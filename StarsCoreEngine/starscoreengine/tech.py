@@ -15,6 +15,8 @@
     You should have received a copy of the Lesser GNU General Public License
     along with Stars Core Engine.  If not, see <http://www.gnu.org/licenses/>.
 
+    Contributors to this project agree to abide by the interpretation expressed in the 
+    COPYING.Interpretation document.
 
 """
 
