@@ -30,11 +30,11 @@
 
 class SpaceObjects(object):
 	"""
-		SpaceObjects is the parent class of all objects in the universe. 
-			(x,y) = current location
-			speed = current speed (note for some this will always be '0' - unless there is a mod! :) ) 
-			(destinationX, destinationY) = next targeted location
-			newSpeed = new speed coming from orders (this speed will become 'speed'). 
+	SpaceObjects is the parent class of all objects in the universe. 
+	(x,y) = current location
+	speed = current speed (note for some this will always be '0' - unless there is a mod! :) ) 
+	(destinationX, destinationY) = next targeted location
+	newSpeed = new speed coming from orders (this speed will become 'speed'). 
 
 	"""
 

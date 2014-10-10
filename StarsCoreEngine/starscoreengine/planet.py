@@ -21,7 +21,7 @@
 
 """
 
-from .space_objects import SpaceObjects
+from space_objects import SpaceObjects
 
 
 

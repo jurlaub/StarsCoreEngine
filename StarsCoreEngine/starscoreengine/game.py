@@ -19,17 +19,71 @@
     COPYING.Interpretation document.
 
 """
-from .space_objects import *
+from space_objects import SpaceObjects
 import planet
 import fleets
 
 
 
-def main():
-	print (" test !")
 
-	t1 = space_objects.SpaceObjects(5,7,4433)
-	print ("id=%", t1.getCurrentCoord())
+
+
+class GameSetup(object):
+
+    def __init__(self, gameDict, standard = 1):
+        #create universe from StandardGame
+        if standard == 1:
+
+            print ("at GameSetup, standard = %d dict=%s" % (standard, gameDict))
+        elif standard == "hello":
+            print("standard was not 1")
+        else:
+            print("hmm")
+
+
+
+        
+
+    def getUniverseSize(self):
+        pass
+
+    
+
+
+    def createXYFile(self):
+        """
+            contains:
+            - Universe information object
+            -
+        """
+        pass
+
+
+
+
+# -- define the universe data in a standard values object, similar format, 
+class StandardGame(object):
+    planet_sparse = .5
+    planet_regular = 1
+    planet_dense = 1.5
+    planets = 10
+    standard_universe_size_small = {"UniverseSizeXY":(200,200)}
+    standard_universe_size_medium = {"UniverseSizeXY":(600,600)}
+    standard_universe_size_large = {"UniverseSizeXY":(1000,1000)}
+    standard_universe = {"UniverseNumber":1, "UniverseSizeXY": (200,200), "UniverseName":("Prime"), "UniversePlanets":(planets), "PlanetDensity": planet_regular, "Players":(1), "VictoryConditions":(None) }
+
+
+
+
+
+
+
+
+
+
+
+
+if __name__ == "__main__":
 
     """
     # user runs hosted game from command line (or gui host - not in this project)
@@ -51,33 +105,31 @@ def main():
 
     """
 
-    #JSON_Universe = {"UniverseNumber": 1, }
-    planets = 10
-    standard_universe = {"UniverseNumber":1, "UniverseSizeXY": (200,200), "UniverseName":("Prime"), "UniversePlanets":(planets), "Players":(1), "VictoryConditions":(None) }
+    
+    #game dictionary?
+    game = {"universe_data":{}, "players_data":{}, "victory_conditions_data":{}}
+
+    # Command line args here
+
+    # Universe Setup File Parsing Here
+    # pull in universe_data from file : Key = "universe_data"
+
+    # Player file's parsing here
+    # pull in player data from file : Key = "players_data"
+
+    # Tech data parsing here
+    # pull in Game tech tree data : Key = "tech_data"
+    #### contains the standard tech (includes race specific tech) 
+    #### will contain additional general tech 
+    #### ultimately contains specific player tech (not associated with race wizard) : Key = "player_n_tech" 
+
+    # Victory conditions file/data here
+    # pull in other data from file : Key = "victory_conditions_data"
+
+
+    GameSetup(game)
+
+    print("yadda")
 
 
 
-class GameSetup(object):
-
-    def __init__(self):
-        #create universe
-
-
-    def createXYFile(self):
-        """
-            contains:
-            - Universe information object
-            -
-        """
-
-
-
-
-
-
-
-
-
-
-if __name__ == "__main__":
-	main()

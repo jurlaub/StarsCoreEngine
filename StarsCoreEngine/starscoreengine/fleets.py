@@ -19,11 +19,23 @@
     COPYING.Interpretation document.
 
 """
+"""
+
+    use a dictionary of (x,y,z) coords along with space object id's to collect locations and other data
+
+    d = {}
+    l = d.setdefault((25,45), [])   # it returns the list associated with the first value or a new list
+    l.append(355)
+    l.append(655)
+
+    
+
+"""
 
 
 
 
-from .space_objects import SpaceObjects
+from space_objects import SpaceObjects
 
 
 class Fleets(SpaceObjects):
