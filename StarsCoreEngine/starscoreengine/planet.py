@@ -26,53 +26,53 @@ from space_objects import SpaceObjects
 
 
 class Planet(SpaceObjects):
-	"""	
-		Planet is the template that provides all the data available for a planet. 
-		origHab = Tuple
-		origConc = Tuple
+    """ 
+        Planet is the template that provides all the data available for a planet. 
+        origHab = Tuple
+        origConc = Tuple
 
-	"""
-	def __init__(self, x, y, ID, name, origHab, origConc):
-		super(Planet, self).__init__(x, y, ID)
-		self.name = name
-		self.origHab = origHab
-		self.origConc = origConc
-		self.currHab = self.origHab
-		self.currConc = self.currConc
-		self.currSurfaceMinerals = 0  # (should be  3 values in a list)
+    """
+    def __init__(self, x, y, ID, name, origHab, origConc):
+        super(Planet, self).__init__(x, y, ID)
+        self.name = name
+        self.origHab = origHab
+        self.origConc = origConc
+        self.currHab = self.origHab
+        self.currConc = self.currConc
+        self.currSurfaceMinerals = 0  # (should be  3 values in a list)
 
-		self.owner = None
-		self.HW = False
-		self.defenses = False
-		self.scanner = False
-		self.orbital = False
-		self.prodQ = False   # this would be good to have as a seperate object for AR races and (future) none-planet starbase production
-		self.population = 0
-
-
+        self.owner = None
+        self.HW = False
+        self.defenses = False
+        self.scanner = False
+        self.orbital = False
+        self.prodQ = False   # this would be good to have as a seperate object for AR races and (future) none-planet starbase production
+        self.population = 0
 
 
-	def getOrigHab(self):
-		#print ("%s" % (self.origHab))
-		return self.origHab
 
-	def getName(self):
 
-		#print ("%s" % (self.name))
-		return self.name
+    def getOrigHab(self):
+        #print ("%s" % (self.origHab))
+        return self.origHab
 
-	def changeHab(self):
-		pass
+    def getName(self):
 
-	def changeConc(self):
-		pass
+        #print ("%s" % (self.name))
+        return self.name
 
-	def updateCurrentSurfaceMinerals(self):
-		pass
+    def changeHab(self):
+        pass
+
+    def changeConc(self):
+        pass
+
+    def updateCurrentSurfaceMinerals(self):
+        pass
 
 
 class HabitablePlanet(Planet):
-	"""
-		A seperate class for Habitable Planet seems helpful but at this point may be too complicated
-	"""
-	pass	
+    """
+        A seperate class for Habitable Planet seems helpful but at this point may be too complicated
+    """
+    pass    

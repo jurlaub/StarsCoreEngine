@@ -39,11 +39,11 @@ from space_objects import SpaceObjects
 
 
 class Fleets(SpaceObjects):
-	"""
-		Fleets - can exist as a single ship. 
+    """
+        Fleets - can exist as a single ship. 
 
-	"""
+    """
 
-	def __init__(self,args):
-		super(Fleets, self).__init__()
-		pass
+    def __init__(self,args):
+        super(Fleets, self).__init__()
+        pass
