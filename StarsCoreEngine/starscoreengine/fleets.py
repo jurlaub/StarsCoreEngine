@@ -35,7 +35,7 @@
 
 
 
-from space_objects import SpaceObjects
+from .space_objects import SpaceObjects
 
 
 class Fleets(SpaceObjects):

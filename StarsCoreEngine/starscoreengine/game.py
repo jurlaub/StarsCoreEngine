@@ -21,7 +21,7 @@
     in the COPYING.Interpretation document.
 
 """
-from space_objects import SpaceObjects
+from .space_objects import SpaceObjects
 import planet
 import fleets
 
