@@ -35,20 +35,19 @@ class GameSetup(object):
     GameSetup will follow a 'singleton' concept. There can be Only One game of 
     any given name in the same folder
 
-
-
     """
 
-    def __init__(self, gameDict, standard = 1):
-        #create universe from StandardGame
-        if standard == 1:
+    def __init__(self, gameDict):
+        # singleton game name check?
+        #create universe from gameDict
+        # if standard == 1:
 
-            print ("at GameSetup, standard = %d dict=%s" % (standard, gameDict))
-        elif standard == "hello":
-            print("standard was not 1")
-        else:
-            print("hmm")
-
+        #     print ("at GameSetup, standard = %d dict=%s" % (standard, gameDict))
+        # elif standard == "hello":
+        #     print("standard was not 1")
+        # else:
+        #     print("hmm")
+        pass
 
 
         
@@ -71,7 +70,14 @@ class GameSetup(object):
 
 
 # -- define the universe data in a standard values object, similar format, 
-class StandardGameObjects(object):
+class StandardGameTemplate(object):
+    """
+    StandardGameTemplate is a class for generating a standard universe. 
+    The class provides tools to modify the standard data. 
+    Modification includes merging a 'setup' dictionary with the standard universe
+    data.
+
+    """
 
     planet_density = (.5, 1, 1.5) 
     planets = 10
@@ -81,14 +87,38 @@ class StandardGameObjects(object):
 
     standard_universe = {"UniverseNumber":1, "UniverseSizeXY": (200,200), \
     "UniverseName":("Prime"), "UniversePlanets":(planets), \
-    "PlanetDensity": planet_regular, "Players":(1), "VictoryConditions":(None)}
-
+    "PlanetDensity": planet_density[1], "Players":(1), "VictoryConditions":(None)}
 
     # instantiate the standard object
+    def __init__(self, setupDict = {}):
+        # instantiates a new game dictionary while merging setup data
+        
+        #setting up dictionary to return
+        self.universe_data = {}
+        #self.players_data = {}
+        # technology
+        # victory conditions
+
+        # takes standard list and merges with setup dictionary.
+        if setupDict:
+            #merge variation with standard
+            print ("StandardGameTemplate:init - setupDict is not empty")
+
+        #print(StandardGameTemplate.standard_universe)
+        self.universe_data = StandardGameTemplate.standard_universe
+
+
+        
 
 
 
+def PreGameSetup(gameDict, setupDict):
+    """
+    Merges Game Dictionary and Setup File data into one dictionary
+    """
 
+
+    pass
 
 
 
@@ -124,7 +154,6 @@ if __name__ == "__main__":
 
     
     #game dictionary?
-    game = {"universe_data":{}, "players_data":{}, "victory_conditions_data":{}}
 
     #*****************************
     # Command line args here
@@ -156,9 +185,15 @@ if __name__ == "__main__":
     #*****************************
     # >>> send in setup derived dictionary
 
+    #game = {"universe_data":{}, "players_data":{}, "victory_conditions_data":{}}
+    #game = {}
 
+    # PreGameSetup()? # from setup file include setup file dictionary with GameSetup call
+    #game = PreGameSetup(game, {})
+    game = StandardGameTemplate()
+    print(game.universe_data)
 
-    GameSetup(game)
+    #GameSetup(game)  
 
     print("yadda")
 
