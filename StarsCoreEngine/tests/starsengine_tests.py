@@ -20,9 +20,11 @@
     
 """
 
-from nose.tools import with_setup, assert_equal, assert_not_equal, assert_raises, raises
+from nose.tools import with_setup, assert_equal, assert_not_equal, \
+ assert_raises, raises, assert_in, assert_true, assert_false
 #import nose
-from ..starscoreengine import fleets, planet, space_objects
+from ..starscoreengine import *
+
 
 
 def test_spaceobjects():
@@ -46,29 +48,52 @@ def test_planet():
 
 
 
-class TestSpaceObject:
+class TestSpaceObject(object):
 
-    def setup(self):
-        print("setup ")
-        
-
-    def teardown(self):
-        print("teardown")
-
+    #classmethods run once before the class is run
     @classmethod
     def setup_class(cls):
+        #from ..starscoreengine.space_objects import SpaceObjects
         print ("class setup")
-        t1 = space_objects.SpaceObjects(5,7,4433)
+
+        
 
     @classmethod
     def teardown_class(cls):
         print("class teardown")
 
 
+    # method run before each test method within the class
+    def setup(self):
+        print("setup ")
+        self.t1 = space_objects.SpaceObjects(5,7,4433)
+        
+
+    def teardown(self):
+        print("teardown")
+
 
     def test_spaceobject_exists(self):
         print("SpaceObjects: test exists")
-        assert_equal(4433, t1.getID())
+        assert_equal(4433, self.t1.getID())
+
+
+class TestGame(object):
+
+    def setup(self):
+        print("TestGame: Setup")
+        self.gameTemplate = game.StandardGameTemplate()
+
+    def teardown(self):
+        print("TestGame: Teardown")
+
+    def test_SGT_Contains_UniverseData(self):
+        assert_in("UniverseSizeXY", self.gameTemplate.universe_data)
+        assert_in("UniverseName", self.gameTemplate.universe_data)
+        u_name = self.gameTemplate.universe_data["UniverseName"]
+        assert_true(u_name)
+        #print("UniverseSizeXY in test game")
+
 
 
 #   t1 = None

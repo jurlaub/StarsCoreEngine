@@ -38,7 +38,7 @@ class Planet(SpaceObjects):
         self.origHab = origHab
         self.origConc = origConc
         self.currHab = self.origHab
-        self.currConc = self.currConc
+        self.currConc = self.origConc
         self.currSurfaceMinerals = 0  # (should be  3 values in a list)
 
         self.owner = None

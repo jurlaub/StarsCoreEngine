@@ -22,8 +22,8 @@
 
 """
 from .space_objects import SpaceObjects
-import planet
-import fleets
+from . import planet
+from . import fleets
 
 
 
@@ -129,7 +129,9 @@ def PreGameSetup(gameDict, setupDict):
 
 
 
-if __name__ == "__main__":
+
+
+def main():
 
     """
     #user runs hosted game from command line (or gui host - not in this project)
@@ -151,7 +153,6 @@ if __name__ == "__main__":
 
 
     """
-
     
     #game dictionary?
 
@@ -199,3 +200,6 @@ if __name__ == "__main__":
 
 
 
+
+# if __name__ == "__main__":
+#     main()
