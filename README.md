@@ -1,9 +1,9 @@
 #TOC
--##Reason / Motivation
--##Goals 
--##Licensing 
--##Technology
-  -###Minimum necessary setup
+- ##Reason / Motivation
+- ##Goals 
+- ##Licensing 
+- ##Technology
+  - ###Minimum necessary setup
 
 
 
@@ -48,22 +48,22 @@ Please Note: The interpretation of the license used for the Stars Core Engine al
 
 
 #Technology
-*Python 3.4.1+
-  -https://www.python.org
-*Nose
-  -https://nose.readthedocs.org/en/latest/
-*virtualenv & virtualenvwrapper
-  -http://virtualenv.readthedocs.org/en/latest/#
-  -http://virtualenvwrapper.readthedocs.org/en/latest/
-*Vagrant
-  -https://www.vagrantup.com
-  -https://vagrantcloud.com/hashicorp/boxes/precise64
-*VirtualBox
-  -https://www.virtualbox.org
-*Python IDE
-  -http://www.sublimetext.com/2
-  -https://www.jetbrains.com/pycharm/  (Community Edition)
-*Git & Github
+* Python 3.4.1+
+  - https://www.python.org
+* Nose
+  - https://nose.readthedocs.org/en/latest/
+* virtualenv & virtualenvwrapper
+  - http://virtualenv.readthedocs.org/en/latest/#
+  - http://virtualenvwrapper.readthedocs.org/en/latest/
+* Vagrant
+  - https://www.vagrantup.com
+  - https://vagrantcloud.com/hashicorp/boxes/precise64
+* VirtualBox
+  - https://www.virtualbox.org
+* Python IDE
+  - http://www.sublimetext.com/2
+  - https://www.jetbrains.com/pycharm/  (Community Edition)
+* Git & Github
 
 
 ##Minimum necessary setup:
@@ -88,12 +88,12 @@ On my setup, there are two areas: the virtualenv python environment running in V
 Vagrant and VirtualBox provide a virtual machine to develop on. Precise64 is the image modal. 
 
 After reading the relevant install documentation, this order of events may be helpful:
-*Install Vagrant according to the documentation. 
-*Install VirtualBox. 
-*Download from vagrantcloud.com the box image used in the project. hashicorp/precise64
-*In a terminal window:
-  -follow the Vagrant init commands
-  -VagrantUp & Vagrant ssh in a terminal window
-  -Now inside the virtual machine, check the python version you are running by starting up python
-  -follow virtualenv or virtualenvwrapper download/install docs to create an environment 
-  -when instantiating a virtualenv instance, make sure to specify the python version. You may need to download the updated version.
+* Install Vagrant according to the documentation. 
+* Install VirtualBox. 
+* Download from vagrantcloud.com the box image used in the project. hashicorp/precise64
+* In a terminal window:
+  - follow the Vagrant init commands
+  - VagrantUp & Vagrant ssh in a terminal window
+  - Now inside the virtual machine, check the python version you are running by starting up python
+  - follow virtualenv or virtualenvwrapper download/install docs to create an environment 
+  - when instantiating a virtualenv instance, make sure to specify the python version. You may need to download the updated version.
