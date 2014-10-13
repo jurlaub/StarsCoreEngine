@@ -7,18 +7,17 @@ The most significant thrills are the multi-player games, where strategies and co
 
 
 #Goals 
-The overriding intent and goal of this project is “To ensure that the essence of Stars! can be extended and played by future generations.” 
+The overriding intent and goal of this project is to ensure that the essence of Stars! can be extended and played by future generations by assembling the core game engine elements of the Stars Game.
 
-With this in mind, the purpose of this project is to implement the first piece of the Stars puzzle by assembling the core game engine elements of the Stars Game.
-
-In order to:
-* encourage and facilitate future game development 
-* establish a baseline from which future modifications can be made
-* describe an overall Stars! Framework from which a complete game will be assembled.
+* to encourage and facilitate future game development 
+* to establish a baseline from which future modifications can be made
+* to describe an overall Stars! Framework from which a complete game will be assembled.
 
 This portion of the project will be considered “code complete” when the following objectives are reached:
-* a JSON object for each player is generated containing the data necessary for a players turn to be viewed in a third-party app/webpage/viewer
-* a JSON object containing a players updated turn data can be accepted into the library’s overall data file
+* new equivalent game files generated
+  * game .xy
+  * players .m 
+  * players .x orders format defined and can be used
 * all players data can be processed into objects used by the Stars Core Engine
 * the Stars Core Engine processes all player orders and game objects according to the Stars Order of Events. 
 
