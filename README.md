@@ -1,5 +1,5 @@
 #TOC
-## - Reason / Motivation
+- Reason / Motivation
 - Goals 
 - Licensing 
 - Technology
