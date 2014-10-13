@@ -1,9 +1,9 @@
 #TOC
-- ##Reason / Motivation
-- ##Goals 
-- ##Licensing 
-- ##Technology
-  - ###Minimum necessary setup
+## - Reason / Motivation
+- Goals 
+- Licensing 
+- Technology
+  - Minimum necessary setup
 
 
 
