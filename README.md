@@ -31,6 +31,6 @@ The intention is that other applications or later projects will incorporate the 
 
 Projects that use the Stars Core Engine and expand upon it may be open source or proprietary. Modifications to the original Stars Core Engine component must follow the conditions outlined in the initial license.
 
-* Please Note: * The interpretation of the license used for the Stars Core Engine allows for the creation and distribution of an App that uses the Stars Core Engine via iTunes App Store or other app stores. The Stars Core Engine source must be made available through a web-link or in-app text file. Contributors to this project must agree to this interpretation.
+*Please Note:* The interpretation of the license used for the Stars Core Engine allows for the creation and distribution of an App that uses the Stars Core Engine via iTunes App Store or other app stores. The Stars Core Engine source must be made available through a web-link or in-app text file. Contributors to this project must agree to this interpretation.
 
 
