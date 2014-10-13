@@ -19,6 +19,7 @@ I remember well games like: Diadachi Wars II, 12 Gates, Rabid Weasels in a Box I
 The flexibility of game-play is near infinite. Vanilla (standard) games are fun. Just as fun (or more) are theme games. The result has been years of games and thousands of hours of gameplay. Hardware and OS technology have advanced and the game needs to adapt. The Stars community needs the next generation of Stars! This is the first step. 
 
 
+
 #Goals 
 The overriding intent and goal of this project is “To ensure that the essence of Stars! can be extended and played by future generations.” 
 
@@ -36,6 +37,7 @@ all players data can be processed into objects used by the Stars Core Engine
 the Stars Core Engine processes all player orders and game objects according to the Stars Order of Events. 
 
 
+
 #Licensing 
 This project is under “Lesser GNU General Public License”. 
 The scope of this work is to create the core engine that processes the users turns - “basically generating a new year in game terms.” The data will be accessible via JSON objects/files. 
@@ -45,6 +47,7 @@ The intention is that other applications or later projects will incorporate the 
 Projects that use the Stars Core Engine and expand upon it may be open source or proprietary. Modifications to the original Stars Core Engine component must follow the conditions outlined in the initial license.
 
 Please Note: The interpretation of the license used for the Stars Core Engine allows for the creation and distribution of an App that uses the Stars Core Engine via iTunes App Store or other app stores. The Stars Core Engine source must be made available through a web-link or in-app text file. Contributors to this project must agree to this interpretation.
+
 
 
 #Technology
@@ -66,22 +69,24 @@ Please Note: The interpretation of the license used for the Stars Core Engine al
 * Git & Github
 
 
-##Minimum necessary setup:
+###Minimum necessary setup:
 I believe the minimum required setup would be a virtualenv Python environment running Python 3.4.1 and associated Python Packages. 
 
-###For Linux:
+####For Linux:
 Setting up the above environment should be fairly straightforward.
 
-###For Windows: 
+####For Windows: 
 Pycharm’s Community Edition seems to have the option to open a new project within a virtualenv environment. I recently downloaded Pycharm on my work pc and it seemed promising. (This will most-likely be the extent of my windows assistance)
 
-###For Mac:
+####For Mac:
 This should be fairly straightforward like the linux setup. However, I added Vagrant and Virtual Box.
 
 
-##Setup Assistance using Vagrant and Virtual Box
 
-###My Mac Setup:
+
+###Setup Assistance using Vagrant and Virtual Box
+
+####My Mac Setup:
 On my setup, there are two areas: the virtualenv python environment running in Vagrant on a virtual box and my normal OS. They are connected via a shared folder. I write code on an IDE running outside the virtual environment. It is saved to the shared folder. Git is used for version control and runs outside the virtual environment. The code is run and tested within the virtual environment. 
 
 
