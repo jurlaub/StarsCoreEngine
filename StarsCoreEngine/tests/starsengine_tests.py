@@ -26,7 +26,7 @@ from nose.tools import with_setup, assert_equal, assert_not_equal, \
 from ..starscoreengine import *
 
 
-
+#old - for reference -  use test classes
 def test_spaceobjects():
 
     t1 = space_objects.SpaceObjects(5,7,4433)
@@ -35,7 +35,7 @@ def test_spaceobjects():
     print ("id=%s" % (t1.getCurrentCoord(),))
     assert t1.getCurrentCoord() == (5, 7)
 
-
+#old - for reference -  use test classes
 def test_planet():
     po1 = planet.Planet(43, 2001, 333, "Saratoga", (100,50,32), (55, 30, 10))
     xy = (43, 2001)
@@ -95,7 +95,7 @@ class TestGame(object):
         #print("UniverseSizeXY in test game")
 
 
-
+#old - for reference -  use test classes
 #   t1 = None
 
 #   def setup(self):

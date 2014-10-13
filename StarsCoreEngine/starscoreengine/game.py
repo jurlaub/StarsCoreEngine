@@ -107,6 +107,14 @@ class StandardGameTemplate(object):
         #print(StandardGameTemplate.standard_universe)
         self.universe_data = StandardGameTemplate.standard_universe
 
+    def standardUniverse(self):
+        standard_universe = {"UniverseNumber":1, "UniverseSizeXY": (200,200), \
+        "UniverseName":("Prime"), "UniversePlanets":(planets), \
+        "PlanetDensity": planet_density[1], "Players":(1), \
+        "VictoryConditions":(None)}
+        
+        return standard_universe
+
 
         
 
