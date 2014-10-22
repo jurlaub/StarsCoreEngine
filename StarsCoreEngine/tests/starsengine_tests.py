@@ -88,17 +88,46 @@ class TestGame(object):
         print("TestGame: Teardown")
 
     def test_SGT_Contains_UniverseData(self):
-        assert_in("UniverseSize(XY)Z", self.gameTemplate.universe_data)
-        assert_in("UniverseName", self.gameTemplate.universe_data)
-        u_name = self.gameTemplate.universe_data["UniverseName"]
+        assert_in("UniverseSizeXY", self.gameTemplate.universe_data[0])
+        assert_in("UniverseName", self.gameTemplate.universe_data[0])
+        u_name = self.gameTemplate.universe_data[0]["UniverseName"]
         assert_true(u_name)
-        
+    
+class TestMultiGame(object):
+    '''
+    Test multiuniverse games
+    '''
+    def setup(self):
+        print("TestMultiGame: Setup")
+        self.universe_count = 5
+        self.universe_player = 3
+        self.gameTemplate = game.StandardGameTemplate({}, self.universe_count, self.universe_player)
 
+    def teardown(self):
+        print("TestGame: Teardown")
+
+    
     def test_SGT_MultiUniverse(self):
-        tmp = self.gameTemplate
-        tmp.universe_data = tmp.multiUniverse()
-        assert_true(tmp.universe_data["UniverseNumber"] > 1)
+        tmp = self.gameTemplate.universe_data
+        #tmp.universe_data = tmp.multiUniverse()
+        x = self.universe_count - 1
+        assert_true(len(tmp) > 1)
+        assert_true(len(tmp) == self.universe_count)
+        assert_true(x == int(tmp[x]['UniverseNumber']))
+        print("UniverseNumber = %d" % (tmp[x]['UniverseNumber'],))
+    
 
+class TestGamePlanets(object):
+
+    def setup(self):
+        print("TestGame: Setup")
+        self.gameTemplate = game.StandardGameTemplate()
+
+    def teardown(self):
+        print("TestGame: Teardown")
+
+    def test_Planet_Objects(self):
+        pass
 
 #old - for reference -  use test classes
 #   t1 = None

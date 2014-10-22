@@ -21,6 +21,7 @@
     in the COPYING.Interpretation document.
 
 """
+import sys
 from .space_objects import SpaceObjects
 from . import planet
 from . import fleets
@@ -77,7 +78,9 @@ class StandardGameTemplate(object):
     Modification includes merging a 'setup' dictionary with the standard universe
     data.
 
+
     """
+    '''
     #u_name = ["Prime", "Alpha", "Beta", "Gamma", "Delta", "Omega", "Zeta"]
 
     planet_density = (.5, 1, 1.5) 
@@ -86,58 +89,68 @@ class StandardGameTemplate(object):
     standard_universe_size_medium = {"UniverseSizeXY":(600,600)}
     standard_universe_size_large = {"UniverseSizeXY":(1000,1000)}
 
-    standard_universe = {"UniverseNumber":1, "UniverseSizeXYZ": (200,200,1), \
+    standard_universe = {"UniverseNumber":1, "UniverseSizeXY": (200,200), \
     "UniverseName":("Prime"), "UniversePlanets":planets, \
     "PlanetDensity": planet_density[1], "Players":(1)}
+    '''
 
     # instantiate the standard object
-    def __init__(self, setupDict = {}):
+    def __init__(self, setupDict = {}, universeNumber = 1, playerNumber = 1):
         # instantiates a new game dictionary while merging setup data
         
-        #setting up dictionary to return
-        self.universe_data = {}
-        #self.players_data = {}
+        self.universe_data = []    # list of universe dictionary data
+        #self.players_data = []     # list of player dictionary data
         #self.technology_data
         #self.victory_conditions
 
+        #print(StandardGameTemplate.standard_universe)
+        if universeNumber < 1:
+            sys.exit("universeNumber must be greater then 1")
+        else:
+
+            for i in range(0, universeNumber):
+                x = self.standardUniverse()
+                x['UniverseNumber'] = i
+                self.universe_data.append(x)
+                
+
+                #self.universe_data = self.standardUniverse()  #StandardGameTemplate.standard_universe
 
         # takes standard list and merges with setup dictionary.
         if setupDict:
             #merge variation with standard
             print ("StandardGameTemplate:init - setupDict is not empty")
 
-        #print(StandardGameTemplate.standard_universe)
-        self.universe_data = self.standardUniverse()  #StandardGameTemplate.standard_universe
+
 
 
 
     def standardUniverse(self):
         # standard universe comprises standard settings for 1 universe.
-        planets = 10
-        planet_density = (.5, 1, 1.5)
-        standard_universe = {"UniverseNumber":1, "UniverseSize(XY)Z": ((200,200),1), \
-        "UniverseName":("Prime"), "UniversePlanets":planets, \
-        "PlanetDensity": planet_density[1], "Players":(1)}
+        #planets = 10
+        #planet_density = (.5, 1, 1.5)
+        standard_universe = {"UniverseNumber":1, "UniverseSizeXY": (200,200), \
+        "UniverseName":("Prime"), "UniversePlanets":10, \
+        "PlanetDensity": 1, "Players":(1)}
         
         return standard_universe
 
 
-    
-    def multiUniverse(self):
+    '''
+    def multiUniverse(self, n_universe = 2):
         """
         MultiUniverse dictionary data used to modify the standard universe 
         dictionary.
         """
 
-        n_universe = 2  #starts at 1
         multi_universe = {"UniverseNumber":n_universe, \
-        "UniverseSize(XY)Z": ((200,200),n_universe)}
+        "UniverseSizeXY": (200,200)}
 
 
-        self.universe_data = self.mergeDictionaryData(self.universe_data, multi_universe)
+        #self.universe_data = self.mergeDictionaryData(self.universe_data, multi_universe)
 
         return self.universe_data
-
+    '''
 
 
     def mergeDictionaryData(self, dict1, dict2):
