@@ -78,6 +78,7 @@ class StandardGameTemplate(object):
     data.
 
     """
+    #u_name = ["Prime", "Alpha", "Beta", "Gamma", "Delta", "Omega", "Zeta"]
 
     planet_density = (.5, 1, 1.5) 
     planets = 10
@@ -85,9 +86,9 @@ class StandardGameTemplate(object):
     standard_universe_size_medium = {"UniverseSizeXY":(600,600)}
     standard_universe_size_large = {"UniverseSizeXY":(1000,1000)}
 
-    standard_universe = {"UniverseNumber":1, "UniverseSizeXY": (200,200), \
-    "UniverseName":("Prime"), "UniversePlanets":(planets), \
-    "PlanetDensity": planet_density[1], "Players":(1), "VictoryConditions":(None)}
+    standard_universe = {"UniverseNumber":1, "UniverseSizeXYZ": (200,200,1), \
+    "UniverseName":("Prime"), "UniversePlanets":planets, \
+    "PlanetDensity": planet_density[1], "Players":(1)}
 
     # instantiate the standard object
     def __init__(self, setupDict = {}):
@@ -96,8 +97,9 @@ class StandardGameTemplate(object):
         #setting up dictionary to return
         self.universe_data = {}
         #self.players_data = {}
-        # technology
-        # victory conditions
+        #self.technology_data
+        #self.victory_conditions
+
 
         # takes standard list and merges with setup dictionary.
         if setupDict:
@@ -105,17 +107,45 @@ class StandardGameTemplate(object):
             print ("StandardGameTemplate:init - setupDict is not empty")
 
         #print(StandardGameTemplate.standard_universe)
-        self.universe_data = StandardGameTemplate.standard_universe
+        self.universe_data = self.standardUniverse()  #StandardGameTemplate.standard_universe
+
+
 
     def standardUniverse(self):
-        standard_universe = {"UniverseNumber":1, "UniverseSizeXY": (200,200), \
-        "UniverseName":("Prime"), "UniversePlanets":(planets), \
-        "PlanetDensity": planet_density[1], "Players":(1), \
-        "VictoryConditions":(None)}
+        # standard universe comprises standard settings for 1 universe.
+        planets = 10
+        planet_density = (.5, 1, 1.5)
+        standard_universe = {"UniverseNumber":1, "UniverseSize(XY)Z": ((200,200),1), \
+        "UniverseName":("Prime"), "UniversePlanets":planets, \
+        "PlanetDensity": planet_density[1], "Players":(1)}
         
         return standard_universe
 
 
+    
+    def multiUniverse(self):
+        """
+        MultiUniverse dictionary data used to modify the standard universe 
+        dictionary.
+        """
+
+        n_universe = 2  #starts at 1
+        multi_universe = {"UniverseNumber":n_universe, \
+        "UniverseSize(XY)Z": ((200,200),n_universe)}
+
+
+        self.universe_data = self.mergeDictionaryData(self.universe_data, multi_universe)
+
+        return self.universe_data
+
+
+
+    def mergeDictionaryData(self, dict1, dict2):
+
+        for n in dict2:
+            dict1[n] = dict2[n]
+
+        return dict1
         
 
 

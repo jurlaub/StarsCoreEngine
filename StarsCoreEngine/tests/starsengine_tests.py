@@ -88,11 +88,16 @@ class TestGame(object):
         print("TestGame: Teardown")
 
     def test_SGT_Contains_UniverseData(self):
-        assert_in("UniverseSizeXY", self.gameTemplate.universe_data)
+        assert_in("UniverseSize(XY)Z", self.gameTemplate.universe_data)
         assert_in("UniverseName", self.gameTemplate.universe_data)
         u_name = self.gameTemplate.universe_data["UniverseName"]
         assert_true(u_name)
-        #print("UniverseSizeXY in test game")
+        
+
+    def test_SGT_MultiUniverse(self):
+        tmp = self.gameTemplate
+        tmp.universe_data = tmp.multiUniverse()
+        assert_true(tmp.universe_data["UniverseNumber"] > 1)
 
 
 #old - for reference -  use test classes
