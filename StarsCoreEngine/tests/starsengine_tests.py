@@ -92,6 +92,11 @@ class TestGame(object):
         assert_in("UniverseName", self.gameTemplate.universe_data[0])
         u_name = self.gameTemplate.universe_data[0]["UniverseName"]
         assert_true(u_name)
+
+    def test_SGT_GetUniverseSize(self):
+        tmp = self.gameTemplate.getUniverseSize()
+        assert_true(len(tmp) == 1)
+        assert_true(tmp[0] == (200,200))
     
 class TestMultiGame(object):
     '''
@@ -107,7 +112,7 @@ class TestMultiGame(object):
         print("TestGame: Teardown")
 
     
-    def test_SGT_MultiUniverse(self):
+    def test_SGT_Multiverse(self):
         tmp = self.gameTemplate.universe_data
         #tmp.universe_data = tmp.multiUniverse()
         x = self.universe_count - 1
@@ -115,7 +120,14 @@ class TestMultiGame(object):
         assert_true(len(tmp) == self.universe_count)
         assert_true(x == int(tmp[x]['UniverseNumber']))
         print("UniverseNumber = %d" % (tmp[x]['UniverseNumber'],))
-    
+
+    def test_SGT_GetMultiverseSizes(self):
+        tmp = self.gameTemplate.getUniverseSize()
+        assert_true(len(tmp) == self.universe_count)
+        print("test_SGT_GetMultiverseSizes is a list: %s || and || %s" % (isinstance(tmp, tuple), tmp))
+        assert_true(tmp[0] == (200,200))  
+        assert_true(isinstance(tmp, tuple))
+
 
 class TestGamePlanets(object):
 

@@ -36,9 +36,12 @@ class GameSetup(object):
     GameSetup will follow a 'singleton' concept. There can be Only One game of 
     any given name in the same folder
 
+    GameSetup() accepts game data from the StandardGameTemplate and turns it into
+    a complete game with its cooresponding game obects.
+
     """
 
-    def __init__(self, gameDict):
+    def __init__(self, gameValues):
         # singleton game name check?
         #create universe from gameDict
         # if standard == 1:
@@ -53,8 +56,7 @@ class GameSetup(object):
 
         
 
-    def getUniverseSize(self):
-        pass
+
 
     
 
@@ -111,6 +113,8 @@ class StandardGameTemplate(object):
             for i in range(0, universeNumber):
                 x = self.standardUniverse()
                 x['UniverseNumber'] = i
+                # if i%2 == 0:
+                #     x["UniverseSizeXY"] = (1100,13400)
                 self.universe_data.append(x)
                 
 
@@ -159,7 +163,10 @@ class StandardGameTemplate(object):
             dict1[n] = dict2[n]
 
         return dict1
-        
+    
+
+    def getUniverseSize(self):
+        return tuple(x["UniverseSizeXY"] for x in self.universe_data)
 
 
 
@@ -235,19 +242,16 @@ def main():
     #*****************************
     #  Go to standard game setup
     #*****************************
-    # >>> send in setup derived dictionary
-
-    #game = {"universe_data":{}, "players_data":{}, "victory_conditions_data":{}}
-    #game = {}
+  
 
     # PreGameSetup()? # from setup file include setup file dictionary with GameSetup call
-    #game = PreGameSetup(game, {})
-    game = StandardGameTemplate()
-    print(game.universe_data)
 
-    #GameSetup(game)  
+    gameValues = StandardGameTemplate()
+    
 
-    print("yadda")
+    #game = GameSetup(gameValues)  
+
+    
 
 
 
