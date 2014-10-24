@@ -21,6 +21,8 @@
     in the COPYING.Interpretation document.
 
 """
+import sys
+import random
 from .space_objects import SpaceObjects
 from . import planet
 from . import fleets
@@ -35,9 +37,12 @@ class GameSetup(object):
     GameSetup will follow a 'singleton' concept. There can be Only One game of 
     any given name in the same folder
 
+    GameSetup() accepts game data from the StandardGameTemplate and turns it into
+    a complete game with its cooresponding game obects.
+
     """
 
-    def __init__(self, gameDict):
+    def __init__(self, template):
         # singleton game name check?
         #create universe from gameDict
         # if standard == 1:
@@ -47,15 +52,46 @@ class GameSetup(object):
         #     print("standard was not 1")
         # else:
         #     print("hmm")
-        pass
+
+        ############# ! hardcoded to a list, requires updating! ############
+        self.planets = self.createPlanetObjects(template)   #dict
+
 
 
         
+    def createPlanetObjects(self, template):
+        """
+        generates planet objects
 
-    def getUniverseSize(self):
+        inputs: single universe dictionary data
+        returns: dictionary of planet objects
+
+        """
+        planets = {}
+
+        uSize = template.universe_data[0]["UniverseSizeXY"]
+        uPlanet = template.universe_data[0]["UniversePlanets"] 
+        uNumber = template.universe_data[0]["UniverseNumber"]
+
+        # create and add Planet objects with random locations, names and ID's
+        for i in range(0, uPlanet):
+            xy = (random.randrange(0, uSize[0]), random.randrange(0, uSize[1]))
+            name = template.getPlanetNameFromTemplate(i)
+            ID = str(uNumber) + str(i)
+            newPlanet = planet.Planet(xy, ID, name)
+            planets[ID] = newPlanet
+
+        return planets 
+
+
+    def randomPlanetLocations(self, uSize, uPlanet):
         pass
 
-    
+
+    def setPlanetLocation(self):
+        pass
+
+
 
 
     def createXYFile(self):
@@ -77,7 +113,10 @@ class StandardGameTemplate(object):
     Modification includes merging a 'setup' dictionary with the standard universe
     data.
 
+
     """
+    '''
+    #u_name = ["Prime", "Alpha", "Beta", "Gamma", "Delta", "Omega", "Zeta"]
 
     planet_density = (.5, 1, 1.5) 
     planets = 10
@@ -86,31 +125,96 @@ class StandardGameTemplate(object):
     standard_universe_size_large = {"UniverseSizeXY":(1000,1000)}
 
     standard_universe = {"UniverseNumber":1, "UniverseSizeXY": (200,200), \
-    "UniverseName":("Prime"), "UniversePlanets":(planets), \
-    "PlanetDensity": planet_density[1], "Players":(1), "VictoryConditions":(None)}
+    "UniverseName":("Prime"), "UniversePlanets":planets, \
+    "PlanetDensity": planet_density[1], "Players":(1)}
+    '''
 
     # instantiate the standard object
-    def __init__(self, setupDict = {}):
+    def __init__(self, setupDict = {}, universeNumber = 1, playerNumber = 1):
         # instantiates a new game dictionary while merging setup data
         
-        #setting up dictionary to return
-        self.universe_data = {}
-        #self.players_data = {}
-        # technology
-        # victory conditions
+        self.game_name = "rabid_weasels"
+        self.planet_names = self.planetNameTemplate()
+        self.universe_data = []    # list of universe dictionary data
+        #self.players_data = []     # list of player dictionary data
+        #self.technology_data
+        #self.victory_conditions
+
+        #print(StandardGameTemplate.standard_universe)
+        if universeNumber < 1:
+            sys.exit("universeNumber must be greater then 1")
+        else:
+
+            for i in range(0, universeNumber):
+                x = self.standardUniverse()
+                x['UniverseNumber'] = i
+                # if i%2 == 0:
+                #     x["UniverseSizeXY"] = (1100,13400)
+                self.universe_data.append(x)
+                
+
+                #self.universe_data = self.standardUniverse()  #StandardGameTemplate.standard_universe
 
         # takes standard list and merges with setup dictionary.
         if setupDict:
             #merge variation with standard
             print ("StandardGameTemplate:init - setupDict is not empty")
 
-        #print(StandardGameTemplate.standard_universe)
-        self.universe_data = StandardGameTemplate.standard_universe
 
 
+
+
+    def standardUniverse(self):
+        # standard universe comprises standard settings for 1 universe.
+        #planets = 10
+        #planet_density = (.5, 1, 1.5)
+        standard_universe = {"UniverseNumber":0, "UniverseSizeXY": (200,200), \
+        "UniverseName":("Prime"), "UniversePlanets":10, \
+        "PlanetDensity": 1, "Players":(1)}
         
+        return standard_universe
 
 
+    '''
+    def multiUniverse(self, n_universe = 2):
+        """
+        MultiUniverse dictionary data used to modify the standard universe 
+        dictionary.
+        """
+
+        multi_universe = {"UniverseNumber":n_universe, \
+        "UniverseSizeXY": (200,200)}
+
+
+        #self.universe_data = self.mergeDictionaryData(self.universe_data, multi_universe)
+
+        return self.universe_data
+    '''
+
+
+    def mergeDictionaryData(self, dict1, dict2):
+
+        for n in dict2:
+            dict1[n] = dict2[n]
+
+        return dict1
+    
+
+    def getUniverseSize(self):
+        return tuple(x["UniverseSizeXY"] for x in self.universe_data)
+
+
+    def getPlanetNameFromTemplate(self, n):
+        planet_names = self.planetNameTemplate()
+        x = int(n % len(planet_names))
+        return planet_names[x]
+
+    def planetNameTemplate(self):
+        planet_names = ["Alan", "Fenge", "Fenris", "Shill", "239_Alf", "Wolf359",\
+         "Dark Star", "Kirk", "Flo Rida", "Pluto", "Centari", "Mau Tai", "Zeta"]
+        return planet_names
+
+      
 
 def PreGameSetup(gameDict, setupDict):
     """
@@ -184,19 +288,16 @@ def main():
     #*****************************
     #  Go to standard game setup
     #*****************************
-    # >>> send in setup derived dictionary
-
-    #game = {"universe_data":{}, "players_data":{}, "victory_conditions_data":{}}
-    #game = {}
+  
 
     # PreGameSetup()? # from setup file include setup file dictionary with GameSetup call
-    #game = PreGameSetup(game, {})
-    game = StandardGameTemplate()
-    print(game.universe_data)
 
-    #GameSetup(game)  
+    gameTemplate = StandardGameTemplate()
+    
 
-    print("yadda")
+    game = GameSetup(gameTemplate)  
+
+    
 
 
 

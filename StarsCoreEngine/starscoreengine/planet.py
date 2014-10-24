@@ -32,8 +32,8 @@ class Planet(SpaceObjects):
         origConc = Tuple
 
     """
-    def __init__(self, x, y, ID, name, origHab, origConc):
-        super(Planet, self).__init__(x, y, ID)
+    def __init__(self, xy, ID, name, origHab = (90, 1.1, 65), origConc = (75, 75, 75)):
+        super(Planet, self).__init__(xy, ID)
         self.name = name
         self.origHab = origHab
         self.origConc = origConc

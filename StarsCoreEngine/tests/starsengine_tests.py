@@ -26,18 +26,18 @@ from nose.tools import with_setup, assert_equal, assert_not_equal, \
 from ..starscoreengine import *
 
 
-
+#old - for reference -  use test classes
 def test_spaceobjects():
 
-    t1 = space_objects.SpaceObjects(5,7,4433)
+    t1 = space_objects.SpaceObjects((5,7), 4433)
     
     
     print ("id=%s" % (t1.getCurrentCoord(),))
     assert t1.getCurrentCoord() == (5, 7)
 
-
+#old - for reference -  use test classes
 def test_planet():
-    po1 = planet.Planet(43, 2001, 333, "Saratoga", (100,50,32), (55, 30, 10))
+    po1 = planet.Planet((43, 2001), 333, "Saratoga", (100,50,32), (55, 30, 10))
     xy = (43, 2001)
 
     assert_equal("Saratoga", po1.getName())
@@ -66,7 +66,7 @@ class TestSpaceObject(object):
     # method run before each test method within the class
     def setup(self):
         print("setup ")
-        self.t1 = space_objects.SpaceObjects(5,7,4433)
+        self.t1 = space_objects.SpaceObjects((5,7), 4433)
         
 
     def teardown(self):
@@ -78,7 +78,7 @@ class TestSpaceObject(object):
         assert_equal(4433, self.t1.getID())
 
 
-class TestGame(object):
+class TestGameTemplate(object):
 
     def setup(self):
         print("TestGame: Setup")
@@ -88,14 +88,87 @@ class TestGame(object):
         print("TestGame: Teardown")
 
     def test_SGT_Contains_UniverseData(self):
-        assert_in("UniverseSizeXY", self.gameTemplate.universe_data)
-        assert_in("UniverseName", self.gameTemplate.universe_data)
-        u_name = self.gameTemplate.universe_data["UniverseName"]
+        assert_in("UniverseSizeXY", self.gameTemplate.universe_data[0])
+        assert_in("UniverseName", self.gameTemplate.universe_data[0])
+        u_name = self.gameTemplate.universe_data[0]["UniverseName"]
         assert_true(u_name)
-        #print("UniverseSizeXY in test game")
+
+    def test_SGT_GetUniverseSize(self):
+        tmp = self.gameTemplate.getUniverseSize()
+        assert_true(len(tmp) == 1)
+        assert_true(tmp[0] == (200,200))
+
+
+    
+class TestMultiGameTemplate(object):
+    '''
+    Test multiuniverse games
+    '''
+    def setup(self):
+        print("TestMultiGame: Setup")
+        self.universe_count = 5
+        self.universe_player = 3
+        self.gameTemplate = game.StandardGameTemplate({}, self.universe_count, self.universe_player)
+
+    def teardown(self):
+        print("TestGame: Teardown")
+
+    
+    def test_SGT_Multiverse(self):
+        tmp = self.gameTemplate.universe_data
+        #tmp.universe_data = tmp.multiUniverse()
+        x = self.universe_count - 1
+        assert_true(len(tmp) > 1)
+        assert_true(len(tmp) == self.universe_count)
+        assert_true(x == int(tmp[x]['UniverseNumber']))
+        print("UniverseNumber = %d" % (tmp[x]['UniverseNumber'],))
+
+    def test_SGT_GetMultiverseSizes(self):
+        tmp = self.gameTemplate.getUniverseSize()
+        assert_true(len(tmp) == self.universe_count)
+        print("test_SGT_GetMultiverseSizes is a list: %s || and || %s" % (isinstance(tmp, tuple), tmp))
+        assert_true(tmp[0] == (200,200))  
+        assert_true(isinstance(tmp, tuple))
+
+
+class TestGameSetup(object):
+    
+    def setup(self):
+        print("TestGame: Setup")
+        self.gameTemplate = game.StandardGameTemplate()
+        self.universe_data = self.gameTemplate.universe_data
+        self.game = game.GameSetup(self.gameTemplate)
+        self.numbPlanets = self.universe_data[0]["UniversePlanets"]
+
+    def teardown(self):
+        print("TestGame: Teardown")
+
+    def test_Planet_Objects(self):
+        tmpPlanet = self.game.planets 
+        #print("%s" % tmpPlanet.keys())
+        assert_true(isinstance(tmpPlanet, dict))
+        #print("%s,%s,%s"% tmpPlanet["01"].currConc)
+        assert(len(tmpPlanet) == self.numbPlanets)
+        tmpItem = tmpPlanet["03"]
+        assert_in(tmpItem.name, self.gameTemplate.planetNameTemplate())
+        assert_false(tmpItem.HW)
 
 
 
+
+class TestGamePlanets(object):
+
+    def setup(self):
+        print("TestGame: Setup")
+        self.gameTemplate = game.StandardGameTemplate()
+
+    def teardown(self):
+        print("TestGame: Teardown")
+
+    def test_Planet_Objects(self):
+        pass
+
+#old - for reference -  use test classes
 #   t1 = None
 
 #   def setup(self):
