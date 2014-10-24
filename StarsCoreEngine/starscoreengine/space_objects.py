@@ -38,13 +38,11 @@ class SpaceObjects(object):
 
     """
 
-    def __init__(self, x, y, ID):
+    def __init__(self, xy, ID):
         self.ID = ID
-        self.x = x
-        self.y = y
+        self.xy = xy   # tuple (x,y)
         self.speed = 0
-        self.destinationX = self.x
-        self.destinationY = self.y
+        self.destinationXY = self.xy  # tuple (x,y)
         self.newSpeed = self.speed
 
 
@@ -53,18 +51,17 @@ class SpaceObjects(object):
 
     def getCurrentCoord(self):
         """ returns a tuple  """ 
-        return (self.x, self.y)
+        return self.xy
 
-    def setCurrentCoord(self, x, y):
-        self.x = x
-        self.y = y
+    def setCurrentCoord(self, xy):
+        self.xy = xy
 
     def printCurrentCoord(self):
-        print ("(x = %, y = %)", self.x, self.y)
+        print ("(x = %, y = %)" % (self.xy))
 
     def getDestinationCoord(self):
         """ returns a tuple """
-        return (self.destinationX, self.destinationY)
+        return self.destinationXY
 
 
 

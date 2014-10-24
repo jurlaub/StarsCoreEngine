@@ -22,6 +22,7 @@
 
 """
 import sys
+import random
 from .space_objects import SpaceObjects
 from . import planet
 from . import fleets
@@ -41,7 +42,7 @@ class GameSetup(object):
 
     """
 
-    def __init__(self, gameValues):
+    def __init__(self, template):
         # singleton game name check?
         #create universe from gameDict
         # if standard == 1:
@@ -51,14 +52,46 @@ class GameSetup(object):
         #     print("standard was not 1")
         # else:
         #     print("hmm")
-        pass
+
+        ############# ! hardcoded to a list, requires updating! ############
+        self.planets = self.createPlanetObjects(template)   #dict
+
 
 
         
+    def createPlanetObjects(self, template):
+        """
+        generates planet objects
+
+        inputs: single universe dictionary data
+        returns: dictionary of planet objects
+
+        """
+        planets = {}
+
+        uSize = template.universe_data[0]["UniverseSizeXY"]
+        uPlanet = template.universe_data[0]["UniversePlanets"] 
+        uNumber = template.universe_data[0]["UniverseNumber"]
+
+        # create and add Planet objects with random locations, names and ID's
+        for i in range(0, uPlanet):
+            xy = (random.randrange(0, uSize[0]), random.randrange(0, uSize[1]))
+            name = template.getPlanetNameFromTemplate(i)
+            ID = str(uNumber) + str(i)
+            newPlanet = planet.Planet(xy, ID, name)
+            planets[ID] = newPlanet
+
+        return planets 
 
 
+    def randomPlanetLocations(self, uSize, uPlanet):
+        pass
 
-    
+
+    def setPlanetLocation(self):
+        pass
+
+
 
 
     def createXYFile(self):
@@ -100,6 +133,8 @@ class StandardGameTemplate(object):
     def __init__(self, setupDict = {}, universeNumber = 1, playerNumber = 1):
         # instantiates a new game dictionary while merging setup data
         
+        self.game_name = "rabid_weasels"
+        self.planet_names = self.planetNameTemplate()
         self.universe_data = []    # list of universe dictionary data
         #self.players_data = []     # list of player dictionary data
         #self.technology_data
@@ -133,7 +168,7 @@ class StandardGameTemplate(object):
         # standard universe comprises standard settings for 1 universe.
         #planets = 10
         #planet_density = (.5, 1, 1.5)
-        standard_universe = {"UniverseNumber":1, "UniverseSizeXY": (200,200), \
+        standard_universe = {"UniverseNumber":0, "UniverseSizeXY": (200,200), \
         "UniverseName":("Prime"), "UniversePlanets":10, \
         "PlanetDensity": 1, "Players":(1)}
         
@@ -169,6 +204,17 @@ class StandardGameTemplate(object):
         return tuple(x["UniverseSizeXY"] for x in self.universe_data)
 
 
+    def getPlanetNameFromTemplate(self, n):
+        planet_names = self.planetNameTemplate()
+        x = int(n % len(planet_names))
+        return planet_names[x]
+
+    def planetNameTemplate(self):
+        planet_names = ["Alan", "Fenge", "Fenris", "Shill", "239_Alf", "Wolf359",\
+         "Dark Star", "Kirk", "Flo Rida", "Pluto", "Centari", "Mau Tai", "Zeta"]
+        return planet_names
+
+      
 
 def PreGameSetup(gameDict, setupDict):
     """
@@ -246,10 +292,10 @@ def main():
 
     # PreGameSetup()? # from setup file include setup file dictionary with GameSetup call
 
-    gameValues = StandardGameTemplate()
+    gameTemplate = StandardGameTemplate()
     
 
-    #game = GameSetup(gameValues)  
+    game = GameSetup(gameTemplate)  
 
     
 
