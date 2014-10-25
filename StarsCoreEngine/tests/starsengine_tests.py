@@ -23,6 +23,7 @@
 from nose.tools import with_setup, assert_equal, assert_not_equal, \
  assert_raises, raises, assert_in, assert_true, assert_false
 #import nose
+import os
 from ..starscoreengine import *
 
 
@@ -81,11 +82,11 @@ class TestSpaceObject(object):
 class TestGameTemplate(object):
 
     def setup(self):
-        print("TestGame: Setup")
+        print("TestGameTemplate: Setup")
         self.gameTemplate = game.StandardGameTemplate()
 
     def teardown(self):
-        print("TestGame: Teardown")
+        print("TestGameTemplate: Teardown")
 
     def test_SGT_Contains_UniverseData(self):
         assert_in("UniverseSizeXY", self.gameTemplate.universe_data[0])
@@ -105,13 +106,13 @@ class TestMultiGameTemplate(object):
     Test multiuniverse games
     '''
     def setup(self):
-        print("TestMultiGame: Setup")
+        print("TestMultiGameTemplate: Setup")
         self.universe_count = 5
         self.universe_player = 3
         self.gameTemplate = game.StandardGameTemplate({}, self.universe_count, self.universe_player)
 
     def teardown(self):
-        print("TestGame: Teardown")
+        print("TestMultiGameTemplate: Teardown")
 
     
     def test_SGT_Multiverse(self):
@@ -134,14 +135,15 @@ class TestMultiGameTemplate(object):
 class TestGameSetup(object):
     
     def setup(self):
-        print("TestGame: Setup")
+        print("TestGameSetup: Setup")
         self.gameTemplate = game.StandardGameTemplate()
         self.universe_data = self.gameTemplate.universe_data
         self.game = game.GameSetup(self.gameTemplate)
-        self.numbPlanets = self.universe_data[0]["UniversePlanets"]
+        print("TestGameSetup: self.universe_data uses a HARDCODED list")
+        self.numbPlanets = self.universe_data[0]["UniversePlanets"]   # HARDCODED!!!
 
     def teardown(self):
-        print("TestGame: Teardown")
+        print("TestGameSetup: Teardown")
 
     def test_Planet_Objects(self):
         tmpPlanet = self.game.planets 
@@ -153,6 +155,26 @@ class TestGameSetup(object):
         assert_in(tmpItem.name, self.gameTemplate.planetNameTemplate())
         assert_false(tmpItem.HW)
 
+
+# class TestPickling(object):
+    
+#     def setup(self):
+#         print("TestPickling: Setup ... (pickling a test game)")
+#         print("cwd: %s" % os.getcwd())
+#         self.gameTemplate = game.StandardGameTemplate()
+#         self.game = game.GameSetup(self.gameTemplate)
+#         #print("TestPickling: self.universe_data uses a HARDCODED list")
+#         #self.numbPlanets = self.universe_data[0]["UniversePlanets"]  # HARDCODED!!!
+#         self.tmpPickleName = 'tmp_pickle.tmp'
+#         game.GamePickle.makePickle(self.tmpPickleName, self.game)
+
+
+
+#     def teardown(self):
+#         print("TestPickling: Teardown")
+
+#     def test_pickle(self):
+        
 
 
 
@@ -167,6 +189,10 @@ class TestGamePlanets(object):
 
     def test_Planet_Objects(self):
         pass
+
+
+
+
 
 #old - for reference -  use test classes
 #   t1 = None

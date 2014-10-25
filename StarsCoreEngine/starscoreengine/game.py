@@ -23,6 +23,7 @@
 """
 import sys
 import random
+import pickle
 from .space_objects import SpaceObjects
 from . import planet
 from . import fleets
@@ -172,7 +173,7 @@ class StandardGameTemplate(object):
         #planets = 10
         #planet_density = (.5, 1, 1.5)
         standard_universe = {"UniverseNumber":0, "UniverseSizeXY": (200,200), \
-        "UniverseName":("Prime"), "UniversePlanets":10, \
+        "UniverseName":("Prime"), "UniversePlanets":50, \
         "PlanetDensity": 1, "Players":(1)}
         
         return standard_universe
@@ -230,6 +231,18 @@ def PreGameSetup(gameDict, setupDict):
 
 
 
+class GamePickle(object):
+
+    def makePickle(fileName, p_object):
+        with open(fileName, "bw") as a_file:    # file closed by the with statement
+            pickle.dump(p_object, a_file)
+
+    def unPickle(fileName):
+        with open(fileName, "rb") as fn:
+            #(gameTemplate, game) = pickle.load(fn)
+            #p_object = pickle.load(fn)
+            #return p_object
+            return pickle.load(fn)
 
 
 
@@ -306,6 +319,43 @@ def main():
         print("ID:%s, %s @%s" % (p[x].ID, p[x].name, p[x].xy))
 
 
+
+
+    #pickle called here
+    fileName = gameTemplate.game_name + '.hst'
+    pickleTest = (gameTemplate, game)
+    # with open(fileName, "bw") as a_file:    # file closed by the with statement
+    #     pickle.dump(pickleTest, a_file)
+    GamePickle.makePickle(fileName, pickleTest)
+
+
+
+
+
+    print("\n\n after pickle \n ")
+    for x in iter(game.planets):
+        p = game.planets
+        print("ID:%s, %s @%s" % (p[x].ID, p[x].name, p[x].xy))
+
+    gameTemplate = None
+    game = None
+    #print("gameTemplate is None:%s  & game is None:%s " % (isinstance(gameTemplate, None), isinstance(game, None)))
+    print("gameTemplate is None:%s  & game is None:%s " % (gameTemplate, game))
+    
+
+    #unpickle here
+    # with open(fileName, "rb") as fn:
+    #     (gameTemplate, game) = pickle.load(fn)
+    gameTemplate, game = GamePickle.unPickle(fileName)
+
+
+    print("\n\n after Unpickle \n ")
+    for x in iter(game.planets):
+        p = game.planets
+        print("ID:%s, %s @%s" % (p[x].ID, p[x].name, p[x].xy))
+
+    print("%s" % gameTemplate.game_name)
+    print("%s" % gameTemplate.universe_data[0])
 
 # if __name__ == "__main__":
 #     main()
