@@ -53,7 +53,10 @@ class GameSetup(object):
         # else:
         #     print("hmm")
 
-        ############# ! hardcoded to a list, requires updating! ############
+        ############
+        ##### ! gameTemplate.universe_data hardcoded to a list, 
+        #####  requires updating!          
+        ############
         self.planets = self.createPlanetObjects(template)   #dict
 
 
@@ -297,8 +300,10 @@ def main():
 
     game = GameSetup(gameTemplate)  
 
-    
-
+    print("game.planets is a dictionary %s" % isinstance(game.planets, dict))
+    for x in iter(game.planets):
+        p = game.planets
+        print("ID:%s, %s @%s" % (p[x].ID, p[x].name, p[x].xy))
 
 
 
