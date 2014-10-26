@@ -313,49 +313,39 @@ def main():
 
     game = GameSetup(gameTemplate)  
 
-    print("game.planets is a dictionary %s" % isinstance(game.planets, dict))
-    for x in iter(game.planets):
-        p = game.planets
-        print("ID:%s, %s @%s" % (p[x].ID, p[x].name, p[x].xy))
-
-
+    # print("game.planets is a dictionary %s" % isinstance(game.planets, dict))
+    # for x in iter(game.planets):
+    #     p = game.planets
+    #     print("ID:%s, %s @%s" % (p[x].ID, p[x].name, p[x].xy))
 
 
     #pickle called here
+    '''
+
+    '''
     fileName = gameTemplate.game_name + '.hst'
     pickleTest = (gameTemplate, game)
-    # with open(fileName, "bw") as a_file:    # file closed by the with statement
-    #     pickle.dump(pickleTest, a_file)
     GamePickle.makePickle(fileName, pickleTest)
 
 
-
-
-
-    print("\n\n after pickle \n ")
-    for x in iter(game.planets):
-        p = game.planets
-        print("ID:%s, %s @%s" % (p[x].ID, p[x].name, p[x].xy))
-
-    gameTemplate = None
-    game = None
-    #print("gameTemplate is None:%s  & game is None:%s " % (isinstance(gameTemplate, None), isinstance(game, None)))
-    print("gameTemplate is None:%s  & game is None:%s " % (gameTemplate, game))
-    
-
     #unpickle here
-    # with open(fileName, "rb") as fn:
-    #     (gameTemplate, game) = pickle.load(fn)
+    '''
+        unpickle requires a fileName,
+            test if the name uses the game name or 
+        unPickle returns a number of objects:
+            gameTemplate = StandardGameTemplate
+            game = data after GameSetup
+    '''
     gameTemplate, game = GamePickle.unPickle(fileName)
 
 
-    print("\n\n after Unpickle \n ")
-    for x in iter(game.planets):
-        p = game.planets
-        print("ID:%s, %s @%s" % (p[x].ID, p[x].name, p[x].xy))
+    # print("\n\n after Unpickle \n ")
+    # for x in iter(game.planets):
+    #     p = game.planets
+    #     print("ID:%s, %s @%s" % (p[x].ID, p[x].name, p[x].xy))
 
-    print("%s" % gameTemplate.game_name)
-    print("%s" % gameTemplate.universe_data[0])
+    # print("%s" % gameTemplate.game_name)
+    # print("%s" % gameTemplate.universe_data[0])
 
 # if __name__ == "__main__":
 #     main()
