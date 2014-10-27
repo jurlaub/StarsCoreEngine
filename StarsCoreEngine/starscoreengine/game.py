@@ -325,27 +325,38 @@ def main():
     '''
     fileName = gameTemplate.game_name + '.hst'
     pickleTest = (gameTemplate, game)
-    GamePickle.makePickle(fileName, pickleTest)
+    #GamePickle.makePickle(fileName, pickleTest)
 
 
     #unpickle here
     '''
-        unpickle requires a fileName,
-            test if the name uses the game name or 
-        unPickle returns a number of objects:
+        unpickle 
+
+        requires a fileName,
+            - test if the name uses the game name or fileName (i.e. <name>.hst)
+            - add .hst and other values to unpack relevant values
+
+        returns a number of objects:
             gameTemplate = StandardGameTemplate
             game = data after GameSetup
     '''
-    gameTemplate, game = GamePickle.unPickle(fileName)
+    #gameTemplate, game = GamePickle.unPickle(fileName)
+
+    #####
+    #  For command line:
+    #        print out of planet information
+    #
+    #####
+    print("%s" % gameTemplate.game_name)
+    for x in iter(game.planets):
+        p = game.planets
+        temp, grav, rad = p[x].origHab
+        ironC, borC, germC = p[x].origConc 
+        print("ID:%s, %s:  %s  - Owner:%s" % (p[x].ID, p[x].name, p[x].xy, p[x].owner))
+        print("\tEnvironment: \t\t(%sc, %sg, %smr) " % (temp, grav, rad))
+        print("\tMineral Concentration: \t(i:%skt, b:%skt, g:%skt)" % (ironC, borC, germC))
 
 
-    # print("\n\n after Unpickle \n ")
-    # for x in iter(game.planets):
-    #     p = game.planets
-    #     print("ID:%s, %s @%s" % (p[x].ID, p[x].name, p[x].xy))
-
-    # print("%s" % gameTemplate.game_name)
-    # print("%s" % gameTemplate.universe_data[0])
 
 # if __name__ == "__main__":
 #     main()
