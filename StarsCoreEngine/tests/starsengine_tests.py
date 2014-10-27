@@ -156,24 +156,38 @@ class TestGameSetup(object):
         assert_false(tmpItem.HW)
 
 
-# class TestPickling(object):
+class TestPickling(object):
     
-#     def setup(self):
-#         print("TestPickling: Setup ... (pickling a test game)")
-#         print("cwd: %s" % os.getcwd())
-#         self.gameTemplate = game.StandardGameTemplate()
-#         self.game = game.GameSetup(self.gameTemplate)
-#         #print("TestPickling: self.universe_data uses a HARDCODED list")
-#         #self.numbPlanets = self.universe_data[0]["UniversePlanets"]  # HARDCODED!!!
-#         self.tmpPickleName = 'tmp_pickle.tmp'
-#         game.GamePickle.makePickle(self.tmpPickleName, self.game)
+    def setup(self):
+        print("TestPickling: Setup ... (pickling a test game)")
+        self.cwd = os.getcwd()
+        print("cwd: %s" % self.cwd)
+        self.tmpGameTemplate = game.StandardGameTemplate()
+        self.tmpGame = game.GameSetup(self.tmpGameTemplate)
 
 
 
-#     def teardown(self):
-#         print("TestPickling: Teardown")
 
-#     def test_pickle(self):
+    def teardown(self):
+        print("TestPickling: Teardown")
+        try:
+            os.remove(r"%s/%s"% (self.cwd, self.tmpPickleName))
+        except IOError as e:
+            print("Unable to remove file: %s%s" % (self.cwd, self.tmpPickleName))
+
+    def test_Pickle(self):
+        self.tmpGame.planets['01'].name = "Starbuck_Straw"
+        self.tmpPickleName = 'tmp_pickle.tmp'
+        pickleTest = (self.tmpGameTemplate, self.tmpGame)
+        game.GamePickle.makePickle(self.tmpPickleName, pickleTest)
+
+        tmpTemplate, tmpGame = game.GamePickle.unPickle(self.tmpPickleName)
+        print("test_Pickle: has HARDCODED SpaceObjects(planets) keys: '01', '02'")
+        assert_true(tmpGame.planets['01'].name == "Starbuck_Straw")
+        assert_true(tmpGame.planets['02'].name == self.tmpGame.planets['02'].name)
+        assert_true(len(tmpGame.planets) == len(self.tmpGame.planets))
+
+        
         
 
 
