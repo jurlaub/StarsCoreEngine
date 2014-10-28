@@ -24,6 +24,7 @@
 import sys
 import random
 import pickle
+import argparse
 from .space_objects import SpaceObjects
 from . import planet
 from . import fleets
@@ -173,7 +174,7 @@ class StandardGameTemplate(object):
         #planets = 10
         #planet_density = (.5, 1, 1.5)
         standard_universe = {"UniverseNumber":0, "UniverseSizeXY": (200,200), \
-        "UniverseName":("Prime"), "UniversePlanets":50, \
+        "UniverseName":("Prime"), "UniversePlanets":6, \
         "PlanetDensity": 1, "Players":(1)}
         
         return standard_universe
@@ -251,6 +252,7 @@ class GamePickle(object):
 
 
 
+
 def main():
 
     """
@@ -273,6 +275,22 @@ def main():
 
 
     """
+
+    parser = argparse.ArgumentParser()
+
+    # help
+    # load game file    gameFile
+    # new game          gameName
+    # generate a game using a setup file  
+    parser.add_argument('-l', action='store', dest='gameFile', help='load .hst file for game')
+    parser.add_argument('-n', action='store', dest='newGame', \
+        help='enter name for new game. Name must be unique within the same folder')
+    parser.add_argument('-g', action='store', dest='generate', \
+        help='Use the setup file to modify the Standard Game Template.')
+
+    results = parser.parse_args()
+
+    print("load from command line: %s" % results.gameFile)
     
     #game dictionary?
 
