@@ -282,8 +282,11 @@ def main():
     # load game file    gameFile
     # new game          gameName
     # generate a game using a setup file  
-    parser.add_argument('-l', action='store', dest='gameFile', help='file to load')
-
+    parser.add_argument('-l', action='store', dest='gameFile', help='load .hst file for game')
+    parser.add_argument('-n', action='store', dest='newGame', \
+        help='enter name for new game. Name must be unique within the same folder')
+    parser.add_argument('-g', action='store', dest='generate', \
+        help='Use the setup file to modify the Standard Game Template.')
 
     results = parser.parse_args()
 
