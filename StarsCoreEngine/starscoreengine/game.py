@@ -135,10 +135,15 @@ class StandardGameTemplate(object):
     '''
 
     # instantiate the standard object
-    def __init__(self, setupDict = {}, universeNumber = 1, playerNumber = 1):
+    def __init__(self, game_name = None, setupDict = {}, universeNumber = 1, playerNumber = 1):
         # instantiates a new game dictionary while merging setup data
         
-        self.game_name = "rabid_weasels"
+        self.game_name = game_name # "rabid_weasels"
+        if not game_name:
+            self.game_name = "rabid_weasels"
+        else:
+             self.game_name = game_name # "rabid_weasels"
+
         self.planet_names = self.planetNameTemplate()
         self.universe_data = []    # list of universe dictionary data
         #self.players_data = []     # list of player dictionary data
@@ -247,7 +252,8 @@ class GamePickle(object):
 
 
 
-
+def getSetupFileDict(setupFile):
+    return {"setupFileName": setupFile}
 
 
 
@@ -282,15 +288,21 @@ def main():
     # load game file    gameFile
     # new game          gameName
     # generate a game using a setup file  
-    parser.add_argument('-l', action='store', dest='gameFile', help='load .hst file for game')
-    parser.add_argument('-n', action='store', dest='newGame', \
+    parser.add_argument('-l', action='store', default=None, dest='gameFile', help='load .hst file for game')
+    parser.add_argument('-n', action='store', default=None, dest='newGame', \
         help='enter name for new game. Name must be unique within the same folder')
-    parser.add_argument('-g', action='store', dest='generate', \
-        help='Use the setup file to modify the Standard Game Template.')
+    parser.add_argument('-g', action='store', default=None, dest='generate', \
+        help='''Use a <game_name.setup> containing key:value pairs to modify the
+        Standard Game Template. Each pair should be on a new line.''')
 
     results = parser.parse_args()
 
     print("load from command line: %s" % results.gameFile)
+
+    setupFileDict = getSetupFileDict(results.generate)
+    print("%s"%setupFileDict)
+    print("create new game %s" %results.newGame)
+
     
     #game dictionary?
 
@@ -326,7 +338,7 @@ def main():
 
     # PreGameSetup()? # from setup file include setup file dictionary with GameSetup call
 
-    gameTemplate = StandardGameTemplate()
+    gameTemplate = StandardGameTemplate(results.newGame)
     
 
     game = GameSetup(gameTemplate)  
