@@ -115,9 +115,9 @@ class StandardGameTemplate(object):
     """
     StandardGameTemplate is a class for generating a standard universe. 
     The class provides tools to modify the standard data. 
-    Modification includes merging a 'setup' dictionary with the standard universe
-    data.
 
+    To modify standard template, pass in dictionary containing key:value pairs 
+    which will be used to update the standard dictionary.
 
     """
     '''
@@ -150,7 +150,6 @@ class StandardGameTemplate(object):
         #self.technology_data
         #self.victory_conditions
 
-        #print(StandardGameTemplate.standard_universe)
         if universeNumber < 1:
             sys.exit("universeNumber must be greater then 1")
         else:
@@ -253,7 +252,50 @@ class GamePickle(object):
 
 
 def getSetupFileDict(setupFile):
+    '''
+    Access setupfile contained within folder, 
+    translate text to key value pairs
+    store into a dictionary and return
+
+    <game setup>
+    <victory conditions>
+    <player setup>    
+    <tech tree and modifications>
+
+
+    '''
     return {"setupFileName": setupFile}
+
+
+def cmdLineParser():
+    '''
+    Uses argparse to capture commands from the command line
+
+    '''
+    parser = argparse.ArgumentParser()
+
+    # help
+    # load game file    gameFile
+    # new game          gameName
+    # generate a game using a setup file  
+    parser.add_argument('-l', action='store', default=None, dest='gameFile', help='load .hst file for game')
+    parser.add_argument('-n', action='store', default=None, dest='newGame', \
+        help='enter name for new game. Name must be unique within the same folder')
+    parser.add_argument('-g', action='store', default=None, dest='generate', \
+        help='''Use a <game_name.setup> containing key:value pairs to modify the
+        Standard Game Template. Each pair should be on a new line.''')
+    parser.add_argument('-tech', action='store', default=None, dest='techTree', \
+        help='''tech tree variations can be loaded by using a seperate 
+        <tech_tree.tech> file. 
+        New tech elements are added by including a complete description in a
+        multi-level dictionary. All necessary values must be included
+
+        Existing tech can be modified by including the tech identifier (or name?)
+        and the dictionary key:value to replace
+
+        ''')
+
+    return parser.parse_args()
 
 
 
@@ -282,71 +324,66 @@ def main():
 
     """
 
-    parser = argparse.ArgumentParser()
 
-    # help
-    # load game file    gameFile
-    # new game          gameName
-    # generate a game using a setup file  
-    parser.add_argument('-l', action='store', default=None, dest='gameFile', help='load .hst file for game')
-    parser.add_argument('-n', action='store', default=None, dest='newGame', \
-        help='enter name for new game. Name must be unique within the same folder')
-    parser.add_argument('-g', action='store', default=None, dest='generate', \
-        help='''Use a <game_name.setup> containing key:value pairs to modify the
-        Standard Game Template. Each pair should be on a new line.''')
+    #*****************************
+    # Command line args using argparser
+    #
+    #
+    #****************************
+    results = cmdLineParser()
 
-    results = parser.parse_args()
-
-    print("load from command line: %s" % results.gameFile)
-
+    #*****************************
+    #   Universe Setup File Parsing 
+    #       pass to the Standard Game Template
+    #*****************************
     setupFileDict = getSetupFileDict(results.generate)
-    print("%s"%setupFileDict)
-    print("create new game %s" %results.newGame)
 
-    
-    #game dictionary?
-
-    #*****************************
-    # Command line args here
-    #*****************************
-    # ### if a setup file is specified then pull setup file data 
-    # ### collect in dictionary
-
-    #*****************************
-    #   Goes in a setup file parser class
-    #*****************************
-    # Universe Setup File Parsing Here
-    # pull in universe_data from file : Key = "universe_data"
-
+    #***************************
     # Player file's parsing here
     # pull in player data from file : Key = "players_data"
+    #***************************
+    # Player data here
 
+
+    #*****************************
+    # Victory conditions file/data here
+    # pull in other data from file : Key = "victory_conditions_data"
+    #*****************************
+    # victory conditions here
+
+    #**************************
     # Tech data parsing here
+    # ****** in same setup file? ********d
     # pull in Game tech tree data : Key = "tech_data"
     #### contains the standard tech (includes race specific tech) 
     #### will contain additional general tech 
     #### ultimately contains specific player tech (not associated with race wizard) : Key = "player_n_tech" 
+    #**************************
+    # tech file data here
+    print("tech file name %s" % results.techTree)
 
-    # Victory conditions file/data here
-    # pull in other data from file : Key = "victory_conditions_data"
+
     #*****************************
-
+    #   The Standard Game Template can be modifed to create game variations
     #*****************************
-    #  Go to standard game setup
-    #*****************************
-  
-
-    # PreGameSetup()? # from setup file include setup file dictionary with GameSetup call
-
-    gameTemplate = StandardGameTemplate(results.newGame)
+    gameTemplate = StandardGameTemplate(results.newGame, setupFileDict)
     
 
+    #*****************************
+    #   The Standard Game Template (or modified version) creates the game
+    #*****************************
     game = GameSetup(gameTemplate)  
 
     # print("game.planets is a dictionary %s" % isinstance(game.planets, dict))
     # for x in iter(game.planets):
     #     p = game.planets
     #     print("ID:%s, %s @%s" % (p[x].ID, p[x].name, p[x].xy))
+
+    print("load from command line: %s" % results.gameFile)
+    print("%s"%setupFileDict)
+    print("create new game %s" %results.newGame)
+
+
 
 
     #pickle called here
