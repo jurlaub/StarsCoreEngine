@@ -242,7 +242,19 @@ class GamePickle(object):
         with open(fileName, "bw") as a_file:    # file closed by the with statement
             pickle.dump(p_object, a_file)
 
+
     def unPickle(fileName):
+        '''
+        unpickle 
+
+        requires a fileName,
+            - test if the name uses the game name or fileName (i.e. <name>.hst)
+            - add .hst and other values to unpack relevant values
+
+        returns a number of objects:
+            gameTemplate = StandardGameTemplate
+            game = data after GameSetup
+        '''
         with open(fileName, "rb") as fn:
             #(gameTemplate, game) = pickle.load(fn)
             #p_object = pickle.load(fn)
@@ -261,13 +273,17 @@ def getSetupFileDict(setupFile):
     <victory conditions>
     <player setup>    
     <tech tree and modifications>
-
-
     '''
+    #----TODO ---- 
+    # ADD obtain key:value pairs from setupfile
+
     return {"setupFileName": setupFile}
 
 
-def cmdLineParser():
+
+
+
+def cmdLineParseArgs():
     '''
     Uses argparse to capture commands from the command line
 
@@ -295,43 +311,13 @@ def cmdLineParser():
 
         ''')
 
+    # add player arg
+    # add victoryconditions (could also be in setupfile?)
+
     return parser.parse_args()
 
 
-
-
-
-def main():
-
-    """
-    #user runs hosted game from command line (or gui host - not in this project)
-    game looks in current folder:
-        .hst file
-        .xn = file  # 1 off file sent to user
-        .mn = file  # player's turn file submited to the host 
-        .h = history file, contains previous turn info
-        .xy = universe definitions
-            - universe size
-            - victory conditions
-            - visible planets (for now all planets)
-            - players (as player 1 - n; player names are typically hidden)
-            >> this is the file that helps start the game. It provides the 
-                starting stats for the player
-
-        create an .xy file that will house .xy data
-
-
-
-    """
-
-
-    #*****************************
-    # Command line args using argparser
-    #
-    #
-    #****************************
-    results = cmdLineParser()
-
+def SetupFileHelper(results):
     #*****************************
     #   Universe Setup File Parsing 
     #       pass to the Standard Game Template
@@ -374,43 +360,80 @@ def main():
     #*****************************
     game = GameSetup(gameTemplate)  
 
-    # print("game.planets is a dictionary %s" % isinstance(game.planets, dict))
-    # for x in iter(game.planets):
-    #     p = game.planets
-    #     print("ID:%s, %s @%s" % (p[x].ID, p[x].name, p[x].xy))
+
 
     print("load from command line: %s" % results.gameFile)
     print("%s"%setupFileDict)
     print("create new game %s" %results.newGame)
 
+    return gameTemplate, game
 
 
 
-    #pickle called here
-    '''
 
-    '''
-    fileName = gameTemplate.game_name + '.hst'
-    pickleTest = (gameTemplate, game)
-    #GamePickle.makePickle(fileName, pickleTest)
+def main():
+
+    """
+    #user runs hosted game from command line (or gui host - not in this project)
+    game looks in current folder:
+        .hst file
+        .xn = file  # 1 off file sent to user
+        .mn = file  # player's turn file submited to the host 
+        .h = history file, contains previous turn info
+        .xy = universe definitions
+            - universe size
+            - victory conditions
+            - visible planets (for now all planets)
+            - players (as player 1 - n; player names are typically hidden)
+            >> this is the file that helps start the game. It provides the 
+                starting stats for the player
+
+        create an .xy file that will house .xy data
 
 
-    #unpickle here
-    '''
-        unpickle 
 
-        requires a fileName,
-            - test if the name uses the game name or fileName (i.e. <name>.hst)
-            - add .hst and other values to unpack relevant values
+    """
 
-        returns a number of objects:
-            gameTemplate = StandardGameTemplate
-            game = data after GameSetup
-    '''
-    #gameTemplate, game = GamePickle.unPickle(fileName)
+
+    #*****************************
+    # Command line args using argparser
+    #
+    #
+    #****************************
+    results = cmdLineParseArgs()
+
+    if results.gameFile:
+        """
+        Loading a .hst file should result in (gameTemplate, game)
+
+        more may be added (techTree, players, victoryConditions)
+
+        """
+        print("loading gamefile named %s" % results.gameFile)
+        #unpickle here
+
+        # ------- TODO ---------
+        # test for .hst file matching results.gameFile in cwd 
+        gameTemplate, game = GamePickle.unPickle(results.gameFile)
+
+
+    else:
+
+        gameTemplate, game = SetupFileHelper(results)
+        
+        #pickle called here
+        '''
+
+        '''
+        fileName = gameTemplate.game_name + '.hst'
+        pickleTest = (gameTemplate, game)
+        GamePickle.makePickle(fileName, pickleTest)
+
+
+
 
     #####
-    #  For command line:
+    #  For command line review:
     #        print out of planet information
     #
     #####
