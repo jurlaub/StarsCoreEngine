@@ -209,8 +209,8 @@ class StandardGameTemplate(object):
         return dict1
     
 
-    def getUniverseSize(self):
-        return tuple(x["UniverseSizeXY"] for x in self.universe_data)
+    # def getUniverseSize(self):
+    #     return tuple(x["UniverseSizeXY"] for x in self.universe_data)
 
 
     def getPlanetNameFromTemplate(self, n):
