@@ -16,7 +16,7 @@ The overriding intent and goal of this project is to ensure that the essence of 
 * to describe an overall Stars! Framework from which a complete game will be assembled.
 
 This portion of the project will be considered “code complete” when the following objectives are reached:
-* new equivalent game files generated
+* functionally equivalent game files generated 
   * game .xy
   * players .m 
   * players .x orders format defined and are used to generate turns
