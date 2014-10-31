@@ -317,6 +317,8 @@ def cmdLineParseArgs():
     results are saved to an .ini file that can be used to generate future games.
         ''')
 
+    # test cheange
+
     # add setup command ==> command line dialog using the standard template and turns into a setup file
 
     # add player arg
