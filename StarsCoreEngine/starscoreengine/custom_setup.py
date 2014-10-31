@@ -34,6 +34,10 @@
 '''
 
 
+
+
+
+
 def customSetupDialog(template):
     """
     Warning... not robust!
@@ -51,12 +55,12 @@ def customSetupDialog(template):
     """
     customTemplateDict = {}
 
-    print("\n-" * 20 + "Custom Stars Universe" + "-" * 20 )
+    print("\n%s%s%s" % ("-" * 20, "Custom Stars Universe", "-" * 20 ))
     print("\nThis is a basic command line interface to setup/generate a custom game.")
     print("Play nice and do not break it. Modify the resulting saved file if necessary.\n\n")
 
     ini_file_name = input("what do you want to name the .ini file? ")
-    number_of_universes = int(input("How many universes do you want to play in? (1): "))
+    number_of_universes = input("How many universes do you want to play in? (1): ")
     number_of_players = int(input("How many players are in the universe total?: "))
 
 
@@ -66,7 +70,7 @@ def customSetupDialog(template):
 
 
 
-    for i in range(0, number_of_universes):
+    for i in range(0, int(number_of_universes)):
         universeDict = {}
         template["UniverseNumber"] = i
         print("\nIn Universe#%s" % i)
@@ -100,10 +104,13 @@ def customSetupDialog(template):
 def printCustomSetup(customDict):
 
     for i in iter(customDict):
+        print(i)
 
-        if isinstance(i, dict):
-            for x in iter(i):
-                print("'%s':%s" %(x, i[x]))
+        if isinstance(customDict[i], dict):
+            print("\n")
+            for x in iter(customDict[i]):
+                print("'%s':%s" %(x, customDict[i][x]))
+            print("\n")
         else:
             print("%s: %s" % (i, customDict[i]))
 
