@@ -28,6 +28,7 @@ import argparse
 from .space_objects import SpaceObjects
 from . import planet
 from . import fleets
+from .custom_setup import customSetupDialog
 
 
 
@@ -159,7 +160,7 @@ class StandardGameTemplate(object):
                 x['UniverseNumber'] = i
                 # if i%2 == 0:
                 #     x["UniverseSizeXY"] = (1100,13400)
-                self.universe_data.append(x)
+                self.universe_data.append(x)          # NOTE: appending to a list
                 
 
                 #self.universe_data = self.standardUniverse()  #StandardGameTemplate.standard_universe
@@ -209,8 +210,8 @@ class StandardGameTemplate(object):
         return dict1
     
 
-    def getUniverseSize(self):
-        return tuple(x["UniverseSizeXY"] for x in self.universe_data)
+    # def getUniverseSize(self):
+    #     return tuple(x["UniverseSizeXY"] for x in self.universe_data)
 
 
     def getPlanetNameFromTemplate(self, n):
@@ -310,6 +311,15 @@ def cmdLineParseArgs():
         and the dictionary key:value to replace
 
         ''')
+    parser.add_argument('-s', action='store', default=None, dest='customSetup', help='''
+    The custom setup dialog creates an interactive command line session allowing
+    the game host to customize StandardGameTemplate values. The configuration 
+    results are saved to an .ini file that can be used to generate future games.
+        ''')
+
+    # test cheange
+
+    # add setup command ==> command line dialog using the standard template and turns into a setup file
 
     # add player arg
     # add victoryconditions (could also be in setupfile?)
@@ -377,6 +387,7 @@ def main():
     #user runs hosted game from command line (or gui host - not in this project)
     game looks in current folder:
         .hst file
+        .rn = player n race
         .xn = file  # 1 off file sent to user
         .mn = file  # player's turn file submited to the host 
         .h = history file, contains previous turn info
@@ -416,6 +427,11 @@ def main():
         # test for .hst file matching results.gameFile in cwd 
         gameTemplate, game = GamePickle.unPickle(results.gameFile)
 
+    elif results.customSetup:
+        # just want the values from the standardUniverse. This however feels odd.
+        standardTemplate = StandardGameTemplate.standardUniverse(None) 
+        customSetupDict = customSetupDialog(standardTemplate)
+        sys.exit()  # 
 
     else:
 
