@@ -79,10 +79,19 @@ def saveCustomSetupJSON(customDict, fileName = 'testSetupFile.json'):
 
 def loadCustomSetupJSON(fileName):
     '''
-    json - may need to add a special object hook to translate tuples stored in
+    Warning... not robust!
+
+    given a fileName - load JSON values and convert to game dictionary to be 
+    used to generate a game.
+
+    NOTE: json - may need to add a special object hook to translate tuples stored in
     an alternative form 
     '''
-    pass
+    with open(fileName, 'r') as fp:
+        setupObject = json.load(fp)
+
+    #print("%s"%setupObject)
+    return setupObject
 
 
 
@@ -146,6 +155,8 @@ def customSetupDialog(template, fileName):
             # User cannot change the UniverseNumber - Hardcoded
             if x == 'UniverseNumber':
                 continue
+            
+            # (x,y) tuple may require special handling
             elif x == 'UniverseSizeXY':
                 print("%s requires a tuple: make sure to add '()' around the xy pair" % x)
                 print("'%s':%s" %(x, template[x]))

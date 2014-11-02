@@ -30,6 +30,7 @@ from . import planet
 from . import fleets
 from .custom_setup import customSetupDialog
 from .custom_setup import customSetupController
+from .custom_setup import loadCustomSetupJSON
 
 
 
@@ -177,7 +178,7 @@ class StandardGameTemplate(object):
 
     def standardUniverse(self):
         # standard universe comprises standard settings for 1 universe.
-        
+
         standard_universe = {"UniverseNumber":0, "UniverseSizeXY": (200,200), \
         "UniverseName":("Prime"), "UniversePlanets":6, "Players":(1)}
         
@@ -298,8 +299,12 @@ def cmdLineParseArgs():
     parser.add_argument('-n', action='store', default=None, dest='newGame', \
         help='enter name for new game. Name must be unique within the same folder')
     parser.add_argument('-g', action='store', default=None, dest='generate', \
-        help='''Use a <game_name.setup> containing key:value pairs to modify the
-        Standard Game Template. Each pair should be on a new line.''')
+        help='''Use a file: <game_name.json> containing key:value pairs to modify the
+        Standard Game Template. Each pair should be on a new line. 
+
+        Use custom setup dialog to generate game setup file. The -s argument.
+
+        ''')
     parser.add_argument('-tech', action='store', default=None, dest='techTree', \
         help='''tech tree variations can be loaded by using a seperate 
         <tech_tree.tech> file. 
@@ -315,6 +320,8 @@ def cmdLineParseArgs():
     the game host to customize StandardGameTemplate values. The configuration 
     results are saved to an .json file that can be used to generate future games.
         ''')
+
+    #add game setup flow that does not save the custom setup dialog
 
     # test cheange
 
@@ -434,6 +441,11 @@ def main():
         customSetupDict = customSetupController(standardTemplate, results.customSetup)
         sys.exit()  # 
 
+    elif results.generate:
+
+        customSetupDict = loadCustomSetupJSON(results.generate)
+
+        sys.exit()
     else:
 
         gameTemplate, game = SetupFileHelper(results)
