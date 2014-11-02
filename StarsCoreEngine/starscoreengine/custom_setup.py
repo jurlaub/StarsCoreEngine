@@ -43,6 +43,8 @@ def customSetupController(template, fileName = None):
     Controller to be used to determine if the custom setup should be saved to 
     file or immediately used (or both). 
 
+    20141101 - Saves custom dialog to file and returns custom dictionary to game.py
+
     '''
     
     customTemplateDict = customSetupDialog(template, fileName)
@@ -101,11 +103,14 @@ def customSetupDialog(template, fileName):
     """
     customTemplateDict = {}
 
-    print("\n%s%s%s" % ("-" * 20, "Custom Stars Universe", "-" * 20 ))
+
+    # Custom Dialog open description
+    print("\n\n\n\n%s%s%s" % ("-" * 20, "Custom Stars Universe", "-" * 20 ))
     print("\nThis is a basic command line interface to setup/generate a custom game.")
     print("Play nice and do not break it. Modify the resulting saved file if necessary.\n\n")
 
  
+    # Custom Dialog starting values
     json_file_name = input('''This Custom Setup will be saved as: 
         <%s.json> 
         (Press enter to keep or type a new name): ''' % fileName)   
@@ -120,14 +125,16 @@ def customSetupDialog(template, fileName):
     else:
         json_file_name = json_file_name + '.json'
 
-    customTemplateDict['json_file_name'] = json_file_name
-    
+
+    # Adding starting values to dictionary
+    customTemplateDict['json_file_name'] = json_file_name    
     customTemplateDict['number_of_universes'] = number_of_universes
     customTemplateDict['number_of_players'] = number_of_players
 
 
 
-
+    #review all dictionary items contained within the 
+    #StandardGameTemplate.standardUniverse() and add values to dictionary
     for i in range(0, int(number_of_universes)):
         universeDict = {}
         template["UniverseNumber"] = i
@@ -135,6 +142,8 @@ def customSetupDialog(template, fileName):
         
 
         for x in iter(template):
+
+            # User cannot change the UniverseNumber - Hardcoded
             if x == 'UniverseNumber':
                 continue
             elif x == 'UniverseSizeXY':
@@ -161,13 +170,15 @@ def customSetupDialog(template, fileName):
             universeDict[x] = tmpValue
 
         
+        # Hardcoded UniverseNumber
         tmpUniverseName = 'UniverseNumber' + str(i)
+
+        # Added universe values to the dictionary
         customTemplateDict[tmpUniverseName] = universeDict
 
 
     printCustomSetup(customTemplateDict)    
 
-    #print("\n\ncustom file name: %s.ini : %s universe(s)" % (ini_file_name, number_of_universes))
     return customTemplateDict
 
 
@@ -178,14 +189,17 @@ def printCustomSetup(customDict):
     prints out the custom setup.
     '''
 
-    for i in iter(customDict):
-        print(i)
+    print("\n\n\n%s%s%s\n" % ("-" * 20, "Custom Universe Values", "-" * 20))
 
+    for i in iter(customDict):
+
+        # prints out each dictionary item 1 layer deep
         if isinstance(customDict[i], dict):
-            print("\n")
+            print(i)
             for x in iter(customDict[i]):
                 print("'%s':%s" %(x, customDict[i][x]))
             print("\n")
+        # prints out standard value if its not a dictionary
         else:
             print("%s: %s" % (i, customDict[i]))
 
