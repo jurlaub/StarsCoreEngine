@@ -32,22 +32,68 @@
         Code is not robust! 
 
 '''
+import json
+
+
+
+def customSetupController(template, fileName = None):
+    '''
+    Warning... not robust!
+
+    Controller to be used to determine if the custom setup should be saved to 
+    file or immediately used (or both). 
+
+    '''
+    
+    customTemplateDict = customSetupDialog(template, fileName)
+
+    if fileName:
+        dialogName = customTemplateDict['json_file_name']
+        saveCustomSetupJSON(customTemplateDict, dialogName)
+    
+    return customTemplateDict
 
 
 
 
+def saveCustomSetupJSON(customDict, fileName = 'testSetupFile.json'):
+    '''
+    Warning... not robust!
+
+    saves the custom setup dictionary as json to a file for later use.
+
+    ---- json != tuples -----
+    json does not handle tuples. If tuples are needed to be saved - consider a 
+    adding a special tool/utility to parse the dict before saving to json. The 
+    tool should replace every tuple with a structure that can be loaded and 
+    returned to a tuple state. See the stackoverflow:
+    http://stackoverflow.com/questions/15721363/preserve-python-tuples-with-json
+
+    '''
+
+    with open(fileName, 'w') as fp:
+        json.dump(customDict, fp, indent=4)
 
 
-def customSetupDialog(template):
+def loadCustomSetupJSON(fileName):
+    '''
+    json - may need to add a special object hook to translate tuples stored in
+    an alternative form 
+    '''
+    pass
+
+
+
+def customSetupDialog(template, fileName):
     """
     Warning... not robust!
 
     The custom setup dialog creates an interactive command line session allowing
     the game host to customize StandardGameTemplate values. The configuration 
-    results are saved to an .ini file that can be used to generate future games.
+    results are saved to an .json file that can be used to generate future games.
 
     input: template = StandardGameTemplate.standardUniverse dictionary
-    output: saves answers to an .ini file and returns dictionary to game.py
+    output: saves answers to an .json file and returns dictionary to game.py
 
     The dialog will indicate the key and the standard value. A blank setting 
     results in the standard value
@@ -59,14 +105,26 @@ def customSetupDialog(template):
     print("\nThis is a basic command line interface to setup/generate a custom game.")
     print("Play nice and do not break it. Modify the resulting saved file if necessary.\n\n")
 
-    ini_file_name = input("what do you want to name the .ini file? ")
+ 
+    json_file_name = input('''This Custom Setup will be saved as: 
+        <%s.json> 
+        (Press enter to keep or type a new name): ''' % fileName)   
     number_of_universes = input("How many universes do you want to play in? (1): ")
     number_of_players = int(input("How many players are in the universe total?: "))
 
 
+    if not json_file_name:
+        if (fileName[-5:] != '.json'):
+            fileNmae = fileName + '.json'
+        json_file_name = fileName
+    else:
+        json_file_name = json_file_name + '.json'
+
+    customTemplateDict['json_file_name'] = json_file_name
+    
     customTemplateDict['number_of_universes'] = number_of_universes
     customTemplateDict['number_of_players'] = number_of_players
-    customTemplateDict['ini_file_name'] = ini_file_name + '.ini'
+
 
 
 
@@ -81,9 +139,23 @@ def customSetupDialog(template):
                 continue
             elif x == 'UniverseSizeXY':
                 print("%s requires a tuple: make sure to add '()' around the xy pair" % x)
+                print("'%s':%s" %(x, template[x]))
+                posx, posy = template[x]
+                tmpValuea = input("What value do you want for x: <%s>? " % (posx))
+                tmpValueb = input("What value do you want for y: <%s>? " % (posy))
+                
+                if not tmpValuea:
+                    tmpValuea = posx
+                if not tmpValueb:
+                    tmpValueb = posy
 
-            print("'%s':%s" %(x, template[x]))
-            tmpValue = input("What value do you want for %s: <%s>? " % (x, template[x]))
+
+                tmpValue = (int(tmpValuea), int(tmpValueb))             
+
+            else:
+                print("'%s':%s" %(x, template[x]))
+                tmpValue = input("What value do you want for %s: <%s>? " % (x, template[x]))
+
             if not tmpValue:
                 tmpValue = template[x]
             universeDict[x] = tmpValue
@@ -96,12 +168,15 @@ def customSetupDialog(template):
     printCustomSetup(customTemplateDict)    
 
     #print("\n\ncustom file name: %s.ini : %s universe(s)" % (ini_file_name, number_of_universes))
-
+    return customTemplateDict
 
 
 
 
 def printCustomSetup(customDict):
+    '''
+    prints out the custom setup.
+    '''
 
     for i in iter(customDict):
         print(i)

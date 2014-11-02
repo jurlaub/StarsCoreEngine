@@ -29,6 +29,7 @@ from .space_objects import SpaceObjects
 from . import planet
 from . import fleets
 from .custom_setup import customSetupDialog
+from .custom_setup import customSetupController
 
 
 
@@ -176,11 +177,9 @@ class StandardGameTemplate(object):
 
     def standardUniverse(self):
         # standard universe comprises standard settings for 1 universe.
-        #planets = 10
-        #planet_density = (.5, 1, 1.5)
+        
         standard_universe = {"UniverseNumber":0, "UniverseSizeXY": (200,200), \
-        "UniverseName":("Prime"), "UniversePlanets":6, \
-        "PlanetDensity": 1, "Players":(1)}
+        "UniverseName":("Prime"), "UniversePlanets":6, "Players":(1)}
         
         return standard_universe
 
@@ -314,7 +313,7 @@ def cmdLineParseArgs():
     parser.add_argument('-s', action='store', default=None, dest='customSetup', help='''
     The custom setup dialog creates an interactive command line session allowing
     the game host to customize StandardGameTemplate values. The configuration 
-    results are saved to an .ini file that can be used to generate future games.
+    results are saved to an .json file that can be used to generate future games.
         ''')
 
     # test cheange
@@ -429,8 +428,10 @@ def main():
 
     elif results.customSetup:
         # just want the values from the standardUniverse. This however feels odd.
+
         standardTemplate = StandardGameTemplate.standardUniverse(None) 
-        customSetupDict = customSetupDialog(standardTemplate)
+        #customSetupDict = customSetupDialog(standardTemplate)
+        customSetupDict = customSetupController(standardTemplate, results.customSetup)
         sys.exit()  # 
 
     else:
