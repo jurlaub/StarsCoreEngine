@@ -388,11 +388,66 @@ def SetupFileInterface(results):
     generate game files. 
 
     '''
-    #*****************************
-    #   Universe Setup File Parsing 
-    #       pass to the Standard Game Template
-    #*****************************
-    # setupFileDict = getSetupFileDict(results.generate)
+
+
+    
+
+    # Tech tree - generate a custom techTree file and then quit
+    if results.customTechTree:
+        print("Custom Tech Tree module is still under development ")
+        
+        # tech expansion here
+         
+        sys.exit()
+
+
+    # Custom Uni - generate custom universe file and quit 
+    elif results.customSetup:
+
+        standardTemplate = StandardGameTemplate.standardUniverse(None) 
+        customSetupDict = customSetupController(standardTemplate, results.customSetup)
+        
+        sys.exit()  # 
+
+
+    # ('-n' + '-g') + '-t' options handled here
+
+
+    if results.standardGame and results.customGame:
+        print("Cannot use a standard ('-n') and custom game ('-g') to setup a game at the same time")
+        sys.exit()
+
+    elif results.standardGame:
+        #*****************************
+        #   The Standard Game Template can be modifed to create game variations
+        #*****************************
+        gameTemplate = StandardGameTemplate(results.standardGame)
+
+    elif results.customGame:
+        #*****************************
+        #   Universe Setup File Parsing 
+        #       pass to the Standard Game Template
+        #*****************************
+        # customSetupDict = loadCustomSetupJSON(results.customGame)
+        pass
+    else: 
+        print("Unexpected command line option. Please review options and try again.")
+        sys.exit()
+
+
+    #**************************
+    # Tech data parsing here
+    # ****** in same setup file? ********d
+    # pull in Game tech tree data : Key = "tech_data"
+    #### contains the standard tech (includes race specific tech) 
+    #### will contain additional general tech 
+    #### ultimately contains specific player tech (not associated with race wizard) : Key = "player_n_tech" 
+    #**************************
+    # tech file data here
+    #print("tech file name %s" % results.techTree)
+
+
+
 
     #***************************
     # Player file's parsing here
@@ -407,22 +462,7 @@ def SetupFileInterface(results):
     #*****************************
     # victory conditions here
 
-    #**************************
-    # Tech data parsing here
-    # ****** in same setup file? ********d
-    # pull in Game tech tree data : Key = "tech_data"
-    #### contains the standard tech (includes race specific tech) 
-    #### will contain additional general tech 
-    #### ultimately contains specific player tech (not associated with race wizard) : Key = "player_n_tech" 
-    #**************************
-    # tech file data here
-    #print("tech file name %s" % results.techTree)
 
-
-    #*****************************
-    #   The Standard Game Template can be modifed to create game variations
-    #*****************************
-    gameTemplate = StandardGameTemplate(results.standardGame)
     
 
 
@@ -459,65 +499,31 @@ def main():
     """
 
 
-    #*****************************
+    #**********************************************
     # Command line args using argparser
     #
     #
-    #****************************
+    #*********************************************
     results = cmdLineParseArgs()
 
-    
-    ''' SetupFileInterface handles all the command line related  decisions. 
 
-
-
-    '''
-    #gameTemplate = SetupFileInterface(results)
-
+    #   Load <'game_name'.hst> file
     if results.gameFile:
-        """
-        Loading a .hst file should result in (gameTemplate, game)
-
-        more may be added (techTree, players, victoryConditions)
-
-        """
+ 
         print("loading gamefile named %s" % results.gameFile)
-        #unpickle here
 
         # ------- TODO ---------
         # test for .hst file matching results.gameFile in cwd 
         gameTemplate, game = GamePickle.unPickle(results.gameFile)
 
-    # Tech tree - generate unique techTree file and then quit
-    # Custom Uni - generate custom universe and quit      
-    #       if other values are provided present a message that some are exclusive 
-    
-    # send other values that load files to SetupFileInterface
-
-    elif results.customSetup:
-        # just want the values from the standardUniverse. This however feels odd.
-
-        standardTemplate = StandardGameTemplate.standardUniverse(None) 
-        #customSetupDict = customSetupDialog(standardTemplate)
-        customSetupDict = customSetupController(standardTemplate, results.customSetup)
-        sys.exit()  # 
-
-    elif results.generate:
-
-        customSetupDict = loadCustomSetupJSON(results.generate)
-        #gameTemplate = 
-
-        #game = GameSetup(gameTemplate)
-
-        sys.exit()
     else:
-
+   
         gameTemplate = SetupFileInterface(results)
         
-    #*****************************
-    #   The Standard Game Template (or modified version) creates the game
-    #*****************************
-    game = GameSetup(gameTemplate)  
+        #*****************************
+        #   The Standard Game Template (or modified version) creates the game
+        #*****************************
+        game = GameSetup(gameTemplate)  
 
 
 
@@ -535,11 +541,11 @@ def main():
 
 
 
-    #####
+    ##**********************************************
     #  For command line review:
     #        print out of planet information
     #
-    #####
+    ##**********************************************
     print("%s" % gameTemplate.game_name)
     for x in iter(game.planets):
         p = game.planets
