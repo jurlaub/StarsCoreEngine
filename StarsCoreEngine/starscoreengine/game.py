@@ -117,10 +117,12 @@ class GameSetup(object):
 class StandardGameTemplate(object):
     """
     StandardGameTemplate is a class for generating a standard universe. 
-    The class provides tools to modify the standard data. 
+    
+    The standard universe data can be modified by passing in a dictionary 
+    containing key:value pairs which will be used to update the standard values.
 
-    To modify standard template, pass in dictionary containing key:value pairs 
-    which will be used to update the standard dictionary.
+    Use the provided command line arguments to create a custom universe file as 
+    well as modify/add technology. 
 
     """
     '''
@@ -138,10 +140,11 @@ class StandardGameTemplate(object):
     '''
 
     # instantiate the standard object
+    #                           customUniverse = {}, customTech = {}, customVC = {}
     def __init__(self, game_name = None, setupDict = {}, universeNumber = 1, playerNumber = 1):
         # instantiates a new game dictionary while merging setup data
         
-        self.game_name = game_name # "rabid_weasels"
+        # self.game_name = game_name # "rabid_weasels"
         if not game_name:
             self.game_name = "rabid_weasels"
         else:
@@ -150,8 +153,8 @@ class StandardGameTemplate(object):
         self.planet_names = self.planetNameTemplate()
         self.universe_data = []    # list of universe dictionary data
         #self.players_data = []     # list of player dictionary data
-        #self.technology_data
-        #self.victory_conditions
+        #self.technology_data       #template would have technology
+        #self.victory_conditions    # standard VC template with changes
 
         if universeNumber < 1:
             sys.exit("universeNumber must be greater then 1")
@@ -263,22 +266,22 @@ class GamePickle(object):
             return pickle.load(fn)
 
 
+# _______ Delete ____ covered by custom_setup.py
+# def getSetupFileDict(setupFile):
+#     '''
+#     Access setupfile contained within folder, 
+#     translate text to key value pairs
+#     store into a dictionary and return
 
-def getSetupFileDict(setupFile):
-    '''
-    Access setupfile contained within folder, 
-    translate text to key value pairs
-    store into a dictionary and return
+#     <game setup>
+#     <victory conditions>
+#     <player setup>    
+#     <tech tree and modifications>
+#     '''
+#     #----TODO ---- 
+#     # ADD obtain key:value pairs from setupfile
 
-    <game setup>
-    <victory conditions>
-    <player setup>    
-    <tech tree and modifications>
-    '''
-    #----TODO ---- 
-    # ADD obtain key:value pairs from setupfile
-
-    return {"setupFileName": setupFile}
+#     return {"setupFileName": setupFile}
 
 
 
@@ -288,37 +291,79 @@ def cmdLineParseArgs():
     '''
     Uses argparse to capture commands from the command line
 
+    TODO - 
+        Race files fileNames' should be in the following format:
+        <'game_name'.rn>. Where .rn = race number, like: rabid_weasels.r1; 
+        rabid_weasels.r2; rabid_weasels.r3; etc.
+
     '''
     parser = argparse.ArgumentParser()
 
     # help
     # load game file    gameFile
     # new game          gameName
-    # generate a game using a setup file  
-    parser.add_argument('-l', action='store', default=None, dest='gameFile', help='load .hst file for game')
-    parser.add_argument('-n', action='store', default=None, dest='newGame', \
-        help='enter name for new game. Name must be unique within the same folder')
-    parser.add_argument('-g', action='store', default=None, dest='generate', \
-        help='''Use a file: <game_name.json> containing key:value pairs to modify the
-        Standard Game Template. Each pair should be on a new line. 
+    
+    # Load an existing game  
+    parser.add_argument('-l', action='store', default=None, dest='gameFile', \
+        help='Load .hst file for game. Specify game to load. \nNo other arguments viable. ')
 
-        Use custom setup dialog to generate game setup file. The -s argument.
 
+    
+    # generate a new game from the standard template.
+    # ---- how does this arg know the number of players and victory conditions? ---
+    # may not be a viable command
+    parser.add_argument('-n', action='store', default=None, dest='standardGame', \
+        help='''Enter name for new game. Name must be unique within the same 
+        folder. The standard game template will be used. 
         ''')
-    parser.add_argument('-tech', action='store', default=None, dest='techTree', \
-        help='''tech tree variations can be loaded by using a seperate 
+
+    # Generate a game from an existing game setup file. 
+    parser.add_argument('-g', action='store', default=None, dest='customGame', \
+        help=''' Generate a new game from a game setup file named: 
+        <'game_name'.json>. Enter file name after the '-g'.
+        
+         Use '-s' arg to create this setup file. 
+        ''')
+    
+    # tech tree mod's could occur with a standard new game.  
+    parser.add_argument('-t', action='store', default=None, dest='techTree', \
+        help='''Use a custom tech tree to generate game. FileName should be <tech_tree.tech>.
+        Enter tech filename after "-t". ''')
+
+
+
+
+
+    # generate a custom tech object file using command line or plain text editor
+    parser.add_argument('-c_tech', action='store', default=None, dest='customTechTree', \
+        help='''Tech tree variations can be loaded by using a seperate 
         <tech_tree.tech> file. 
-        New tech elements are added by including a complete description in a
-        multi-level dictionary. All necessary values must be included
 
-        Existing tech can be modified by including the tech identifier (or name?)
-        and the dictionary key:value to replace
+        \nUsers have three options: 
+        \n1)  Use the command line prompts to add customized tech to the tech file.
+        
+        \n2)  Indicate the number of new tech items that are desired. A template 
+            will be generated in the correct format for the desired number of 
+            items. The user can fill in the data from a plain text editor. 
+        
+        \n3)  Existing tech can be modified by including the tech identifier 
+            and the dictionary key:value to replace. User must provide the exact
+            standard tech template - tech identifier and the correct dictionary 
+            value in order for a change to occur. Changes to standard tech will
+            affect the common tech tree for all players. 
+       
+        \nNo other arguments viable.
 
         ''')
-    parser.add_argument('-s', action='store', default=None, dest='customSetup', help='''
+
+    # generate a custom universe json object file using command line.
+    parser.add_argument('-c_setup', action='store', default=None, dest='customSetup', help='''
     The custom setup dialog creates an interactive command line session allowing
     the game host to customize StandardGameTemplate values. The configuration 
     results are saved to an .json file that can be used to generate future games.
+    
+    \nNo other arguments viable.    
+
         ''')
 
     #add game setup flow that does not save the custom setup dialog
@@ -333,12 +378,21 @@ def cmdLineParseArgs():
     return parser.parse_args()
 
 
-def SetupFileHelper(results):
+def SetupFileInterface(results):
+    '''
+    Interface layer between command line args and GameSetup(). 
+
+    Handles all command line arg logic and decision making
+
+    Output is gameTemplate - which comprises all template logic necessary to 
+    generate game files. 
+
+    '''
     #*****************************
     #   Universe Setup File Parsing 
     #       pass to the Standard Game Template
     #*****************************
-    setupFileDict = getSetupFileDict(results.generate)
+    # setupFileDict = getSetupFileDict(results.generate)
 
     #***************************
     # Player file's parsing here
@@ -362,27 +416,20 @@ def SetupFileHelper(results):
     #### ultimately contains specific player tech (not associated with race wizard) : Key = "player_n_tech" 
     #**************************
     # tech file data here
-    print("tech file name %s" % results.techTree)
+    #print("tech file name %s" % results.techTree)
 
 
     #*****************************
     #   The Standard Game Template can be modifed to create game variations
     #*****************************
-    gameTemplate = StandardGameTemplate(results.newGame, setupFileDict)
+    gameTemplate = StandardGameTemplate(results.standardGame)
     
 
-    #*****************************
-    #   The Standard Game Template (or modified version) creates the game
-    #*****************************
-    game = GameSetup(gameTemplate)  
 
+    #print("create new game %s" %results.standardGame)
 
+    return gameTemplate
 
-    print("load from command line: %s" % results.gameFile)
-    print("%s"%setupFileDict)
-    print("create new game %s" %results.newGame)
-
-    return gameTemplate, game
 
 
 
@@ -419,6 +466,14 @@ def main():
     #****************************
     results = cmdLineParseArgs()
 
+    
+    ''' SetupFileInterface handles all the command line related  decisions. 
+
+
+
+    '''
+    #gameTemplate = SetupFileInterface(results)
+
     if results.gameFile:
         """
         Loading a .hst file should result in (gameTemplate, game)
@@ -433,6 +488,12 @@ def main():
         # test for .hst file matching results.gameFile in cwd 
         gameTemplate, game = GamePickle.unPickle(results.gameFile)
 
+    # Tech tree - generate unique techTree file and then quit
+    # Custom Uni - generate custom universe and quit      
+    #       if other values are provided present a message that some are exclusive 
+    
+    # send other values that load files to SetupFileInterface
+
     elif results.customSetup:
         # just want the values from the standardUniverse. This however feels odd.
 
@@ -444,19 +505,32 @@ def main():
     elif results.generate:
 
         customSetupDict = loadCustomSetupJSON(results.generate)
+        #gameTemplate = 
+
+        #game = GameSetup(gameTemplate)
 
         sys.exit()
     else:
 
-        gameTemplate, game = SetupFileHelper(results)
+        gameTemplate = SetupFileInterface(results)
         
-        #pickle called here
-        '''
+    #*****************************
+    #   The Standard Game Template (or modified version) creates the game
+    #*****************************
+    game = GameSetup(gameTemplate)  
 
-        '''
-        fileName = gameTemplate.game_name + '.hst'
-        pickleTest = (gameTemplate, game)
-        GamePickle.makePickle(fileName, pickleTest)
+
+
+
+    #Test when game needs to be saved as a .hst file.
+
+    #pickle called here
+    '''
+
+    '''
+    fileName = gameTemplate.game_name + '.hst'
+    pickleTest = (gameTemplate, game)
+    GamePickle.makePickle(fileName, pickleTest)
 
 
 
