@@ -62,6 +62,12 @@ class GameSetup(object):
         ##### ! gameTemplate.universe_data hardcoded to a list, 
         #####  requires updating!          
         ############
+
+        # ----TODO----
+        # change how planets are added
+        # template should send in 1 universe's template
+        # 
+        #need to define self.planet structure
         self.planets = self.createPlanetObjects(template)   #dict
 
 
@@ -77,8 +83,11 @@ class GameSetup(object):
         """
         planets = {}
 
+
+        # ----- TODO ----
+        # template should a single universe definition
         uSize = template.universe_data[0]["UniverseSizeXY"]
-        uPlanet = template.universe_data[0]["UniversePlanets"] 
+        uPlanet = int(template.universe_data[0]["UniversePlanets"])
         uNumber = template.universe_data[0]["UniverseNumber"]
 
         # create and add Planet objects with random locations, names and ID's
@@ -156,24 +165,24 @@ class StandardGameTemplate(object):
         #self.technology_data       #template would have technology
         #self.victory_conditions    # standard VC template with changes
 
-        if universeNumber < 1:
+        if int(universeNumber) < 1:
             sys.exit("universeNumber must be greater then 1")
         else:
 
-            for i in range(0, universeNumber):
+            for i in range(0, int(universeNumber)):
                 x = self.standardUniverse()
                 x['UniverseNumber'] = i
-                # if i%2 == 0:
-                #     x["UniverseSizeXY"] = (1100,13400)
+
+                #merge variation with standard
+                if setupDict:
+                    tmp_universe = 'UniverseNumber' + str(i)
+                    customUniverseObject = setupDict[tmp_universe]
+
+                    x = self.mergeDictionaryData(x, customUniverseObject)
+
                 self.universe_data.append(x)          # NOTE: appending to a list
                 
 
-                #self.universe_data = self.standardUniverse()  #StandardGameTemplate.standard_universe
-
-        # takes standard list and merges with setup dictionary.
-        if setupDict:
-            #merge variation with standard
-            print ("StandardGameTemplate:init - setupDict is not empty")
 
 
 
@@ -206,9 +215,16 @@ class StandardGameTemplate(object):
 
 
     def mergeDictionaryData(self, dict1, dict2):
+        '''
+        input: dict1, dict2
+        output: dict1
+
+        if items in dict2 are in dict1, merge those items into dict1
+        '''
 
         for n in dict2:
-            dict1[n] = dict2[n]
+            if n in dict1:
+                dict1[n] = dict2[n]
 
         return dict1
     
@@ -312,15 +328,16 @@ def cmdLineParseArgs():
     # generate a new game from the standard template.
     # ---- how does this arg know the number of players and victory conditions? ---
     # may not be a viable command
-    parser.add_argument('-n', action='store', default=None, dest='standardGame', \
+    parser.add_argument('-n', action='store', default=None, dest='newGame', \
         help='''Enter name for new game. Name must be unique within the same 
-        folder. The standard game template will be used. 
+        folder. 
         ''')
 
     # Generate a game from an existing game setup file. 
     parser.add_argument('-g', action='store', default=None, dest='customGame', \
         help=''' Generate a new game from a game setup file named: 
-        <'game_name'.json>. Enter file name after the '-g'.
+        <'game_name'.json>. Enter file name after the '-g'. Without this setting,
+        the game will be generated from the StandardGameTemplate.
         
          Use '-s' arg to create this setup file. 
         ''')
@@ -411,25 +428,33 @@ def SetupFileInterface(results):
 
 
     # ('-n' + '-g') + '-t' options handled here
+    if results.newGame and results.customGame:
+        #"Generates a new game using a custom dictionary."
+        customSetupDict = loadCustomSetupJSON(results.customGame)
+        
+        gameName = results.newGame
+        gameUniverseNumber = customSetupDict['number_of_universes']
+        gamePlayerNumber = customSetupDict['number_of_players']
 
+        gameTemplate = StandardGameTemplate(gameName, customSetupDict, 
+            gameUniverseNumber, gamePlayerNumber)
 
-    if results.standardGame and results.customGame:
-        print("Cannot use a standard ('-n') and custom game ('-g') to setup a game at the same time")
-        sys.exit()
-
-    elif results.standardGame:
+    elif results.newGame:
         #*****************************
         #   The Standard Game Template can be modifed to create game variations
         #*****************************
-        gameTemplate = StandardGameTemplate(results.standardGame)
+        gameTemplate = StandardGameTemplate(results.newGame)
 
-    elif results.customGame:
-        #*****************************
-        #   Universe Setup File Parsing 
-        #       pass to the Standard Game Template
-        #*****************************
-        # customSetupDict = loadCustomSetupJSON(results.customGame)
-        pass
+    # elif results.customGame:
+    #     #*****************************
+    #     #   Universe Setup File Parsing 
+    #     #       pass to the Standard Game Template
+    #     #*****************************
+    #     customSetupDict = loadCustomSetupJSON(results.customGame)
+
+    #     gameTemplate = StandardGameTemplate
+
+    #     pass
     else: 
         print("Unexpected command line option. Please review options and try again.")
         sys.exit()
@@ -444,7 +469,7 @@ def SetupFileInterface(results):
     #### ultimately contains specific player tech (not associated with race wizard) : Key = "player_n_tech" 
     #**************************
     # tech file data here
-    #print("tech file name %s" % results.techTree)
+    print("Tech Tree import under development: tech file name %s" % results.techTree)
 
 
 
@@ -454,14 +479,14 @@ def SetupFileInterface(results):
     # pull in player data from file : Key = "players_data"
     #***************************
     # Player data here
-
+    print("Player Data under development")
 
     #*****************************
     # Victory conditions file/data here
     # pull in other data from file : Key = "victory_conditions_data"
     #*****************************
     # victory conditions here
-
+    print("Victory Conditions under development")
 
     
 
@@ -519,7 +544,7 @@ def main():
     else:
    
         gameTemplate = SetupFileInterface(results)
-        
+
         #*****************************
         #   The Standard Game Template (or modified version) creates the game
         #*****************************
@@ -527,16 +552,15 @@ def main():
 
 
 
-
     #Test when game needs to be saved as a .hst file.
+    # saject = input("Do you wish to save this object? (y/n)")
 
-    #pickle called here
-    '''
-
-    '''
-    fileName = gameTemplate.game_name + '.hst'
-    pickleTest = (gameTemplate, game)
-    GamePickle.makePickle(fileName, pickleTest)
+    # if saject == 'y':
+    #     #pickle called here
+ 
+    #     fileName = gameTemplate.game_name + '.hst'
+    #     pickleTest = (gameTemplate, game)
+    #     GamePickle.makePickle(fileName, pickleTest)
 
 
 

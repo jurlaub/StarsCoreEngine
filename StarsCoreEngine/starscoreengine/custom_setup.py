@@ -122,7 +122,8 @@ def customSetupDialog(template, fileName):
     # Custom Dialog starting values
     json_file_name = input('''This Custom Setup will be saved as: 
         <%s.json> 
-        (Press enter to keep or type a new name): ''' % fileName)   
+        (Press enter to keep or type a new name): ''' % fileName)
+
     number_of_universes = input("How many universes do you want to play in? (1): ")
     number_of_players = int(input("How many players are in the universe total?: "))
 
@@ -137,8 +138,8 @@ def customSetupDialog(template, fileName):
 
     # Adding starting values to dictionary
     customTemplateDict['json_file_name'] = json_file_name    
-    customTemplateDict['number_of_universes'] = number_of_universes
-    customTemplateDict['number_of_players'] = number_of_players
+    customTemplateDict['number_of_universes'] = int(number_of_universes)
+    customTemplateDict['number_of_players'] = int(number_of_players)
 
 
 
