@@ -26,6 +26,7 @@ import random
 import pickle
 import argparse
 from .space_objects import SpaceObjects
+from .space_objects import UniverseObject
 from . import planet
 from . import fleets
 from .custom_setup import customSetupDialog
@@ -68,12 +69,31 @@ class GameSetup(object):
         # template should send in 1 universe's template
         # 
         #need to define self.planet structure
-        self.planets = self.createPlanetObjects(template)   #dict
+
+        ''' 
+        A universe contains all space objects.
+        planets
+        fleets
+
+        universe object?
+
+
+        '''
+
+        self.game_universe = {}
+
+        for i in range(0, int(template.universeNumber)):
+
+            #newUni_name = template.universe_data[i]['UniverseName']
+            newUni = UniverseObject(i)
+            newUni.planets = self.createPlanetObjects(template.universe_data[i])   #dict
+
+            self.game_universe[i] = newUni
 
 
 
         
-    def createPlanetObjects(self, template):
+    def createPlanetObjects(self, u_template):
         """
         generates planet objects
 
@@ -86,14 +106,14 @@ class GameSetup(object):
 
         # ----- TODO ----
         # template should a single universe definition
-        uSize = template.universe_data[0]["UniverseSizeXY"]
-        uPlanet = int(template.universe_data[0]["UniversePlanets"])
-        uNumber = template.universe_data[0]["UniverseNumber"]
+        uSize = u_template["UniverseSizeXY"]
+        uPlanet = int(u_template["UniversePlanets"])
+        uNumber = u_template["UniverseNumber"]
 
         # create and add Planet objects with random locations, names and ID's
         for i in range(0, uPlanet):
             xy = (random.randrange(0, uSize[0]), random.randrange(0, uSize[1]))
-            name = template.getPlanetNameFromTemplate(i)
+            name = StandardGameTemplate.getPlanetNameFromTemplate(None, i)
             ID = str(uNumber) + str(i)
             newPlanet = planet.Planet(xy, ID, name)
             planets[ID] = newPlanet
@@ -160,6 +180,7 @@ class StandardGameTemplate(object):
              self.game_name = game_name # "rabid_weasels"
 
         self.planet_names = self.planetNameTemplate()
+        self.universeNumber = universeNumber
         self.universe_data = []    # list of universe dictionary data
         #self.players_data = []     # list of player dictionary data
         #self.technology_data       #template would have technology
@@ -197,22 +218,6 @@ class StandardGameTemplate(object):
         return standard_universe
 
 
-    '''
-    def multiUniverse(self, n_universe = 2):
-        """
-        MultiUniverse dictionary data used to modify the standard universe 
-        dictionary.
-        """
-
-        multi_universe = {"UniverseNumber":n_universe, \
-        "UniverseSizeXY": (200,200)}
-
-
-        #self.universe_data = self.mergeDictionaryData(self.universe_data, multi_universe)
-
-        return self.universe_data
-    '''
-
 
     def mergeDictionaryData(self, dict1, dict2):
         '''
@@ -227,11 +232,7 @@ class StandardGameTemplate(object):
                 dict1[n] = dict2[n]
 
         return dict1
-    
-
-    # def getUniverseSize(self):
-    #     return tuple(x["UniverseSizeXY"] for x in self.universe_data)
-
+   
 
     def getPlanetNameFromTemplate(self, n):
         planet_names = self.planetNameTemplate()
@@ -244,15 +245,6 @@ class StandardGameTemplate(object):
         return planet_names
 
       
-
-def PreGameSetup(gameDict, setupDict):
-    """
-    Merges Game Dictionary and Setup File data into one dictionary
-    """
-
-
-    pass
-
 
 
 
@@ -571,13 +563,14 @@ def main():
     #
     ##**********************************************
     print("%s" % gameTemplate.game_name)
-    for x in iter(game.planets):
-        p = game.planets
-        temp, grav, rad = p[x].origHab
-        ironC, borC, germC = p[x].origConc 
-        print("ID:%s, %s:  %s  - Owner:%s" % (p[x].ID, p[x].name, p[x].xy, p[x].owner))
-        print("\tEnvironment: \t\t(%sc, %sg, %smr) " % (temp, grav, rad))
-        print("\tMineral Concentration: \t(i:%skt, b:%skt, g:%skt)" % (ironC, borC, germC))
+    for zz in iter(game.game_universe):
+        for nn in iter(zz.planets):
+            
+            temp, grav, rad = nn.origHab
+            ironC, borC, germC = nn.origConc 
+            print("ID:%s, %s:  %s  - Owner:%s" % (nn.ID, nn.name, nn.xy, nn.owner))
+            print("\tEnvironment: \t\t(%sc, %sg, %smr) " % (temp, grav, rad))
+            print("\tMineral Concentration: \t(i:%skt, b:%skt, g:%skt)" % (ironC, borC, germC))
 
 
 

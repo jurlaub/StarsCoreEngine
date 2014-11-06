@@ -95,4 +95,12 @@ class WhereAmI(SpaceObjects):
 
 
 
+class UniverseObject(object):
+
+    def __init__(self, ID):
+        self.ID = ID 
+        self.planets = {}
+        self.fleets = {}
+        
+
 
