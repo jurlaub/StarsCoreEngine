@@ -113,7 +113,7 @@ class GameSetup(object):
         # create and add Planet objects with random locations, names and ID's
         for i in range(0, uPlanet):
             xy = (random.randrange(0, uSize[0]), random.randrange(0, uSize[1]))
-            name = StandardGameTemplate.getPlanetNameFromTemplate(None, i)
+            name = getPlanetNameFromTemplate(i)
             ID = str(uNumber) + str(i)
             newPlanet = planet.Planet(xy, ID, name)
             planets[ID] = newPlanet
@@ -179,7 +179,7 @@ class StandardGameTemplate(object):
         else:
              self.game_name = game_name # "rabid_weasels"
 
-        self.planet_names = self.planetNameTemplate()
+        self.planet_names = planetNameTemplate()
         self.universeNumber = universeNumber
         self.universe_data = []    # list of universe dictionary data
         #self.players_data = []     # list of player dictionary data
@@ -234,12 +234,13 @@ class StandardGameTemplate(object):
         return dict1
    
 
-    def getPlanetNameFromTemplate(self, n):
-        planet_names = self.planetNameTemplate()
+
+def getPlanetNameFromTemplate( n):
+        planet_names = planetNameTemplate()
         x = int(n % len(planet_names))
         return planet_names[x]
 
-    def planetNameTemplate(self):
+def planetNameTemplate():
         planet_names = ["Alan", "Fenge", "Fenris", "Shill", "239_Alf", "Wolf359",\
          "Dark Star", "Kirk", "Flo Rida", "Pluto", "Centari", "Mau Tai", "Zeta"]
         return planet_names
@@ -564,8 +565,12 @@ def main():
     ##**********************************************
     print("%s" % gameTemplate.game_name)
     for zz in iter(game.game_universe):
-        for nn in iter(zz.planets):
+        print("\t%s%s%d%s"%('-'*20, 'UniverseNumber:', zz,'-'*20 ))
+
+        for x in iter(game.game_universe[zz].planets):
             
+            nn = game.game_universe[zz].planets[x]
+
             temp, grav, rad = nn.origHab
             ironC, borC, germC = nn.origConc 
             print("ID:%s, %s:  %s  - Owner:%s" % (nn.ID, nn.name, nn.xy, nn.owner))
