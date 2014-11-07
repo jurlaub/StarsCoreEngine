@@ -68,6 +68,7 @@ class GameSetup(object):
 
         self.game_universe = self.generateUniverses(template)
 
+        #self.players
 
 
 
