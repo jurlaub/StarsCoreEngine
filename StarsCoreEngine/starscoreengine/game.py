@@ -26,7 +26,7 @@ import random
 import pickle
 import argparse
 from .space_objects import SpaceObjects
-from .space_objects import UniverseObject
+from .universe import UniverseObject
 from . import planet
 from . import fleets
 from .custom_setup import customSetupDialog
@@ -64,32 +64,35 @@ class GameSetup(object):
         #####  requires updating!          
         ############
 
-        # ----TODO----
-        # change how planets are added
-        # template should send in 1 universe's template
-        # 
-        #need to define self.planet structure
-
-        ''' 
-        A universe contains all space objects.
-        planets
-        fleets
-
-        universe object?
 
 
-        '''
+        self.game_universe = self.generateUniverses(template)
 
-        self.game_universe = {}
+
+
+
+    
+
+
+    def generateUniverses(self, template):
+
+        tmpUniverses = {}
 
         for i in range(0, int(template.universeNumber)):
 
             #newUni_name = template.universe_data[i]['UniverseName']
-            newUni = UniverseObject(i)
+            universeSize = template.universe_data[i]['UniverseSizeXY']
+
+            newUni = UniverseObject(i, universeSize)
+           
             newUni.planets = self.createPlanetObjects(template.universe_data[i])   #dict
 
-            self.game_universe[i] = newUni
+            tmpUniverses[i] = newUni
 
+
+
+
+        return tmpUniverses
 
 
         
@@ -99,6 +102,9 @@ class GameSetup(object):
 
         inputs: single universe dictionary data
         returns: dictionary of planet objects
+
+        Eventually planet object generation within a universe should be shifted
+        to the Universe class. 
 
         """
         planets = {}

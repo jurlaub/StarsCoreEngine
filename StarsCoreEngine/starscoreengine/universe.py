@@ -21,7 +21,7 @@
 """
 
 
-class Universe(object):
+class UniverseObject(object):
     """
         The universe object should ultimately allow for the creation of multiple universes within a game.
 
@@ -47,8 +47,14 @@ class Universe(object):
     """
 
 
-    def __init__(self):
-        pass
+    def __init__(self, ID, uni_size = ()):
+        self.ID = ID 
+        self.UniverseSizeXY = uni_size
+        self.planets = {}
+        self.fleets = {}
+        # other space objects
+        # this is where a universe would initialize special rules and tech tree
+
 
 
 
