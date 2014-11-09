@@ -72,6 +72,13 @@ class Player(object):
     def __init__(self, raceData):
         self.race = raceData #RaceData()
         self.colonies = {}  # colony objects
+        self.tech = {}  # tech object
+        self.shipDesign = {} # ship design objects
+        self.battleOrders = {} 
+        self.production = {} 
+        self.turnOrders = {}
+        self.diplomacy = {} # diplomacy object?
+        self.intel = {} 
 
         pass
 
@@ -86,6 +93,7 @@ class RaceData(object):
         self.popEfficiency = 10   # ?
 
         self.habGravity = 10  # (centerpoint, Click width)?  
+        # other hab items
 
         self.factoryRun = 10
         self.factoryCost = 10

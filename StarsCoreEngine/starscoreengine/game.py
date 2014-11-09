@@ -189,7 +189,7 @@ class StandardGameTemplate(object):
         self.planet_names = planetNameTemplate()
         self.universeNumber = universeNumber
         self.universe_data = []    # list of universe dictionary data
-        #self.players_data = []     # list of player dictionary data
+        #self.players_data = []     # list of player objects 
         #self.technology_data       #template would have technology
         #self.victory_conditions    # standard VC template with changes
 
@@ -239,7 +239,18 @@ class StandardGameTemplate(object):
                 dict1[n] = dict2[n]
 
         return dict1
-   
+
+    def getPlayerRaceFile(self):
+        # 'race name'.r1
+        # look for all r1 files in folder
+        # should match number of players
+
+        return getDevRaceFile()
+
+    def getDevRaceFile(self):
+        # returns a development file that will substitute as a player race file
+
+        pass
 
 
 def getPlanetNameFromTemplate( n):
