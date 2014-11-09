@@ -51,7 +51,7 @@ class UniverseObject(object):
         self.ID = ID 
         self.UniverseSizeXY = uni_size
         self.planets = {}
-        self.fleets = {}
+        self.genericfleets = {} # fleet objects like Mystery Traders
         # other space objects
         # this is where a universe would initialize special rules and tech tree
 

@@ -63,19 +63,21 @@
 '''
 
 
-class PlayerData(object):
+class Player(object):
     """
     Contains player related data that is not space objects.
 
     """
 
-    def __init__(self):
-        #self.speciesData = SpeciesData()
+    def __init__(self, raceData):
+        self.race = raceData #RaceData()
+        self.colonies = {}  # colony objects
+
         pass
 
 
 
-class SpeciesData(object):
+class RaceData(object):
     """
     Contains data from RaceWizard.
     """
