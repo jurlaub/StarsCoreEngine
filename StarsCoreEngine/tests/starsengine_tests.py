@@ -94,28 +94,31 @@ class TestGameTemplate(object):
         u_name = self.gameTemplate.universe_data[0]["UniverseName"]
         assert_true(u_name)
 
-    def test_SGT_GetUniverseSize(self):
-        tmp = self.gameTemplate.getUniverseSize()
-        assert_true(len(tmp) == 1)
-        assert_true(tmp[0] == (200,200))
+
 
 
     
-class TestMultiGameTemplate(object):
+class TestGameTemplate_Multi(object):
     '''
     Test multiuniverse games
     '''
     def setup(self):
-        print("TestMultiGameTemplate: Setup")
+        print("TestGameTemplate_Multi: Setup")
         self.universe_count = 5
         self.universe_player = 3
-        self.gameTemplate = game.StandardGameTemplate({}, self.universe_count, self.universe_player)
+        # def __init__(self, game_name = None, setupDict = {}, universeNumber = 1, playerNumber = 1):
+        self.gameTemplate = game.StandardGameTemplate(None, {}, self.universe_count, self.universe_player)
 
     def teardown(self):
-        print("TestMultiGameTemplate: Teardown")
+        print("TestGameTemplate_Multi: Teardown")
 
     
-    def test_SGT_Multiverse(self):
+    def test_SGT_MultiUniverse(self):
+        '''
+        Tests the number of universes inside self.gameTemplate.universe_data
+        the count should match. 
+        '''
+
         tmp = self.gameTemplate.universe_data
         #tmp.universe_data = tmp.multiUniverse()
         x = self.universe_count - 1
@@ -123,13 +126,8 @@ class TestMultiGameTemplate(object):
         assert_true(len(tmp) == self.universe_count)
         assert_true(x == int(tmp[x]['UniverseNumber']))
         print("UniverseNumber = %d" % (tmp[x]['UniverseNumber'],))
+        assert_true(self.gameTemplate.universeNumber == self.universe_count)  
 
-    def test_SGT_GetMultiverseSizes(self):
-        tmp = self.gameTemplate.getUniverseSize()
-        assert_true(len(tmp) == self.universe_count)
-        print("test_SGT_GetMultiverseSizes is a list: %s || and || %s" % (isinstance(tmp, tuple), tmp))
-        assert_true(tmp[0] == (200,200))  
-        assert_true(isinstance(tmp, tuple))
 
 
 class TestGame(object):
@@ -192,6 +190,8 @@ class TestGame(object):
     def test_createPlanetObjects(self):
         pass
 
+
+
 class TestPickling(object):
     
     def setup(self):
@@ -212,16 +212,20 @@ class TestPickling(object):
             print("Unable to remove file: %s%s" % (self.cwd, self.tmpPickleName))
 
     def test_Pickle(self):
-        self.tmpGame.planets['01'].name = "Starbuck_Straw"
+        tmpUniverse = self.tmpGame.game_universe[0]
+
+        tmpUniverse.planets['01'].name = "Starbuck_Straw"
         self.tmpPickleName = 'tmp_pickle.tmp'
         pickleTest = (self.tmpGameTemplate, self.tmpGame)
         game.GamePickle.makePickle(self.tmpPickleName, pickleTest)
 
-        tmpTemplate, tmpGame = game.GamePickle.unPickle(self.tmpPickleName)
+        savedTemplate, savedGame = game.GamePickle.unPickle(self.tmpPickleName)
         print("test_Pickle: has HARDCODED SpaceObjects(planets) keys: '01', '02'")
-        assert_true(tmpGame.planets['01'].name == "Starbuck_Straw")
-        assert_true(tmpGame.planets['02'].name == self.tmpGame.planets['02'].name)
-        assert_true(len(tmpGame.planets) == len(self.tmpGame.planets))
+        savedUniverse = savedGame.game_universe[0]    
+
+        assert_true(savedUniverse.planets['01'].name == "Starbuck_Straw")
+        assert_true(savedUniverse.planets['02'].name == tmpUniverse.planets['02'].name)
+        assert_true(len(savedUniverse.planets) == len(tmpUniverse.planets))
 
         
         
