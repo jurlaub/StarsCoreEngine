@@ -174,12 +174,9 @@ class TestGame(object):
         assert(len(self.gameTemplate.universe_data) == 1)
         assert_true(isinstance(tmpUniverses, dict))
         
-        tmpKeys = tmpUniverses.keys()
-        if '1' in tmpUniverses:
-            tmpKey = '1'
-        else:
-            tmpKey = 1
-        print("%s" % tmpUniverses[0].planets)
+        tmpKey = 0      # 0 = key for 1st universe
+
+        print("%s" % tmpUniverses[tmpKey].planets)
 
         assert_true(len(tmpUniverses[tmpKey].planets) == int(self.universe_data[0]["UniversePlanets"]))
 
