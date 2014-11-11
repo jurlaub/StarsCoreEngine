@@ -38,12 +38,12 @@ from .custom_setup import loadCustomSetupJSON
 
 
 
-class GameSetup(object):
+class Game(object):
     """
-    GameSetup will follow a 'singleton' concept. There can be Only One game of 
+    Game will follow a 'singleton' concept. There can be Only One game of 
     any given name in the same folder
 
-    GameSetup() accepts game data from the StandardGameTemplate and turns it into
+    Game() accepts game data from the StandardGameTemplate and turns it into
     a complete game with its cooresponding game obects.
 
     """
@@ -53,7 +53,7 @@ class GameSetup(object):
         #create universe from gameDict
         # if standard == 1:
 
-        #     print ("at GameSetup, standard = %d dict=%s" % (standard, gameDict))
+        #     print ("at Game, standard = %d dict=%s" % (standard, gameDict))
         # elif standard == "hello":
         #     print("standard was not 1")
         # else:
@@ -76,6 +76,12 @@ class GameSetup(object):
 
 
     def generateUniverses(self, template):
+        '''
+        Generates the number of universes specified in the template file. 
+        >> template.universeNumber must be >= 1
+        
+
+        '''
 
         tmpUniverses = {}
 
@@ -187,13 +193,13 @@ class StandardGameTemplate(object):
              self.game_name = game_name # "rabid_weasels"
 
         self.planet_names = planetNameTemplate()
-        self.universeNumber = universeNumber
+        self.universeNumber = int(universeNumber)
         self.universe_data = []    # list of universe dictionary data
         #self.players_data = []     # list of player objects 
         #self.technology_data       #template would have technology
         #self.victory_conditions    # standard VC template with changes
 
-        if int(universeNumber) < 1:
+        if universeNumber < 1:
             sys.exit("universeNumber must be greater then 1")
         else:
 
@@ -284,7 +290,7 @@ class GamePickle(object):
 
         returns a number of objects:
             gameTemplate = StandardGameTemplate
-            game = data after GameSetup
+            game = data after Game
         '''
         with open(fileName, "rb") as fn:
             #(gameTemplate, game) = pickle.load(fn)
@@ -408,7 +414,7 @@ def cmdLineParseArgs():
 
 def SetupFileInterface(results):
     '''
-    Interface layer between command line args and GameSetup(). 
+    Interface layer between command line args and Game(). 
 
     Handles all command line arg logic and decision making
 
@@ -559,7 +565,7 @@ def main():
         #*****************************
         #   The Standard Game Template (or modified version) creates the game
         #*****************************
-        game = GameSetup(gameTemplate)  
+        game = Game(gameTemplate)  
 
 
 

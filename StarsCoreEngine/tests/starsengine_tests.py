@@ -132,29 +132,68 @@ class TestMultiGameTemplate(object):
         assert_true(isinstance(tmp, tuple))
 
 
-class TestGameSetup(object):
+class TestGame(object):
+    '''
+    This class tests game.Game() 
+
+
+
+    '''
     
     def setup(self):
-        print("TestGameSetup: Setup")
+        print("TestGame: Setup")
         self.gameTemplate = game.StandardGameTemplate()
         self.universe_data = self.gameTemplate.universe_data
-        self.game = game.GameSetup(self.gameTemplate)
-        print("TestGameSetup: self.universe_data uses a HARDCODED list")
-        self.numbPlanets = self.universe_data[0]["UniversePlanets"]   # HARDCODED!!!
+        self.game = game.Game(self.gameTemplate)
+        print("TestGame: self.universe_data uses a HARDCODED list")
+        # self.numbPlanets = self.universe_data[0]["UniversePlanets"]   # HARDCODED!!!
 
     def teardown(self):
-        print("TestGameSetup: Teardown")
+        print("TestGame: Teardown")
 
-    def test_Planet_Objects(self):
-        tmpPlanet = self.game.planets 
-        #print("%s" % tmpPlanet.keys())
-        assert_true(isinstance(tmpPlanet, dict))
-        #print("%s,%s,%s"% tmpPlanet["01"].currConc)
-        assert(len(tmpPlanet) == self.numbPlanets)
-        tmpItem = tmpPlanet["03"]
-        assert_in(tmpItem.name, self.gameTemplate.planetNameTemplate())
-        assert_false(tmpItem.HW)
+    # def test_Planet_Objects(self):
+    #     tmpPlanet = self.game.planets 
+    #     #print("%s" % tmpPlanet.keys())
+    #     assert_true(isinstance(tmpPlanet, dict))
+    #     #print("%s,%s,%s"% tmpPlanet["01"].currConc)
+    #     assert(len(tmpPlanet) == self.numbPlanets)
+    #     tmpItem = tmpPlanet["03"]
+    #     assert_in(tmpItem.name, self.gameTemplate.planetNameTemplate())
+    #     assert_false(tmpItem.HW)
 
+    def test_generateUniverses_Zero(self):
+
+        # can it handle 0 universes
+        pass
+
+    def test_generateUniverses_Single(self):
+        # can it generate 1 universe?
+        tmpUniverses = self.game.game_universe
+
+        assert_true(self.gameTemplate.universeNumber == 1)
+        assert(len(self.gameTemplate.universe_data) == 1)
+        assert_true(isinstance(tmpUniverses, dict))
+        
+        tmpKeys = tmpUniverses.keys()
+        if '1' in tmpUniverses:
+            tmpKey = '1'
+        else:
+            tmpKey = 1
+        print("%s" % tmpUniverses[0].planets)
+
+        assert_true(len(tmpUniverses[tmpKey].planets) == int(self.universe_data[0]["UniversePlanets"]))
+
+
+    
+    
+    def test_generateUniverses_Multiple(self):
+
+        # can it handle multiple universes
+        pass
+
+
+    def test_createPlanetObjects(self):
+        pass
 
 class TestPickling(object):
     
@@ -163,7 +202,7 @@ class TestPickling(object):
         self.cwd = os.getcwd()
         print("cwd: %s" % self.cwd)
         self.tmpGameTemplate = game.StandardGameTemplate()
-        self.tmpGame = game.GameSetup(self.tmpGameTemplate)
+        self.tmpGame = game.Game(self.tmpGameTemplate)
 
 
 

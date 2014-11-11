@@ -143,8 +143,8 @@ def customSetupDialog(template, fileName):
 
 
 
-    #review all dictionary items contained within the 
-    #StandardGameTemplate.standardUniverse() and add values to dictionary
+    # review all dictionary items contained within the 
+    # StandardGameTemplate.standardUniverse() and add values to dictionary
     for i in range(0, int(number_of_universes)):
         universeDict = {}
         template["UniverseNumber"] = i
