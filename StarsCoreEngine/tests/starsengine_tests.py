@@ -186,10 +186,9 @@ class TestGame(object):
         # can it handle multiple universes
         pass
 
+    def test_Players(self):
 
-    def test_createPlanetObjects(self):
-        pass
-
+        assert_true(isinstance(self.game.players, dict))
 
 
 class TestPickling(object):

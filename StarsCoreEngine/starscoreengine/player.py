@@ -62,6 +62,14 @@
 
 '''
 
+'''
+    New Game  & New player
+    > player race file name is added to the Custom File.
+    > one name for each list.
+    > name of file must match race name for new game setup
+
+'''
+
 
 class Player(object):
     """

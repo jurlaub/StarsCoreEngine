@@ -46,6 +46,8 @@ class Game(object):
     Game() accepts game data from the StandardGameTemplate and turns it into
     a complete game with its cooresponding game obects.
 
+
+
     """
 
     def __init__(self, template):
@@ -65,10 +67,11 @@ class Game(object):
         ############
 
 
-
+        # -- A dictionary of Universe Objects
         self.game_universe = self.generateUniverses(template)
 
-        #self.players
+        # -- a dictionary of Player Objects
+        self.players = {}
 
 
 
@@ -101,6 +104,9 @@ class Game(object):
 
         return tmpUniverses
 
+
+    def generatePlayers(self):
+        pass
 
         
     def createPlanetObjects(self, u_template):
