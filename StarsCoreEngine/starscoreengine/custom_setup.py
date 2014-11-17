@@ -126,6 +126,20 @@ def customSetupDialog(template, fileName):
 
     number_of_universes = input("How many universes do you want to play in? (1): ")
     number_of_players = int(input("How many players are in the universe total?: "))
+    
+
+    # -- TODO --
+    # change to be input from user that turns user input into a list
+    # choice should be to add race filenames, add blank template for later revision
+    # or for user to specifically limit the number of race files in current working
+    # directory to be the exact race files used in the game
+    player_file_names = []
+
+    for player in range(0, number_of_players):
+        print("NEED to add interaction for user to input player race file name")
+        tmpPlayer = 'player' + str(player)
+
+        player_file_names.append(tmpPlayer)
 
 
     if not json_file_name:
@@ -140,6 +154,7 @@ def customSetupDialog(template, fileName):
     customTemplateDict['json_file_name'] = json_file_name    
     customTemplateDict['number_of_universes'] = int(number_of_universes)
     customTemplateDict['number_of_players'] = int(number_of_players)
+    customTemplateDict['player_file_names'] = player_file_names
 
 
 

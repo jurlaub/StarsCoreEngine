@@ -94,6 +94,14 @@ class TestGameTemplate(object):
         u_name = self.gameTemplate.universe_data[0]["UniverseName"]
         assert_true(u_name)
 
+    def test_SGT_Contains_PlayerData(self):
+        players = self.gameTemplate.players_data
+
+        assert_true(isinstance(players, list))
+        
+
+
+
 
 
 

@@ -32,6 +32,7 @@ from . import fleets
 from .custom_setup import customSetupDialog
 from .custom_setup import customSetupController
 from .custom_setup import loadCustomSetupJSON
+from .player import RaceData, Player
 
 
 
@@ -201,9 +202,15 @@ class StandardGameTemplate(object):
         self.planet_names = planetNameTemplate()
         self.universeNumber = int(universeNumber)
         self.universe_data = []    # list of universe dictionary data
-        #self.players_data = []     # list of player objects 
+
         #self.technology_data       #template would have technology
-        #self.victory_conditions    # standard VC template with changes
+        #self.victory_conditions    # standard VC template with changes        
+
+
+        # ---- HARDCODED =>> requires updating custom setup
+        self.players_data = getPlayerRaceFile(setupDict['player_file_names'])    # list of player race file names 
+        
+
 
         if universeNumber < 1:
             sys.exit("universeNumber must be greater then 1")
@@ -252,17 +259,24 @@ class StandardGameTemplate(object):
 
         return dict1
 
-    def getPlayerRaceFile(self):
+    def getPlayerRaceFile(self, fileList):
         # 'race name'.r1
         # look for all r1 files in folder
         # should match number of players
+        raceObjects = []
 
-        return getDevRaceFile()
+        for each in fileList:
+
+            #--- TODO  change from grabbing a dev race to grabbing a .r1 file
+            # and turning it into a RaceData() object
+            raceObjects.append(getDevRaceFile())
+
+        return raceObjects
 
     def getDevRaceFile(self):
         # returns a development file that will substitute as a player race file
 
-        pass
+        return RaceData()
 
 
 def getPlanetNameFromTemplate( n):

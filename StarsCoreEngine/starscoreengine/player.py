@@ -109,7 +109,7 @@ class RaceData(object):
         self.mineRun = 10
         self.mineCost = 10
         self.mineRate = 10
-        pass
+        
 
     
 
