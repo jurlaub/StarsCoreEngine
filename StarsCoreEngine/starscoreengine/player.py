@@ -30,15 +30,15 @@
 
     PRT Summary:
     >PRT ==> changes how species operate in some manner. typically acts as an augmentation
-    >>> WM = extra hulls + tech, better invasion, better ship speed etc
-    >>> SS = base stealth, extra tech, capture percent of research resources
+    >>> WM = extra hulls + tech, better invasion, better ship speed etc, invasion benefit
+    >>> SS = base stealth, extra hulls, extra tech, capture percent of research resources
     >>> JOAT = base pop higher, scout hulls have intrinsic pen scanners
     >>> IT = extra tech, jump cargo and pop through gates, better at gating, 2nd planets
-    >>> PP 
-    >>> SD 
-    >>> HE 
-    >>> IS 
-    >>> AR 
+    >>> PP = extra tech, extra planet, diff pack behavior
+    >>> SD = extra hulls, extra tech, diff minefild behavior,
+    >>> HE = extra hulls, extra engine, double growthrate, half pop capacity
+    >>> IS = extra tech, invasion benefit
+    >>> AR = special housing, extra hulls, different behavior
 
 
     >LRT ==> chages how a species operate in a smaller manner
@@ -75,6 +75,9 @@ class Player(object):
     """
     Contains player related data that is not space objects.
 
+    Case for multiple inheritance:
+    > inherits a set of behaviors that changes based on the PRT
+
     """
 
     def __init__(self, raceData):
@@ -100,16 +103,46 @@ class RaceData(object):
     """
     def __init__(self, raceName):
         self.raceName = raceName
-        #self.raceNamePlural = raceNamePlural
-        self.popGrowthRate = .14
-        self.popEfficiency = 10   # ?
+        self.raceNamePlural = raceName
+        
+        #self.PRT = 'SS'
 
-        self.habGravity = 10  # (centerpoint, Click width)?  
-        # other hab items
+        #self.LRT = []
+
+        self.popGrowthRate = .14
+        
+        #--- TODO ---
+        # add resource gen: per xx(800-2500) pop yy(8-15) resources generated
+        #self.popEfficiency = 10   # ?
+
+
+
+        '''
+        #Environment
+        >> Consists of centerpoint & range
+
+        |------<==========x==========>----------------------|
+
+        >> the range value captures only the positive side of the total 
+        habitat values 
+
+        immune = None value for centerpoint
+
+        '''
+        self.habGravityCenter = 1  # (centerpoint, Click width)?  
+        self.habGravRange = 15.0  # pos range from Center. Total range doubled  
+        
+        self.habTempCenter = 70
+        self.habTempRange = 25.0
+
+        self.habRadCenter = 50
+        self.habRadRange = 15.0
+
 
         self.factoryRun = 10
         self.factoryCost = 10
         self.factoryRate = 10
+        
         self.mineRun = 10
         self.mineCost = 10
         self.mineRate = 10
