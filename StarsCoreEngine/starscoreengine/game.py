@@ -47,7 +47,7 @@ class Game(object):
     Game() accepts game data from the StandardGameTemplate and turns it into
     a complete game with its cooresponding game obects.
 
-
+    StandardGameTemplate grabs race (r1) files from the cwd
 
     """
 
@@ -72,7 +72,7 @@ class Game(object):
         self.game_universe = self.generateUniverses(template)
 
         # -- a dictionary of Player Objects
-        self.players = {}
+        self.players = self.generatePlayers(template.players_data)
 
 
 
@@ -106,8 +106,20 @@ class Game(object):
         return tmpUniverses
 
 
-    def generatePlayers(self):
-        pass
+    def generatePlayers(self, raceObjectList):
+        tmpPlayers = {}
+
+        # for n in range(0, len(raceObjectList)):
+        #     tmpKey = ("player%s" % str(n))
+        n = 0
+        for race in raceObjectList:
+            tmpKey = ("player%s" % str(n))
+            player = Player(race)
+            tmpPlayers[tmpKey] = player
+            n+=1
+
+
+        return tmpPlayers
 
         
     def createPlanetObjects(self, u_template):
@@ -146,6 +158,9 @@ class Game(object):
 
 
     def setPlanetLocation(self):
+        '''
+        Planet pattern setup or specific relocation
+        '''
         pass
 
 
@@ -208,6 +223,7 @@ class StandardGameTemplate(object):
 
 
         # ---- HARDCODED =>> requires updating custom setup
+        # -- TODO --- Template grabs data from r1 files
         self.players_data = self.getPlayerRaceFile(playerFileList)    # list of player race file names 
         
 
@@ -269,14 +285,14 @@ class StandardGameTemplate(object):
 
             #--- TODO  change from grabbing a dev race to grabbing a .r1 file
             # and turning it into a RaceData() object
-            raceObjects.append(self.getDevRaceFile())
+            raceObjects.append(self.getDevRaceFile(each))
 
         return raceObjects
 
-    def getDevRaceFile(self):
+    def getDevRaceFile(self, raceName):
         # returns a development file that will substitute as a player race file
 
-        return RaceData()
+        return RaceData(raceName)
 
 
 def getPlanetNameFromTemplate( n):
@@ -534,7 +550,29 @@ def SetupFileInterface(results):
     return gameTemplate
 
 
+def printGameValues(game):
+    for zz in iter(game.game_universe):
+        print("\t%s%s%d%s"%('-'*20, 'UniverseNumber:', zz,'-'*20 ))
 
+        for x in iter(game.game_universe[zz].planets):
+            
+            nn = game.game_universe[zz].planets[x]
+
+            temp, grav, rad = nn.origHab
+            ironC, borC, germC = nn.origConc 
+            print("ID:%s, %s:  %s  - Owner:%s" % (nn.ID, nn.name, nn.xy, nn.owner))
+            print("\tEnvironment: \t\t(%sc, %sg, %smr) " % (temp, grav, rad))
+            print("\tMineral Concentration: \t(i:%skt, b:%skt, g:%skt)" % (ironC, borC, germC))
+
+
+    print("\n%s%s%s" % ('-'*10, '**** Players ****', '-' * 10))
+    
+    for player in iter(game.players):
+        playerObject = game.players[player]
+        print("%s" % ( playerObject.raceName ))
+        print("population growth rate: %s" % str(playerObject.race.popGrowthRate))
+
+    print("\n")
 
 
 def main():
@@ -596,9 +634,9 @@ def main():
     # if saject == 'y':
     #     #pickle called here
  
-    #     fileName = gameTemplate.game_name + '.hst'
-    #     pickleTest = (gameTemplate, game)
-    #     GamePickle.makePickle(fileName, pickleTest)
+    fileName = gameTemplate.game_name + '.hst'
+    pickleTest = (gameTemplate, game)
+    GamePickle.makePickle(fileName, pickleTest)
 
 
 
@@ -609,20 +647,8 @@ def main():
     #
     ##**********************************************
     print("%s" % gameTemplate.game_name)
-    for zz in iter(game.game_universe):
-        print("\t%s%s%d%s"%('-'*20, 'UniverseNumber:', zz,'-'*20 ))
 
-        for x in iter(game.game_universe[zz].planets):
-            
-            nn = game.game_universe[zz].planets[x]
-
-            temp, grav, rad = nn.origHab
-            ironC, borC, germC = nn.origConc 
-            print("ID:%s, %s:  %s  - Owner:%s" % (nn.ID, nn.name, nn.xy, nn.owner))
-            print("\tEnvironment: \t\t(%sc, %sg, %smr) " % (temp, grav, rad))
-            print("\tMineral Concentration: \t(i:%skt, b:%skt, g:%skt)" % (ironC, borC, germC))
-
-
+    printGameValues(game)
 
 # if __name__ == "__main__":
 #     main()

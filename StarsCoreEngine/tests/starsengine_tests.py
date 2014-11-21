@@ -25,6 +25,7 @@ from nose.tools import with_setup, assert_equal, assert_not_equal, \
 #import nose
 import os
 from ..starscoreengine import *
+from ..starscoreengine.player import Player
 
 
 #old - for reference -  use test classes
@@ -125,6 +126,8 @@ class TestGameTemplate(object):
 class TestGameTemplate_Multi(object):
     '''
     Test multiuniverse games
+
+
     '''
     def setup(self):
         print("TestGameTemplate_Multi: Setup")
@@ -181,13 +184,12 @@ class TestGame(object):
     
     def setup(self):
         print("TestGame: Setup")
-        playerFileList = ['playerTest1', 'playerTest2']
-        testGameName = 'rabidTest'
-        self.gameTemplate = game.StandardGameTemplate(testGameName, playerFileList)
+        self.playerFileList = ['playerTest1', 'playerTest2']
+        self.testGameName = 'rabidTest'
+        self.gameTemplate = game.StandardGameTemplate(self.testGameName, self.playerFileList)
         self.universe_data = self.gameTemplate.universe_data
         self.game = game.Game(self.gameTemplate)
-        print("TestGame: self.universe_data uses a HARDCODED list")
-        # self.numbPlanets = self.universe_data[0]["UniversePlanets"]   # HARDCODED!!!
+
 
     def teardown(self):
         print("TestGame: Teardown")
@@ -204,7 +206,7 @@ class TestGame(object):
 
     def test_generateUniverses_Zero(self):
 
-        # can it handle 0 universes
+        #--- TODO --- can it handle 0 universes?
         pass
 
     def test_generateUniverses_Single(self):
@@ -226,12 +228,25 @@ class TestGame(object):
     
     def test_generateUniverses_Multiple(self):
 
-        # can it handle multiple universes
+        # --- TODO --- can it handle multiple universes
         pass
 
     def test_Players(self):
+        players = self.game.players
 
-        assert_true(isinstance(self.game.players, dict))
+        assert_true(isinstance(players, dict))
+        assert_true(len(players) == len(self.playerFileList))
+
+        # val == to dictionary key 
+        for val in players:
+            playerObject = players[val]         # use key to grab player object
+
+            assert_true(isinstance(playerObject, Player))
+
+
+            assert_in(playerObject.raceName, self.playerFileList)
+
+
 
 
 class TestPickling(object):

@@ -78,6 +78,9 @@ class Player(object):
     """
 
     def __init__(self, raceData):
+        self.raceName = raceData.raceName
+        self.raceNamePlural = raceData.raceName
+        #self.homeUniverse = None
         self.race = raceData #RaceData()
         self.colonies = {}  # colony objects
         self.tech = {}  # tech object
@@ -88,7 +91,6 @@ class Player(object):
         self.diplomacy = {} # diplomacy object?
         self.intel = {} 
 
-        pass
 
 
 
@@ -96,7 +98,9 @@ class RaceData(object):
     """
     Contains data from RaceWizard.
     """
-    def __init__(self):
+    def __init__(self, raceName):
+        self.raceName = raceName
+        #self.raceNamePlural = raceNamePlural
         self.popGrowthRate = .14
         self.popEfficiency = 10   # ?
 

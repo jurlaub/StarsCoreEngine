@@ -144,7 +144,7 @@ def customSetupDialog(template, fileName):
 
     if not json_file_name:
         if (fileName[-5:] != '.json'):
-            fileNmae = fileName + '.json'
+            fileName = fileName + '.json'
         json_file_name = fileName
     else:
         json_file_name = json_file_name + '.json'
@@ -174,7 +174,7 @@ def customSetupDialog(template, fileName):
             
             # (x,y) tuple may require special handling
             elif x == 'UniverseSizeXY':
-                print("%s requires a tuple: make sure to add '()' around the xy pair" % x)
+                # print("%s requires a tuple: make sure to add '()' around the xy pair" % x)
                 print("'%s':%s" %(x, template[x]))
                 posx, posy = template[x]
                 tmpValuea = input("What value do you want for x: <%s>? " % (posx))
