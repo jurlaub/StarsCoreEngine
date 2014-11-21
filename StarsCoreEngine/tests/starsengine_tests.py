@@ -83,7 +83,9 @@ class TestGameTemplate(object):
 
     def setup(self):
         print("TestGameTemplate: Setup")
-        self.gameTemplate = game.StandardGameTemplate()
+        self.playerFileList = ['playerTest1', 'playerTest2', 'playerTest3']
+        self.gameName = "rabidTest"
+        self.gameTemplate = game.StandardGameTemplate(self.gameName, self.playerFileList)
 
     def teardown(self):
         print("TestGameTemplate: Teardown")
@@ -98,6 +100,7 @@ class TestGameTemplate(object):
         players = self.gameTemplate.players_data
 
         assert_true(isinstance(players, list))
+        assert(len(players) > 0)    # a game must have at least 1 player
         
 
 
@@ -114,8 +117,9 @@ class TestGameTemplate_Multi(object):
         print("TestGameTemplate_Multi: Setup")
         self.universe_count = 5
         self.universe_player = 3
-        # def __init__(self, game_name = None, setupDict = {}, universeNumber = 1, playerNumber = 1):
-        self.gameTemplate = game.StandardGameTemplate(None, {}, self.universe_count, self.universe_player)
+        self.playerFileList = ['playerTest1', 'playerTest2', 'playerTest3']
+        self.gameName = "rabidTest"
+        self.gameTemplate = game.StandardGameTemplate(self.gameName, self.playerFileList, {}, self.universe_count)
 
     def teardown(self):
         print("TestGameTemplate_Multi: Teardown")
@@ -148,7 +152,9 @@ class TestGame(object):
     
     def setup(self):
         print("TestGame: Setup")
-        self.gameTemplate = game.StandardGameTemplate()
+        playerFileList = ['playerTest1', 'playerTest2']
+        testGameName = 'rabidTest'
+        self.gameTemplate = game.StandardGameTemplate(testGameName, playerFileList)
         self.universe_data = self.gameTemplate.universe_data
         self.game = game.Game(self.gameTemplate)
         print("TestGame: self.universe_data uses a HARDCODED list")

@@ -137,8 +137,8 @@ def customSetupDialog(template, fileName):
 
     for player in range(0, number_of_players):
         print("NEED to add interaction for user to input player race file name")
-        tmpPlayer = 'player' + str(player)
-
+        
+        tmpPlayer = 'player' + str(player)  # --TODO -- Interactive naming
         player_file_names.append(tmpPlayer)
 
 

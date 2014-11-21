@@ -190,7 +190,7 @@ class StandardGameTemplate(object):
 
     # instantiate the standard object
     #                           customUniverse = {}, customTech = {}, customVC = {}
-    def __init__(self, game_name = None, setupDict = {}, universeNumber = 1, playerNumber = 1):
+    def __init__(self, game_name = None, playerFileList = [], setupDict = {}, universeNumber = 1):
         # instantiates a new game dictionary while merging setup data
         
         # self.game_name = game_name # "rabid_weasels"
@@ -208,7 +208,7 @@ class StandardGameTemplate(object):
 
 
         # ---- HARDCODED =>> requires updating custom setup
-        self.players_data = getPlayerRaceFile(setupDict['player_file_names'])    # list of player race file names 
+        self.players_data = self.getPlayerRaceFile(playerFileList)    # list of player race file names 
         
 
 
@@ -269,7 +269,7 @@ class StandardGameTemplate(object):
 
             #--- TODO  change from grabbing a dev race to grabbing a .r1 file
             # and turning it into a RaceData() object
-            raceObjects.append(getDevRaceFile())
+            raceObjects.append(self.getDevRaceFile())
 
         return raceObjects
 
@@ -471,10 +471,11 @@ def SetupFileInterface(results):
         
         gameName = results.newGame
         gameUniverseNumber = customSetupDict['number_of_universes']
-        gamePlayerNumber = customSetupDict['number_of_players']
+        #gamePlayerNumber = customSetupDict['number_of_players']
+        playerFileList = customSetupDict['player_file_names']
 
-        gameTemplate = StandardGameTemplate(gameName, customSetupDict, 
-            gameUniverseNumber, gamePlayerNumber)
+        gameTemplate = StandardGameTemplate(gameName, playerFileList, customSetupDict, 
+            gameUniverseNumber)
 
     elif results.newGame:
         #*****************************
