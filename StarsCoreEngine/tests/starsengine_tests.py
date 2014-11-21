@@ -91,16 +91,29 @@ class TestGameTemplate(object):
         print("TestGameTemplate: Teardown")
 
     def test_SGT_Contains_UniverseData(self):
-        assert_in("UniverseSizeXY", self.gameTemplate.universe_data[0])
-        assert_in("UniverseName", self.gameTemplate.universe_data[0])
-        u_name = self.gameTemplate.universe_data[0]["UniverseName"]
-        assert_true(u_name)
+        '''
+        Validates the existance of specific keys in each universe dictionary. 
+        The values are not validated. 
+
+        '''
+
+        tmpSGT = self.gameTemplate
+
+        for uni in tmpSGT.universe_data:
+            assert_in("UniverseSizeXY", uni)
+            assert_in("UniverseName", uni)
+            assert_in("UniverseNumber", uni)
+            assert_in("UniversePlanets", uni)
+            assert_in("Players", uni)
 
     def test_SGT_Contains_PlayerData(self):
-        players = self.gameTemplate.players_data
+        tmpSGT = self.gameTemplate
+
+        players = tmpSGT.players_data
 
         assert_true(isinstance(players, list))
         assert(len(players) > 0)    # a game must have at least 1 player
+        assert(len(players) == len(self.playerFileList))  
         
 
 

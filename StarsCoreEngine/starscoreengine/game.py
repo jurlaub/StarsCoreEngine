@@ -220,7 +220,7 @@ class StandardGameTemplate(object):
                 x = self.standardUniverse()
                 x['UniverseNumber'] = i
 
-                #merge variation with standard
+                #merge setupDict (the customized dictionary) with standard
                 if setupDict:
                     tmp_universe = 'UniverseNumber' + str(i)
                     customUniverseObject = setupDict[tmp_universe]
@@ -239,7 +239,7 @@ class StandardGameTemplate(object):
         # standard universe comprises standard settings for 1 universe.
 
         standard_universe = {"UniverseNumber":0, "UniverseSizeXY": (200,200), \
-        "UniverseName":("Prime"), "UniversePlanets":6, "Players":(1)}
+        "UniverseName": "Prime", "UniversePlanets":6, "Players":(1)}
         
         return standard_universe
 
