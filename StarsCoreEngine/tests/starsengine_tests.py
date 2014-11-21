@@ -152,6 +152,22 @@ class TestGameTemplate_Multi(object):
         assert_true(x == int(tmp[x]['UniverseNumber']))
         print("UniverseNumber = %d" % (tmp[x]['UniverseNumber'],))
         assert_true(self.gameTemplate.universeNumber == self.universe_count)  
+    
+    def test_SGT_Contains_MultiUniverseData(self):
+        '''
+        Validates the existance of specific keys in each universe dictionary. 
+        The values are not validated. 
+
+        '''
+
+        tmpSGT = self.gameTemplate
+
+        for uni in tmpSGT.universe_data:
+            assert_in("UniverseSizeXY", uni)
+            assert_in("UniverseName", uni)
+            assert_in("UniverseNumber", uni)
+            assert_in("UniversePlanets", uni)
+            assert_in("Players", uni)
 
 
 
