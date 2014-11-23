@@ -83,6 +83,44 @@ class Player(object):
     def __init__(self, raceData):
         self.raceName = raceData.raceName
         self.raceNamePlural = raceData.raceName
+
+        self.PRT = raceData.PRT     # apply PRT values after player variables set,
+        self.LRT = raceData.LRT   # apply LRT values after player is updated with PRT variables
+
+        self.popGrowthRate = raceData.popGrowthRate
+        self.popEfficiency = raceData.popEfficiency
+
+        self.habGravityCenter = raceData.habGravityCenter  # (centerpoint, Click width)?  
+        self.habGravRange = raceData.habGravRange  # pos range from Center. Total range doubled  
+        
+        self.habTempCenter = raceData.habTempCenter
+        self.habTempRange = raceData.habTempRange
+
+        self.habRadCenter = raceData.habRadCenter
+        self.habRadRange = raceData.habRadRange
+
+        self.factoryProduce = raceData.factoryProduce   # 10 factories produce n resources a year
+        self.factoryOperate = raceData.factoryOperate   # 10,000 colonist operate n factories       
+        self.mineProduce = raceData.mineProduce     # 10 mines produce n kt of each mineral a year
+        self.mineOperate = raceData.mineOperate       #  10,000 colonist operate n mines
+
+        self.factoryCost = raceData.factoryCost      # a factory cost n resources to build
+        self.factoryGermCost = raceData.factoryGermCost # True = cost 1kt less of Germanium to build
+        self.mineCost = raceData.mineCost         # a mine costs n resources to build
+
+
+
+        # Research costs = (75% extra, standard amount, 50% less)
+        self.techCostEner = raceData.techCostEner 
+        self.techCostWeap = raceData.techCostWeap
+        self.techCostProp = raceData.techCostProp
+        self.techCostCon = raceData.techCostCon 
+        self.techCostElec = raceData.techCostElec
+        self.techCostBio = raceData.techCostBio
+        
+        self.techJumpStart = raceData.techJumpStart # True = All 'Costs 75% extra' fields start at Tech 4
+
+
         #self.homeUniverse = None
         self.race = raceData #RaceData()
         self.colonies = {}  # colony objects
@@ -109,6 +147,9 @@ class Player(object):
 
         '''
         pass
+
+
+
 
 class RaceData(object):
     """

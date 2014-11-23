@@ -63,6 +63,7 @@ class Planet(SpaceObjects):
 class ColonizedPlanet(object):
     """ Requires a planet object    
     """
+
     def __init__(self, planet, population):
         self.planet = planet
         self.scanner = False
@@ -70,6 +71,7 @@ class ColonizedPlanet(object):
         self.prodQ = False   # this would be good to have as a seperate object for AR races and (future) none-planet starbase production
 
         self.population = population
+        self.growthRate = .10  # calc on colonizing; recalc on any terriform event
 
         #calculated values
         self.resources = 0
