@@ -34,19 +34,19 @@ def test_spaceobjects():
     t1 = space_objects.SpaceObjects((5,7), 4433)
     
     
-    print ("id=%s" % (t1.getCurrentCoord(),))
-    assert t1.getCurrentCoord() == (5, 7)
+    print ("id=%s" % (t1.xy,))
+    assert t1.xy == (5, 7)
 
 #old - for reference -  use test classes
 def test_planet():
     po1 = planet.Planet((43, 2001), 333, "Saratoga", (100,50,32), (55, 30, 10))
     xy = (43, 2001)
 
-    assert_equal("Saratoga", po1.getName())
-    assert_equal((100,50,32), po1.getOrigHab())
-    assert_equal(333, po1.getID())
-    assert_equal((43,2001), po1.getCurrentCoord())
-    assert_equal(xy, po1.getDestinationCoord())
+    assert_equal("Saratoga", po1.name)
+    assert_equal((100,50,32), po1.origHab)
+    assert_equal(333, po1.ID)
+    assert_equal((43,2001), po1.xy)
+    assert_equal(xy, po1.destinationXY)
 
 
 
@@ -77,7 +77,7 @@ class TestSpaceObject(object):
 
     def test_spaceobject_exists(self):
         print("SpaceObjects: test exists")
-        assert_equal(4433, self.t1.getID())
+        assert_equal(4433, self.t1.ID)
 
 
 class TestGameTemplate(object):
@@ -331,32 +331,7 @@ class TestColonizedPlanets(object):
         pass
 
     def test_Planet_Resources(self):
+        pass
 
 
 
-
-#old - for reference -  use test classes
-#   t1 = None
-
-#   def setup(self):
-#       print ("SETUP!")
-#       t1 = space_objects.SpaceObjects(5,7,4433)
-#       po1 = planet.Planet(43, 2001, 333, "Saratoga", (100,50,32), (55, 30, 10))
-#       print ("id=%s" % (t1.getCurrentCoord(),))
-
-
-#       #print ("planet id=%d; name:%s" % (self.po1.getID(), self.po1.getName()))
-#       #return t1
-
-#   def teardown(self):
-#       print ("TEAR DOWN!")
-
-#   @with_setup(setup, teardown)
-#   def test_basic(self):
-#       assert t1.getID() == 4433
-#       print ("I RAN!")
-
-#   @with_setup(setup, teardown)
-#   def test_SpaceObject(self):
-#       assert t1.getCurrentCoord() == (5, 7)
-#       print ("id=%s" % (t1.printCurrentCoord()))
