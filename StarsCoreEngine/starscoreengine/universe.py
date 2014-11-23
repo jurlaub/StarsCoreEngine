@@ -47,9 +47,14 @@ class UniverseObject(object):
     """
 
 
-    def __init__(self, ID, uni_size = ()):
+    def __init__(self, ID, universe_data):
         self.ID = ID    # Key for universe in universe dictionary
-        self.UniverseSizeXY = uni_size
+        self.UniverseSizeXY = universe_data['UniverseSizeXY']
+        self.UniverseName = universe_data['UniverseName']
+        self.UniversePlanets = universe_data['UniversePlanets']
+        self.Players = universe_data['Players']
+        self.PlayerList = None  # which player races are located in this uni
+        
         self.planets = {}
         self.genericfleets = {} # fleet objects like Mystery Traders
         # other space objects

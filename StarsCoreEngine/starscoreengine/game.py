@@ -92,9 +92,9 @@ class Game(object):
         for i in range(0, int(template.universeNumber)):
 
             #newUni_name = template.universe_data[i]['UniverseName']
-            universeSize = template.universe_data[i]['UniverseSizeXY']
+            #universeSize = template.universe_data[i]['UniverseSizeXY']
 
-            newUni = UniverseObject(i, universeSize)
+            newUni = UniverseObject(i, template.universe_data[i])
            
             newUni.planets = self.createPlanetObjects(template.universe_data[i])   #dict
 
@@ -290,7 +290,7 @@ class StandardGameTemplate(object):
         # standard universe comprises standard settings for 1 universe.
 
         standard_universe = {"UniverseNumber":0, "UniverseSizeXY": (200,200), \
-        "UniverseName": "Prime", "UniversePlanets":6, "Players":(1)}
+        "UniverseName": "Prime", "UniversePlanets":6, "Players":1}
         
         return standard_universe
 
