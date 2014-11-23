@@ -19,6 +19,9 @@
     COPYING.Interpretation document.
 
 """
+import random
+from .template import getPlanetNameFromTemplate, planetNameTemplate
+from . import planet
 
 
 class UniverseObject(object):
@@ -55,14 +58,45 @@ class UniverseObject(object):
         self.Players = universe_data['Players']
         self.PlayerList = None  # which player races are located in this uni
         
-        self.planets = {}
+        self.planets = self.createPlanetObjects()
         self.genericfleets = {} # fleet objects like Mystery Traders
         # other space objects
         # this is where a universe would initialize special rules and tech tree
 
 
+    def createPlanetObjects(self):
+        """
+        generates planet objects
+
+        inputs: single universe dictionary data
+        returns: dictionary of planet objects
+
+        Eventually planet object generation within a universe should be shifted
+        to the Universe class. 
+
+        """
+        planets = {}
 
 
+        # ----- TODO ----
+        # template should a single universe definition
+        # uSize = u_template["UniverseSizeXY"]
+        # uPlanet = int(u_template["UniversePlanets"])
+        # uNumber = u_template["UniverseNumber"]
+        uSize = self.UniverseSizeXY
+        uPlanet = int(self.UniversePlanets)
+        uNumber = self.ID
+
+        # create and add Planet objects with random locations, names and ID's
+        for i in range(0, uPlanet):
+            xy = (random.randrange(0, uSize[0]), random.randrange(0, uSize[1]))
+            name = getPlanetNameFromTemplate(i)
+            ID = str(uNumber) + str(i)
+            newPlanet = planet.Planet(xy, ID, name)
+            
+            planets[ID] = newPlanet
+
+        return planets
 
 
 

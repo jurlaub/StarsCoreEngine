@@ -25,6 +25,7 @@ from nose.tools import with_setup, assert_equal, assert_not_equal, \
 #import nose
 import os
 from ..starscoreengine import *
+from ..starscoreengine.universe import UniverseObject
 from ..starscoreengine.player import Player
 from ..starscoreengine.player import RaceData as Race
 
@@ -212,17 +213,40 @@ class TestGame(object):
 
     def test_generateUniverses_Single(self):
         # can it generate 1 universe?
-        tmpUniverses = self.game.game_universe
+        tmpKey = 0      # 0 = key for 1st universe
+
+        tmpUniverse = self.game.game_universe[tmpKey]
 
         assert_true(self.gameTemplate.universeNumber == 1)
         assert(len(self.gameTemplate.universe_data) == 1)
-        assert_true(isinstance(tmpUniverses, dict))
+        assert_true(isinstance(self.game.game_universe, dict))
         
-        tmpKey = 0      # 0 = key for 1st universe
+        assert_true(isinstance(tmpUniverse, UniverseObject))
+        assert_true(isinstance(tmpUniverse.planets, dict))
+        
+        #one will be true
+        totalPlanets = tmpUniverse.UniversePlanets + tmpUniverse.Players
+        #assert_true(len(tmpUniverse.planets) == totalPlanets)
 
-        print("%s" % tmpUniverses[tmpKey].planets)
 
-        assert_true(len(tmpUniverses[tmpKey].planets) == int(self.universe_data[0]["UniversePlanets"]))
+        print("%s" % tmpUniverse.planets)
+        
+        planetsNonHW = 0
+        planetsHW = 0
+
+        for item in tmpUniverse.planets:
+            planet = tmpUniverse.planets[item]
+
+            if planet.HW:
+                planetsHW += 1
+            elif not planet.HW:
+                planetsNonHW += 1
+            else:
+                assert_true(False)  # should not get here.
+
+
+        assert_true(planetsNonHW == int(self.universe_data[0]["UniversePlanets"]))
+        assert_true(planetsHW == tmpUniverse.Players)
 
 
     

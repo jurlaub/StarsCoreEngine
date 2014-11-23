@@ -22,17 +22,18 @@
 
 """
 import sys
-import random
+
 import pickle
 import argparse
 from .space_objects import SpaceObjects
 from .universe import UniverseObject
-from . import planet
+# from . import planet
 from . import fleets
 from .custom_setup import customSetupDialog
 from .custom_setup import customSetupController
 from .custom_setup import loadCustomSetupJSON
 from .player import RaceData, Player
+from .template import planetNameTemplate
 
 
 
@@ -96,7 +97,7 @@ class Game(object):
 
             newUni = UniverseObject(i, template.universe_data[i])
            
-            newUni.planets = self.createPlanetObjects(template.universe_data[i])   #dict
+            #newUni.planets = self.createPlanetObjects(template.universe_data[i])   #dict
 
 
 
@@ -156,35 +157,7 @@ class Game(object):
 
 
 
-    def createPlanetObjects(self, u_template):
-        """
-        generates planet objects
 
-        inputs: single universe dictionary data
-        returns: dictionary of planet objects
-
-        Eventually planet object generation within a universe should be shifted
-        to the Universe class. 
-
-        """
-        planets = {}
-
-
-        # ----- TODO ----
-        # template should a single universe definition
-        uSize = u_template["UniverseSizeXY"]
-        uPlanet = int(u_template["UniversePlanets"])
-        uNumber = u_template["UniverseNumber"]
-
-        # create and add Planet objects with random locations, names and ID's
-        for i in range(0, uPlanet):
-            xy = (random.randrange(0, uSize[0]), random.randrange(0, uSize[1]))
-            name = getPlanetNameFromTemplate(i)
-            ID = str(uNumber) + str(i)
-            newPlanet = planet.Planet(xy, ID, name)
-            planets[ID] = newPlanet
-
-        return planets 
 
 
     def randomPlanetLocations(self, uSize, uPlanet):
@@ -335,15 +308,7 @@ class StandardGameTemplate(object):
         return RaceData(raceName)
 
 
-def getPlanetNameFromTemplate( n):
-        planet_names = planetNameTemplate()
-        x = int(n % len(planet_names))
-        return planet_names[x]
 
-def planetNameTemplate():
-        planet_names = ["Alan", "Fenge", "Fenris", "Shill", "239_Alf", "Wolf359",\
-         "Dark Star", "Kirk", "Flo Rida", "Pluto", "Centari", "Mau Tai", "Zeta"]
-        return planet_names
 
       
 
