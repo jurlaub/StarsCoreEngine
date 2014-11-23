@@ -248,6 +248,8 @@ class TestGame(object):
             assert_in(playerObject.raceName, self.playerFileList)
 
 
+    def test_Players_HW(self):
+        pass
 
 
 class TestPickling(object):
@@ -344,6 +346,8 @@ class TestColonyPlanets(object):
 
     def test_Planet_Resources(self):
         pass
+
+
 
 class TestPlayerObject(object):
 

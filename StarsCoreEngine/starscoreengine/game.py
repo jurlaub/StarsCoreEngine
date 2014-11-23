@@ -72,7 +72,7 @@ class Game(object):
         self.game_universe = self.generateUniverses(template)
 
         # -- a dictionary of Player Objects
-        self.players = self.generatePlayers(template.players_data)
+        self.players = self.generatePlayers(template)
 
 
 
@@ -98,6 +98,8 @@ class Game(object):
            
             newUni.planets = self.createPlanetObjects(template.universe_data[i])   #dict
 
+
+
             tmpUniverses[i] = newUni
 
 
@@ -106,7 +108,7 @@ class Game(object):
         return tmpUniverses
 
 
-    def generatePlayers(self, raceObjectList):
+    def generatePlayers(self, template):
         '''
         input: list of raceData objects 
                 (StandardGameTemplate grabs from .r1 
@@ -118,6 +120,14 @@ class Game(object):
 
         '''
 
+        raceObjectList = template.players_data
+
+        # way to see how many players per universe
+        # way to see the min spacing between players? 
+        # randomly sort players by universe -> or use the SGT value
+        # Then generate a planet, assign to a Universe, Randomized ID
+        # Create Colony, add to player 
+
         tmpPlayers = {}
 
         # for n in range(0, len(raceObjectList)):
@@ -126,7 +136,9 @@ class Game(object):
         for race in raceObjectList:
             tmpKey = ("player%s" % str(n))
             player = Player(race)
-            
+
+
+
             tmpPlayers[tmpKey] = player
             n+=1
 
@@ -134,6 +146,16 @@ class Game(object):
         return tmpPlayers
 
         
+    def createHomeworld(self):
+        # -- TODO --- a positional location of HWs based on some number
+
+        # -- TODO -- "shuffle" the HW planet id inside the planets
+
+
+        pass
+
+
+
     def createPlanetObjects(self, u_template):
         """
         generates planet objects
@@ -237,7 +259,8 @@ class StandardGameTemplate(object):
         # ---- HARDCODED =>> requires updating custom setup
         # -- TODO --- Template grabs data from r1 files
         self.players_data = self.getPlayerRaceFile(playerFileList)    # list of player race file names 
-        
+        self.player_by_universe = None  # method to sort players into respective universes
+
 
 
         if universeNumber < 1:
@@ -271,6 +294,11 @@ class StandardGameTemplate(object):
         
         return standard_universe
 
+    @classmethod
+    def homeworld():
+        iron = 78
+        bora = 67
+        germ = 79
 
 
     def mergeDictionaryData(self, dict1, dict2):
