@@ -48,7 +48,7 @@ class UniverseObject(object):
 
 
     def __init__(self, ID, uni_size = ()):
-        self.ID = ID 
+        self.ID = ID    # Key for universe in universe dictionary
         self.UniverseSizeXY = uni_size
         self.planets = {}
         self.genericfleets = {} # fleet objects like Mystery Traders
