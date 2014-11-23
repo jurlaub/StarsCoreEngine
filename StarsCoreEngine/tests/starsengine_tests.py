@@ -327,7 +327,7 @@ class TestColonizedPlanets(object):
         assert_true(colony.planet.ID == self.SO_ID)
 
     def test_Colonized_Planet(self):
-
+        
         pass
 
     def test_Planet_Resources(self):

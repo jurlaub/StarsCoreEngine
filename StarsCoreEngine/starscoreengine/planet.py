@@ -71,11 +71,13 @@ class ColonizedPlanet(object):
         self.prodQ = False   # this would be good to have as a seperate object for AR races and (future) none-planet starbase production
 
         self.population = population
-        self.growthRate = .10  # calc on colonizing; recalc on any terriform event
+
 
         #calculated values
+        self.growthRate = .10  # calc on colonizing; recalc on any terriform event
         self.resources = 0
         self.planetValue = 1.0    # percentage 
+
 
     def calcResources(self):
 
