@@ -148,14 +148,9 @@ class Player(object):
 
         '''
         newColony = Colony(planet, pop)
-        #planet.surface
-        # calulate planet value
+        planet.updateSurfaceMinerals(fleetMinerals)
         newColony.planetValue = self.planetValue(planet)
-
-        # calculate growthRate
         newColony.calcGrowthRate(self.growthRate)
-        
-        # set planet owner
         planet.owner = self.raceName
 
         self.colonies[planet.ID] = newColony

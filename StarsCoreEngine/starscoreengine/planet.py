@@ -40,7 +40,11 @@ class Planet(SpaceObjects):
         self.currHab = self.origHab
         self.currConc = self.origConc
         self.currSurfaceMinerals = 0  # (should be  3 values in a list)
-        
+        self.surfaceIronium = 0
+        self.surfaceBoranium = 0
+        self.surfaceGermanium = 0
+
+
         self.HW = False
         self.owner = None  # may not keep here      
 
@@ -56,8 +60,10 @@ class Planet(SpaceObjects):
     def changeConc(self):
         pass
 
-    def updateCurrentSurfaceMinerals(self):
-        pass
+    def updateSurfaceMinerals(self, minerals):
+        self.surfaceIronium += minerals[0]
+        self.surfaceBoranium += minerals[1]
+        self.surfaceGermanium += minerals[2]
 
 
 class Colony(object):

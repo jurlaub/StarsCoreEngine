@@ -317,7 +317,7 @@ class TestColonyPlanets(object):
         self.planetName = 'Abbadon'
         self.planetOne = planet.Planet((104,300), self.SO_ID, self.planetName )
         self.player.colonizePlanet(self.planetOne, self.population)
-        #self.colonizedOne = planet.Colony(self.planetOne, self.population)
+
 
 
     def teardown(self):
@@ -339,6 +339,7 @@ class TestColonyPlanets(object):
         colony = self.player.colonies[self.SO_ID]
         assert_true(colony.planet.owner == self.raceName)
         assert_true(colony.growthRate == self.player.growthRate)
+
 
 
     def test_Planet_Resources(self):
