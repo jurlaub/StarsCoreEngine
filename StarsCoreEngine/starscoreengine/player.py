@@ -95,7 +95,20 @@ class Player(object):
         self.intel = {} 
 
 
+    def colonyMining(self):
+        pass
 
+    def colonyResources(self):
+        pass
+
+    def planetValue(self):
+        '''Calculates planet value for player based on Race Data. 
+
+            if a colony = updates colony values
+            if not a colony, 
+
+        '''
+        pass
 
 class RaceData(object):
     """

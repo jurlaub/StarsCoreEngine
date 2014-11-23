@@ -28,8 +28,8 @@ from .space_objects import SpaceObjects
 class Planet(SpaceObjects):
     """ 
         Planet is the template that provides all the data available for a planet. 
-        origHab = Tuple
-        origConc = Tuple
+        origHab = Tuple  --TODO-- change to individual variables
+        origConc = Tuple --TODO-- change to individual variables
 
     """
     def __init__(self, xy, ID, name, origHab = (90, 1.1, 65), origConc = (75, 75, 75)):
@@ -40,26 +40,15 @@ class Planet(SpaceObjects):
         self.currHab = self.origHab
         self.currConc = self.origConc
         self.currSurfaceMinerals = 0  # (should be  3 values in a list)
-
-        self.owner = None
+        
         self.HW = False
-        self.defenses = False
-        self.scanner = False
-        self.orbital = False
-        self.prodQ = False   # this would be good to have as a seperate object for AR races and (future) none-planet starbase production
-        self.population = 0
+        self.owner = None  # may not keep here      
+
+        self.factories = 0
+        self.mines = 0
+        self.defenses = 0
 
 
-
-
-    def getOrigHab(self):
-        #print ("%s" % (self.origHab))
-        return self.origHab
-
-    def getName(self):
-
-        #print ("%s" % (self.name))
-        return self.name
 
     def changeHab(self):
         pass
@@ -71,8 +60,50 @@ class Planet(SpaceObjects):
         pass
 
 
-class HabitablePlanet(Planet):
+class ColonizedPlanet(object):
+    """ Requires a planet object    
     """
-        A seperate class for Habitable Planet seems helpful but at this point may be too complicated
-    """
-    pass    
+    def __init__(self, planet, population):
+        self.planet = planet
+        self.scanner = False
+        self.orbital = False
+        self.prodQ = False   # this would be good to have as a seperate object for AR races and (future) none-planet starbase production
+
+        self.population = population
+
+        #calculated values
+        self.resources = 0
+        self.planetValue = 1.0    # percentage 
+
+    def calcResources(self):
+
+        self.resources = 0
+        pass
+
+    def operatingFactories(self):
+        '''
+        Input: 
+        returns the number of factories that can be run
+
+        '''
+        pass
+
+    def operateMines(self):
+        pass
+
+    def populationGrowth(self):
+        pass
+
+    def colonyUninhabit(self):
+        # self.planet.owner = None
+        # damage to infrastructure?
+        # self.resources = 0
+        # self.population = 0
+        # self.scanner = False
+        # self.orbital = False
+        # self.prodQ = False
+
+        pass
+
+
+

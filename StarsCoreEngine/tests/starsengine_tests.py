@@ -292,15 +292,45 @@ class TestPickling(object):
 class TestGamePlanets(object):
 
     def setup(self):
-        print("TestGame: Setup")
-        self.gameTemplate = game.StandardGameTemplate()
+        print("TestGamePlanets: Setup")
+        self.planet1 = planet.Planet((104,300), '024', 'Abbadon')
 
     def teardown(self):
-        print("TestGame: Teardown")
+        print("TestGamePlanets: Teardown")
 
     def test_Planet_Objects(self):
         pass
 
+
+class TestColonizedPlanets(object):
+
+    def setup(self):
+        print("TestColonizedPlanets: Setup")
+        self.population = 25000
+        self.SO_ID = '024'
+        self.planetName = 'Abbadon'
+        self.planetOne = planet.Planet((104,300), self.SO_ID, self.planetName )
+        self.colonizedOne = planet.ColonizedPlanet(self.planetOne, self.population)
+
+    def teardown(self):
+        print("TestColonizedPlanets: Teardown")
+
+    def test_Colonized_PlanetValues(self):
+        planet = self.planetOne
+        colony = self.colonizedOne
+
+        assert_true(planet.name == self.planetName)
+        assert_true(planet.ID == self.SO_ID)
+        assert_true(colony.population == self.population)
+        
+        assert_true(colony.planet.name == self.planetName)
+        assert_true(colony.planet.ID == self.SO_ID)
+
+    def test_Colonized_Planet(self):
+
+        pass
+
+    def test_Planet_Resources(self):
 
 
 

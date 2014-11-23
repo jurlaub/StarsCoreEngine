@@ -46,22 +46,10 @@ class SpaceObjects(object):
         self.newSpeed = self.speed
 
 
-    def getID(self):
-        return self.ID
-
-    def getCurrentCoord(self):
-        """ returns a tuple  """ 
-        return self.xy
-
-    def setCurrentCoord(self, xy):
-        self.xy = xy
 
     def printCurrentCoord(self):
         print ("(x = %, y = %)" % (self.xy))
 
-    def getDestinationCoord(self):
-        """ returns a tuple """
-        return self.destinationXY
 
 
 

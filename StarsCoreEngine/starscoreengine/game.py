@@ -107,6 +107,17 @@ class Game(object):
 
 
     def generatePlayers(self, raceObjectList):
+        '''
+        input: list of raceData objects 
+                (StandardGameTemplate grabs from .r1 
+                files or development standard object)
+
+        output: creates a dictionary of player objects
+                Player Object Dictionary key = "player" + (0 to N)
+
+
+        '''
+
         tmpPlayers = {}
 
         # for n in range(0, len(raceObjectList)):
