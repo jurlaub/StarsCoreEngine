@@ -104,19 +104,15 @@ class RaceData(object):
     def __init__(self, raceName):
         self.raceName = raceName
         self.raceNamePlural = raceName
-        
-        #self.PRT = 'SS'
+        self.raceIcon = None
+        self.LeftOverRWPoints = None
 
-        #self.LRT = []
+        self.PRT = 'SS'
+        self.LRT = []
 
         self.popGrowthRate = .14
+        self.popEfficiency = 1000  # 1 resource per 1000 colonists
         
-        #--- TODO ---
-        # add resource gen: per xx(800-2500) pop yy(8-15) resources generated
-        #self.popEfficiency = 10   # ?
-
-
-
         '''
         #Environment
         >> Consists of centerpoint & range
@@ -139,16 +135,24 @@ class RaceData(object):
         self.habRadRange = 15.0
 
 
-        self.factoryRun = 10
-        self.factoryCost = 10
-        self.factoryRate = 10
-        
-        self.mineRun = 10
-        self.mineCost = 10
-        self.mineRate = 10
-        
+        self.factoryProduce = 10    # 10 factories produce n resources a year
+        self.factoryCost = 10       # a factory cost n resources to build
+        self.factoryOperate = 10    # 10,000 colonist operate n factories       
+        self.factoryGermCost = False # True = cost 1kt less of Germanium to build
 
-    
+        self.mineProduce = 10       # 10 mines produce n kt of each mineral a year
+        self.mineCost = 10          # a mine costs n resources to build
+        self.mineOperate = 10       #  10,000 colonist operate n mines
+        
+        # Research costs = (75% extra, standard amount, 50% less)
+        self.techCostEner = 1 
+        self.techCostWeap = 1 
+        self.techCostProp = 1 
+        self.techCostCon = 1 
+        self.techCostElec = 1 
+        self.techCostBio = 1 
+        
+        self.techJumpStart = False # True = All 'Costs 75% extra' fields start at Tech 4
 
 
 
