@@ -26,6 +26,7 @@ from nose.tools import with_setup, assert_equal, assert_not_equal, \
 import os
 from ..starscoreengine import *
 from ..starscoreengine.player import Player
+from ..starscoreengine.player import RaceData as Race
 
 
 #old - for reference -  use test classes
@@ -302,22 +303,29 @@ class TestGamePlanets(object):
         pass
 
 
-class TestColonizedPlanets(object):
+class TestColonyPlanets(object):
 
     def setup(self):
-        print("TestColonizedPlanets: Setup")
+        print("TestColonyPlanets: Setup")
+        self.playerKey = 'player1'
+        self.raceName = 'Wolfbane'
+        self.RaceData = Race(self.raceName)
+        self.player = Player(self.RaceData)
+
         self.population = 25000
         self.SO_ID = '024'
         self.planetName = 'Abbadon'
         self.planetOne = planet.Planet((104,300), self.SO_ID, self.planetName )
-        self.colonizedOne = planet.ColonizedPlanet(self.planetOne, self.population)
+        self.player.colonizePlanet(self.planetOne, self.population)
+        #self.colonizedOne = planet.Colony(self.planetOne, self.population)
+
 
     def teardown(self):
-        print("TestColonizedPlanets: Teardown")
+        print("TestColonyPlanets: Teardown")
 
-    def test_Colonized_PlanetValues(self):
+    def test_Colony_PlanetValues(self):
         planet = self.planetOne
-        colony = self.colonizedOne
+        colony = self.player.colonies[self.SO_ID]
 
         assert_true(planet.name == self.planetName)
         assert_true(planet.ID == self.SO_ID)
@@ -326,12 +334,36 @@ class TestColonizedPlanets(object):
         assert_true(colony.planet.name == self.planetName)
         assert_true(colony.planet.ID == self.SO_ID)
 
-    def test_Colonized_Planet(self):
-        
-        pass
+    def test_Colony_Planet(self):
+        assert_in(self.SO_ID, self.player.colonies)
+        colony = self.player.colonies[self.SO_ID]
+        assert_true(colony.planet.owner == self.raceName)
+        assert_true(colony.growthRate == self.player.growthRate)
+
 
     def test_Planet_Resources(self):
         pass
+
+class TestPlayerObject(object):
+
+    def setup(self):
+        print("TestPlayerObject: Setup")
+        self.raceName = 'Wolfbane'
+        self.RaceData = Race(self.raceName)
+        self.player = Player(self.RaceData)
+
+
+    def teardown(self):
+        print("TestPlayerObject: Teardown")
+
+    def test_PlayerValues(self):
+        player = self.player
+        race = self.RaceData
+
+        assert(self.raceName == player.raceName)
+
+
+
 
 
 

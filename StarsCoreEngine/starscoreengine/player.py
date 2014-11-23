@@ -19,6 +19,7 @@
     COPYING.Interpretation document.
 
 """
+from .planet import Colony, Planet
 
 
 '''
@@ -87,7 +88,7 @@ class Player(object):
         self.PRT = raceData.PRT     # apply PRT values after player variables set,
         self.LRT = raceData.LRT   # apply LRT values after player is updated with PRT variables
 
-        self.popGrowthRate = raceData.popGrowthRate
+        self.growthRate = raceData.growthRate
         self.popEfficiency = raceData.popEfficiency
 
         self.habGravityCenter = raceData.habGravityCenter  # (centerpoint, Click width)?  
@@ -122,7 +123,7 @@ class Player(object):
 
 
         #self.homeUniverse = None
-        self.race = raceData #RaceData()
+        #self.race = raceData #RaceData()
         self.colonies = {}  # colony objects
         self.tech = {}  # tech object
         self.shipDesign = {} # ship design objects
@@ -139,14 +140,38 @@ class Player(object):
     def colonyResources(self):
         pass
 
-    def planetValue(self):
+    def colonizePlanet(self, planet, pop, fleetMinerals = (25,20,30)):
+        '''
+        input:  planet = planet object; 
+                pop = colonists - typically cargo of colony ship
+                fleetMinerals = colony fleet object that has been salvaged
+
+        '''
+        newColony = Colony(planet, pop)
+        #planet.surface
+        # calulate planet value
+        newColony.planetValue = self.planetValue(planet)
+
+        # calculate growthRate
+        newColony.calcGrowthRate(self.growthRate)
+        
+        # set planet owner
+        planet.owner = self.raceName
+
+        self.colonies[planet.ID] = newColony
+        
+
+
+    def planetValue(self, planet):
         '''Calculates planet value for player based on Race Data. 
 
             if a colony = updates colony values
-            if not a colony, 
+            if not a colony, updates intel values
 
         '''
-        pass
+        planetValue = 1.0
+
+        return planetValue
 
 
 
@@ -164,7 +189,7 @@ class RaceData(object):
         self.PRT = 'SS'
         self.LRT = []
 
-        self.popGrowthRate = .14
+        self.growthRate = .14
         self.popEfficiency = 1000  # 1 resource per 1000 colonists
         
         '''

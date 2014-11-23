@@ -60,8 +60,9 @@ class Planet(SpaceObjects):
         pass
 
 
-class ColonizedPlanet(object):
-    """ Requires a planet object    
+class Colony(object):
+    """ Requires a planet object >>> or object that mimics required attributes
+
     """
 
     def __init__(self, planet, population):
@@ -97,6 +98,10 @@ class ColonizedPlanet(object):
 
     def populationGrowth(self):
         pass
+
+
+    def calcGrowthRate(self, raceRate):
+        self.growthRate = raceRate
 
     def colonyUninhabit(self):
         # self.planet.owner = None

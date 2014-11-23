@@ -126,6 +126,7 @@ class Game(object):
         for race in raceObjectList:
             tmpKey = ("player%s" % str(n))
             player = Player(race)
+            
             tmpPlayers[tmpKey] = player
             n+=1
 
