@@ -188,7 +188,9 @@ class TestGame(object):
         print("TestGame: Setup")
         self.playerFileList = ['playerTest1', 'playerTest2']
         self.testGameName = 'rabidTest'
-        self.gameTemplate = game.StandardGameTemplate(self.testGameName, self.playerFileList)
+        #self.testCustomSetup = {"UniverseNumber0": { "Players": "2"}}
+
+        self.gameTemplate = game.StandardGameTemplate(self.testGameName, self.playerFileList, {"UniverseNumber0": { "Players": "2"}})
         self.universe_data = self.gameTemplate.universe_data
         self.game = game.Game(self.gameTemplate)
 
@@ -225,7 +227,7 @@ class TestGame(object):
         assert_true(isinstance(tmpUniverse.planets, dict))
         
         #one will be true
-        totalPlanets = tmpUniverse.UniversePlanets + tmpUniverse.Players
+        totalPlanets = int(tmpUniverse.UniversePlanets) + int(tmpUniverse.Players)
         assert_true(len(tmpUniverse.planets) == totalPlanets)
 
 
@@ -244,9 +246,10 @@ class TestGame(object):
             else:
                 assert_true(False)  # should not get here.
 
+        print("Planets: %d; homeworld: %d " % (planetsNonHW, planetsHW))
 
         assert_true(planetsNonHW == int(self.universe_data[0]["UniversePlanets"]))
-        assert_true(planetsHW == tmpUniverse.Players)
+        assert_true(planetsHW == int(tmpUniverse.Players))
 
 
     
@@ -267,10 +270,17 @@ class TestGame(object):
             playerObject = players[val]         # use key to grab player object
 
             assert_true(isinstance(playerObject, Player))
-
-
             assert_in(playerObject.raceName, self.playerFileList)
 
+            #test HW
+            assert_true(isinstance(playerObject.colonies, dict))
+            print("player colonies have %d colonies" % len(playerObject.colonies))
+            assert_true(len(playerObject.colonies) == 1)
+            homeworldKey, homeworld = playerObject.colonies.popitem()
+            
+            assert_true(homeworld.planet.HW == True)
+            assert_true(homeworld.planet.owner == playerObject.raceName)
+            assert_true(homeworld.scanner == True)
 
     def test_Players_HW(self):
         pass

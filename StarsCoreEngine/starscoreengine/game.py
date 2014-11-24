@@ -113,25 +113,17 @@ class Game(object):
 
         '''
 
-
         raceObjectList = template.players_data
 
-        # way to see how many players per universe
-        # way to see the min spacing between players? 
-        # randomly sort players by universe -> or use the SGT value
-        # Then generate a planet, assign to a Universe, Randomized ID
-        # Create Colony, add to player 
+        # --TODO --- way to see the min spacing between players? 
+        # --TODO --- randomly sort players by universe -> or use the SGT value
 
         tmpPlayers = {}
 
-        # for n in range(0, len(raceObjectList)):
-        #     tmpKey = ("player%s" % str(n))
         n = 0
         for race in raceObjectList:
             tmpKey = ("player%s" % str(n))
             player = Player(race)
-
-
 
             tmpPlayers[tmpKey] = player
             n+=1
@@ -145,10 +137,11 @@ class Game(object):
         for uniKey in self.game_universe:   
             universe = self.game_universe[uniKey]   
             
+            # add players' HW to each universe
             for p in range(0, int(universe.Players)):
                 tmpKey = ("player%s" % str(playNumb))
 
-
+                # if there are enough players add to the universe
                 if tmpKey in tmpPlayers:
                     player = tmpPlayers[tmpKey]
 
@@ -160,10 +153,6 @@ class Game(object):
                     player.colonies[planetHW.ID] = homeworld
 
                 playNumb += 1
-
-
-
-
 
 
         return tmpPlayers

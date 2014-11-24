@@ -59,7 +59,8 @@ class UniverseObject(object):
         self.PlayerList = None  # which player races are located in this uni
         
         self.planets = self.createPlanetObjects()
-        self.usedNames = ["hello"]
+        
+        self.usedNames = []
 
         self.genericfleets = {} # fleet objects like Mystery Traders
         # other space objects
@@ -93,15 +94,9 @@ class UniverseObject(object):
         return planets
 
     def getPlanetName(self):
-        # print("%s" % self.usedNames)
-        # nameList = self.usedNames
+
         name = getPlanetNameFromTemplate()
-        # while True:
-        #     name = getPlanetNameFromTemplate()
-        #     if name in nameList:
-        #         continue
-        #     break
-        # nameList.append(name)
+
         return name
 
     def createPlanet(self, ID, name):
