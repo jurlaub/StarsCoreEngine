@@ -53,7 +53,7 @@ class Planet(SpaceObjects):
 
         self.factories = 0
         self.mines = 0
-        self.defenses = 0
+
 
 
 
@@ -81,7 +81,7 @@ class Colony(object):
         self.prodQ = False   # this would be good to have as a seperate object for AR races and (future) none-planet starbase production
 
         self.population = population
-
+        self.defenses = 0
 
         #calculated values
         self.growthRate = .10  # calc on colonizing; recalc on any terriform event

@@ -226,7 +226,7 @@ class TestGame(object):
         
         #one will be true
         totalPlanets = tmpUniverse.UniversePlanets + tmpUniverse.Players
-        #assert_true(len(tmpUniverse.planets) == totalPlanets)
+        assert_true(len(tmpUniverse.planets) == totalPlanets)
 
 
         print("%s" % tmpUniverse.planets)

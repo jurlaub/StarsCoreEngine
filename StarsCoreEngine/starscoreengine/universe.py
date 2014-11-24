@@ -21,7 +21,7 @@
 """
 import random
 from .template import getPlanetNameFromTemplate, planetNameTemplate
-from . import planet
+from .planet import Planet, Colony
 
 
 class UniverseObject(object):
@@ -49,8 +49,8 @@ class UniverseObject(object):
 
     """
 
-
-    def __init__(self, ID, universe_data):
+    #--TODO-- PLANET_NAMES  new Universe accepts planet name list
+    def __init__(self, ID, universe_data, planet_names = []):
         self.ID = ID    # Key for universe in universe dictionary
         self.UniverseSizeXY = universe_data['UniverseSizeXY']
         self.UniverseName = universe_data['UniverseName']
@@ -59,6 +59,8 @@ class UniverseObject(object):
         self.PlayerList = None  # which player races are located in this uni
         
         self.planets = self.createPlanetObjects()
+        self.usedNames = ["hello"]
+
         self.genericfleets = {} # fleet objects like Mystery Traders
         # other space objects
         # this is where a universe would initialize special rules and tech tree
@@ -68,35 +70,74 @@ class UniverseObject(object):
         """
         generates planet objects
 
-        inputs: single universe dictionary data
+        inputs:  universe data found in universe object
         returns: dictionary of planet objects
-
-        Eventually planet object generation within a universe should be shifted
-        to the Universe class. 
 
         """
         planets = {}
 
 
-        # ----- TODO ----
-        # template should a single universe definition
-        # uSize = u_template["UniverseSizeXY"]
-        # uPlanet = int(u_template["UniversePlanets"])
-        # uNumber = u_template["UniverseNumber"]
-        uSize = self.UniverseSizeXY
         uPlanet = int(self.UniversePlanets)
         uNumber = self.ID
 
         # create and add Planet objects with random locations, names and ID's
         for i in range(0, uPlanet):
-            xy = (random.randrange(0, uSize[0]), random.randrange(0, uSize[1]))
-            name = getPlanetNameFromTemplate(i)
+            
+            name = self.getPlanetName()
             ID = str(uNumber) + str(i)
-            newPlanet = planet.Planet(xy, ID, name)
+
+            newPlanet = self.createPlanet(ID, name)
             
             planets[ID] = newPlanet
 
         return planets
+
+    def getPlanetName(self):
+        # print("%s" % self.usedNames)
+        # nameList = self.usedNames
+        name = getPlanetNameFromTemplate()
+        # while True:
+        #     name = getPlanetNameFromTemplate()
+        #     if name in nameList:
+        #         continue
+        #     break
+        # nameList.append(name)
+        return name
+
+    def createPlanet(self, ID, name):
+        uSize = self.UniverseSizeXY
+        xy = (random.randrange(0, uSize[0]), random.randrange(0, uSize[1]))
+        tmpVal = Planet(xy, ID, name)
+        
+        return tmpVal
+
+
+    def createHomeworldPlanet(self, raceName):
+        # -- TODO --- a positional location of HWs based on some number
+
+        count = len(self.planets)   # 0 based count == next planet number
+        ID = str(self.ID) + str(count)  # new planet ID
+
+        #**********************
+        #Shuffling a new HW into the existing planet ID's so that HW's are not 
+        #easily identified.
+        #**********************
+        switchID = str(self.ID) + str(random.randrange(0, count))
+
+        switchPlanet = self.planets[switchID]
+        switchPlanet.ID = ID    # Existing Planet takes in new planet ID
+        self.planets[ID] = switchPlanet
+
+        name = self.getPlanetName()
+        homeworld = self.createPlanet(switchID, name)   # HW takes existing planet ID
+        homeworld.HW = True  
+        homeworld.owner = raceName     
+
+        self.planets[switchID] = homeworld      # HW takes existing planet Key
+
+
+        return homeworld
+
 
 
 

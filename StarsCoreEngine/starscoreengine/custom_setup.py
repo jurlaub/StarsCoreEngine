@@ -157,6 +157,7 @@ def customSetupDialog(template, fileName):
     customTemplateDict['player_file_names'] = player_file_names
 
 
+    player_count = number_of_players
 
     # review all dictionary items contained within the 
     # StandardGameTemplate.standardUniverse() and add values to dictionary
@@ -188,6 +189,9 @@ def customSetupDialog(template, fileName):
 
                 tmpValue = (int(tmpValuea), int(tmpValueb))             
 
+            elif x == 'Players':
+                tmpValue = input("There are %d players total. \nHow many players do you want in this universe? <%d left>: " % (number_of_players, player_count))
+                
             else:
                 print("'%s':%s" %(x, template[x]))
                 tmpValue = input("What value do you want for %s: <%s>? " % (x, template[x]))

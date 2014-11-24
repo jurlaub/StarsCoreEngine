@@ -27,7 +27,7 @@ import pickle
 import argparse
 from .space_objects import SpaceObjects
 from .universe import UniverseObject
-# from . import planet
+from .planet import Colony
 from . import fleets
 from .custom_setup import customSetupDialog
 from .custom_setup import customSetupController
@@ -89,22 +89,14 @@ class Game(object):
         '''
 
         tmpUniverses = {}
+        #---TODO--- PLANET_NAMES access planet name list
 
         for i in range(0, int(template.universeNumber)):
 
-            #newUni_name = template.universe_data[i]['UniverseName']
-            #universeSize = template.universe_data[i]['UniverseSizeXY']
-
-            newUni = UniverseObject(i, template.universe_data[i])
-           
-            #newUni.planets = self.createPlanetObjects(template.universe_data[i])   #dict
-
-
-
+            # --TODO-- PLANET_NAMES send planet name list to universes => each 
+            #          planet should have a unique name across universes
+            newUni = UniverseObject(i, template.universe_data[i])       
             tmpUniverses[i] = newUni
-
-
-
 
         return tmpUniverses
 
@@ -120,6 +112,7 @@ class Game(object):
 
 
         '''
+
 
         raceObjectList = template.players_data
 
@@ -144,16 +137,39 @@ class Game(object):
             n+=1
 
 
+        # Go through Universe list and assign players to Universe
+        # if Universes have more player slots then players = no additional value added
+        # if Universes have less player slots then players are not assigned.
+
+        playNumb = 0
+        for uniKey in self.game_universe:   
+            universe = self.game_universe[uniKey]   
+            
+            for p in range(0, int(universe.Players)):
+                tmpKey = ("player%s" % str(playNumb))
+
+
+                if tmpKey in tmpPlayers:
+                    player = tmpPlayers[tmpKey]
+
+                    planetHW = universe.createHomeworldPlanet(player.raceName)
+
+                    homeworld = Colony(planetHW, template.starting_population)
+                    homeworld.scanner = True
+
+                    player.colonies[planetHW.ID] = homeworld
+
+                playNumb += 1
+
+
+
+
+
+
         return tmpPlayers
 
         
-    def createHomeworld(self):
-        # -- TODO --- a positional location of HWs based on some number
 
-        # -- TODO -- "shuffle" the HW planet id inside the planets
-
-
-        pass
 
 
 
@@ -222,6 +238,7 @@ class StandardGameTemplate(object):
              self.game_name = game_name # "rabid_weasels"
 
         self.planet_names = planetNameTemplate()
+        self.starting_population = 50000
         self.universeNumber = int(universeNumber)
         self.universe_data = []    # list of universe dictionary data
 
