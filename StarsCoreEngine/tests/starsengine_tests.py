@@ -376,6 +376,50 @@ class TestColonyPlanets(object):
         assert_true(colony.planet.owner == self.raceName)
         assert_true(colony.growthRate == self.player.growthRate)
 
+    def test_ColonyHW_Growth_Low(self):
+        planet = self.planetOne
+        colony = self.player.colonies[self.SO_ID]
+
+        assert_true(colony.population == self.population)
+
+        colony.populationGrowth()
+        assert_true(colony.population > self.population)
+
+        habVal = colony.planetValue
+        growRate = colony.growthRate
+        tmpGrowth = self.population * habVal * growRate
+
+        print("%d population this year" % tmpGrowth)
+        assert_true(colony.population == self.population + tmpGrowth)
+
+    def test_ColonyHW_Growth_Mid(self):
+        planet = self.planetOne
+        colony = self.player.colonies[self.SO_ID]
+        
+        # change the pop to 'half-full' for non- JOAT & HE & AR
+        popmid = 500000
+        capacity = (popmid * 1.0) / colony.planetMaxPopulation
+        colony.population = popmid
+
+
+        colony.populationGrowth()
+        assert_true(colony.population > popmid)
+
+        habVal = colony.planetValue
+        growRate = colony.growthRate
+        tmpGrowth = popmid * habVal * growRate
+        tmpGrowth *= 16.0/9
+        tmpGrowth *= (1.0 - capacity) * (1.0 - capacity)
+
+        print("%d population this year" % tmpGrowth)
+        assert_true(colony.population == popmid + tmpGrowth)
+
+
+
+
+
+
+
 
 
     def test_Planet_Resources(self):

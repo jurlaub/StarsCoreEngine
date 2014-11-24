@@ -87,6 +87,7 @@ class Player(object):
 
         self.PRT = raceData.PRT     # apply PRT values after player variables set,
         self.LRT = raceData.LRT   # apply LRT values after player is updated with PRT variables
+        self.raceTraits = None
 
         self.growthRate = raceData.growthRate
         self.popEfficiency = raceData.popEfficiency
@@ -168,7 +169,11 @@ class Player(object):
 
         return planetValue
 
+class RaceTraits(object):
 
+    def __init__(self):
+        self.planetMaxPopulation = 1000000
+        
 
 
 class RaceData(object):

@@ -93,11 +93,15 @@ class UniverseObject(object):
 
         return planets
 
+
+
     def getPlanetName(self):
 
         name = getPlanetNameFromTemplate()
 
         return name
+
+
 
     def createPlanet(self, ID, name):
         uSize = self.UniverseSizeXY

@@ -80,13 +80,15 @@ class Colony(object):
         self.orbital = False
         self.prodQ = False   # this would be good to have as a seperate object for AR races and (future) none-planet starbase production
 
+
         self.population = population
         self.defenses = 0
 
         #calculated values
         self.growthRate = .10  # calc on colonizing; recalc on any terriform event
         self.resources = 0
-        self.planetValue = 1.0    # percentage 
+        self.planetValue = 1.0    # 1.0 = 100% Value = calculated from currHab 
+        self.planetMaxPopulation = 1000000  # based on PlanetValue & PRT # HE is .5; JOAT is 1.20
 
 
     def calcResources(self):
@@ -106,7 +108,37 @@ class Colony(object):
         pass
 
     def populationGrowth(self):
-        pass
+        ''' Population Growth is a function of Planet Value, GrowthRate, and 
+        Population. 
+        http://wiki.starsautohost.org/wiki/Guts_of_population_growth
+        
+        under 25%: popgrowth = population * growthrate * habvalue
+        over 25%:  as above, then multiply by crowdingfactor = 16/9 * (1-cap%)^2.
+
+        '''
+        pop = self.population
+        growth = self.growthRate
+        hab = self.planetValue
+
+        capacity = (self.population * 1.0) / self.planetMaxPopulation # 1.0 = ensure float
+
+        if capacity > 1.0:
+            # --TODO--- negative growth
+            
+            return  
+        
+        else:
+            popgrowth = pop * growth * hab
+
+            if (capacity > .25):
+                popgrowth = popgrowth * 16.0/9
+                popgrowth = popgrowth * (1.0 - capacity) * (1.0 - capacity)
+
+
+            self.population += popgrowth
+            print("%s had %d population growth. Total Population: %d" % (self.planet.name, popgrowth, self.population))
+            
+
 
 
     def calcGrowthRate(self, raceRate):
