@@ -414,6 +414,17 @@ class TestColonyPlanets(object):
         print("%d population this year" % tmpGrowth)
         assert_true(colony.population == popmid + tmpGrowth)
 
+    def test_Colony_Resources(self):
+        planet = self.planetOne
+        colony = self.player.colonies[self.SO_ID]
+        popEfficiency = 1000
+        totalResources = self.population / popEfficiency
+        
+
+        colony.calcTotalResources(popEfficiency)
+
+        assert_true(colony.totalResources == totalResources)
+
 
 
 

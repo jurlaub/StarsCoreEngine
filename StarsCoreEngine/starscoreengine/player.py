@@ -173,12 +173,14 @@ class RaceTraits(object):
 
     def __init__(self):
         self.planetMaxPopulation = 1000000
-        
+
 
 
 class RaceData(object):
     """
     Contains data from RaceWizard.
+
+    possible use this to hold all PRT and LRT values. 
     """
     def __init__(self, raceName):
         self.raceName = raceName

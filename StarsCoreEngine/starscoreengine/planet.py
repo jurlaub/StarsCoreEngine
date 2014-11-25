@@ -75,26 +75,28 @@ class Colony(object):
     """
 
     def __init__(self, planet, population):
-        self.planet = planet
+        self.planet = planet    # *** connects a colony to a planet object ****
+        
+
         self.scanner = False
         self.orbital = False
         self.prodQ = False   # this would be good to have as a seperate object for AR races and (future) none-planet starbase production
-
 
         self.population = population
         self.defenses = 0
 
         #calculated values
         self.growthRate = .10  # calc on colonizing; recalc on any terriform event
-        self.resources = 0
+        self.totalResources = 0
+        self.resourceTax = False  
         self.planetValue = 1.0    # 1.0 = 100% Value = calculated from currHab 
         self.planetMaxPopulation = 1000000  # based on PlanetValue & PRT # HE is .5; JOAT is 1.20
 
 
-    def calcResources(self):
+    def calcTotalResources(self, popEfficiency):
 
-        self.resources = 0
-        pass
+        self.totalResources = self.population / popEfficiency
+
 
     def operatingFactories(self):
         '''
@@ -105,6 +107,9 @@ class Colony(object):
         pass
 
     def operateMines(self):
+        ''' Extract minerals from planet and turn into surface minerals
+                minerals should deplete in a seperate method
+        '''
         pass
 
     def populationGrowth(self):
