@@ -33,6 +33,7 @@
 
 '''
 import json
+from .game_utility import saveFileToJSON
 
 
 
@@ -51,7 +52,7 @@ def customSetupController(template, fileName = None):
 
     if fileName:
         dialogName = customTemplateDict['json_file_name']
-        saveCustomSetupJSON(customTemplateDict, dialogName)
+        saveFileToJSON(customTemplateDict, dialogName)
     
     return customTemplateDict
 

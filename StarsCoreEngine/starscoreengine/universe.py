@@ -85,7 +85,7 @@ class UniverseObject(object):
         for i in range(0, uPlanet):
             
             name = self.getPlanetName()
-            ID = str(uNumber) + str(i)
+            ID = str(uNumber) + '_' + str(i)
 
             newPlanet = self.createPlanet(ID, name)
             
@@ -115,13 +115,13 @@ class UniverseObject(object):
         # -- TODO --- a positional location of HWs based on some number
 
         count = len(self.planets)   # 0 based count == next planet number
-        ID = str(self.ID) + str(count)  # new planet ID
+        ID = str(self.ID) + '_' + str(count)  # new planet ID
 
         #**********************
         #Shuffling a new HW into the existing planet ID's so that HW's are not 
         #easily identified.
         #**********************
-        switchID = str(self.ID) + str(random.randrange(0, count))
+        switchID = str(self.ID) + '_' + str(random.randrange(0, count))
 
         switchPlanet = self.planets[switchID]
         switchPlanet.ID = ID    # Existing Planet takes in new planet ID

@@ -35,7 +35,8 @@ from .custom_setup import loadCustomSetupJSON
 from .player import RaceData, Player
 from .template import planetNameTemplate
 from .template import StandardGameTemplate
-from .game_utility import printGameValues, GamePickle
+from .game_utility import printGameValues
+from .game_utility import GamePickle, createXYFile
 
 
 
@@ -379,8 +380,7 @@ def SetupFileInterface(results):
 
 
 
-def createXYFile(game):
-    pass
+
 
 
 def main():
@@ -437,8 +437,7 @@ def main():
 
         if results.newGame:
             # generate an xy file
-            # send in game
-            pass
+            createXYFile(game)
 
 
 

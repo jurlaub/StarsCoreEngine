@@ -23,6 +23,63 @@
 """
 
 import pickle
+import json
+
+
+
+
+
+
+def createXYFile(game):
+    ''' Generates the game .xy file for users.
+    
+    '''
+    # for each planet in universe, capture: ID, Name, XY, 
+    xy_filename = game.game_name + '.xy'
+    planets_in_game = {} # key is existing key
+
+    for universeKey in game.game_universe:
+        universe = game.game_universe[universeKey]
+
+        for planetKey in universe.planets:
+            planet = universe.planets[planetKey]
+
+
+            # planet data to be added to JSON file
+            planetDict = {}
+            planetDict['ID'] = planet.ID
+            planetDict['name'] = planet.name
+            planetDict['xy'] = planet.xy 
+
+
+            planets_in_game[planetKey] = planetDict
+
+
+    saveFileToJSON(planets_in_game, xy_filename)
+    # call json encoder
+    # with open(xy_filename, 'w') as fp:
+    #     json.dump(planetList, fp, indent=4)
+
+
+def saveFileToJSON(customDict, fileName = 'testSetupFile.json'):
+    '''
+    Warning... not robust!
+
+    saves the stream (typically a dictionary) in json form to a file for later use.
+
+    ---- json != tuples -----
+    json does not handle tuples. If tuples are needed to be saved - consider a 
+    adding a special tool/utility to parse the dict before saving to json. The 
+    tool should replace every tuple with a structure that can be loaded and 
+    returned to a tuple state. See the stackoverflow:
+    http://stackoverflow.com/questions/15721363/preserve-python-tuples-with-json
+
+    '''
+
+    with open(fileName, 'w') as fp:
+        json.dump(customDict, fp, indent=4)
+
+
 
 
 
@@ -52,9 +109,6 @@ class GamePickle(object):
             return pickle.load(fn)
 
 
-
-
-
 def printGameValues(game):
     for zz in iter(game.game_universe):
         print("\t%s%s%d%s"%('-'*20, 'UniverseNumber:', zz,'-'*20 ))
@@ -75,7 +129,7 @@ def printGameValues(game):
     for player in iter(game.players):
         playerObject = game.players[player]
         print("%s" % ( playerObject.raceName ))
-        print("population growth rate: %s" % str(playerObject.race.popGrowthRate))
+        print("population growth rate: %s" % str(playerObject.growthRate))
 
     print("\n")
 

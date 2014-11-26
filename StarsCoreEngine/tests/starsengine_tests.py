@@ -28,6 +28,7 @@ from ..starscoreengine import *
 from ..starscoreengine.universe import UniverseObject
 from ..starscoreengine.player import Player
 from ..starscoreengine.player import RaceData as Race
+from ..starscoreengine.game_utility import GamePickle
 
 
 #old - for reference -  use test classes
@@ -294,7 +295,7 @@ class TestPickling(object):
         print("cwd: %s" % self.cwd)
         self.tmpGameTemplate = game.StandardGameTemplate()
         self.tmpGame = game.Game(self.tmpGameTemplate)
-
+        self.tmpPickleName = 'tmp_pickle.tmp'
 
 
 
@@ -308,17 +309,20 @@ class TestPickling(object):
     def test_Pickle(self):
         tmpUniverse = self.tmpGame.game_universe[0]
 
-        tmpUniverse.planets['01'].name = "Starbuck_Straw"
-        self.tmpPickleName = 'tmp_pickle.tmp'
-        pickleTest = (self.tmpGameTemplate, self.tmpGame)
-        game.GamePickle.makePickle(self.tmpPickleName, pickleTest)
+        tmpUniverse.planets['0_1'].name = "Starbuck_Straw"
 
-        savedTemplate, savedGame = game.GamePickle.unPickle(self.tmpPickleName)
-        print("test_Pickle: has HARDCODED SpaceObjects(planets) keys: '01', '02'")
+        pickleTest = (self.tmpGameTemplate, self.tmpGame)
+        
+
+
+        GamePickle.makePickle(self.tmpPickleName, pickleTest)
+
+        savedTemplate, savedGame = GamePickle.unPickle(self.tmpPickleName)
+        print("test_Pickle: has HARDCODED SpaceObjects(planets) keys: '0_1', '0_2'")
         savedUniverse = savedGame.game_universe[0]    
 
-        assert_true(savedUniverse.planets['01'].name == "Starbuck_Straw")
-        assert_true(savedUniverse.planets['02'].name == tmpUniverse.planets['02'].name)
+        assert_true(savedUniverse.planets['0_1'].name == "Starbuck_Straw")
+        assert_true(savedUniverse.planets['0_2'].name == tmpUniverse.planets['0_2'].name)
         assert_true(len(savedUniverse.planets) == len(tmpUniverse.planets))
 
         
