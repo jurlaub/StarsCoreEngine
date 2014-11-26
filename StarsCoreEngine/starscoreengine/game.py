@@ -23,7 +23,7 @@
 """
 import sys
 
-import pickle
+
 import argparse
 from .space_objects import SpaceObjects
 from .universe import UniverseObject
@@ -34,6 +34,8 @@ from .custom_setup import customSetupController
 from .custom_setup import loadCustomSetupJSON
 from .player import RaceData, Player
 from .template import planetNameTemplate
+from .template import StandardGameTemplate
+from .game_utility import printGameValues, GamePickle
 
 
 
@@ -54,20 +56,13 @@ class Game(object):
 
     def __init__(self, template):
         # singleton game name check?
-        #create universe from gameDict
-        # if standard == 1:
 
-        #     print ("at Game, standard = %d dict=%s" % (standard, gameDict))
-        # elif standard == "hello":
-        #     print("standard was not 1")
-        # else:
-        #     print("hmm")
+        self.game_name = template.game_name
 
         ############
         ##### ! gameTemplate.universe_data hardcoded to a list, 
         #####  requires updating!          
         ############
-
 
         # -- A dictionary of Universe Objects
         self.game_universe = self.generateUniverses(template)
@@ -159,191 +154,8 @@ class Game(object):
 
         
 
-
-
-
-
-
-
-    def randomPlanetLocations(self, uSize, uPlanet):
-        pass
-
-
-    def setPlanetLocation(self):
-        '''
-        Planet pattern setup or specific relocation
-        '''
-        pass
-
-
-
-
-    def createXYFile(self):
-        """
-            contains:
-            - Universe information object
-            -
-        """
-        pass
-
-
-
-
-# -- define the universe data in a standard values object, similar format, 
-class StandardGameTemplate(object):
-    """
-    StandardGameTemplate is a class for generating a standard universe. 
-    
-    The standard universe data can be modified by passing in a dictionary 
-    containing key:value pairs which will be used to update the standard values.
-
-    Use the provided command line arguments to create a custom universe file as 
-    well as modify/add technology. 
-
-    """
-    '''
-    #u_name = ["Prime", "Alpha", "Beta", "Gamma", "Delta", "Omega", "Zeta"]
-
-    planet_density = (.5, 1, 1.5) 
-    planets = 10
-    standard_universe_size_small = {"UniverseSizeXY":(200,200)}
-    standard_universe_size_medium = {"UniverseSizeXY":(600,600)}
-    standard_universe_size_large = {"UniverseSizeXY":(1000,1000)}
-
-    standard_universe = {"UniverseNumber":1, "UniverseSizeXY": (200,200), \
-    "UniverseName":("Prime"), "UniversePlanets":planets, \
-    "PlanetDensity": planet_density[1], "Players":(1)}
-    '''
-
-    # instantiate the standard object
-    #                           customUniverse = {}, customTech = {}, customVC = {}
-    def __init__(self, game_name = None, playerFileList = [], setupDict = {}, universeNumber = 1):
-        # instantiates a new game dictionary while merging setup data
-        
-        # self.game_name = game_name # "rabid_weasels"
-        if not game_name:
-            self.game_name = "rabid_weasels"
-        else:
-             self.game_name = game_name # "rabid_weasels"
-
-        self.planet_names = planetNameTemplate()
-        self.starting_population = 50000
-        self.universeNumber = int(universeNumber)
-        self.universe_data = []    # list of universe dictionary data
-
-        #self.technology_data       #template would have technology
-        #self.victory_conditions    # standard VC template with changes        
-
-
-        # ---- HARDCODED =>> requires updating custom setup
-        # -- TODO --- Template grabs data from r1 files
-        self.players_data = self.getPlayerRaceFile(playerFileList)    # list of player race file names 
-        self.player_by_universe = None  # method to sort players into respective universes
-
-
-
-        if universeNumber < 1:
-            sys.exit("universeNumber must be greater then 1")
-        else:
-
-            for i in range(0, int(universeNumber)):
-                x = self.standardUniverse()
-                x['UniverseNumber'] = i
-
-                #merge setupDict (the customized dictionary) with standard
-                if setupDict:
-                    tmp_universe = 'UniverseNumber' + str(i)
-                    customUniverseObject = setupDict[tmp_universe]
-
-                    x = self.mergeDictionaryData(x, customUniverseObject)
-
-                self.universe_data.append(x)          # NOTE: appending to a list
-                
-
-
-
-
-
-
-    def standardUniverse(self):
-        # standard universe comprises standard settings for 1 universe.
-
-        standard_universe = {"UniverseNumber":0, "UniverseSizeXY": (200,200), \
-        "UniverseName": "Prime", "UniversePlanets":6, "Players":1}
-        
-        return standard_universe
-
-    @classmethod
-    def homeworld():
-        iron = 78
-        bora = 67
-        germ = 79
-
-
-    def mergeDictionaryData(self, dict1, dict2):
-        '''
-        input: dict1, dict2
-        output: dict1
-
-        if items in dict2 are in dict1, merge those items into dict1
-        '''
-
-        for n in dict2:
-            if n in dict1:
-                dict1[n] = dict2[n]
-
-        return dict1
-
-    def getPlayerRaceFile(self, fileList):
-        # 'race name'.r1
-        # look for all r1 files in folder
-        # should match number of players
-        raceObjects = []
-
-        for each in fileList:
-
-            #--- TODO  change from grabbing a dev race to grabbing a .r1 file
-            # and turning it into a RaceData() object
-            raceObjects.append(self.getDevRaceFile(each))
-
-        return raceObjects
-
-    def getDevRaceFile(self, raceName):
-        # returns a development file that will substitute as a player race file
-
-        return RaceData(raceName)
-
-
-
-
       
 
-
-
-class GamePickle(object):
-
-    def makePickle(fileName, p_object):
-        with open(fileName, "bw") as a_file:    # file closed by the with statement
-            pickle.dump(p_object, a_file)
-
-
-    def unPickle(fileName):
-        '''
-        unpickle 
-
-        requires a fileName,
-            - test if the name uses the game name or fileName (i.e. <name>.hst)
-            - add .hst and other values to unpack relevant values
-
-        returns a number of objects:
-            gameTemplate = StandardGameTemplate
-            game = data after Game
-        '''
-        with open(fileName, "rb") as fn:
-            #(gameTemplate, game) = pickle.load(fn)
-            #p_object = pickle.load(fn)
-            #return p_object
-            return pickle.load(fn)
 
 
 # _______ Delete ____ covered by custom_setup.py
@@ -563,29 +375,12 @@ def SetupFileInterface(results):
     return gameTemplate
 
 
-def printGameValues(game):
-    for zz in iter(game.game_universe):
-        print("\t%s%s%d%s"%('-'*20, 'UniverseNumber:', zz,'-'*20 ))
-
-        for x in iter(game.game_universe[zz].planets):
-            
-            nn = game.game_universe[zz].planets[x]
-
-            temp, grav, rad = nn.origHab
-            ironC, borC, germC = nn.origConc 
-            print("ID:%s, %s:  %s  - Owner:%s" % (nn.ID, nn.name, nn.xy, nn.owner))
-            print("\tEnvironment: \t\t(%sc, %sg, %smr) " % (temp, grav, rad))
-            print("\tMineral Concentration: \t(i:%skt, b:%skt, g:%skt)" % (ironC, borC, germC))
 
 
-    print("\n%s%s%s" % ('-'*10, '**** Players ****', '-' * 10))
-    
-    for player in iter(game.players):
-        playerObject = game.players[player]
-        print("%s" % ( playerObject.raceName ))
-        print("population growth rate: %s" % str(playerObject.race.popGrowthRate))
 
-    print("\n")
+
+def createXYFile(game):
+    pass
 
 
 def main():
@@ -640,9 +435,10 @@ def main():
         game = Game(gameTemplate)  
 
 
-    if results.newGame:
-        # generate an xy file
-        pass
+        if results.newGame:
+            # generate an xy file
+            # send in game
+            pass
 
 
 

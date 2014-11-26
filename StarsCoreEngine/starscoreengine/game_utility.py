@@ -22,3 +22,60 @@
 
 """
 
+import pickle
+
+
+
+class GamePickle(object):
+
+    def makePickle(fileName, p_object):
+        with open(fileName, "bw") as a_file:    # file closed by the with statement
+            pickle.dump(p_object, a_file)
+
+
+    def unPickle(fileName):
+        '''
+        unpickle 
+
+        requires a fileName,
+            - test if the name uses the game name or fileName (i.e. <name>.hst)
+            - add .hst and other values to unpack relevant values
+
+        returns a number of objects:
+            gameTemplate = StandardGameTemplate
+            game = data after Game
+        '''
+        with open(fileName, "rb") as fn:
+            #(gameTemplate, game) = pickle.load(fn)
+            #p_object = pickle.load(fn)
+            #return p_object
+            return pickle.load(fn)
+
+
+
+
+
+def printGameValues(game):
+    for zz in iter(game.game_universe):
+        print("\t%s%s%d%s"%('-'*20, 'UniverseNumber:', zz,'-'*20 ))
+
+        for x in iter(game.game_universe[zz].planets):
+            
+            nn = game.game_universe[zz].planets[x]
+
+            temp, grav, rad = nn.origHab
+            ironC, borC, germC = nn.origConc 
+            print("ID:%s, %s:  %s  - Owner:%s" % (nn.ID, nn.name, nn.xy, nn.owner))
+            print("\tEnvironment: \t\t(%sc, %sg, %smr) " % (temp, grav, rad))
+            print("\tMineral Concentration: \t(i:%skt, b:%skt, g:%skt)" % (ironC, borC, germC))
+
+
+    print("\n%s%s%s" % ('-'*10, '**** Players ****', '-' * 10))
+    
+    for player in iter(game.players):
+        playerObject = game.players[player]
+        print("%s" % ( playerObject.raceName ))
+        print("population growth rate: %s" % str(playerObject.race.popGrowthRate))
+
+    print("\n")
+
