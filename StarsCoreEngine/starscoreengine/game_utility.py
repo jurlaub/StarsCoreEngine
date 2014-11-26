@@ -62,10 +62,8 @@ def createXYFile(game):
 
 
 def saveFileToJSON(customDict, fileName = 'testSetupFile.json'):
-    '''
-    Warning... not robust!
-
-    saves the stream (typically a dictionary) in json form to a file for later use.
+    ''' Saves the stream (typically a dictionary) in json form to a file 
+    for later use.
 
     ---- json != tuples -----
     json does not handle tuples. If tuples are needed to be saved - consider a 
@@ -80,7 +78,18 @@ def saveFileToJSON(customDict, fileName = 'testSetupFile.json'):
         json.dump(customDict, fp, indent=4)
 
 
+def loadFileFromJSON(fileName):
+    ''' Given a fileName - load JSON values and convert to game dictionary to be 
+    used to generate a game.
 
+    NOTE: json - may need to add a special object hook to translate tuples 
+    stored in an alternative form 
+    '''
+    with open(fileName, 'r') as fp:
+        setupObject = json.load(fp)
+
+
+    return setupObject
 
 
 class GamePickle(object):

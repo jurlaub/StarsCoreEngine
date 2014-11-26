@@ -59,23 +59,23 @@ def customSetupController(template, fileName = None):
 
 
 
-def saveCustomSetupJSON(customDict, fileName = 'testSetupFile.json'):
-    '''
-    Warning... not robust!
+# def saveCustomSetupJSON(customDict, fileName = 'testSetupFile.json'):
+#     '''
+#     Warning... not robust!
 
-    saves the custom setup dictionary as json to a file for later use.
+#     saves the custom setup dictionary as json to a file for later use.
 
-    ---- json != tuples -----
-    json does not handle tuples. If tuples are needed to be saved - consider a 
-    adding a special tool/utility to parse the dict before saving to json. The 
-    tool should replace every tuple with a structure that can be loaded and 
-    returned to a tuple state. See the stackoverflow:
-    http://stackoverflow.com/questions/15721363/preserve-python-tuples-with-json
+#     ---- json != tuples -----
+#     json does not handle tuples. If tuples are needed to be saved - consider a 
+#     adding a special tool/utility to parse the dict before saving to json. The 
+#     tool should replace every tuple with a structure that can be loaded and 
+#     returned to a tuple state. See the stackoverflow:
+#     http://stackoverflow.com/questions/15721363/preserve-python-tuples-with-json
 
-    '''
+#     '''
 
-    with open(fileName, 'w') as fp:
-        json.dump(customDict, fp, indent=4)
+#     with open(fileName, 'w') as fp:
+#         json.dump(customDict, fp, indent=4)
 
 
 def loadCustomSetupJSON(fileName):

@@ -31,12 +31,12 @@ from .planet import Colony
 from . import fleets
 from .custom_setup import customSetupDialog
 from .custom_setup import customSetupController
-from .custom_setup import loadCustomSetupJSON
 from .player import RaceData, Player
 from .template import planetNameTemplate
 from .template import StandardGameTemplate
 from .game_utility import printGameValues
 from .game_utility import GamePickle, createXYFile
+from .game_utility import loadFileFromJSON
 
 
 
@@ -307,7 +307,7 @@ def SetupFileInterface(results):
     # ('-n' + '-g') + '-t' options handled here
     if results.newGame and results.customGame:
         #"Generates a new game using a custom dictionary."
-        customSetupDict = loadCustomSetupJSON(results.customGame)
+        customSetupDict = loadFileFromJSON(results.customGame)
         
         gameName = results.newGame
         gameUniverseNumber = customSetupDict['number_of_universes']
