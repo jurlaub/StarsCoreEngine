@@ -504,6 +504,8 @@ def SetupFileInterface(results):
         gameTemplate = StandardGameTemplate(gameName, playerFileList, customSetupDict, 
             gameUniverseNumber)
 
+
+
     elif results.newGame:
         #*****************************
         #   The Standard Game Template can be modifed to create game variations
@@ -636,6 +638,11 @@ def main():
         #   The Standard Game Template (or modified version) creates the game
         #*****************************
         game = Game(gameTemplate)  
+
+
+    if results.newGame:
+        # generate an xy file
+        pass
 
 
 
