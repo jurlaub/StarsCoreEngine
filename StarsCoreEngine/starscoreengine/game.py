@@ -416,6 +416,16 @@ def main():
     results = cmdLineParseArgs()
 
 
+    #*****************************
+    #   Create a custom Game Template
+    #***************************** 
+
+    #*****************************
+    #   Create a custom Tech Template
+    #***************************** 
+
+
+
     #   Load <'game_name'.hst> file
     if results.gameFile:
  
@@ -426,7 +436,9 @@ def main():
         gameTemplate, game = GamePickle.unPickle(results.gameFile)
 
     else:
-   
+        #*****************************
+        #   Create a game
+        #***************************** 
         gameTemplate = SetupFileInterface(results)
 
         #*****************************
