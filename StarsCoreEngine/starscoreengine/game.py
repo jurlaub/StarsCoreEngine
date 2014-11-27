@@ -271,6 +271,21 @@ def cmdLineParseArgs():
 
     return parser.parse_args()
 
+def CustomSetupFile(fileName):
+
+    standardTemplate = StandardGameTemplate.standardUniverse(None) 
+    customSetupDict = customSetupController(standardTemplate, fileName)
+
+    # probably do not need to return the custom setup. 
+    # Note: original intent was to have an option to save to file or create a new game. 
+    # simplified version is now: create a file. Then use it to generate a game. 
+    return customSetupDict
+
+def CustomTechTreeFile():
+    print("Custom Tech Tree module is still under development ")
+        
+    # tech expansion here
+
 
 def SetupFileInterface(results):
     '''
@@ -282,27 +297,6 @@ def SetupFileInterface(results):
     generate game files. 
 
     '''
-
-
-    
-
-    # Tech tree - generate a custom techTree file and then quit
-    if results.customTechTree:
-        print("Custom Tech Tree module is still under development ")
-        
-        # tech expansion here
-         
-        sys.exit()
-
-
-    # Custom Uni - generate custom universe file and quit 
-    elif results.customSetup:
-
-        standardTemplate = StandardGameTemplate.standardUniverse(None) 
-        customSetupDict = customSetupController(standardTemplate, results.customSetup)
-        
-        sys.exit()  # 
-
 
     # ('-n' + '-g') + '-t' options handled here
     if results.newGame and results.customGame:
@@ -325,16 +319,7 @@ def SetupFileInterface(results):
         #*****************************
         gameTemplate = StandardGameTemplate(results.newGame)
 
-    # elif results.customGame:
-    #     #*****************************
-    #     #   Universe Setup File Parsing 
-    #     #       pass to the Standard Game Template
-    #     #*****************************
-    #     customSetupDict = loadCustomSetupJSON(results.customGame)
 
-    #     gameTemplate = StandardGameTemplate
-
-    #     pass
     else: 
         print("Unexpected command line option. Please review options and try again.")
         sys.exit()
@@ -419,15 +404,21 @@ def main():
     #*****************************
     #   Create a custom Game Template
     #***************************** 
+    if results.customSetup:
+        gameTemplate = CustomSetupFile(results.customSetup)
+        sys.exit()  #  
 
     #*****************************
     #   Create a custom Tech Template
     #***************************** 
+    elif results.customTechTree:
+        CustomTechTreeFile()    
+        sys.exit()
 
-
-
-    #   Load <'game_name'.hst> file
-    if results.gameFile:
+    #***************************** 
+    #   Load <'game_name'.hst> file   &   do something
+    #***************************** 
+    elif results.gameFile:
  
         print("loading gamefile named %s" % results.gameFile)
 
@@ -435,10 +426,11 @@ def main():
         # test for .hst file matching results.gameFile in cwd 
         gameTemplate, game = GamePickle.unPickle(results.gameFile)
 
+    #*****************************
+    #   Create a game
+    #***************************** 
     else:
-        #*****************************
-        #   Create a game
-        #***************************** 
+
         gameTemplate = SetupFileInterface(results)
 
         #*****************************

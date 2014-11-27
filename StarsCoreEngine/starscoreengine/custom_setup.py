@@ -78,21 +78,21 @@ def customSetupController(template, fileName = None):
 #         json.dump(customDict, fp, indent=4)
 
 
-def loadCustomSetupJSON(fileName):
-    '''
-    Warning... not robust!
+# def loadCustomSetupJSON(fileName):
+#     '''
+#     Warning... not robust!
 
-    given a fileName - load JSON values and convert to game dictionary to be 
-    used to generate a game.
+#     given a fileName - load JSON values and convert to game dictionary to be 
+#     used to generate a game.
 
-    NOTE: json - may need to add a special object hook to translate tuples stored in
-    an alternative form 
-    '''
-    with open(fileName, 'r') as fp:
-        setupObject = json.load(fp)
+#     NOTE: json - may need to add a special object hook to translate tuples stored in
+#     an alternative form 
+#     '''
+#     with open(fileName, 'r') as fp:
+#         setupObject = json.load(fp)
 
-    #print("%s"%setupObject)
-    return setupObject
+#     #print("%s"%setupObject)
+#     return setupObject
 
 
 
