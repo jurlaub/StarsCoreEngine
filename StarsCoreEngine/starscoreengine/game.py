@@ -290,6 +290,9 @@ def CustomTechTreeFile():
         
     # tech expansion here
 
+def CustomRaceFile():
+    print("Custom RaceFile still under development")
+
 
 def CreateNewGameTemplate(results):
     '''
@@ -430,8 +433,7 @@ def main():
     #***************************** 
     elif results.newRace:
 
-        print("race file under development")
-        # call race file creation
+        CustomRaceFile()
         sys.exit()
 
 
@@ -446,10 +448,10 @@ def main():
         #*****************************
         #   The Standard Game Template (or modified version) creates the game
         #*****************************
-        gameTemplate = CreateNewGameTemplate(results)
+        gameTemplate = CreateNewGameTemplate(results) 
         game = Game(gameTemplate)  
 
-        createXYFile(game)
+        createXYFile(game)   # source -> game_utility.py
 
 
     #***************************** 
@@ -463,9 +465,9 @@ def main():
         # test for .hst file matching results.gameFile in cwd 
         gameTemplate, game = GamePickle.unPickle(results.gameFile)
 
-        # import each players .x file
-        # run order of events
-        # intel and any other turn actions
+        # ---TODO--- import each players .x file
+        # ---TODO--- run order of events
+        # ---TODO--- intel and any other turn actions (in order of events?)
 
     else:
         print("\n\n\n\t***Stars Core Engine***\nPlease use '-h' to see the correct options.\n\n\n")
@@ -476,13 +478,9 @@ def main():
     #   Save .hst files after turn is finished
     #***************************** 
 
-    # save game only as .hst file. Game file should hold all template values
+    # SaveGameFile(game)
 
-    #Test when game needs to be saved as a .hst file.
-    # saject = input("Do you wish to save this object? (y/n)")
 
-    # if saject == 'y':
-    #     #pickle called here
  
     fileName = gameTemplate.game_name + '.hst'
     pickleTest = (gameTemplate, game)
@@ -496,7 +494,12 @@ def main():
     #   Save .m files for each player. 
     #***************************** 
 
-    createMFile(game)     #source -> game_utility.py ?
+    createMFile(game)     #source -> game_utility.py 
+
+
+
+
+    print("finished")
 
 
 
@@ -505,14 +508,5 @@ def main():
 
 
 
-    ##**********************************************
-    #  For command line review:
-    #        print out of planet information
-    #
 
-    #       for dev only - remove.
-    ##**********************************************
-    print("%s" % gameTemplate.game_name)
-
-    printGameValues(game)
 

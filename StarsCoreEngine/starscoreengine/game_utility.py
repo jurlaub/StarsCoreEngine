@@ -29,7 +29,21 @@ import json
 
 
 def createMFile(game):
-    pass
+    print("A players .m file is generated from game files and found in game_utility.py")
+
+    # 
+
+    #**********************************************
+    #  For command line review:
+    #        print out of planet information
+    #       for dev only - remove.
+    ##**********************************************
+
+    print("-----------%s-----------" % game.game_name)  
+    printGameValues(game)
+    printPlayerValues(game) 
+    
+
 
 
 
@@ -136,12 +150,18 @@ def printGameValues(game):
             print("\tMineral Concentration: \t(i:%skt, b:%skt, g:%skt)" % (ironC, borC, germC))
 
 
+
+
+
+def printPlayerValues(game):
     print("\n%s%s%s" % ('-'*10, '**** Players ****', '-' * 10))
     
     for player in iter(game.players):
         playerObject = game.players[player]
         print("%s" % ( playerObject.raceName ))
-        print("population growth rate: %s" % str(playerObject.growthRate))
+        print("Population growth rate: %s" % str(playerObject.growthRate))
+        print("%s has %d planets" % (playerObject.raceName, len(playerObject.colonies)))
+
 
     print("\n")
 
