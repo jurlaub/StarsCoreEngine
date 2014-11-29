@@ -35,7 +35,7 @@ from .player import RaceData, Player
 from .template import planetNameTemplate
 from .template import StandardGameTemplate
 from .game_utility import printGameValues
-from .game_utility import GamePickle, createXYFile
+from .game_utility import GamePickle, createXYFile, createMFile
 from .game_utility import loadFileFromJSON
 
 
@@ -291,11 +291,13 @@ def CustomTechTreeFile():
     # tech expansion here
 
 
-def SetupFileInterface(results):
+def CreateNewGameTemplate(results):
     '''
-    Interface layer between command line args and Game(). 
+    Method for creating a new game template. 
 
-    Handles all command line arg logic and decision making
+    Handles all new game command line arg logic and decision making.
+    Assembles all pieces of a template into a StandardGameTemplate or Custom 
+    version. 
 
     Output is gameTemplate - which comprises all template logic necessary to 
     generate game files. 
@@ -429,6 +431,7 @@ def main():
     elif results.newRace:
 
         print("race file under development")
+        # call race file creation
         sys.exit()
 
 
@@ -443,7 +446,7 @@ def main():
         #*****************************
         #   The Standard Game Template (or modified version) creates the game
         #*****************************
-        gameTemplate = SetupFileInterface(results)
+        gameTemplate = CreateNewGameTemplate(results)
         game = Game(gameTemplate)  
 
         createXYFile(game)
@@ -486,11 +489,18 @@ def main():
     GamePickle.makePickle(fileName, pickleTest)
 
 
+
+
+
     #*****************************
     #   Save .m files for each player. 
     #***************************** 
 
-    # createMFile(game)     #game_utility.py ?
+    createMFile(game)     #source -> game_utility.py ?
+
+
+
+
 
 
 

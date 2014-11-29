@@ -28,6 +28,9 @@ import json
 
 
 
+def createMFile(game):
+    pass
+
 
 
 def createXYFile(game):
