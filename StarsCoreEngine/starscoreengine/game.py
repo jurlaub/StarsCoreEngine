@@ -390,8 +390,6 @@ def main():
             >> this is the file that helps start the game. It provides the 
                 starting stats for the player
 
-        create an .xy file that will house .xy data
-
 
 
     """
@@ -409,8 +407,9 @@ def main():
     #   Create a custom Game Template
     #***************************** 
     if results.customSetup:
+
         gameTemplate = CustomSetupFile(results.customSetup)
-        sys.exit()  #  
+        sys.exit()  
 
 
 
@@ -418,6 +417,7 @@ def main():
     #   Create a custom Tech Template
     #***************************** 
     elif results.customTechTree:
+
         CustomTechTreeFile()    
         sys.exit()
 
@@ -427,6 +427,7 @@ def main():
     #   Create a custom race file
     #***************************** 
     elif results.newRace:
+
         print("race file under development")
         sys.exit()
 
@@ -438,17 +439,14 @@ def main():
     #       all new games require '-n'
     #***************************** 
     elif results.newGame:
-        gameTemplate = SetupFileInterface(results)
 
         #*****************************
         #   The Standard Game Template (or modified version) creates the game
         #*****************************
+        gameTemplate = SetupFileInterface(results)
         game = Game(gameTemplate)  
 
-
-        if results.newGame:
-            # generate an xy file
-            createXYFile(game)
+        createXYFile(game)
 
 
     #***************************** 
@@ -462,6 +460,10 @@ def main():
         # test for .hst file matching results.gameFile in cwd 
         gameTemplate, game = GamePickle.unPickle(results.gameFile)
 
+        # import each players .x file
+        # run order of events
+        # intel and any other turn actions
+
     else:
         print("\n\n\n\t***Stars Core Engine***\nPlease use '-h' to see the correct options.\n\n\n")
         sys.exit()
@@ -471,12 +473,7 @@ def main():
     #   Save .hst files after turn is finished
     #***************************** 
 
-
-
-
-
-
-
+    # save game only as .hst file. Game file should hold all template values
 
     #Test when game needs to be saved as a .hst file.
     # saject = input("Do you wish to save this object? (y/n)")
@@ -489,16 +486,23 @@ def main():
     GamePickle.makePickle(fileName, pickleTest)
 
 
+    #*****************************
+    #   Save .m files for each player. 
+    #***************************** 
+
+    # createMFile(game)     #game_utility.py ?
+
+
 
 
     ##**********************************************
     #  For command line review:
     #        print out of planet information
     #
+
+    #       for dev only - remove.
     ##**********************************************
     print("%s" % gameTemplate.game_name)
 
     printGameValues(game)
 
-# if __name__ == "__main__":
-#     main()
