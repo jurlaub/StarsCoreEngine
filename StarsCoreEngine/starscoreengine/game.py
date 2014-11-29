@@ -207,7 +207,7 @@ def cmdLineParseArgs():
     # may not be a viable command
     parser.add_argument('-n', action='store', default=None, dest='newGame', \
         help='''Enter name for new game. Name must be unique within the same 
-        folder. 
+        folder. Note: In order to generate a new game this argument is required.
         ''')
 
     # Generate a game from an existing game setup file. 
@@ -216,7 +216,7 @@ def cmdLineParseArgs():
         <'game_name'.json>. Enter file name after the '-g'. Without this setting,
         the game will be generated from the StandardGameTemplate.
         
-         Use '-s' arg to create this setup file. 
+         Use '-c_setup' arg to create this setup file. 
         ''')
     
     # tech tree mod's could occur with a standard new game.  
@@ -225,6 +225,10 @@ def cmdLineParseArgs():
         Enter tech filename after "-t". ''')
 
 
+    parser.add_argument('-r', action='store', default=None, dest='newRace', \
+        help='''Enter race name. Name must be unique within the same 
+        folder. 
+        ''')
 
 
 
@@ -408,12 +412,44 @@ def main():
         gameTemplate = CustomSetupFile(results.customSetup)
         sys.exit()  #  
 
+
+
     #*****************************
     #   Create a custom Tech Template
     #***************************** 
     elif results.customTechTree:
         CustomTechTreeFile()    
         sys.exit()
+
+
+ 
+    #*****************************
+    #   Create a custom race file
+    #***************************** 
+    elif results.newRace:
+        print("race file under development")
+        sys.exit()
+
+
+
+
+    #*****************************
+    #   Create a game
+    #       all new games require '-n'
+    #***************************** 
+    elif results.newGame:
+        gameTemplate = SetupFileInterface(results)
+
+        #*****************************
+        #   The Standard Game Template (or modified version) creates the game
+        #*****************************
+        game = Game(gameTemplate)  
+
+
+        if results.newGame:
+            # generate an xy file
+            createXYFile(game)
+
 
     #***************************** 
     #   Load <'game_name'.hst> file   &   do something
@@ -426,22 +462,19 @@ def main():
         # test for .hst file matching results.gameFile in cwd 
         gameTemplate, game = GamePickle.unPickle(results.gameFile)
 
-    #*****************************
-    #   Create a game
-    #***************************** 
     else:
-
-        gameTemplate = SetupFileInterface(results)
-
-        #*****************************
-        #   The Standard Game Template (or modified version) creates the game
-        #*****************************
-        game = Game(gameTemplate)  
+        print("\n\n\n\t***Stars Core Engine***\nPlease use '-h' to see the correct options.\n\n\n")
+        sys.exit()
 
 
-        if results.newGame:
-            # generate an xy file
-            createXYFile(game)
+    #*****************************
+    #   Save .hst files after turn is finished
+    #***************************** 
+
+
+
+
+
 
 
 
