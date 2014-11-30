@@ -141,7 +141,7 @@ class Colony(object):
 
 
             self.population += popgrowth
-            print("%s had %d population growth. Total Population: %d" % (self.planet.name, popgrowth, self.population))
+            print("(planet.Colony): %s had %d population growth. Total Population: %d" % (self.planet.name, popgrowth, self.population))
             
 
 

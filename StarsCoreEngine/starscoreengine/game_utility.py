@@ -29,7 +29,7 @@ import json
 
 
 def createMFile(game):
-    print("A players .m file is generated from game files and found in game_utility.py")
+    
 
     # 
 
@@ -43,6 +43,8 @@ def createMFile(game):
     printGameValues(game)
     printPlayerValues(game) 
     
+    print("""*** Players .m files are under development. ***
+        The code is found in game_utility.py. """)
 
 
 

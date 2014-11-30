@@ -226,6 +226,9 @@ def cmdLineParseArgs():
         help='''Use a custom tech tree to generate game. FileName should be <tech_tree.tech>.
         Enter tech filename after "-t". ''')
 
+    parser.add_argument('-T', action='store', default=1, dest='gameTurns', \
+        help='''The number of years to generate after loading a game. Default is 1. ''')
+
 
     parser.add_argument('-r', action='store', default=None, dest='newRace', \
         help='''Enter race name. Name must be unique within the same 
@@ -294,6 +297,25 @@ def CustomTechTreeFile():
 
 def CustomRaceFile():
     print("Custom RaceFile still under development")
+
+def GenerateMFiles(game):
+    '''
+    input: game object
+    output: sends one player's data
+            Game year
+
+            to createMFile()
+
+    '''
+
+    createMFile(game)
+
+
+def SaveGameFile(game, gameTemplate):
+    fileName = game.game_name + '.hst'
+    pickleTest = (gameTemplate, game)
+    GamePickle.makePickle(fileName, pickleTest)
+
 
 
 def CreateNewGameTemplate(results):
@@ -469,7 +491,8 @@ def main():
 
         # ---TODO--- import each players .x file
 
-        OrderOfEvents(game)
+        for year in range(0, int(results.gameTurns)):
+            OrderOfEvents(game)
         # ---TODO--- intel and any other turn actions (in order of events?)
 
     else:
@@ -481,13 +504,13 @@ def main():
     #   Save .hst files after turn is finished
     #***************************** 
 
-    # SaveGameFile(game)
+    SaveGameFile(game, gameTemplate)
 
 
  
-    fileName = game.game_name + '.hst'
-    pickleTest = (gameTemplate, game)
-    GamePickle.makePickle(fileName, pickleTest)
+    # fileName = game.game_name + '.hst'
+    # pickleTest = (gameTemplate, game)
+    # GamePickle.makePickle(fileName, pickleTest)
 
 
 
@@ -497,8 +520,8 @@ def main():
     #   Save .m files for each player. 
     #***************************** 
 
-    createMFile(game)     #source -> game_utility.py 
-
+    #createMFile(game)     #source -> game_utility.py 
+    GenerateMFiles(game)    # sends player data that can generate a game turn
 
 
 
