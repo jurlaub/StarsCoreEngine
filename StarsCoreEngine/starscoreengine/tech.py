@@ -22,4 +22,11 @@
 
 
 
-# flyweight pattern?
+# flyweight pattern?  
+
+
+class BaseTech(object):
+    pass
+
+
+    

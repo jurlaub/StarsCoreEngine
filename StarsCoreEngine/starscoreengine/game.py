@@ -21,6 +21,13 @@
     in the COPYING.Interpretation document.
 
 """
+
+'''
+Items used by the client that need some information / code from the model layer.
+http://starsautohost.org/sahforum2/index.php?t=msg&th=2780&start=0&rid=0
+
+
+'''
 import sys
 
 

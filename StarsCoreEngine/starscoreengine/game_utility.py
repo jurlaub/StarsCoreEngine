@@ -171,5 +171,6 @@ def printPlayerValues(game):
             print("%s : %d colonists" % (colony.planet.name, colony.population))
 
 
-    print("\n")
+    print("\nFor game: %s, the year is %d\n" % (game.game_name, game.year))
+
 
