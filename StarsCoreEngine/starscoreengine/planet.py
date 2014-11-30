@@ -37,23 +37,23 @@ class Planet(SpaceObjects):
         self.name = name
         self.origHab = origHab
         self.origConc = origConc
-        self.currHab = self.origHab
-        self.currConc = self.origConc
+        self.currHab = self.origHab         # depreciate
+        self.currConc = self.origConc       # depreciate
         self.concIron = 1
         self.concBora = 1
         self.concGerm = 1
-        self.currSurfaceMinerals = 0  # (should be  3 values in a list)
+        self.currSurfaceMinerals = 0  # depreciate  (should be  3 values in a list)
         self.surfaceIron = 0
         self.surfaceBora = 0
         self.surfaceGerm = 0
 
 
         self.HW = False
-        self.owner = None  # may not keep here      
+        self.owner = None       
 
         self.factories = 0
         self.mines = 0
-
+        self.defenseValue = 0
 
 
 
