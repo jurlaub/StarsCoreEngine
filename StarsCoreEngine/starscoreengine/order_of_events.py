@@ -21,12 +21,71 @@
     in the COPYING.Interpretation document.
 
 """
+from .planet import *
+from .player import Player
 
-def orderOfEvents(game):
+
+def OrderOfEvents(game):
+    """Controller method that runs all order of events - including scanning.
+
+    Assumes all .x data that will be used is present and loaded into game object. 
+
+    """
+
+
+    # scrappingFleets(game):
+    # waypointZeroLoadTasks(game):
+    # waypointZeroTasks():
+    # MTMoves(
+    # inSpacePackets()
+    # fleetsMove():
+    # ISFleetgrowth():
+    # mineralDecay():
+    # wormholesMove():
+    # minefieldDetonate():
+    # mineralMining():
+    # production():
+    # universeResearchCapture():
+
+    population(game)
+
+    # newPacketCollisions():
+    # fleetsRefuel():
+    # randomEvents():
+
+    # fleetBattles():
+    # bombing():
+    # meetMT():
+    # remoteMining():
+    # waypointOneTasks():   
+    # minefieldDecay():
+    # mineLaying():
+
+    # fleetTransfer():
+    # waypointOneFleetMerge():
+    # instaforming():
+    # mineSweeping():
+    #  repair():
+    # remoteTerraforming():
+    # Intel():
+
+
+ 
+
+
+
+
+
     pass
 
 
-def colonyIterator():
+def colonyIterator(players, action):
+    ''' iterate through all current colonies held by each player and perform one 
+    action
+
+    input: a game's players and one action (action must be a method)
+    '''
+
     pass
 
 
@@ -98,9 +157,17 @@ def universeResearchCapture():
     # could the SS races have their own version of Walter (see Fringe :) )
     pass
 
-def population():
-    # grows/dies
-    pass
+def population(game):
+    # all colony populations grows/dies
+
+    for player in game.players:
+        playerObject = game.players[player]
+        colonies = playerObject.colonies
+
+        for each in colonies:
+            colony = colonies[each]
+            colony.populationGrowth()
+    
 
 def newPacketCollisions():
     # that just launched and reach their destination cause damage (Impacts are in planet ID order)

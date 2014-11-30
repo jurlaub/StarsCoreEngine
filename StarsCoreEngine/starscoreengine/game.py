@@ -37,6 +37,7 @@ from .template import StandardGameTemplate
 from .game_utility import printGameValues
 from .game_utility import GamePickle, createXYFile, createMFile
 from .game_utility import loadFileFromJSON
+from .order_of_events import OrderOfEvents
 
 
 
@@ -467,6 +468,7 @@ def main():
 
         # ---TODO--- import each players .x file
         # ---TODO--- run order of events
+        OrderOfEvents(game)
         # ---TODO--- intel and any other turn actions (in order of events?)
 
     else:
@@ -482,7 +484,7 @@ def main():
 
 
  
-    fileName = gameTemplate.game_name + '.hst'
+    fileName = game.game_name + '.hst'
     pickleTest = (gameTemplate, game)
     GamePickle.makePickle(fileName, pickleTest)
 
@@ -498,8 +500,6 @@ def main():
 
 
 
-
-    print("finished")
 
 
 

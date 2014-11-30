@@ -29,7 +29,7 @@ from ..starscoreengine.universe import UniverseObject
 from ..starscoreengine.player import Player
 from ..starscoreengine.player import RaceData as Race
 from ..starscoreengine.game_utility import GamePickle
-
+from ..starscoreengine.order_of_events import *
 
 #old - for reference -  use test classes
 def test_spaceobjects():
@@ -462,6 +462,41 @@ class TestPlayerObject(object):
 
 
 
+class TestOrderOfEvents(object):
+
+    def setup(self):
+        print("TestOrderOfEvents: Setup")
+        self.playerFileList = ['playerTest1', 'playerTest2']
+        self.testGameName = 'EventsTest'
+
+        self.gameTemplate = game.StandardGameTemplate(self.testGameName, self.playerFileList, {"UniverseNumber0": { "Players": "2"}})
+        self.universe_data = self.gameTemplate.universe_data
+        self.game = game.Game(self.gameTemplate)
+
+
+    def teardown(self):
+        print("TestOrderOfEvents: Teardown")
+
+    def test_Population(self):
+        
+        player1 = self.game.players['player0']
+        colonies = player1.colonies
+
+        assert_true(len(colonies) == 1)
+        key, colony = colonies.popitem()
+        tmpPop = colony.population
+        # print("%s population = %d" % (colony.planet.name, tmpPop))
+        assert_true(tmpPop > 0)
+        colonies[key] = colony
+
+        assert_true(len(colonies) == 1)
+
+        population(self.game)
+
+        colonyAfter = colonies[key] 
+        assert_true(tmpPop < colonyAfter.population)
+        assert_false(tmpPop == colonyAfter.population)
+        # print("%s population = %d" % (colonyAfter.planet.name, colonyAfter.population) )
 
 
 
