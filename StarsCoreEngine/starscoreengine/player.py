@@ -199,8 +199,8 @@ class RaceTraits(object):
     '''
 
     def __init__(self):
-        self.planetMaxPopulation = 1000000
-
+        #self.planetMaxPopulation = 1000000  
+        pass
 
 
 class RaceData(object):

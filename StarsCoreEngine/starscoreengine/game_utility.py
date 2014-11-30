@@ -44,13 +44,15 @@ def createMFile(game):
     printPlayerValues(game) 
     
     print("""*** Players .m files are under development. ***
-        The code is found in game_utility.py. """)
+        The .m code is found in game_utility.py. """)
 
 
 
 
 def createXYFile(game):
     ''' Generates the game .xy file for users.
+
+    --TODO-- add tech tree. (.m file will contain list of tech ids that player can use)
     
     '''
     # for each planet in universe, capture: ID, Name, XY, 
