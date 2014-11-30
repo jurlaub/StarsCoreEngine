@@ -104,11 +104,20 @@ class UniverseObject(object):
 
 
     def createPlanet(self, ID, name):
+        ''' createPlanet generates the initial planet values. 
+
+
+        '''
+
+        # -- TODO -- randomized planet values
+
         uSize = self.UniverseSizeXY
         xy = (random.randrange(0, uSize[0]), random.randrange(0, uSize[1]))
-        tmpVal = Planet(xy, ID, name)
+        tmpVal = Planet(xy, ID, name)  # --TODO -- Add random values to Planet object
         
         return tmpVal
+
+
 
 
     def createHomeworldPlanet(self, raceName):

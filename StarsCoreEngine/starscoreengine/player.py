@@ -157,19 +157,46 @@ class Player(object):
         self.colonies[planet.ID] = newColony
         
 
+    def updateColonyValues(self):
+        ''' updateColonyValues called from OrderOfEvents 
+        to update colony values before population growth
+
+        uses planetValue()
+
+        '''
+        for each in self.colonies:              # for every key in dictionary
+            colony = self.colonies[each]        # assign value(colony object)
+
+            value = self.planetValue(colony.planet)
+
+            colony.planetValue = value
+
 
     def planetValue(self, planet):
         '''Calculates planet value for player based on Race Data. 
 
-            if a colony = updates colony values
-            if not a colony, updates intel values
+        >used for each colony before OrderOfEvents.population (growth)
+        >>> called from Player.updateColonyValues()
+
+        >used when calculating intel on planets
+
+
+        input:  self.hab values 
+                planet habe values
+
+        output: planet value for player
 
         '''
         planetValue = 1.0
 
         return planetValue
 
+
+
+
 class RaceTraits(object):
+    ''' Most likely RaceTraits will be removed and RaceData will take its place
+    '''
 
     def __init__(self):
         self.planetMaxPopulation = 1000000

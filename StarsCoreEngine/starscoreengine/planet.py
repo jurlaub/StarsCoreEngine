@@ -34,14 +34,23 @@ class Planet(SpaceObjects):
     """
     def __init__(self, xy, ID, name, origHab = (90, 1.1, 65), origConc = (75, 75, 75)):
         super(Planet, self).__init__(xy, ID)
-        self.name = name
-        self.origHab = origHab
-        self.origConc = origConc
+        self.name = name    
+        self.origHab = origHab              #depreciate
+        self.origTemp = origHab[0]
+        self.origGrav = origHab[1]
+        self.origRad = origHab[2]
+
         self.currHab = self.origHab         # depreciate
+        # detail current hab
+
+        self.origConc = origConc            #depreciate
+        self.concIron = origConc[0]
+        self.concBora = origConc[1]
+        self.concGerm = origConc[2]
+
         self.currConc = self.origConc       # depreciate
-        self.concIron = 1
-        self.concBora = 1
-        self.concGerm = 1
+        #detail current Concentration
+
         self.currSurfaceMinerals = 0  # depreciate  (should be  3 values in a list)
         self.surfaceIron = 0
         self.surfaceBora = 0
@@ -95,6 +104,7 @@ class Colony(object):
 
     def calcTotalResources(self, popEfficiency):
 
+        # -- TODO -- include operating factory resources
         self.totalResources = self.population / popEfficiency
 
 
@@ -147,6 +157,9 @@ class Colony(object):
 
 
     def calcGrowthRate(self, raceRate):
+        ''' Calculate the planetary growth rate based on the planet value
+
+        '''
         self.growthRate = raceRate
 
     def colonyUninhabit(self):
