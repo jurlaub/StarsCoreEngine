@@ -60,6 +60,7 @@ class Game(object):
         # singleton game name check?
 
         self.game_name = template.game_name
+        self.year = 2400 
 
         ############
         ##### ! gameTemplate.universe_data hardcoded to a list, 
@@ -467,7 +468,7 @@ def main():
         gameTemplate, game = GamePickle.unPickle(results.gameFile)
 
         # ---TODO--- import each players .x file
-        # ---TODO--- run order of events
+
         OrderOfEvents(game)
         # ---TODO--- intel and any other turn actions (in order of events?)
 

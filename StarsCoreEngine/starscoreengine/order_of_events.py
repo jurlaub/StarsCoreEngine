@@ -70,7 +70,7 @@ def OrderOfEvents(game):
     # Intel():
 
 
- 
+    game.year += 1
 
 
 
