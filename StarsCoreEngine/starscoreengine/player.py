@@ -190,6 +190,8 @@ from m.a@stars
 http://starsautohost.org/sahforum2/index.php?t=msg&th=2299&rid=625&S=ee625fe2bec617564d7c694e9c5379c5&pl_view=&start=0#msg_19643
         http://starsautohost.org/sahforum2/index.php?t=msg&th=2271&start=0&rid=0
 
+        @ju -> check "calculateHabValues2" 
+
         '''
         planetValue = 1.0
 
@@ -265,6 +267,11 @@ class RaceData(object):
         self.techCostBio = 1 
         
         self.techJumpStart = False # True = All 'Costs 75% extra' fields start at Tech 4
+
+
+
+
+
 
 
 

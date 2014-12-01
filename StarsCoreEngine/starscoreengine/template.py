@@ -26,6 +26,7 @@ from .player import RaceData
 
 
 
+
 # -- define the universe data in a standard values object, similar format, 
 class StandardGameTemplate(object):
     """
@@ -98,10 +99,6 @@ class StandardGameTemplate(object):
                 
 
 
-
-
-
-
     def standardUniverse(self):
         # standard universe comprises standard settings for 1 universe.
 
@@ -158,6 +155,11 @@ class StandardGameTemplate(object):
 
 
 
+
+
+
+
+
 def getPlanetNameFromTemplate():
     planet_names = planetNameTemplate()
     count = len(planet_names)
@@ -166,7 +168,7 @@ def getPlanetNameFromTemplate():
     return planet_names[rand]
 
 def planetNameTemplate():
-    planet_names = ["Alan", "Fenge", "Fenris", "Shill", "239_Alf", "Wolf 359",
+    planet_names = ["Fenge", "Fenris", "Shill", "239_Alf", "Wolf 359",
      "Dark Star", "Kirk", "Flo Rida", "Pluto", "Centari", "Mau Tai", "Zeta", 
      "Mars", "Babylon 5", "Quell", "Be Still My Heart", "Soft Light", "Piink",
      "Vertigo", "Verillon", "Camelot", "Too Much", "Avalon", "Quiver", "Otaah",
@@ -259,4 +261,13 @@ def planetNameTemplate():
 def planetNamesFromFile():
     #--TODO--
     pass
+
+
+
+
+
+
+
+
+
 
