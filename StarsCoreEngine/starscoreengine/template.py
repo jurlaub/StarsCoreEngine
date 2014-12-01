@@ -266,8 +266,24 @@ def planetNamesFromFile():
 
 
 
+def techItemTemplate():
+    tech = { "itemID":100, "itemType":"shield",
+            "cost": { "iron":1, "bor": 1, "germ":1, "resources": 1, "mass":1},
+            "tech": {"ener":0, "weap":0, "prop":0, "con":0, "elec":0, "bio":0} 
+            }
 
 
 
+'''
+ship hulls design:
+
+    uses techItemTemplate for itself
+    +
+    specifies dictionaries of slots
+    mech_slot1 = {}
+    mech_slot2 = {}
+    weap_slot1 = {}
+
+'''
 
 
