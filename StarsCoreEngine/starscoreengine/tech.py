@@ -47,27 +47,124 @@ class BaseTech(object):
 
         # Some witty 'Mass' related grouping
         self.mass = None
-
         # Tech Requirements
         self.ener = None
         self.weap = None
         self.prop = None
-        self.con = None
+        self.con = None 
         self.elec = None
         self.bio = None
 
 
+        self.raceRequirement = None
+        self.special = None
+        self.restrictions = None
+
+
+        self.initative = None
+        self.cloaking = None
+        self.battleMovement = None
+        self.cargo = None
+        self.fuelGeneration = None
+
+
+
+
+class Engines(BaseTech):
+
+    def __init__(self):
+        self.optimalSpeed = 0
+        self.freeSpeed = 0
+        self.safeSpeed = 0
+
+        self.radiation = False
+
+
 class Weapon(BaseTech):
+    ''' Weapons - both Beam & Torpedos
+    '''
 
     def __init__(self):
         self.range = None
-        self.damage = None
+        self.power = None
+        self.minesSwept = 0
+        self.accuracy = 0
 
+class Bombs(BaseTech):
+
+    def __init__(self):
+        self.popKillPercent = .06
+        self.minKill = 300
+        self.installations = 2
+
+
+
+class MineLayer(BaseTech):
+
+    def __init__(self):
+        self.miningRate = 0
+
+        self.terraform = False
+
+class Electrical(BaseTech):
+
+    def __init__(self):
+        self.tachyon = None
+        self.deflection = None
+        self.beamDamage = None
+
+
+class Orbital(BaseTech):
+
+    def __init__(self):
+        self.safeMass = 0
+        self.safeRange = 0
+
+        self.warpSpeed = 0
+
+class PlanetaryInstallations(BaseTech):
+
+    def __init__(self):
+        self.range = None
+        self.pen = None
+
+        self.defenses40 = 33
+        self.defenses80 = 55
+
+
+class Terraforming(BaseTech):
+    """docstring for Terraforming"""
+    def __init__(self):
+        super(Terraforming, self).__init__()
+        self.modGrav  = None
+        self.modTemp = None
+        self.modRad = None
+
+        
+        
 
 class Mechanical(BaseTech):
 
     def __init__(self):
-        self.cargo = None
+        self.beamDeflector = None
+        self.movement = None
+        self.extraFuel = None
+        self.extraCargo = None
+        self.fuel = None
+        self.colonizer = None
+    
+
+
+class Scanner(BaseTech):
+    
+    def __init__(self):
+        self.range = None
+        self.pen = None
+        self.stealFromShips = False   
+        self.stealFromPlanets = False
+
+
+
 
 class Armor(BaseTech):
 
@@ -86,11 +183,16 @@ class Hull(BaseTech):
     def __init__(self):
         self.designName = None  # user specified ship design name
         self.shipType = None    # Miner, Transport, Armed, ect.
-        self.cargo = None
+
         
         self.armor = 100
         self.fuelCapacity = 500
-        # etc
+        
+        self.mineLayerDouble = False
+        self.shipsHeal = False
+
+        self.ARPopulation = None
+        self.spaceDock = None
 
 
         # slot defines the hull component composition
@@ -122,8 +224,6 @@ class ShipDesign(Hull):
             update BaseTech values + objects values?
         '''
         pass
-
-
 
 
 
