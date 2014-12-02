@@ -29,7 +29,26 @@
 #   I believe so. This may not be preferred but may be something to consider.
 #   answer the fuel calculation problem, the ship design update component problem. 
 
+'''
+Note: 
 
+a composite design pattern 
+
+would solve the problem of tech which acts like multiple components. (i.e. like 
+the Mystery Trader parts. A Multi-contained Munition is a beam weapon that 
+bombs planets and lays mines, etc) Such components could be added together in 
+composite form. The problem with this is the StarsCoreEngine passes its data via
+JSON files. Any 'fancy' composite design would be wasted when its data is 
+aggregated into JSON form and passed to the client. 
+
+Were this not the case, then the composite design pattern would be used to assemble
+the components (especially the multi-type/multi-class ones). The components 
+would be used by a flyweight design pattern.
+
+Ultimately, it appears that the JeffMC approach is the simplest.  
+
+
+'''
 
 
 class BaseTech(object):
