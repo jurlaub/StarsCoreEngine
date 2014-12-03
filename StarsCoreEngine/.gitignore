@@ -40,3 +40,15 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+
+
+
+# Stars Core Engine files
+*.hst
+*.x*
+*.m*
+*.xy
+*.json
+
+.DS_Store
+.vagrant/
