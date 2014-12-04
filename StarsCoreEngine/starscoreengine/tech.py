@@ -230,8 +230,12 @@ class ShipDesign(Hull):
 
     def __init__(self, hullID):
         self.hullID = hullID # points to a Hull object. there is one for each type of ship.
+
+        self.isDesignLocked = False   # once a player has built a design- it cannot change
+
         # component holds the number of items assigned to a design
-        self.component = {"A":["itemID", "itemID"], "B":["itemID", "itemID", "itemID"]}  # capacity
+        #self.component = {"A":["itemID", "itemID"], "B":["itemID", "itemID", "itemID"]}  # capacity
+        #self.component = {"A":{"component":"itemID", "quantity":1 }, "B":{"component":"itemID", "quantity":1 }}  # capacity
 
 
 

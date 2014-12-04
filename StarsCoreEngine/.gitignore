@@ -50,5 +50,6 @@ docs/_build/
 *.xy
 *.json
 
+
 .DS_Store
 .vagrant/

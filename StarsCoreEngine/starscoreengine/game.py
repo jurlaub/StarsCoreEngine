@@ -69,17 +69,15 @@ class Game(object):
         self.game_name = template.game_name
         self.year = 2400 
 
-        ############
-        ##### ! gameTemplate.universe_data hardcoded to a list, 
-        #####  requires updating!          
-        ############
 
         # -- A dictionary of Universe Objects
         self.game_universe = self.generateUniverses(template)
 
+        # -- a dictionary (?) of Technology items
+        #self.technology = self.generateTechnology(template)
+
         # -- a dictionary of Player Objects
         self.players = self.generatePlayers(template)
-
 
 
     
