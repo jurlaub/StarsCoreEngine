@@ -29,8 +29,8 @@
 #   I believe so. This may not be preferred but may be something to consider.
 #   answer the fuel calculation problem, the ship design update component problem. 
 
-'''
-Note: 
+"""
+Note - musings on:
 
 a composite design pattern 
 
@@ -48,7 +48,61 @@ would be used by a flyweight design pattern.
 Ultimately, it appears that the JeffMC approach is the simplest.  
 
 
-'''
+"""
+
+# Note: to speed up tech consider using NamedTuples in the tech class
+
+"""
+Design: from Template to Tech Game Object.
+
+-*- Game: ------------------------------------------
+
+At the core of technology will be a class object that captures all 
+values related to each tech item. (like JeffMC describes)
+
+
+-*- Setup (Template): ------------------------------------------
+
+Custom designs will feed this class. (this can be done smartly or naively)
+naively - one large dict per tech with all questions (including items that
+    are none)
+smartly - objects added to dictionary that address item + type specific
+     questions. Smaller and compact description 
+
+-*- Interface: ------------------------------------------
+
+Basic Tech will be contained as a tech dictionary in the .xy file. This is
+    the tech source for the client. The user (player) can access the tech
+    tree and see component details.
+
+The user (player) can also create starbases & ships from those components,
+    based on the hull's accessible at the users tech level.
+
+Designs are stored within each player's object. Designs are communicated
+    to the client via the players .m file.  Because a players fleet 
+    and production need ready access to the design.  
+
+
+Intel: designs revealed based on scanning and combat. Intel stored with
+    each player. 
+
+
+"""
+
+"""
+Alternative:
+
+
+
+
+"""
+
+
+class TechComponent(object):
+
+    def __init__(self):
+        self.name = None
+
 
 
 class BaseTech(object):
@@ -103,7 +157,8 @@ class Weapon(BaseTech):
     ''' Weapons - both Beam & Torpedos
     '''
 
-    def __init__(self):
+    def __init__(self, ID):
+        super(Weapon,self).__init__(ID)
         self.range = None
         self.power = None
         self.minesSwept = 0
@@ -232,6 +287,8 @@ class ShipDesign(Hull):
         self.hullID = hullID # points to a Hull object. there is one for each type of ship.
 
         self.isDesignLocked = False   # once a player has built a design- it cannot change
+        self.owner = None
+        self.seen = []
 
         # component holds the number of items assigned to a design
         #self.component = {"A":["itemID", "itemID"], "B":["itemID", "itemID", "itemID"]}  # capacity
