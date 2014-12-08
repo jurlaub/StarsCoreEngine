@@ -64,8 +64,8 @@ values related to each tech item. (like JeffMC describes)
 -*- Setup (Template): ------------------------------------------
 
 Custom designs will feed this class. (this can be done smartly or naively)
-naively - one large dict per tech with all questions (including items that
-    are none)
+naively - one large dict per tech with all questions (includes items that
+    may not relate to component)
 smartly - objects added to dictionary that address item + type specific
      questions. Smaller and compact description 
 
@@ -74,6 +74,8 @@ smartly - objects added to dictionary that address item + type specific
 Basic Tech will be contained as a tech dictionary in the .xy file. This is
     the tech source for the client. The user (player) can access the tech
     tree and see component details.
+    Grouped by Type: Key = "type" : Value = { 'components of that type',
+                            'Key = itemName : Value = Component object'}
 
 The user (player) can also create starbases & ships from those components,
     based on the hull's accessible at the users tech level.
@@ -255,7 +257,7 @@ class Shields(BaseTech):
 class Hull(BaseTech):
 
     def __init__(self):
-        self.designName = None  # user specified ship design name
+        
         self.shipType = None    # Miner, Transport, Armed, ect.
 
         
@@ -284,10 +286,12 @@ class ShipDesign(Hull):
     '''
 
     def __init__(self, hullID):
-        self.hullID = hullID # points to a Hull object. there is one for each type of ship.
-
+        self.designName = None  # user specified ship design name
         self.isDesignLocked = False   # once a player has built a design- it cannot change
         self.owner = None
+
+        self.hullID = hullID # points to a Hull object. there is one for each type of ship.
+
         self.seen = []
 
         # component holds the number of items assigned to a design
