@@ -100,17 +100,22 @@ Alternative:
 """
 
 
-class TechComponent(object):
+class Component(BaseTech):
 
     def __init__(self):
         self.name = None
+        self.itemID = None
+
+        self.armor = None
+        self.shield = None
+        
 
 
 
 class BaseTech(object):
     
-    def __init__(self, ID):
-        self.itemID = ID
+    def __init__(self):
+        
         self.name = None            # tech object name (game name for object)
         self.itemType = None
 
@@ -122,6 +127,7 @@ class BaseTech(object):
 
         # Some witty 'Mass' related grouping
         self.mass = None
+
         # Tech Requirements
         self.ener = None
         self.weap = None
@@ -160,7 +166,7 @@ class Weapon(BaseTech):
     '''
 
     def __init__(self, ID):
-        super(Weapon,self).__init__(ID)
+        super(Weapon,self).__init__()
         self.range = None
         self.power = None
         self.minesSwept = 0
@@ -187,7 +193,7 @@ class Electrical(BaseTech):
     def __init__(self):
         self.tachyon = None
         self.deflection = None
-        self.beamDamage = None
+        self.capacitor = None
 
 
 class Orbital(BaseTech):
@@ -272,7 +278,11 @@ class Hull(BaseTech):
 
 
         # slot defines the hull component composition
-        self.slot = {"A":{"engine":1}, "B":{"objectType":"number_of_slots"}}  # each key == specific slot, value is
+        self.slot = {
+            "A":{"objectType": "engine", "slotsAvalable":1,  "itemID": None, 
+            "itemQuantity": None}, 
+            "B":{"objectType":"itemType",  "slotsAvalable":2, "itemID": None, 
+            "itemQuantity": None}}  # each key == specific slot
 
         # identify slots:
         #   slot type -> General, Engine, Weap, Mech, Elect, etc
@@ -281,7 +291,7 @@ class Hull(BaseTech):
         # specify all ship related question?
 
 
-class ShipDesign(Hull):
+class ShipDesign(BaseTech):
     ''' ShipDesign is a specific user defined design of the Hull class 
     '''
 
@@ -290,9 +300,9 @@ class ShipDesign(Hull):
         self.isDesignLocked = False   # once a player has built a design- it cannot change
         self.owner = None
 
-        self.hullID = hullID # points to a Hull object. there is one for each type of ship.
+        self.hullID = hullID # points to a Hull object.  one for each type of ship.
 
-        self.seen = []
+        self.seen = [] #? necessary?
 
         # component holds the number of items assigned to a design
         #self.component = {"A":["itemID", "itemID"], "B":["itemID", "itemID", "itemID"]}  # capacity
