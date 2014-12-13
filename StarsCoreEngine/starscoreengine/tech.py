@@ -137,20 +137,6 @@ class BaseTech(CoreStats):
 
     
 
-class Component(object):
-
-    def __init__(self):
-        self.name = None
-        self.itemID = None
-        self.typeDict = {}
-
-        # self.armor = None
-        # self.shield = None
-
-
-
-
-
 class Engines(object):
 
     def __init__(self):
@@ -193,6 +179,8 @@ class Electrical(object):
         self.tachyon = None
         self.deflection = None
         self.capacitor = None
+
+        self.cloaking = None
 
 
 class Orbital(object):
@@ -256,6 +244,87 @@ class Shields(object):
 
     def __init__(self):
         self.shield = 0
+
+
+
+
+
+class Component(BaseTech):
+
+    def __init__(self):
+        super(Component, self).__init__()
+        # self.name = None
+        self.itemID = None
+        self.typeDict = {}
+
+        #engines
+        self.optimalSpeed = 0
+        self.freeSpeed = 0
+        self.safeSpeed = 0
+        self.radiation = False
+
+        #weapons
+        self.range = None
+        self.power = None
+        self.minesSwept = 0
+        self.accuracy = 0
+
+
+        #bombs
+        self.popKillPercent = .06
+        self.minKill = 300
+        self.installations = 2
+
+        #minelayer
+        self.miningRate = 0
+        self.terraform = False
+
+        #Electrical
+        self.tachyon = None
+        self.deflection = None
+        self.capacitor = None
+
+        #Mechanical
+        self.beamDeflector = None
+        #self.movement = None
+        self.extraFuel = None
+        self.extraCargo = None
+        self.fuel = None
+        self.colonizer = None
+        self.cargo = None  
+
+        #scanner
+        self.range = None
+        self.pen = None
+        self.stealFromShips = False   
+        self.stealFromPlanets = False
+
+        #Armor
+        self.armor = 0
+
+        #Shields
+        self.shield = 0
+
+
+    def updateElements(self):
+        extraItems = {}
+
+        for eachKey in self.typeDict:
+            each = self.typeDict[eachKey]
+            
+            for item in each.__dict__:
+                if item in self.__dict__:
+                    #print("key:%s\t self:%s; other:%s" % (item, self.__dict__[item], each.__dict__[item] ))
+                    self.__dict__[item] = each.__dict__[item]
+                    #print("a %s:%s" % (item, self.__dict__[item]))
+                else:
+                    # 
+                    extraItems[item] = each.__dict__[item]
+
+        print("Component:%s had %d items which were not added to the component" % (self.name, len(extraItems)))
+        print("%s" % extraItems)
+
+        
 
 
 
