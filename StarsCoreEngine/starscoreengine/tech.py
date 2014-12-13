@@ -137,19 +137,23 @@ class BaseTech(CoreStats):
 
     
 
-
-
 class Component(object):
 
     def __init__(self):
         self.name = None
         self.itemID = None
+        self.typeDict = {}
 
-        self.armor = None
-        self.shield = None
+        # self.armor = None
+        # self.shield = None
 
-    def Engines(self):
 
+
+
+
+class Engines(object):
+
+    def __init__(self):
         self.optimalSpeed = 0
         self.freeSpeed = 0
         self.safeSpeed = 0
@@ -157,7 +161,7 @@ class Component(object):
 
 
 
-class Weapon(BaseTech):
+class Weapon(object):
     ''' Weapons - both Beam & Torpedos
     '''
 
@@ -167,7 +171,7 @@ class Weapon(BaseTech):
         self.minesSwept = 0
         self.accuracy = 0
 
-class Bombs(BaseTech):
+class Bombs(object):
 
     def __init__(self):
         self.popKillPercent = .06
@@ -176,14 +180,14 @@ class Bombs(BaseTech):
 
 
 
-class MineLayer(BaseTech):
+class MineLayer(object):
 
     def __init__(self):
         self.miningRate = 0
 
         self.terraform = False
 
-class Electrical(BaseTech):
+class Electrical(object):
 
     def __init__(self):
         self.tachyon = None
@@ -191,7 +195,7 @@ class Electrical(BaseTech):
         self.capacitor = None
 
 
-class Orbital(BaseTech):
+class Orbital(object):
 
     def __init__(self):
         self.safeMass = 0
@@ -199,7 +203,7 @@ class Orbital(BaseTech):
 
         self.warpSpeed = 0
 
-class PlanetaryInstallations(BaseTech):
+class PlanetaryInstallations(object):
 
     def __init__(self):
         self.range = None
@@ -209,7 +213,7 @@ class PlanetaryInstallations(BaseTech):
         self.defenses80 = 55
 
 
-class Terraforming(BaseTech):
+class Terraforming(object):
     """docstring for Terraforming"""
     def __init__(self):
         super(Terraforming, self).__init__()
@@ -220,7 +224,7 @@ class Terraforming(BaseTech):
         
         
 
-class Mechanical(BaseTech):
+class Mechanical(object):
 
     def __init__(self):
         self.beamDeflector = None
@@ -232,7 +236,7 @@ class Mechanical(BaseTech):
         self.cargo = None    
 
 
-class Scanner(BaseTech):
+class Scanner(object):
     
     def __init__(self):
         self.range = None
@@ -243,12 +247,12 @@ class Scanner(BaseTech):
 
 
 
-class Armor(BaseTech):
+class Armor(object):
 
     def __init__(self):
         self.armor = 0
 
-class Shields(BaseTech):
+class Shields(object):
 
     def __init__(self):
         self.shield = 0
@@ -258,7 +262,7 @@ class Shields(BaseTech):
 class Hull(BaseTech):
 
     def __init__(self):
-        
+        super(Hull,self).__init__()
         self.shipType = None    # Miner, Transport, Armed, ect.
 
         
@@ -284,12 +288,14 @@ class Hull(BaseTech):
         # specify all ship related question?
 
 
-class ShipDesign(BaseTech):
+class ShipDesign(CoreStats):
     ''' ShipDesign is a specific user defined design of the Hull class 
     '''
 
     def __init__(self, hullID):
+        super(ShipDesign,self).__init__()
         self.designName = None  # user specified ship design name
+        self.designID = None
         self.isDesignLocked = False   # once a player has built a design- it cannot change
         self.owner = None
 
