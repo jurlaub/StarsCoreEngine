@@ -99,27 +99,10 @@ Alternative:
 
 """
 
-
-class Component(BaseTech):
+class CoreStats(object):
 
     def __init__(self):
-        self.name = None
-        self.itemID = None
-
-        self.armor = None
-        self.shield = None
-        
-
-
-
-class BaseTech(object):
-    
-    def __init__(self):
-        
-        self.name = None            # tech object name (game name for object)
-        self.itemType = None
-
-        # Costs
+            # Costs
         self.iron= None
         self.bor = None
         self.germ = None
@@ -127,6 +110,17 @@ class BaseTech(object):
 
         # Some witty 'Mass' related grouping
         self.mass = None
+        self.initative = None
+        self.cloaking = None
+        self.battleMovement = None
+
+
+class BaseTech(CoreStats):
+    
+    def __init__(self):
+        super(BaseTech,self).__init__()
+        self.name = None            # tech object name (game name for object)
+        self.itemType = None
 
         # Tech Requirements
         self.ener = None
@@ -136,29 +130,31 @@ class BaseTech(object):
         self.elec = None
         self.bio = None
 
-
         self.raceRequirement = None
         self.special = None
         self.restrictions = None
-
-
-        self.initative = None
-        self.cloaking = None
-        self.battleMovement = None
-        self.cargo = None
         self.fuelGeneration = None
 
+    
 
 
 
-class Engines(BaseTech):
+class Component(object):
 
     def __init__(self):
+        self.name = None
+        self.itemID = None
+
+        self.armor = None
+        self.shield = None
+
+    def Engines(self):
+
         self.optimalSpeed = 0
         self.freeSpeed = 0
         self.safeSpeed = 0
-
         self.radiation = False
+
 
 
 class Weapon(BaseTech):
@@ -166,7 +162,6 @@ class Weapon(BaseTech):
     '''
 
     def __init__(self, ID):
-        super(Weapon,self).__init__()
         self.range = None
         self.power = None
         self.minesSwept = 0
@@ -229,12 +224,12 @@ class Mechanical(BaseTech):
 
     def __init__(self):
         self.beamDeflector = None
-        self.movement = None
+        #self.movement = None
         self.extraFuel = None
         self.extraCargo = None
         self.fuel = None
         self.colonizer = None
-    
+        self.cargo = None    
 
 
 class Scanner(BaseTech):
@@ -279,10 +274,8 @@ class Hull(BaseTech):
 
         # slot defines the hull component composition
         self.slot = {
-            "A":{"objectType": "engine", "slotsAvalable":1,  "itemID": None, 
-            "itemQuantity": None}, 
-            "B":{"objectType":"itemType",  "slotsAvalable":2, "itemID": None, 
-            "itemQuantity": None}}  # each key == specific slot
+            "A":{"objectType": "engine", "slotsAvalable":1 }, 
+            "B":{"objectType":"itemType",  "slotsAvalable":2}}  # each key == specific slot
 
         # identify slots:
         #   slot type -> General, Engine, Weap, Mech, Elect, etc
@@ -302,13 +295,13 @@ class ShipDesign(BaseTech):
 
         self.hullID = hullID # points to a Hull object.  one for each type of ship.
 
-        self.seen = [] #? necessary?
-
         # component holds the number of items assigned to a design
         #self.component = {"A":["itemID", "itemID"], "B":["itemID", "itemID", "itemID"]}  # capacity
-        #self.component = {"A":{"component":"itemID", "quantity":1 }, "B":{"component":"itemID", "quantity":1 }}  # capacity
+        self.component = {  
+                "A":{"itemID": None, "itemQuantity": None }, 
+                "B":{"itemID": None, "itemQuantity": None}}  # capacity
 
-
+        self.seen = [] #? necessary?
 
     def componentDict(self, key, value):
 

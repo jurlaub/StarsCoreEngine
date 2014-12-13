@@ -107,6 +107,7 @@ class StandardGameTemplate(object):
         
         return standard_universe
 
+    # test of classmethod - 
     @classmethod
     def homeworld():
         iron = 78
@@ -266,12 +267,24 @@ def planetNamesFromFile():
 
 
 
-def techItemTemplate():
-    tech = { "itemID":100, "itemType":"shield",
-            "cost": { "iron":1, "bor": 1, "germ":1, "resources": 1, "mass":1},
-            "tech": {"ener":0, "weap":0, "prop":0, "con":0, "elec":0, "bio":0} 
-            }
+# def techItemTemplate():
+#     tech = { "itemID":100, "itemType":"shield",
+#             "cost": { "iron":1, "bor": 1, "germ":1, "resources": 1, "mass":1},
+#             "tech": {"ener":0, "weap":0, "prop":0, "con":0, "elec":0, "bio":0} 
+#             }
 
+def techCompleteTemplate():
+    tech = {
+        'name': None, 'itemID': None, 'itemType': None, 
+        'iron': None, 'bor': None, 'germ': None,'resources': None,  
+        'mass': None, 'initative': None, 
+        'ener': None, 'con': None, 'weap': None,'prop': None, 'bio': None, 'elec': None,  
+         'cargo': None,'battleMovement': None, 'cloaking': None, 
+        'fuelGeneration': None, 
+        'raceRequirement': None, 'special': None,'restrictions': None
+
+
+    }
 
 
 '''
@@ -285,5 +298,6 @@ ship hulls design:
     weap_slot1 = {}
 
 '''
+
 
 

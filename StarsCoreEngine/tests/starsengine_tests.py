@@ -199,7 +199,7 @@ class TestGame(object):
     def teardown(self):
         print("TestGame: Teardown")
 
-    # def test_Planet_Objects(self):
+    # def dtest_Planet_Objects(self):
     #     tmpPlanet = self.game.planets 
     #     #print("%s" % tmpPlanet.keys())
     #     assert_true(isinstance(tmpPlanet, dict))
@@ -285,6 +285,13 @@ class TestGame(object):
 
     def test_Players_HW(self):
         pass
+
+    def test_Technology(self):
+        assert_true(isinstance(self.game.technology, dict) )
+
+    def test_GenerateTechnology(self):
+        ''' send in a template and return a dictionary of tech items '''
+        assert_true(isinstance(self.game.generateTechnology(template), dict))
 
 
 class TestPickling(object):
