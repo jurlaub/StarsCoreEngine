@@ -175,6 +175,11 @@ class TestGameTemplate_Multi(object):
             assert_in("UniversePlanets", uni)
             assert_in("Players", uni)
 
+    def test_SGT_Contains_TechTree(self):
+        tech = self.gameTemplate.technology
+        assert_true(isinstance(tech, dict))
+        assert_true(len(tech) > 0)
+        
 
 
 class TestGame(object):

@@ -69,7 +69,7 @@ class StandardGameTemplate(object):
         self.universeNumber = int(universeNumber)
         self.universe_data = []    # list of universe dictionary data
 
-        #self.technology_data       #template would have technology
+        #self.technology       #template would have technology
         #self.victory_conditions    # standard VC template with changes        
 
 
