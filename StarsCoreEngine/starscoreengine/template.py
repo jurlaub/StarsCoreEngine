@@ -286,7 +286,8 @@ def techCompleteTemplate():
 
     }
 
-
+def get_PRT_list():
+    return ("HE", "SS", "WM", "CA", "IS", "SD", "PP", "IT", "AR", "JOAT")
 '''
 ship hulls design:
 
