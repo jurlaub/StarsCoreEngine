@@ -50,28 +50,28 @@ def race_editor_tech_costs(numExpensive, numCheap, boxTicked):
     """Returns the cost in points from the number of expensive and cheap fields chosen,
     and whether the 'start expensive fields at level 3/4' box is ticked.
     """ 
-    _diff = expensive - cheap
+    _diff = numExpensive - numCheap
     cost = 0
-    if diff == 0:    cost = 0    
-    elif diff == 1:  cost = -49  #-49
-    elif diff == 2:  cost = -109 #-60
-    elif diff == 3:  cost = -179 #-70
-    elif diff == 4:  cost = -259 #-80
-    elif diff == 5:  cost = -349 #-90
-    elif diff == 6:  cost = -459 #-110
-    elif diff == -1: cost = 43   #43
-    elif diff == -2: cost = 173  #130
-    elif diff == -3: cost = 390  #217
-    elif diff == -4: cost = 693  #303
-    elif diff == -5: cost = 910  #217
-    elif diff == -6: cost = 1083 #173
+    if _diff == 0:    cost = 0    
+    elif _diff == 1:  cost = -49  #-49
+    elif _diff == 2:  cost = -109 #-60
+    elif _diff == 3:  cost = -179 #-70
+    elif _diff == 4:  cost = -259 #-80
+    elif _diff == 5:  cost = -349 #-90
+    elif _diff == 6:  cost = -459 #-110
+    elif _diff == -1: cost = 43   #43
+    elif _diff == -2: cost = 173  #130
+    elif _diff == -3: cost = 390  #217
+    elif _diff == -4: cost = 693  #303
+    elif _diff == -5: cost = 910  #217
+    elif _diff == -6: cost = 1083 #173
     if boxTicked:
         cost -= 60
     return cost
 
-def set_base_tech(PRT, *LRTs):
+def set_base_tech(PRT, LRTs=[]):
     """Returns the starting tech levels for a race design based on its PTR and a list of LRTs.
-    Expects a string as PTR ('JOAT' etc) and a list of strings for *LTRs (['IFE', 'CE'] etc)
+    Expects a string as PTR ('JOAT' etc) and a list of strings for LRTs (['IFE', 'CE'] etc)
     """
     startLevels = {"energy" : 0, 
               "weapons" : 0,
@@ -80,35 +80,40 @@ def set_base_tech(PRT, *LRTs):
               "electronics" : 0,
               "biotechnology" : 0
           }
-    if PTR in ("HE", "IS"):
+    if PRT in ("HE", "IS"):
         pass #start at 0 in all fields
-    elif PTR == "SS":
+    elif PRT == "SS":
         startLevels["electronics"] += 5
-    elif PTR == "WM":
+    elif PRT == "WM":
         startLevels["energy"] += 1
         startLevels["weapons"] += 6
         startLevels["propulsion"] += 1
-    elif PTR == "CA":
+    elif PRT == "CA":
         startLevels["energy"] += 1
         startLevels["weapons"] += 1
         startLevels["propulsion"] += 1 
         startLevels["construction"] += 2
         startLevels["biotechnology"] += 6 
-    elif PTR == "SD":
+    elif PRT == "SD":
         startLevels["propulsion"] += 2 
         startLevels["biotechnology"] += 2 
-    elif PTR == "PP":
+    elif PRT == "PP":
         startLevels["energy"] += 4
-    elif PTR == "IT":
+    elif PRT == "IT":
         startLevels["propulsion"] += 5
         startLevels["construction"] += 5 
-    elif PTR == "AR":
+    elif PRT == "AR":
         startLevels["energy"] += 1
-    elif PTR == "JOAT":
+    elif PRT == "JOAT":
         for k in startLevels.keys():
             startLevels[k] += 3
-    for LTR in *LTRs:
-        if LTR in ("IFE", "CE"):
+    else:
+        raise ValueError("PRT not recognised, what is {}?".format(PRT))
+    print ("LRTs are")
+    print (LRTs)
+    print (i for i in LRTs)
+    for LRT in LRTs:
+        if LRT in ("IFE", "CE"):
             startLevels["propulsion"] += 1
     return startLevels
     
