@@ -20,7 +20,7 @@
 
 """
 from .planet import Colony, Planet
-
+from .research import set_base_tech
 
 '''
     Player Data
@@ -126,7 +126,7 @@ class Player(object):
         #self.homeUniverse = None
         #self.race = raceData #RaceData()
         self.colonies = {}  # colony objects
-        self.tech = {}  # tech object
+        self.tech = set_base_tech(self.PRT, self.LRT)  # tech object
         self.shipDesign = {} # ship design objects
         self.battleOrders = {} 
         self.production = {} 
