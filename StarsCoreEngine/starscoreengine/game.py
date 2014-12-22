@@ -229,7 +229,11 @@ def cmdLineParseArgs():
     # tech tree mod's could occur with a standard new game.  
     parser.add_argument('-t', action='store', default=None, dest='techTree', \
         help='''Use a custom tech tree to generate game. FileName should be <tech_tree.tech>.
-        Enter tech filename after "-t". ''')
+        Enter tech filename after "-t". 
+        If "OnlyUseCustomTechTree" : "True" key:value is set within the file 
+        then the custom file will replace the standard tech tree.
+
+        ''')
 
     parser.add_argument('-T', action='store', default=1, dest='gameTurns', \
         help='''The number of years to generate after loading a game. Default is 1. ''')
@@ -259,7 +263,11 @@ def cmdLineParseArgs():
             standard tech template - tech identifier and the correct dictionary 
             value in order for a change to occur. Changes to standard tech will
             affect the common tech tree for all players. 
-       
+        
+        \n4) Existing Tech tree will be saved to file. 
+             Set "OnlyUseCustomTechTree" : "True" in the file to replace standard 
+             tech tree. 
+
         \nNo other arguments viable.
 
         ''')

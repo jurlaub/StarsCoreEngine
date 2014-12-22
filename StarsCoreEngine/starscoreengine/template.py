@@ -55,7 +55,7 @@ class StandardGameTemplate(object):
 
     # instantiate the standard object
     #                           customUniverse = {}, customTech = {}, customVC = {}
-    def __init__(self, game_name = None, playerFileList = [], setupDict = {}, universeNumber = 1):
+    def __init__(self, game_name = None, playerFileList = [], setupDict = {}, universeNumber = 1, techDict = {}):
         # instantiates a new game dictionary while merging setup data
         
         # self.game_name = game_name # "rabid_weasels"
@@ -68,6 +68,32 @@ class StandardGameTemplate(object):
         self.starting_population = 50000
         self.universeNumber = int(universeNumber)
         self.universe_data = []    # list of universe dictionary data
+
+        '''Technology 
+            Standard Tech is dictionary of Vanilla tech components.
+            Key = Vanilla name
+            Value = key:value pairs which will update the tech component's values
+
+            key = "OnlyUseCustomTechTree"  : value   == "True" 
+                Template will ignore standard tech tree and assume custom tree 
+                covers all the tech that is needed 
+        '''
+
+        # 
+
+        self.technology = {}
+
+        if "OnlyUseCustomTechTree" in techDict && 
+            techDict["OnlyUseCustomTechTree"] == "True":
+
+            self.technology = techDict
+
+        else:
+            self.technology =       
+
+
+
+
 
         #self.technology       #template would have technology
         #self.victory_conditions    # standard VC template with changes        
@@ -147,6 +173,15 @@ class StandardGameTemplate(object):
         # returns a development file that will substitute as a player race file
 
         return RaceData(raceName)
+
+
+    def getTechTree(self, techDict):
+        tmpTree = TechTree()
+
+        # if 
+        self.mergeDictionaryData(, techDict)
+
+        return tmpTree
 
 
 
@@ -273,18 +308,27 @@ def planetNamesFromFile():
 #             "tech": {"ener":0, "weap":0, "prop":0, "con":0, "elec":0, "bio":0} 
 #             }
 
-def techCompleteTemplate():
-    tech = {
-        'name': None, 'itemID': None, 'itemType': None, 
-        'iron': None, 'bor': None, 'germ': None,'resources': None,  
-        'mass': None, 'initative': None, 
-        'ener': None, 'con': None, 'weap': None,'prop': None, 'bio': None, 'elec': None,  
-         'cargo': None,'battleMovement': None, 'cloaking': None, 
-        'fuelGeneration': None, 
-        'raceRequirement': None, 'special': None,'restrictions': None
+# def techCompleteTemplate():
+#     tech = {
+#         'name': None, 'itemID': None, 'itemType': None, 
+#         'iron': None, 'bor': None, 'germ': None,'resources': None,  
+#         'mass': None, 'initative': None, 
+#         'ener': None, 'con': None, 'weap': None,'prop': None, 'bio': None, 'elec': None,  
+#          'cargo': None,'battleMovement': None, 'cloaking': None, 
+#         'fuelGeneration': None, 
+#         'raceRequirement': None, 'special': None,'restrictions': None
 
+
+#     }
+
+def TechTree():
+    techTree = { 
+    "component1" : {},
+    "component2" : {}
 
     }
+    return techTree
+
 
 
 '''

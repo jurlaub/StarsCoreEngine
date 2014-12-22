@@ -99,6 +99,29 @@ Alternative:
 
 """
 
+''' technology & game Setup options
+Template Options
+1) use standard game tech Template
+2) modify existing game technology components
+    a) add components to standard game tech Template
+    b) remove (disable) standard technology
+3) use a completely different tech tree
+
+Custom Tech Options
+1) custom tech setup = save standard tech tree to file
+    a) Note: in dict add a key that specifies the function of the custom file
+        - use instead of the standard tech tree
+        - modify existing tech tree
+
+
+
+
+
+
+
+'''
+
+
 class CoreStats(object):
 
     def __init__(self):
@@ -140,9 +163,9 @@ class BaseTech(CoreStats):
 class Engines(object):
 
     def __init__(self):
-        self.optimalSpeed = 0
-        self.freeSpeed = 0
-        self.safeSpeed = 0
+        self.optimalSpeed = None
+        self.freeSpeed = None
+        self.safeSpeed = None
         self.radiation = False
 
 
@@ -154,22 +177,22 @@ class Weapon(object):
     def __init__(self, ID):
         self.range = None
         self.power = None
-        self.minesSwept = 0
-        self.accuracy = 0
+        self.minesSwept = None
+        self.accuracy = None
 
 class Bombs(object):
 
     def __init__(self):
-        self.popKillPercent = .06
-        self.minKill = 300
-        self.installations = 2
+        self.popKillPercent = None
+        self.minKill = None
+        self.installations = None
 
 
 
 class MineLayer(object):
 
     def __init__(self):
-        self.miningRate = 0
+        self.miningRate = None
 
         self.terraform = False
 
@@ -186,10 +209,10 @@ class Electrical(object):
 class Orbital(object):
 
     def __init__(self):
-        self.safeMass = 0
-        self.safeRange = 0
+        self.safeMass = None
+        self.safeRange = None
 
-        self.warpSpeed = 0
+        self.warpSpeed = None
 
 class PlanetaryInstallations(object):
 
@@ -197,8 +220,8 @@ class PlanetaryInstallations(object):
         self.range = None
         self.pen = None
 
-        self.defenses40 = 33
-        self.defenses80 = 55
+        self.defenses40 = None
+        self.defenses80 = None
 
 
 class Terraforming(object):
@@ -238,12 +261,12 @@ class Scanner(object):
 class Armor(object):
 
     def __init__(self):
-        self.armor = 0
+        self.armor = None
 
 class Shields(object):
 
     def __init__(self):
-        self.shield = 0
+        self.shield = None
 
 
 
@@ -258,25 +281,25 @@ class Component(BaseTech):
         self.typeDict = {}
 
         #engines
-        self.optimalSpeed = 0
-        self.freeSpeed = 0
-        self.safeSpeed = 0
+        self.optimalSpeed = None
+        self.freeSpeed = None
+        self.safeSpeed = None
         self.radiation = False
 
         #weapons
         self.range = None
         self.power = None
-        self.minesSwept = 0
-        self.accuracy = 0
+        self.minesSwept = None
+        self.accuracy = None
 
 
         #bombs
-        self.popKillPercent = .06
-        self.minKill = 300
-        self.installations = 2
+        self.popKillPercent = None
+        self.minKill = None
+        self.installations = None
 
         #minelayer
-        self.miningRate = 0
+        self.miningRate = None
         self.terraform = False
 
         #Electrical
@@ -300,10 +323,10 @@ class Component(BaseTech):
         self.stealFromPlanets = False
 
         #Armor
-        self.armor = 0
+        self.armor = None
 
         #Shields
-        self.shield = 0
+        self.shield = None
 
 
     def updateElements(self):
@@ -312,6 +335,8 @@ class Component(BaseTech):
         for eachKey in self.typeDict:
             each = self.typeDict[eachKey]
             
+            # -- TODO -- test if each is a dictionary -> if not then should be a value
+
             for item in each.__dict__:
                 if item in self.__dict__:
                     #print("key:%s\t self:%s; other:%s" % (item, self.__dict__[item], each.__dict__[item] ))
