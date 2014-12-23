@@ -148,10 +148,10 @@ class Player(object):
                 fleetMinerals = colony fleet object that has been salvaged
 
         '''
-        newColony = Colony(planet, pop)
+        newColony = Colony(planet, pop, self)
         planet.updateSurfaceMinerals(fleetMinerals)
         newColony.planetValue = self.planetValue(planet)
-        newColony.calcGrowthRate(self.growthRate)
+        newColony.calcGrowthRate()
         planet.owner = self.raceName
 
         self.colonies[planet.ID] = newColony
@@ -186,17 +186,103 @@ class Player(object):
 
         output: planet value for player
 
-from m.a@stars
-http://starsautohost.org/sahforum2/index.php?t=msg&th=2299&rid=625&S=ee625fe2bec617564d7c694e9c5379c5&pl_view=&start=0#msg_19643
+        from m.a@stars
+        http://starsautohost.org/sahforum2/index.php?t=msg&th=2299&rid=625&S=ee625fe2bec617564d7c694e9c5379c5&pl_view=&start=0#msg_19643
         http://starsautohost.org/sahforum2/index.php?t=msg&th=2271&start=0&rid=0
 
         @ju -> check "calculateHabValues2" 
 
+        Origional code written by m.a@stars, just converted to python
+        #define BYTE char
+        #define WORD short
+
+        #define IMMUNE(a) ((a)==-1)
+        
+        //simplified for this. Initialized somewhere else
+        struct playerDataStruct 
+        {
+            BYTE lowerHab[3];	 // from 0 to 100 "clicks", -1 for immunity
+            BYTE upperHab[3];
+        } player;
+
+        //in: an array of 3 bytes from 0 to 100
+        //out: a signed integer between -45 and 100
+        //hey, it was the Jeffs idea! Smile
+        signed long planetValueCalc(BYTE* planetHabData)
+        {
+            signed long planetValuePoints=0,redValue=0,ideality=10000;	//in fact, they are never < 0
+            WORD planetHab,habUpper,habLower,habCenter;
+            WORD Excentr,habRadius,margin,Negativ,dist2Center;
+        
+            for (WORD i=0; i<3; i++) {
+                habUpper = player.upperHab[i];
+                if (IMMUNE(habUpper)) {			//perfect hab
+                    planetValuePoints += 10000;
+                }
+                else {	//the messy part
+                    habLower  = player.lowerHab[i];
+                    habCenter = (habUpper+habLower)/2;	//no need to precalc
+                    planetHab = planetHabData[i];
+        
+                    /*
+                    note: this version makes the basic assumption that habitability is
+                    symmetrical around the center, that is, the ideal center is located
+                    in the middle of the lower and upper boundaries, and both halves
+                    have the same value. The original algorithm seems able to cope with
+                    weirder definitions, i.e: bottom is 20, top is 80, center is 65,
+                    and hab value stretches proportionally to the different length of
+                    both "halves"...
+                    */
+                    
+                    dist2Center = abs(planetHab-habCenter);
+                    habRadius = habCenter-habLower;
+        
+                    if (dist2Center<=habRadius) {		/* green planet */
+              	        Excentr = 100*dist2Center/habRadius;	//note: implicit conversion to integer
+            	        Excentr = 100 - Excentr;		//kind of reverse excentricity
+            	        planetValuePoints += Excentr*Excentr;
+                  	margin = dist2Center*2 - habRadius;
+            	        if (margin>0) {		//hab in the "external quarters". dist2Center > 0.5*habRadius
+                            ideality *= (double)(3/2 - dist2Center/habRadius);	//decrease ideality up to ~50%
+            	            /*
+                            ideality *= habRadius*2 - margin;	//better suited for integer math
+                            ideality /= habRadius*2;
+            	            */
+            	        }
+                    } else {					/* red planet */
+            	        Negativ = dist2Center-habRadius;
+            	        if (Negativ>15) Negativ=15;
+            	            redValue += Negativ;
+                    }
+                }
+            }
+        
+        if (redValue!=0) return -redValue;
+        planetValuePoints = sqrt((double)planetValuePoints/3)+0.9;	//rounding a la Jeffs
+        planetValuePoints = planetValuePoints * ideality/10000;	//note: implicit conversion to integer
+        
+        return planetValuePoints;		//Thanks ConstB for starting this
         '''
-        planetValue = 1.0
+        gc = self.habGravityCenter 
+        gr = self.habGravRange 
+        
+        tc = self.habTempCenter 
+        gr = self.habTempRange 
 
-        return planetValue
+        rc = self.habRadCenter 
+        rr = self.habRadRange 
 
+        playerUpperHab = [gc + gr / 2.,tc + tr / 2. , rc + rr / 2.]
+        playerLowerHab = [gc - gr / 2.,tc - tr / 2. , rc - rr / 2.]
+        planetValuePoints=0,redValue=0,ideality=10000;	//in fact, they are never < 0
+        #WORD planetHab,habUpper,habLower,habCenter;
+        #WORD Excentr,habRadius,margin,Negativ,dist2Center;        
+        for i in range(3):
+            pass
+            #nevermind, setup to use clicks instead of actual values for hab and -1 for immune, 
+            #not sure howto proceed
+        return 10.
+            
 
 
 
@@ -236,7 +322,7 @@ class RaceData(object):
         >> the range value captures only the positive side of the total 
         habitat values 
 
-        immune = None value for centerpoint
+        immune =  value for centerpoint
 
         '''
         self.habGravityCenter = 1  # (centerpoint, Click width)?  
