@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+#added to use plus\minus symbol in terraforming tech
+
+from template import get_PRT_list
+
 """
     This file is part of Stars Core Engine, which provides an interface and processing of Stars data.
     Copyright (C) 2014  <Joshua Urlaub + Contributors>
@@ -396,7 +401,7 @@ class ShipDesign(CoreStats):
 
 
 
-def items_Armour():
+def items_armor():
     return {"Tritanium" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 0,
                            "electronics" : 0, "biotechnology" : 0, "mass" : 60, "resources" : 10,
                            "iron" : 5, "bor" : 0, "ger" : 0, "DP" : 50},
@@ -418,7 +423,7 @@ def items_Armour():
             "Fielded Kelarium" : {"energy" : 4, "weapons" : 0, "propulsion" : 0, "construction" : 10,
                                   "electronics" : 0, "biotechnology" : 0, "mass" : 50, "resources" : 28,
                                   "iron" : 10, "bor" : 0, "ger" : 2, "DP" : 175},
-            "Depleted Neurtonium" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 10,
+            "Depleted Neutronium" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 10,
                                      "electronics" : 3, "biotechnology" : 0, "mass" : 50, "resources" : 28,
                                      "iron" : 10, "bor" : 0, "ger" : 2, "DP" : 200},
             "Neutronium" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 12,
@@ -432,7 +437,7 @@ def items_Armour():
                                "iron" : 25, "bor" : 0, "ger" : 0, "DP" : 1500}}
 
 
-def items_beam():
+def items_beams():
     return {"Laser" : {"energy" : 0, "weapons" : 0, "propulsion" : 0,
                        "construction" : 0, "electronics" : 0, "biotechnology" : 0,
                        "mass" : 1, "resources" : 5, "iron" : 0, "bor" : 6, "ger" : 0,
@@ -461,7 +466,7 @@ def items_beam():
                                "construction" : 0, "electronics" : 0, "biotechnology" : 0,
                                "mass" : 1, "resources" : 12, "iron" : 0, "bor" : 0, "ger" : 4,
                                "range" : 3, "DP" : 82, "init" : 14},
-            "Colloidal Phaser" {"energy" :0, "weapons" : 10, "propulsion" : 0,
+            "Colloidal Phaser" : {"energy" :0, "weapons" : 10, "propulsion" : 0,
                                 "construction" : 0, "electronics" : 0, "biotechnology" : 0,
                                 "mass" : 2, "resources" : 18, "iron" : 0, "bor" : 14, "ger" :  0,
                                 "range" : 3, "DP" : 26, "initiative" : 5},
@@ -474,7 +479,7 @@ def items_beam():
                                "mass" : 1, "resources" : 9, "iron" : 0, "bor" : 10, "ger" : 0,
                                "range" : 1, "DP" : 66, "initiative" : 9},
             "Bludgeon" : { "energy" : 0, "weapons" : 13, "propulsion" : 0,
-                           "construction" : 0, "electronics" : 0, "biotechnology" : ,
+                           "construction" : 0, "electronics" : 0, "biotechnology" : 0,
                            "mass" : 10, "resources" : 9, "iron" : 0, "bor" : 22, "ger" : 0,
                            "range" : 0, "DP" : 231, "initiative" : 10},
             "Mark IV Blaster" : { "energy" : 0, "weapons" : 14, "propulsion" : 0,
@@ -502,7 +507,7 @@ def items_beam():
                               "mass" : 10, "resources" : 13, "iron" : 0, "bor" : 30, "ger" : 0,
                               "range" : 0, "DP" : 592, "initiative" : 11},
             "Disruptor" : { "energy" : 0, "weapons" : 20, "propulsion" : 0,
-                            "construction" : 0, "electronics" : 0, "biotechnology" : ,
+                            "construction" : 0, "electronics" : 0, "biotechnology" : 0,
                             "mass" : 2, "resources" : 20, "iron" : 0, "bor" : 16, "ger" : 0,
                             "range" : 2, "DP" : 169, "initiative" : 8},
             "Syncro Sapper" : { "energy" : 11, "weapons" : 21, "propulsion" : 0,
@@ -810,7 +815,7 @@ def items_mechanical():
             "Super Cargo Pod" : {"energy" : 3, "weapons" : 0, "propulsion" : 0, "construction" : 9, 
                                  "electronics" : 0, "biotechnology" : 0, "mass" : 7, "resources" : 15, 
                                  "iron" : 8, "bor" : 0, "ger" : 2, "ability" : 10},
-            "Fuel Tank" : {"energy" :"weapons"ns : 0, "propulsion" : 0, "construction" : 0, 
+            "Fuel Tank" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                            "electronics" : 0, "biotechnology" : 0, "mass" : 3, "resources" : 4, 
                            "iron" : 6, "bor" : 0, "ger" : 0, "ability" : 250},
             "Super Fuel Tank" : {"energy" : 6, "weapons" : 0, "propulsion" : 4, "construction" : 14, 
@@ -827,64 +832,64 @@ def items_mechanical():
                                 "iron" : 0, "bor" : 0, "ger" : 10, "ability" : -10}}
 
 
-def items_mines():
+def items_minelayers():
     return {"Mine Dispenser 40" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                    "electronics" : 0, "biotechnology" : 0, "mass" : 25, "resources" : 45, 
-                                   "iron" : 2, "bor" : 10, "ger" : 8,mines per year : 40},
+                                   "iron" : 2, "bor" : 10, "ger" : 8, "mines per year" : 40},
             "Mine Dispenser 50" : {"energy" : 2, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                    "electronics" : 0, "biotechnology" : 4, "mass" : 30, "resources" : 55, 
-                                   "iron" : 2, "bor" : 12, "ger" : 10,mines per year : 50},
+                                   "iron" : 2, "bor" : 12, "ger" : 10, "mines per year" : 50},
             "Mine Dispenser 80" : {"energy" : 3, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                    "electronics" : 0, "biotechnology" : 7, "mass" : 30, "resources" : 65, 
-                                   "iron" : 2, "bor" : 14, "ger" : 10,mines per year : 80},
+                                   "iron" : 2, "bor" : 14, "ger" : 10, "mines per year" : 80},
             "Mine Dispenser 130" : {"energy" : 6, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                     "electronics" : 0, "biotechnology" : 12, "mass" : 30, "resources" : 80, 
-                                    "iron" : 2, "bor" : 18, "ger" : 10,mines per year : 130},
+                                    "iron" : 2, "bor" : 18, "ger" : 10, "mines per year" : 130},
             "Heavy Dispenser 50" : {"energy" : 5, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                     "electronics" : 0, "biotechnology" : 3, "mass" : 10, "resources" : 50, 
-                                    "iron" : 2, "bor" : 20, "ger" : 5,mines per year : 50},
+                                    "iron" : 2, "bor" : 20, "ger" : 5, "mines per year" : 50},
             "Heavy Dispenser 110" : {"energy" : 9, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                      "electronics" : 0, "biotechnology" : 5, "mass" : 15, "resources" : 70, 
-                                     "iron" : 2, "bor" : 30, "ger" : 5,mines per year : 110},
+                                     "iron" : 2, "bor" : 30, "ger" : 5, "mines per year" : 110},
             "Heavy Dispenser 200" : {"energy" : 14, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                      "electronics" : 0, "biotechnology" : 7, "mass" : 20, "resources" : 90, 
-                                     "iron" : 2, "bor" : 45, "ger" : 5,mines per year : 200},
+                                     "iron" : 2, "bor" : 45, "ger" : 5, "mines per year" : 200},
             "Speed Trap 20" : {"energy" : 0, "weapons" : 0, "propulsion" : 2, "construction" : 0, 
                                "electronics" : 0, "biotechnology" : 2, "mass" : 100, "resources" : 60, 
-                               "iron" : 30, "bor" : 0, "ger" : 12,mines per year : 20},
+                               "iron" : 30, "bor" : 0, "ger" : 12, "mines per year" : 20},
             "Speed Trap 30" : {"energy" : 0, "weapons" : 0, "propulsion" : 3, "construction" : 0, 
                                "electronics" : 0, "biotechnology" : 6, "mass" : 135, "resources" : 72, 
-                               "iron" : 32, "bor" : 0, "ger" : 14,mines per year : 30},
+                               "iron" : 32, "bor" : 0, "ger" : 14, "mines per year" : 30},
             "Speed Trap 50" : {"energy" : 0, "weapons" : 0, "propulsion" : 5, "construction" : 0, 
                                "electronics" : 0, "biotechnology" : 11, "mass" : 140, "resources" : 80, 
-                               "iron" : 40, "bor" : 0, "ger" : 15,mines per year : 50}}
+                               "iron" : 40, "bor" : 0, "ger" : 15, "mines per year" : 50}}
 
 
-def items_mining():
+def items_miningrobots():
     return {"Robo-Midget Miner" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                    "electronics" : 0, "biotechnology" : 0, "mass" : 80, "resources" : 50, 
-                                   "iron" : 14, "bor" : 0, "ger" : 4,KT per year : 5},
+                                   "iron" : 14, "bor" : 0, "ger" : 4, "KT per year" : 5},
             "Robo-Mini-Miner" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 2, 
                                  "electronics" : 1, "biotechnology" : 0, "mass" : 240, "resources" : 100, 
-                                 "iron" : 30, "bor" : 0, "ger" : 7,KT per year : 4},
+                                 "iron" : 30, "bor" : 0, "ger" : 7, "KT per year" : 4},
             "Robo-Miner" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 4, 
                             "electronics" : 2, "biotechnology" : 0, "mass" : 240, "resources" : 100, 
-                            "iron" : 30, "bor" : 0, "ger" : 7,KT per year : 12},
-            "Robo-Maxi-Miner"w : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 7, 
+                            "iron" : 30, "bor" : 0, "ger" : 7, "KT per year" : 12},
+            "Robo-Maxi-Miner" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 7, 
                                   "electronics" : 4, "biotechnology" : 0, "mass" : 240, "resources" : 100, 
-                                  "iron" : 30, "bor" : 0, "ger" : 7,KT per year : 18},
+                                  "iron" : 30, "bor" : 0, "ger" : 7, "KT per year" : 18},
             "Robo-Super-Miner" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 12, 
                                   "electronics" : 6, "biotechnology" : 0, "mass" : 240, "resources" : 100, 
-                                  "iron" : 30, "bor" : 0, "ger" : 7,KT per year : 27},
+                                  "iron" : 30, "bor" : 0, "ger" : 7, "KT per year" : 27},
             "Robo-Ultra-Miner" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 15, 
                                   "electronics" : 8, "biotechnology" : 0, "mass" : 80, "resources" : 50, 
-                                  "iron" : 14, "bor" : 0, "ger" : 4,KT per year : 25},
+                                  "iron" : 14, "bor" : 0, "ger" : 4, "KT per year" : 25},
             "Orbital Adjuster" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                   "electronics" : 0, "biotechnology" : 6, "mass" : 80, "resources" : 50, 
-                                  "iron" : 25, "bor" : 25, "ger" : 25,KT per year : 0}}
+                                  "iron" : 25, "bor" : 25, "ger" : 25, "KT per year" : 0}}
 
 
-def items_torpedos():
+def items_torpedoes():
     return {"Alpha Torpedo" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                "electronics" : 0, "biotechnology" : 0, "mass" : 25, "resources" : 5, 
                                "iron" : 9, "bor" : 3, "ger" : 3, "range"  : 4, "DP" : 5, "initiative" : 0, "hit chance" : 35, "double damage unshielded" : False},
@@ -953,7 +958,7 @@ def items_planetary_scanners():
                               "iron" : 10, "bor" : 10, "ger" : 70, "range" : 620, "pen scan" : 310}}
 
 
-def items_planetary_defences():
+def items_planetary_defenses():
     return {"SDI" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                      "electronics" : 0, "biotechnology" : 0, "resources" : 15, 
                      "iron" : 5, "bor" : 5, "ger" : 5, "ability" : 10},
@@ -1060,16 +1065,69 @@ def items_starbases():
                             "iron" : 40, "bor" : 10, "ger" : 50, "dock size" : 200, "DP" : 250, "initiative" : 12}, 
             "Space Station" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                "electronics" : 0, "biotechnology" : 0, "resources" : 1200, 
-                               "iron" : 240, "bor" : 160, "ger" : 500, "dock size" : inf, "DP" : 500, "initiative" : 14},
+                               "iron" : 240, "bor" : 160, "ger" : 500, "dock size" : 'inf', "DP" : 500, "initiative" : 14},
             "Ultra Station" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 12, 
                                "electronics" : 0, "biotechnology" : 0, "resources" : 1200, 
-                               "iron" : 240, "bor" : 160, "ger" : 600, "dock size" : inf, "DP" : 1000, "initiative" : 16}, 
+                               "iron" : 240, "bor" : 160, "ger" : 600, "dock size" : 'inf', "DP" : 1000, "initiative" : 16}, 
             "Death Star" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 17, 
                             "electronics" : 0, "biotechnology" : 0, "resources" : 1500, 
-                            "iron" : 240, "bor" : 160, "ger" : 700, "dock size" : inf, "DP" : 1500, "initiative" : 18}}
+                            "iron" : 240, "bor" : 160, "ger" : 700, "dock size" : 'inf', "DP" : 1500, "initiative" : 18}}
 
+def items_stargates():
+    return {"Stargate 100/250" : {"energy" : 0, "weapons" : 0, "propulsion" : 5, "construction" : 5, 
+                                  "electronics" : 0, "biotechnology" : 0, "resources" : 200, 
+                                  "iron" : 50, "bor" : 20, "ger" : 20, "hull mass" : 100, "range" : 250},
+            "Stargate any/300" : {"energy" : 0, "weapons" : 0, "propulsion" : 6, "construction" : 10, 
+                                  "electronics" : 0, "biotechnology" : 0, "resources" : 250, 
+                                  "iron" : 50, "bor" : 20, "ger" : 20, "hull mass" : 'inf', "range" : 300}, 
+            "Stargate 150/600" : {"energy" : 0, "weapons" : 0, "propulsion" : 11, "construction" : 7, 
+                                  "electronics" : 0, "biotechnology" : 0, "resources" : 500, 
+                                  "iron" : 50, "bor" : 20, "ger" : 20, "hull mass" : 150, "range" : 600}, 
+            "Stargate 300/500" : {"energy" : 0, "weapons" : 0, "propulsion" : 9, "construction" : 13, 
+                                  "electronics" : 0, "biotechnology" : 0, "resources" : 600, 
+                                  "iron" : 50, "bor" : 20, "ger" : 20, "hull mass" : 300, "range" : 500}, 
+            "Stargate 100/any" : {"energy" : 0, "weapons" : 0, "propulsion" : 16, "construction" : 12, 
+                                  "electronics" : 0, "biotechnology" : 0, "resources" : 700, 
+                                  "iron" : 50, "bor" : 20, "ger" : 20, "hull mass" : 100, "range" : 'inf'}, 
+            "Stargate any/800" : {"energy" : 0, "weapons" : 0, "propulsion" : 12, "construction" : 18, 
+                                  "electronics" : 0, "biotechnology" : 0, "resources" : 700, 
+                                  "iron" : 50, "bor" : 20, "ger" : 20, "hull mass" : 'inf', "range" : 800}, 
+            "Stargate any/any" : {"energy" : 0, "weapons" : 0, "propulsion" : 19, "construction" : 24, 
+                                  "electronics" : 0, "biotechnology" : 0, "resources" : 800, 
+                                  "iron" : 50, "bor" : 20, "ger" : 20, "hull mass" : 'inf', "range" : 'inf'}} 
 
-def items_terraform():
+def items_mass_drivers():
+    return {
+        "Mass Driver 5" : {"energy" : 4, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
+                           "electronics" : 0, "biotechnology" : 0, "resources" : 70, 
+                           "iron" : 24, "bor" : 20, "ger" : 20, "warp" : 5}, 
+        "Mass Driver 6" : {"energy" : 7, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
+                           "electronics" : 0, "biotechnology" : 0, "resources" : 144, 
+                           "iron" : 24, "bor" : 20, "ger" : 20, "warp" : 6}, 
+        "Mass Driver 7" : {"energy" : 9, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
+                           "electronics" : 0, "biotechnology" : 0, "resources" : 512, 
+                           "iron" : 100, "bor" : 100, "ger" : 100, "warp" : 7}, 
+        "Super Driver 8" : {"energy" : 11, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
+                            "electronics" : 0, "biotechnology" : 0, "resources" : 256, 
+                            "iron" : 24, "bor" : 20, "ger" : 20, "warp" : 8}, 
+        "Super Driver 9" : {"energy" : 13, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
+                            "electronics" : 0, "biotechnology" : 0, "resources" : 324, 
+                            "iron" : 24, "bor" : 20, "ger" : 20, "warp" : 9}, 
+        "Ultra Driver 10" : {"energy" : 15, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
+                             "electronics" : 0, "biotechnology" : 0, "resources" : 968, 
+                             "iron" : 100, "bor" : 100, "ger" : 100, "warp" : 10}, 
+        "Ultra Driver 11" : {"energy" : 17, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
+                             "electronics" : 0, "biotechnology" : 0, "resources" : 484, 
+                             "iron" : 24, "bor" : 20, "ger" : 20, "warp" : 11}, 
+        "Ultra Driver 12" : {"energy" : 20, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
+                             "electronics" : 0, "biotechnology" : 0, "resources" : 576, 
+                             "iron" : 24, "bor" : 20, "ger" : 20, "warp" : 12}, 
+        "Ultra Driver 13" : {"energy" : 24, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
+                             "electronics" : 0, "biotechnology" : 0, "resources" : 676, 
+                             "iron" : 24, "bor" : 20, "ger" : 20, "warp" : 13}
+    }
+                    
+def items_terraforming():
     return {"Total Terraform ±3" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                     "electronics" : 0, "biotechnology" : 0, "resources" : 70, "ability" : 3, "variable" : "any"},
             "Total Terraform ±5" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
@@ -1111,3 +1169,173 @@ def items_terraform():
             "Radiation Terraform ±15" : {"energy" : 0, "weapons" : 16, "propulsion" : 0, "construction" : 0, 
                                          "electronics" : 0, "biotechnology" : 4, "resources" : 100, "ability" : 15, "variable" : "radiation"}} 
 
+
+def items_restrictions():
+    """
+    Returns a dict with all of the techs which have a restriction related to
+    PRT or LRT. The restrictions have the following forms:
+       must be PRT
+       must not be PRT
+       must have LRT
+       must not have LRT
+       must have LRT and not LRT
+    which will be recorded as follows:
+       hasPRT []   (not PRT is same as requires any other PRT)
+       hasLRT       
+       notLRT
+    """
+    _allPRT = get_PRT_list()
+    _notWM   = [x for x in _allPRT if x != "WM"]
+    _notHE   = [x for x in _allPRT if x != "HE"]
+    _notAR   = [x for x in _allPRT if x != "AR"]
+    _notIS   = [x for x in _allPRT if x != "IS"]
+    _notWM_AR= [x for x in _allPRT if x not in ["AR", "WM"]]
+    return {
+        "SDI" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : []},
+        "Missile Battery" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : []},
+        "Laser Battery" : {"hasPRT" : [_notWM_AR], "hasLRT" : [], "notLRT" : []},
+        "Planetary Shield" : {"hasPRT" : [_notWM_AR], "hasLRT" : [], "notLRT" : []},
+        "Neutron Shield" : {"hasPRT" : [_notWM_AR], "hasLRT" : [], "notLRT" : []},
+        "Mini-Colony Ship" : {"hasPRT" : ["HE"], "hasLRT" : [], "notLRT" : []},
+        "Total Terraform ±3" : {"hasPRT" : [], "hasLRT" : ["TT"], "notLRT" : []},
+        "Total Terraform ±5" : {"hasPRT" : [], "hasLRT" : ["TT"], "notLRT" : []},
+        "Total Terraform ±7" : {"hasPRT" : [], "hasLRT" : ["TT"], "notLRT" : []},
+        "Total Terraform ±10" : {"hasPRT" : [], "hasLRT" : ["TT"], "notLRT" : []},
+        "Total Terraform ±15" : {"hasPRT" : [], "hasLRT" : ["TT"], "notLRT" : []},
+        "Total Terraform ±20" : {"hasPRT" : [], "hasLRT" : ["TT"], "notLRT" : []},
+        "Total Terraform ±25" : {"hasPRT" : [], "hasLRT" : ["TT"], "notLRT" : []},
+        "Total Terraform ±30" : {"hasPRT" : [], "hasLRT" : ["TT"], "notLRT" : []},
+        "Space Dock" : {"hasPRT" : [], "hasLRT" : ["ISB"], "notLRT" : []},
+        "Ultra Station" : {"hasPRT" : [], "hasLRT" : ["ISB"], "notLRT" : []},
+        "Death Star" : {"hasPRT" : ["AR"], "hasLRT" : [], "notLRT" : []},
+        "Croby Sharmor" : {"hasPRT" : ["IS"], "hasLRT" : [], "notLRT" : []},
+        "Shadow Shield" : {"hasPRT" : ["SS"], "hasLRT" : [], "notLRT" : []},
+        "Robber Baron Scanner" : {"hasPRT" : ["SS"], "hasLRT" : [], "notLRT" : []},
+        "Pick Pocket Scanner" : {"hasPRT" : ["SS"], "hasLRT" : [], "notLRT" : []},
+        "Chameleon Scanner" : {"hasPRT" : ["SS"], "hasLRT" : [], "notLRT" : []},
+        "Super Freighter" : {"hasPRT" : ["IS"], "hasLRT" : [], "notLRT" : []},
+        "Battle Cruiser" : {"hasPRT" : ["WM"], "hasLRT" : [], "notLRT" : []},
+        "Dreadnought" : {"hasPRT" : ["WM"], "hasLRT" : [], "notLRT" : []},
+        "Rogue" : {"hasPRT" : ["SS"], "hasLRT" : [], "notLRT" : []},
+        "Stealth Bomber" : {"hasPRT" : ["SS"], "hasLRT" : [], "notLRT" : []},
+        "Midget Miner" : {"hasPRT" : [], "hasLRT" : ["ARM"], "notLRT" : []},
+        "Miner" : {"hasPRT" : [], "hasLRT" : ["ARM"], "notLRT" : []},
+        "Maxi-Miner" : {"hasPRT" : [], "hasLRT" : [], "notLRT" : ["OBRM"]},
+        "Ultra-Miner" : {"hasPRT" : [], "hasLRT" : ["ARM"], "notLRT" : []},
+        "Fuel Transport" : {"hasPRT" : ["IS"], "hasLRT" : [], "notLRT" : []},
+        "Mini Mine Layer" : {"hasPRT" : ["SD"], "hasLRT" : [], "notLRT" : []},
+        "Super Mine Layer" : {"hasPRT" : ["SD"], "hasLRT" : [], "notLRT" : []},
+        "Meta Morph" : {"hasPRT" : ["HE"], "hasLRT" : [], "notLRT" : []},
+        "Ferret Scanner" : {"hasPRT" : [], "hasLRT" : [], "notLRT" : ["NAS"]},
+        "Dolphin Scanner" : {"hasPRT" : [], "hasLRT" : [], "notLRT" : ["NAS"]},
+        "Elephant Scanner" : {"hasPRT" : [], "hasLRT" : [], "notLRT" : ["NAS"]},
+        "Viewer 50" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : []},
+        "Viewer 90" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : []},
+        "Scoper 150" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : []},
+        "Scoper 220" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : []},
+        "Scoper 280" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : []},
+        "Snooper 320X" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : ["NAS"]},
+        "Snooper 400X" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : ["NAS"]},
+        "Snooper 500X" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : ["NAS"]},
+        "Snooper 620X" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : ["NAS"]},
+        "Stargate 100/250" : {"hasPRT" : [_notHE], "hasLRT" : [], "notLRT" : []},
+        "Stargate any/300" : {"hasPRT" : ["IT"], "hasLRT" : [], "notLRT" : []},
+        "Stargate 150/600" : {"hasPRT" : [_notHE], "hasLRT" : [], "notLRT" : []},
+        "Stargate 300/500" : {"hasPRT" : [_notHE], "hasLRT" : [], "notLRT" : []},
+        "Stargate 100/any" : {"hasPRT" : ["IT"], "hasLRT" : [], "notLRT" : []},
+        "Stargate any/800" : {"hasPRT" : ["IT"], "hasLRT" : [], "notLRT" : []},
+        "Stargate any/any" : {"hasPRT" : ["IT"], "hasLRT" : [], "notLRT" : []},
+        "Mass Driver 5" : {"hasPRT" : ["PP"], "hasLRT" : [], "notLRT" : []},
+        "Mass Driver 6" : {"hasPRT" : ["PP"], "hasLRT" : [], "notLRT" : []},
+        "Super Driver 8" : {"hasPRT" : ["PP"], "hasLRT" : [], "notLRT" : []},
+        "Super Driver 9" : {"hasPRT" : ["PP"], "hasLRT" : [], "notLRT" : []},
+        "Ultra Driver 11" : {"hasPRT" : ["PP"], "hasLRT" : [], "notLRT" : []},
+        "Ultra Driver 12" : {"hasPRT" : ["PP"], "hasLRT" : [], "notLRT" : []},
+        "Ultra Driver 13" : {"hasPRT" : ["PP"], "hasLRT" : [], "notLRT" : []},
+        "Robo-Midget Miner" : {"hasPRT" : [], "hasLRT" : ["ARM"], "notLRT" : []},
+        "Robo-Miner" : {"hasPRT" : [], "hasLRT" : [], "notLRT" : ["OBRM"]},
+        "Robo-Maxi-Miner" : {"hasPRT" : [], "hasLRT" : [], "notLRT" : ["OBRM"]},
+        "Robo-Super-Miner" : {"hasPRT" : [], "hasLRT" : [], "notLRT" : ["OBRM"]},
+        "Robo-Ultra-Miner" : {"hasPRT" : [], "hasLRT" : ["ARM"], "notLRT" : []},
+        "Orbital Adjuster" : {"hasPRT" : ["CA"], "hasLRT" : [], "notLRT" : []},
+        "Mine Dispenser 40" : {"hasPRT" : ["SD"], "hasLRT" : [], "notLRT" : []},
+        "Mine Dispenser 50" : {"hasPRT" : ["SD"], "hasLRT" : [], "notLRT" : []},
+        "Mine Dispenser 80" : {"hasPRT" : ["SD"], "hasLRT" : [], "notLRT" : []},
+        "Mine Dispenser 130" : {"hasPRT" : ["SD"], "hasLRT" : [], "notLRT" : []},
+        "Heavy Dispenser 50" : {"hasPRT" : ["SD"], "hasLRT" : [], "notLRT" : []},
+        "Heavy Dispenser 110" : {"hasPRT" : ["SD"], "hasLRT" : [], "notLRT" : []},
+        "Heavy Dispenser 200" : {"hasPRT" : ["SD"], "hasLRT" : [], "notLRT" : []},
+        "Speed Trap 20" : {"hasPRT" : ["SD", "IS"], "hasLRT" : [], "notLRT" : []},
+        "Speed Trap 30" : {"hasPRT" : ["SD"], "hasLRT" : [], "notLRT" : []},
+        "Speed Trap 50" : {"hasPRT" : ["SD"], "hasLRT" : [], "notLRT" : []},
+        "Colonization Module" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : []},
+        "Orbital Construction Module" : {"hasPRT" : ["AR"], "hasLRT" : [], "notLRT" : []},
+        "Settler's Delight" : {"hasPRT" : ["HE"], "hasLRT" : [], "notLRT" : []},
+        "Fuel Mizer" : {"hasPRT" : [], "hasLRT" : ["IFE"], "notLRT" : []},
+        "Interspace-10" : {"hasPRT" : [], "hasLRT" : ["NRSE"], "notLRT" : []},
+        "Sub-Galactic Fuel Scoop" : {"hasPRT" : [], "hasLRT" : [], "notLRT" : ["NRSE"]},
+        "Trans-Galactic Fuel Scoop" : {"hasPRT" : [], "hasLRT" : [], "notLRT" : ["NRSE"]},
+        "Trans-Galactic Super Scoop" : {"hasPRT" : [], "hasLRT" : [], "notLRT" : ["NRSE"]},
+        "Trans-Galactic Mizer Scoop" : {"hasPRT" : [], "hasLRT" : [], "notLRT" : ["NRSE"]},
+        "Galaxy Scoop" : {"hasPRT" : [], "hasLRT" : ["IFE"], "notLRT" : ["NRSE"]},
+        "Transport Cloaking" : {"hasPRT" : ["SS"], "hasLRT" : [], "notLRT" : []},
+        "Ultra-Stealth Cloak" : {"hasPRT" : ["SS"], "hasLRT" : [], "notLRT" : []},
+        "Jammer 10" : {"hasPRT" : ["IS"], "hasLRT" : [], "notLRT" : []},
+        "Jammer 50" : {"hasPRT" : ["IS"], "hasLRT" : [], "notLRT" : []},
+        "Flux Capacitor" : {"hasPRT" : ["HE"], "hasLRT" : [], "notLRT" : []},
+        "Energy Dampener" : {"hasPRT" : ["SD"], "hasLRT" : [], "notLRT" : []},
+        "Tachyon Detector" : {"hasPRT" : ["IS"], "hasLRT" : [], "notLRT" : []},
+        "Anti-matter Generator" : {"hasPRT" : ["IT"], "hasLRT" : [], "notLRT" : []},
+        "Retro Bomb" : {"hasPRT" : ["CA"], "hasLRT" : [], "notLRT" : []},
+        "Smart Bomb" : {"hasPRT" : ["_notIS"], "hasLRT" : [], "notLRT" : []},
+        "Neutron Bomb" : {"hasPRT" : ["_notIS"], "hasLRT" : [], "notLRT" : []},
+        "Enriched Neutron Bomb" : {"hasPRT" : ["_notIS"], "hasLRT" : [], "notLRT" : []},
+        "Peerless Bomb" : {"hasPRT" : ["_notIS"], "hasLRT" : [], "notLRT" : []},
+        "Annihilator Bomb" : {"hasPRT" : ["_notIS"], "hasLRT" : [], "notLRT" : []},
+        "Mini Gun" : {"hasPRT" : ["IS"], "hasLRT" : [], "notLRT" : []},
+        "Gatling Neutrino Cannon" : {"hasPRT" : ["WM"], "hasLRT" : [], "notLRT" : []},
+        "Blunderbuss" : {"hasPRT" : ["WM"], "hasLRT" : [], "notLRT" : []},
+        "Fielded Kelarium" : {"hasPRT" : ["SS"], "hasLRT" : [], "notLRT" : []},
+        "Depleted Neutronium" : {"hasPRT" : ["SS"], "hasLRT" : [], "notLRT" : []}
+    }
+
+def order_tech():
+    """Returns all of the tech in a dict. The struct of the dict is:
+    {category : {tech ....}}
+    This function also adds the restrictions to the tech obtained from items_restrictions
+    """
+    #get all of the dicts
+    tech = {"armor" : items_armor(),
+            "beam weapons" : items_beams(),
+            "bombs" : items_bombs(),
+            "electrical" : items_electrical(),
+            "engines" : items_engines(),
+            "mechanical" : items_mechanical(),
+            "mine layers" : items_minelayers(),
+            "mining robots" : items_miningrobots(),
+            "orbital" : dict(list(items_stargates().items()) +  list(items_mass_drivers().items())),
+            "planetary" : dict(list(items_planetary_defenses().items()) + list(items_planetary_scanners().items())),
+            "scanners" : items_scanners(),
+            "shields" : items_shields(),
+            "ship hulls" : items_hulls(),
+            "starbase hulls" : items_starbases(),
+            "terraforming" : items_terraforming(),
+            "torpedoes" : items_torpedoes()}
+
+    #add empty lists as the restriction for all tech
+    for v1 in tech.values():
+        for v2 in v1.values():
+            v2.update({"hasPRT" : [], "hasLRT" : [], "notLRT" : []})
+    
+    restrictions = items_restrictions()
+
+    for k1, v1 in restrictions.items():
+        found = False
+        for k2, v2 in tech.items():
+            if k1 in v2.keys():
+                found = True
+                for k4, v4 in v1.items():
+                    tech[k2][k1][k4] = v4
+        if not found:
+            raise ValueError("Trying to apply a restriction to tech '{}' but it wasn't found in tech".format(k1))
+    return tech
