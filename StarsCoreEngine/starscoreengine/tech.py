@@ -126,17 +126,26 @@ class CoreStats(object):
 
     def __init__(self):
             # Costs
-        self.iron= None
-        self.bor = None
-        self.germ = None
-        self.resources = None
+        self.iron= 0
+        self.bor = 0
+        self.germ = 0
+        self.resources = 0
 
         # Some witty 'Mass' related grouping
-        self.mass = None
+        self.mass = 0
         self.initative = None
         self.cloaking = None
         self.battleMovement = None
 
+# class TechReq(object):
+#     def __init__(self):
+#         # Tech Requirements
+#         self.ener = 0
+#         self.weap = 0
+#         self.prop = 0
+#         self.con = 0 
+#         self.elec = 0
+#         self.bio = 0 
 
 class BaseTech(CoreStats):
     
@@ -146,19 +155,21 @@ class BaseTech(CoreStats):
         self.itemType = None
 
         # Tech Requirements
-        self.ener = None
-        self.weap = None
-        self.prop = None
-        self.con = None 
-        self.elec = None
-        self.bio = None
+        self.ener = 0
+        self.weap = 0
+        self.prop = 0
+        self.con = 0 
+        self.elec = 0
+        self.bio = 0
 
         self.raceRequirement = None
         self.special = None
         self.restrictions = None
         self.fuelGeneration = None
 
-    
+     
+
+
 
 class Engines(object):
 
@@ -170,11 +181,11 @@ class Engines(object):
 
 
 
-class Weapon(object):
+class Weapons(object):
     ''' Weapons - both Beam & Torpedos
     '''
 
-    def __init__(self, ID):
+    def __init__(self):
         self.range = None
         self.power = None
         self.minesSwept = None
@@ -203,7 +214,7 @@ class Electrical(object):
         self.deflection = None
         self.capacitor = None
 
-        self.cloaking = None
+        self.cloaking = None       # may need to change this
 
 
 class Orbital(object):
@@ -242,16 +253,16 @@ class Mechanical(object):
         #self.movement = None
         self.extraFuel = None
         self.extraCargo = None
-        self.fuel = None
+
         self.colonizer = None
-        self.cargo = None    
+        # self.cargo = None    
 
 
 class Scanner(object):
     
     def __init__(self):
-        self.range = None
-        self.pen = None
+        self.normalRange = None
+        self.penRange = None
         self.stealFromShips = False   
         self.stealFromPlanets = False
 
@@ -273,6 +284,7 @@ class Shields(object):
 
 
 class Component(BaseTech):
+    # may want to consider class type enum
 
     def __init__(self):
         super(Component, self).__init__()
@@ -312,9 +324,9 @@ class Component(BaseTech):
         #self.movement = None
         self.extraFuel = None
         self.extraCargo = None
-        self.fuel = None
+        # self.fuel = None
         self.colonizer = None
-        self.cargo = None  
+        # self.cargo = None  
 
         #scanner
         self.range = None
@@ -359,9 +371,9 @@ class Hull(BaseTech):
         super(Hull,self).__init__()
         self.shipType = None    # Miner, Transport, Armed, ect.
 
-        
+        self.fuel = None        
         self.armor = 100
-        self.fuelCapacity = 500
+        # self.fuelCapacity = 500
         
         self.mineLayerDouble = False
         self.shipsHeal = False

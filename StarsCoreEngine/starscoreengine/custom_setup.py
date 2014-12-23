@@ -34,6 +34,7 @@
 '''
 import json
 from .game_utility import saveFileToJSON
+from .tech import *
 
 
 
@@ -216,12 +217,13 @@ def customSetupDialog(template, fileName):
 
 
 
-def printCustomSetup(customDict):
+def printCustomSetup(customDict, uniVals = "Universe"):
     '''
     prints out the custom setup.
     '''
+    title = "Custom %s Values" % uniVals
 
-    print("\n\n\n%s%s%s\n" % ("-" * 20, "Custom Universe Values", "-" * 20))
+    print("\n\n\n%s%s%s\n" % ("-" * 20, title, "-" * 20))
 
     for i in iter(customDict):
 
@@ -234,6 +236,190 @@ def printCustomSetup(customDict):
         # prints out standard value if its not a dictionary
         else:
             print("%s: %s" % (i, customDict[i]))
+
+
+
+def customTechDialog():
+    """Create Technology Components File from Command Line
+    """
+
+    customTechDict = {}
+
+    fileName = 'customTechTree'
+
+    techTreeHelp = ''' Modifying the file values will result in changes to the 
+    tech components. Modified Keys require changes to the code and is discouraged.
+
+    If you want a custom component with "composite" properties (say both 
+        electrical and a shield) - both types can be added to the one component.
+
+    '''
+
+    options = '''
+    # option 1 - add a custom component - until user wants to stop
+    # option 2 - (saved for later)
+    # option 3 - (saved for later) (save standard tech tree to file) (overwrites)
+    (1), (2), (3) ? 
+    '''
+
+
+
+    # Custom Dialog open description
+    print("\n\n\n\n%s%s%s" % ("-" * 20, "Custom Stars Technology Tree", "-" * 20 ))
+    print("\nThis is a basic command line interface to setup/generate custom tech components.")
+    print("Play nice and do not break it. Modify the resulting saved file if necessary.\n\n")
+
+
+
+    tech_file_name = input('''This Custom Tech Tree will be saved as: 
+    <%s.tech> 
+    (Press enter to keep or type a new name): ''' % fileName)
+
+    # check if file exists - if so add a _1 to the end of the file.
+    if not tech_file_name:
+        tech_file_name = fileName + '.tech'
+    else:
+        if (tech_file_name[-5:] != '.tech'):
+            tech_file_name = tech_file_name + '.tech'
+
+
+
+
+    customTechDict["help"] = techTreeHelp
+
+
+    # option 1 - add a custom component - until user wants to stop
+    # option 2 - (saved for later)
+    # option 3 - (saved for later) (save all tech to file - new Custom Dictionary)
+
+
+    # add while loop to allow for modifications of dict from command line
+
+    opts = input(options)
+    if opts == '1':
+        customTechDict = customTechOption1(customTechDict)
+    
+    elif opts == '3':
+        print("Saving the tech tree to .tech file. ")
+        customTechDict = customTechOption3(customTechDict)
+    
+    else:
+        print("%s not a valid option- exit" % opt)
+
+    
+    printCustomSetup(customTechDict, "Technology")
+
+    return tech_file_name, customTechDict
+
+
+
+    
+def customTechOption1(customTechDict):
+    """ Users can add a component via command line interactive dialog.
+
+    Needs a better user experience. 
+
+    """
+    typeValues = """
+    (a)rmor, (s)hields, (w)eapons, (e)ngines, (b)ombs, (mi)nelayer, (El)ectrical,
+    (O)rbital, (P)lanetary Installation, (m)echanical, (sc)anner
+            
+    (q)uit -> end adding types
+    """
+
+    print("----- Adding a New Component ----")
+
+    while True:
+        newItem = input("(n)ew component, (q)uit:")
+        if newItem == "q":
+            break
+
+        
+        print("new component attributes")
+
+        tmpComponentDict = {}
+        tmpName = input("name:")
+        tmpType = input("type:")
+
+        tmpComponentDict['name'] = tmpName
+        tmpComponentDict['itemType'] = tmpType
+
+        tmpComponentDict = addCustomTechType(tmpComponentDict, BaseTech())
+
+        while True:
+
+            print(typeValues)
+            tmpAddType = input("Add another type:")
+            if tmpAddType == "q":
+                break
+            elif tmpAddType == "a":
+                tmpObj = Armor()
+            elif tmpAddType == "s":
+                tmpObj = Shields()
+            elif tmpAddType == "w":
+                tmpObj = Weapons()
+            elif tmpAddType == "e":
+                tmpObj = Engines()
+            elif tmpAddType == "b":
+                tmpObj = Bombs()
+            elif tmpAddType == "mi":
+                tmpObj = Minelayer()
+            elif tmpAddType == "El":
+                tmpObj = Electrical()
+            elif tmpAddType == "O":
+                tmpObj = Orbital()
+            elif tmpAddType == "P":
+                tmpObj = PlanetaryInstallations()
+            elif tmpAddType == "m":
+                tmpObj = Mechanical()
+            elif tmpAddType == "sc":
+                tmpObj = Scanner()
+            else:
+                print("*** Warning *** \nEntry not understood, try again")
+                continue
+
+            tmpComponentDict = addCustomTechType(tmpComponentDict, tmpObj)
+
+        print("after inner break")
+
+        customTechDict[tmpName] = tmpComponentDict
+
+    return customTechDict
+
+
+def addCustomTechType(tmpComponentDict, typeObj):
+    """
+
+    """
+    d = typeObj.__dict__
+
+    print("\nEnter to keep '<value>' ")
+
+    return mergeTechTree(tmpComponentDict, d)
+
+
+def mergeTechTree(d1, d2):
+
+    for eachKey in d2:
+        if eachKey == 'itemType':
+            continue
+        elif eachKey == 'name':
+            continue
+
+        each = input("%s = %s : <%s>? " % (eachKey, d2[eachKey], d2[eachKey]))
+        if not each:
+            continue
+        d1[eachKey] = each
+
+    return d1
+
+def customTechOption3(customTechDict):
+    customTechDict = TechTree()     # overwrites custom tech tree. 
+
+    customTechDict["OnlyUseCustomTechTree"] = True  # Only use this tech tree
+
+
+    return customTechDict
 
 
 

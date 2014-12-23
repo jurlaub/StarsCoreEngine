@@ -38,12 +38,13 @@ from .planet import Colony
 from . import fleets
 from .custom_setup import customSetupDialog
 from .custom_setup import customSetupController
+from .custom_setup import customTechDialog
 from .player import RaceData, Player
 from .template import planetNameTemplate
 from .template import StandardGameTemplate
 from .game_utility import printGameValues
 from .game_utility import GamePickle, createXYFile, createMFile
-from .game_utility import loadFileFromJSON
+from .game_utility import loadFileFromJSON, saveFileToJSON
 from .order_of_events import OrderOfEvents
 
 
@@ -305,8 +306,10 @@ def CustomSetupFile(fileName):
 
 def CustomTechTreeFile():
     print("Custom Tech Tree module is still under development ")
-        
     # tech expansion here
+    treeFileName, techTree = customTechDialog()
+    saveFileToJSON(techTree, treeFilename)
+
 
 def CustomRaceFile():
     print("Custom RaceFile still under development")
@@ -370,17 +373,14 @@ def CreateNewGameTemplate(results):
         print("Unexpected command line option. Please review options and try again.")
         sys.exit()
 
+    
+    """ Tech Data Added To Game Template:
+    Adds an existing tech file to be used with a game.
 
-    #**************************
-    # Tech data parsing here
-    # ****** in same setup file? ********d
-    # pull in Game tech tree data : Key = "tech_data"
-    #### contains the standard tech (includes race specific tech) 
-    #### will contain additional general tech 
-    #### ultimately contains specific player tech (not associated with race wizard) : Key = "player_n_tech" 
-    #**************************
-    # tech file data here
-    print("Tech Tree import under development: tech file name %s" % results.techTree)
+    """
+    if results.techTree:
+        print("Tech Tree import under development: tech file name %s" % results.techTree)
+        print("*** need to add detection and loading of the tech file")
 
 
 
@@ -446,7 +446,7 @@ def main():
 
 
     #*****************************
-    #   Create a custom Game Template
+    #   Assemble a custom Game Template
     #***************************** 
     if results.customSetup:
 
@@ -456,7 +456,7 @@ def main():
 
 
     #*****************************
-    #   Create a custom Tech Template
+    #   Create a custom Tech File
     #***************************** 
     elif results.customTechTree:
 
