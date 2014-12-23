@@ -89,7 +89,7 @@ class StandardGameTemplate(object):
             self.technology = techDict
 
         else:
-            self.technology =       
+            self.technology = self.getTechTree(techDict)      
 
 
 
@@ -178,14 +178,36 @@ class StandardGameTemplate(object):
     def getTechTree(self, techDict):
         tmpTree = TechTree()
 
-        # if 
-        self.mergeDictionaryData(, techDict)
+        tmpTree = self.techTreeIterator(tmpTree, techDict)
 
         return tmpTree
 
+    def techTreeIterator(self, tmpTree, techDict):
+
+        for eachKey in techDict:
+            each = techDict[eachKey]
+            
+            if isinstance(each, dict):
+
+                d = self.techTreeIterator(tmpTree, techDict)
+                tmpTree = self.mergeAllItems(tmpTree, d) # combine d into tmpTree
+                
+            else:
+                tmpTree[eachKey] = each 
 
 
+        return tmpTree
 
+    def mergeAllItems(self, dict1, dict2):
+        '''
+        Merges all dictionary items from dict2 into dict1. There must be a built
+        in method that does this but I don't have access to documentation.
+        '''
+        for eachKey in dict2:
+            each = dict2[eachKey]
+            dict1[eachKey] = each
+
+        return dict1
 
 
 
@@ -323,8 +345,6 @@ def planetNamesFromFile():
 
 def TechTree():
     techTree = { 
-    "component1" : {},
-    "component2" : {}
 
     }
     return techTree
