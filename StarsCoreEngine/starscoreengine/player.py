@@ -79,6 +79,8 @@ class Player(object):
     Case for multiple inheritance:
     > inherits a set of behaviors that changes based on the PRT
 
+
+
     """
 
     def __init__(self, raceData):
@@ -87,7 +89,10 @@ class Player(object):
 
         self.PRT = raceData.PRT     # apply PRT values after player variables set,
         self.LRT = raceData.LRT   # apply LRT values after player is updated with PRT variables
-        self.raceTraits = None
+        
+
+        self.raceData = raceData        # 
+
 
         self.growthRate = raceData.growthRate
         self.popEfficiency = raceData.popEfficiency
@@ -182,9 +187,9 @@ class Player(object):
 
 
         input:  self.hab values 
-                planet habe values
+                planet hab values
 
-        output: planet value for player
+        output: planet value for player (used for colony and planet assessments)
 
         from m.a@stars
         http://starsautohost.org/sahforum2/index.php?t=msg&th=2299&rid=625&S=ee625fe2bec617564d7c694e9c5379c5&pl_view=&start=0#msg_19643
