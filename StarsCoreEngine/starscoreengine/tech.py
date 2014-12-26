@@ -92,13 +92,6 @@ Intel: designs revealed based on scanning and combat. Intel stored with
 
 """
 
-"""
-Alternative:
-
-
-
-
-"""
 
 ''' technology & game Setup options
 Template Options
@@ -211,7 +204,8 @@ class Component(BaseTech):
 
         #weapons
         self.range = None
-        self.power = None
+        self.beamPower = None
+        self.missilePower = None    # both torpedo & missile damage power 
         self.minesSwept = None
         self.accuracy = None
 
@@ -305,8 +299,8 @@ class Component(BaseTech):
 
     @staticmethod
     def weapons():
-        return {'range': 'None', 'power': 'None', 'minesSwept': 'None', 
-                'accuracy': 'None'}
+        return {'range': 'None', 'beamPower': 'None', 'missilePower': 'None', 
+                'minesSwept': 'None', 'accuracy': 'None'}
 
     @staticmethod
     def bombs():
@@ -355,6 +349,14 @@ class Component(BaseTech):
         return {'shieldDP': 'None'}
 
 
+    @staticmethod
+    def hull():
+        """
+        The items in Hull may need to be incorporated into the component object.
+        """
+        pass
+
+    # method for checking that static methods match component attributes.
 
 
 
@@ -367,9 +369,9 @@ class Hull(BaseTech):
         super(Hull,self).__init__()
         self.shipType = None    # Miner, Transport, Armed, ect.
 
-        self.fuel = None        
-        self.armor = 100
-        # self.fuelCapacity = 500
+        self.fuel = None           # amount of current fuel
+        self.armor = 0
+        self.fuelCapacity = 0      # max fuel transported in the ship
         
         self.mineLayerDouble = False
         self.shipsHeal = False
@@ -390,8 +392,19 @@ class Hull(BaseTech):
         # specify all ship related question?
 
 
-class ShipDesign(CoreStats):
+class ShipDesign(Component):
     ''' ShipDesign is a specific user defined design of the Hull class 
+
+    --TODO--
+    ShipDesign is a subclass of CoreStats. As components are added or removed, 
+    these values are updated. Perhaps subclassing Component would be better. 
+    As Components are added/removed they could update the ShipDesign Component values. 
+    The final design would capture all the designs capabilities. 
+    20141226 - ju - I think subclassing Component is better.
+
+
+
+
     '''
 
     def __init__(self, hullID):
