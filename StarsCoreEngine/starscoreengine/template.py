@@ -83,8 +83,7 @@ class StandardGameTemplate(object):
 
         self.technology = {}
 
-        if "OnlyUseCustomTechTree" in techDict && 
-            techDict["OnlyUseCustomTechTree"] == "True":
+        if "OnlyUseCustomTechTree" in techDict and techDict["OnlyUseCustomTechTree"] == "True":
 
             self.technology = techDict
 
