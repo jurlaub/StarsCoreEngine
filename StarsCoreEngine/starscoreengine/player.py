@@ -272,9 +272,9 @@ class Player(object):
         rc = self.habRadCenter 
         rr = self.habRadRange 
 
-        playerUpperHab = [gc + gr / 2.,tc + tr / 2. , rc + rr / 2.]
-        playerLowerHab = [gc - gr / 2.,tc - tr / 2. , rc - rr / 2.]
-        planetValuePoints=0,redValue=0,ideality=10000;	//in fact, they are never < 0
+        # playerUpperHab = [gc + gr / 2.,tc + tr / 2. , rc + rr / 2.]
+        # playerLowerHab = [gc - gr / 2.,tc - tr / 2. , rc - rr / 2.]
+        # planetValuePoints=0,redValue=0,ideality=10000;	//in fact, they are never < 0
         #WORD planetHab,habUpper,habLower,habCenter;
         #WORD Excentr,habRadius,margin,Negativ,dist2Center;        
         for i in range(3):

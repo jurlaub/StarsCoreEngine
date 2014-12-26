@@ -123,41 +123,36 @@ Custom Tech Options
 '''
 
 
-# class CoreStats(object):
-
-#     def __init__(self):
-#             # Costs
-#         self.iron = 0
-#         self.bor = 0
-#         self.germ = 0
-#         self.resources = 0
-
-#         # Some witty 'Mass' related grouping
-#         self.mass = 0
-#         self.initative = None
-#         self.cloaking = None
-#         self.battleMovement = None
-
-
-class BaseTech(object):
-    """BaseTech captures the parts of a component and hull that are shared.
+class CoreStats(object):
+    """CoreStats captures the parts of a Component and ShipDesign that are shared.
 
     """
-    
-    def __init__(self):
-        #super(BaseTech,self).__init__()
-        self.name = None            # tech object name (game name for object)
-        self.itemType = None
 
+    def __init__(self):
+            # Costs
         self.iron = 0
         self.bor = 0
         self.germ = 0
         self.resources = 0
+
+        # Some witty 'Mass' related grouping
         self.mass = 0
-        
         self.initative = None
         self.cloaking = None
         self.battleMovement = None
+
+
+class BaseTech(CoreStats):
+    """BaseTech captures the parts of a Component and Hull that are shared.
+
+    """
+    
+    def __init__(self):
+        super(BaseTech,self).__init__()
+        self.name = None            # tech object name (game name for object)
+        self.itemType = None
+
+
         self.special = None     
         self.fuelGeneration = None
 
@@ -173,130 +168,6 @@ class BaseTech(object):
         self.electronics = 0
         self.biotechnology = 0
      
-
-
-
-# class Engines(object):
-
-#     def __init__(self):
-#         self.optimalSpeed = None
-#         self.freeSpeed = None
-#         self.safeSpeed = None   # may not be necessary with warp10safe
-#         self.radiation = False
-
-#         self.warp1 = None
-#         self.warp2 = None 
-#         self.warp3 = None 
-#         self.warp4 = None 
-#         self.warp5 = None 
-#         self.warp6 = None
-#         self.warp7 = None 
-#         self.warp8 = None 
-#         self.warp9 = None 
-#         self.warp10 = None
-#         self.warp10safe = False
-
-
-
-# class Weapons(object):
-#     ''' Weapons - both Beam & Torpedos
-#     '''
-
-#     def __init__(self):
-#         self.range = None
-#         self.power = None
-#         self.minesSwept = None
-#         self.accuracy = None
-
-# class Bombs(object):
-
-#     def __init__(self):
-#         self.popKillPercent = None
-#         self.minKill = None
-#         self.installations = None
-
-
-
-# class MineLayer(object):
-
-#     def __init__(self):
-#         self.minesPerYear = None
-
-#         self.terraform = False
-
-# class Electrical(object):
-
-#     def __init__(self):
-#         self.tachyon = None
-#         self.deflection = None
-#         self.capacitor = None
-
-#         self.cloaking = None       # may need to change this
-
-
-# class Orbital(object):
-
-#     def __init__(self):
-#         self.safeGatableMass = None
-#         self.safeRange = None
-
-#         self.warpDriverSpeed = None
-
-# class PlanetaryInstallations(object):
-
-#     def __init__(self):
-#         self.normalScanRange = None
-#         self.penScanRange = None
-
-#         self.defenses40 = None
-#         self.defenses80 = None
-
-
-# class Terraforming(object):
-#     """docstring for Terraforming"""
-#     def __init__(self):
-#         super(Terraforming, self).__init__()
-#         self.modGrav  = None
-#         self.modTemp = None
-#         self.modRad = None
-
-        
-        
-
-# class Mechanical(object):
-
-#     def __init__(self):
-#         self.beamDeflector = None
-#         #self.movement = None
-#         self.extraFuel = None
-#         self.extraCargo = None
-
-#         self.colonizer = None
-#         # self.cargo = None    
-
-
-# class Scanner(object):
-    
-#     def __init__(self):
-#         self.normalScanRange = None
-#         self.penScanRange = None
-#         self.stealFromShips = False   
-#         self.stealFromPlanets = False
-
-
-
-
-# class Armor(object):
-
-#     def __init__(self):
-#         self.armorDP = None
-
-# class Shields(object):
-
-#     def __init__(self):
-#         self.shieldDP = None
-
-
 
 
 
