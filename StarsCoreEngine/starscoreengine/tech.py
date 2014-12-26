@@ -167,10 +167,13 @@ class BaseTech(CoreStats):
         self.electronics = 0
         self.biotechnology = 0
 
-        self.raceRequirement = None
-        self.special = None
-        self.restrictions = None
+
+        self.special = None     
         self.fuelGeneration = None
+
+        self.hasPRT = None
+        self.hasLRT = None
+        self.notLRT = None
 
      
 
@@ -308,6 +311,8 @@ class Component(BaseTech):
         # self.name = None
         self.itemID = None
         self.typeDict = {}
+
+
 
         #engines
         self.optimalSpeed = None
