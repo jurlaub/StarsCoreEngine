@@ -41,7 +41,9 @@ class Planet(SpaceObjects):
         self.origRad = origHab[2]
 
         self.currHab = self.origHab         # depreciate
-        # detail current hab
+        self.currentTemp = self.origTemp
+        self.currentGrav = self.origGrav
+        self.currentRad = self.origRad
 
         #detail current Concentration, random by default
         if not origConc: 
