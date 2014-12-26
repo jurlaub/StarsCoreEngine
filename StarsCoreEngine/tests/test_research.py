@@ -1,0 +1,116 @@
+
+from ..starscoreengine import *
+from ..starscoreengine.research import *
+import unittest
+from math import fabs
+
+class TestResearchCosts(unittest.TestCase):
+    def test_cost_remaining(self):
+        #tech level 1, no other tech, normal cost
+        self.assertTrue((fabs(cost_remaining(1, "normal", 0, 0) - 50) <= 1e-6))
+        #tech level 1, no other tech, cheap cost
+        self.assertTrue((fabs(cost_remaining(1, "cheap", 0, 0) - 25) <= 1e-6))
+        #tech level 1, no other tech, expensive cost
+        self.assertTrue((fabs(cost_remaining(1, "expensive", 0, 0) - 50*1.75) <= 1e-6))
+        
+        #tech level 1, 2 other techs, normal cost
+        self.assertTrue((fabs(cost_remaining(1, "normal", 2, 0) - 70) <= 1e-6))
+        #tech level 1, 2 other techs, cheap cost
+        self.assertTrue((fabs(cost_remaining(1, "cheap", 2, 0) - 35) <= 1e-6))
+        #tech level 1, 2 other techs, expensive cost
+        self.assertTrue((fabs(cost_remaining(1, "expensive", 2, 0) - 70 * 1.75) <= 1e-6))
+
+        #tech level 2, 1 other techs, normal cost
+        self.assertTrue((fabs(cost_remaining(2, "normal", 1, 0) - 90) <= 1e-6))
+        #tech level 2, 1 other techs, cheap cost
+        self.assertTrue((fabs(cost_remaining(2, "cheap", 1, 0) - 45) <= 1e-6))
+        #tech level 2, 1 other techs, expensive cost
+        self.assertTrue((fabs(cost_remaining(2, "expensive", 1, 0) - 157.5) <= 1e-6))
+
+        #tech level 2, 1 other techs, normal cost, some already spent
+        self.assertTrue((fabs(cost_remaining(2, "normal", 1, 50) - 40) <= 1e-6))
+        #tech level 2, 1 other techs, cheap cost, some already spent
+        self.assertTrue((fabs(cost_remaining(2, "cheap", 1, 50) + 5) <= 1e-6))
+        #tech level 2, 1 other techs, expensive cost, some already spent
+        self.assertTrue((fabs(cost_remaining(2, "expensive", 1, 50) - 107.5) <= 1e-6))
+
+    def test_cost_remaining_error(self):
+        self.assertRaises(ValueError, cost_remaining, 2, "fish", 1, 50)
+
+
+class TestStartTech(unittest.TestCase):
+    def setUp(self):
+        self.baseTechLevels = {
+            "energy" : 0, 
+            "weapons" : 0,
+            "propulsion" : 0,
+            "construction" : 0,
+            "electronics" : 0,
+            "biotechnology" : 0
+          }
+
+
+    def test_startTech_JOAT1(self):
+        #JOAT - 3 in all
+        JOAT_calc = set_base_tech("JOAT", [])
+        for k in self.baseTechLevels.keys():
+            self.baseTechLevels[k] = 3
+        self.assertEquals(JOAT_calc, self.baseTechLevels)
+
+    def test_startTech_JOAT2(self):
+        #JOAT - 3 in all, prop 4
+        JOAT_calc = set_base_tech("JOAT", ["CE"])
+        for k in self.baseTechLevels.keys():
+            self.baseTechLevels[k] = 3
+        self.baseTechLevels["propulsion"] = 4
+        self.assertEquals(JOAT_calc, self.baseTechLevels)
+
+
+    def test_startTech_JOAT3(self):
+        #JOAT - 3 in all, prob 4
+        JOAT_calc = set_base_tech("JOAT", ["IFE"])
+        for k in self.baseTechLevels.keys():
+            self.baseTechLevels[k] = 3
+        self.baseTechLevels["propulsion"] = 4
+        self.assertEquals(JOAT_calc, self.baseTechLevels)
+
+
+    def test_startTech_JOAT4(self):
+        #JOAT - 3 in all, prop 5
+        JOAT_calc = set_base_tech("JOAT", ["IFE", "CE"])
+        for k in self.baseTechLevels.keys():
+            self.baseTechLevels[k] = 3
+        self.baseTechLevels["propulsion"] = 5
+        self.assertEquals(JOAT_calc, self.baseTechLevels)
+        
+    def test_startTech_wrongPTR(self):
+        self.assertRaises(ValueError, set_base_tech, "fish")
+
+    def test_startTech_HE1(self):
+        self.assertEquals(set_base_tech("HE"), self.baseTechLevels)
+
+    def test_startTech_HE2(self):
+        self.baseTechLevels["propulsion"] = 1
+        self.assertEquals(set_base_tech("HE", ["IFE"]), self.baseTechLevels)
+
+
+class TestRaceTechFieldsCost(unittest.TestCase):
+    def test_race_editor_costs1(self):
+        #all normal, box not ticked
+        self.assertEqual(0, race_editor_tech_costs(0, 0, False))
+
+    def test_race_editor_costs2(self):
+        #all normal, box ticked
+        self.assertEqual(-60, race_editor_tech_costs(0, 0, True))
+
+    def test_race_editor_costs3(self):
+        #3 exp, 3 cheap,  box ticked
+        self.assertEqual(-60, race_editor_tech_costs(3, 3, True))
+
+    def test_race_editor_costs4(self):
+        #1 exp, box ticked
+        self.assertEqual(-60 + -49, race_editor_tech_costs(1, 0, True))
+
+    def test_race_editor_costs5(self):
+        #1 cheap, box ticked
+        self.assertEqual(-60 + 43, race_editor_tech_costs(0, 1, True))

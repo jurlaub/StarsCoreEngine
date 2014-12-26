@@ -22,7 +22,7 @@
 """
 
 from .space_objects import SpaceObjects
-
+import random
 
 
 class Planet(SpaceObjects):
@@ -32,7 +32,7 @@ class Planet(SpaceObjects):
         origConc = Tuple --TODO-- change to individual variables
 
     """
-    def __init__(self, xy, ID, name, origHab = (90, 1.1, 65), origConc = (75, 75, 75)):
+    def __init__(self, xy, ID, name, origHab = (90, 1.1, 65), origConc = None):
         super(Planet, self).__init__(xy, ID)
         self.name = name    
         self.origHab = origHab              #depreciate
@@ -43,13 +43,17 @@ class Planet(SpaceObjects):
         self.currHab = self.origHab         # depreciate
         # detail current hab
 
-        self.origConc = origConc            #depreciate
-        self.concIron = origConc[0]
-        self.concBora = origConc[1]
-        self.concGerm = origConc[2]
+        #detail current Concentration, random by default
+        if not origConc: 
+            self.concIron = random.randint(1,100)
+            self.concBora = random.randint(1,100)
+            self.concGerm = random.randint(1,100)
+        else:
+            self.concIron = origConc[0]
+            self.concBora = origConc[1]
+            self.concGerm = origConc[2]
+        
 
-        self.currConc = self.origConc       # depreciate
-        #detail current Concentration
 
         self.currSurfaceMinerals = 0  # depreciate  (should be  3 values in a list)
         self.surfaceIron = 0
@@ -69,8 +73,12 @@ class Planet(SpaceObjects):
     def changeHab(self):
         pass
 
-    def changeConc(self):
-        pass
+    def changeConc(self, concIron, concBora, concGerm):
+        #set concentrations to new values, perhaps best to let the mines\mining fleets decide how much and have them set the values?
+        self.concIron = concIron
+        self.concBora = concBora
+        self.concGerm = concGerm
+
 
     def updateSurfaceMinerals(self, minerals):
         self.surfaceIron += minerals[0]
@@ -83,7 +91,8 @@ class Colony(object):
 
     """
 
-    def __init__(self, planet, population):
+    def __init__(self, planet, population, player):
+        self.player = player    #link to owner
         self.planet = planet    # *** connects a colony to a planet object ****
         
 
@@ -95,7 +104,8 @@ class Colony(object):
         self.defenses = 0
 
         #calculated values
-        self.growthRate = .10  # calc on colonizing; recalc on any terriform event
+        #! this is race figure and then the true growth rate is calculate in populationGrowth function, taking into account hab\capacity?
+        self.growthRate = player.growthRate  # calc on colonizing; recalc on any terriform event ! 
         self.totalResources = 0
         self.resourceTax = False  
         self.planetValue = 1.0    # 1.0 = 100% Value = calculated from currHab 
@@ -156,11 +166,11 @@ class Colony(object):
 
 
 
-    def calcGrowthRate(self, raceRate):
+    def calcGrowthRate(self):
         ''' Calculate the planetary growth rate based on the planet value
-
+        not sure what the point of this
         '''
-        self.growthRate = raceRate
+        self.growthRate = player.growthRate
 
     def colonyUninhabit(self):
         # self.planet.owner = None
