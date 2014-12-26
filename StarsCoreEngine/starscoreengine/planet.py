@@ -89,12 +89,18 @@ class Planet(SpaceObjects):
 
 
 class Colony(object):
-    """ Requires a planet object >>> or object that mimics required attributes
+    """ 
+    Requires 
+        >   A player object. Every player.colonies = {} holding colony objects. 
+            
+        >   a planet object >>> or object that mimics required attributes
+
+
 
     """
 
-    def __init__(self, planet, population, player):
-        self.player = player    #link to owner
+    def __init__(self, planet, population):
+        # self.player = player    #link to owner
         self.planet = planet    # *** connects a colony to a planet object ****
         
 
@@ -107,7 +113,7 @@ class Colony(object):
 
         #calculated values
         #! this is race figure and then the true growth rate is calculate in populationGrowth function, taking into account hab\capacity?
-        self.growthRate = player.growthRate  # calc on colonizing; recalc on any terriform event ! 
+        self.growthRate = .10  # calc on colonizing; recalc on any terriform event ! 
         self.totalResources = 0
         self.resourceTax = False  
         self.planetValue = 1.0    # 1.0 = 100% Value = calculated from currHab 
@@ -168,11 +174,16 @@ class Colony(object):
 
 
 
-    def calcGrowthRate(self):
-        ''' Calculate the planetary growth rate based on the planet value
-        not sure what the point of this
+    def calcGrowthRate(self, raceRate):
         '''
-        self.growthRate = player.growthRate
+        Input:  raceRate is from owning Player object.
+                self.planetValue must be present and updated
+                
+        Output: the method should update the rate at which the colonist grow.
+                This value is based on planet value. 
+        (Currently set to the max race rate.)
+        '''
+        self.growthRate = raceRate
 
     def colonyUninhabit(self):
         # self.planet.owner = None

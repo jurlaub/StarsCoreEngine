@@ -148,10 +148,10 @@ class Player(object):
                 fleetMinerals = colony fleet object that has been salvaged
 
         '''
-        newColony = Colony(planet, pop, self)
+        newColony = Colony(planet, pop)
         planet.updateSurfaceMinerals(fleetMinerals)
         newColony.planetValue = self.planetValue(planet)
-        newColony.calcGrowthRate()
+        newColony.calcGrowthRate(self.growthRate)
         planet.owner = self.raceName
 
         self.colonies[planet.ID] = newColony
@@ -281,7 +281,11 @@ class Player(object):
             pass
             #nevermind, setup to use clicks instead of actual values for hab and -1 for immune, 
             #not sure howto proceed
-        return 10.
+        #return 10.
+
+        planetValue = 1.0
+
+        return planetValue
             
 
 
