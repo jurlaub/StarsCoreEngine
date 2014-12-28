@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
     This file is part of Stars Core Engine, which provides an interface and 
     processing of Stars data. 
@@ -1571,3 +1573,19 @@ def order_tech():
         if not found:
             raise ValueError("Trying to apply a restriction to tech '{}' but it wasn't found in tech".format(k1))
     return tech
+
+def hull_slots(hullDatabase):
+    hullDicts = {}
+    for k, v in hullDatabase.items():
+        name = k
+        hullDict = {}
+        slotNames = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        letterNum = 0
+        for k2, v2 in v.items():
+            if v2: #skip empty types of slots
+                for i in v2:
+                    hullDict[slotNames[letterNum]] = {"objectType": k2, "slotsAvalable": i}
+                    letterNum += 1
+        hullDicts[k] = hullDict
+    return hullDicts
+    
