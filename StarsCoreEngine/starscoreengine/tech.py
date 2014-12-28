@@ -208,6 +208,7 @@ class Component(BaseTech):
         #weapons
         self.range = None
         self.beamPower = None
+        self.sapper = False 
         self.missilePower = None    # both torpedo & missile damage power 
         self.minesSwept = None
         self.accuracy = None
@@ -307,7 +308,7 @@ class Component(BaseTech):
 
     @staticmethod
     def weapons():
-        return {'range': 'None', 'beamPower': 'None', 'missilePower': 'None', 
+        return {'range': 'None', 'sapper' : 'None', 'beamPower': 'None', 'missilePower': 'None', 
                 'minesSwept': 'None', 'accuracy': 'None'}
 
     @staticmethod
@@ -431,6 +432,16 @@ class ShipDesign(Component):
                 "B":{"itemID": None, "itemQuantity": None}}  # capacity
 
         self.seen = [] #? necessary?
+
+        #need to be reevaluated every turn to take into account tech changes, need to know them both 
+        #for production cost and for evaluating attractiveness in battle
+        self.iron = None
+        self.bor  = None
+        self.germ = None
+        self.resources = None
+        self.deflector_effectiveness = None
+        self.jamming_effectiveness = None
+        self.computing_power = None
 
     def componentDict(self, key, value):
 

@@ -88,3 +88,8 @@ class TestBattle(unittest.TestCase):
         expect = [(1, 4), (8, 5), (2, 8), (7, 1), (6, 8), (3, 1), (1, 6), (8, 3), (1, 2), (4, 8), (5, 1), (8, 7)]
         self.assertEqual(expect, calc)
 
+    def test_calcAccuracy1(self):
+        computingPower = 50
+        torpAccuracy = 75
+        jamming = 0
+        self.assertAlmostEqual(87.5, calcAccuracy(computingPower, torpAccuracy, jamming))

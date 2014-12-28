@@ -221,3 +221,35 @@ def extractCoords(grid, numPlayers):
                     break
     return results
             
+
+def calcAccuracy(computing_power, base_accuracy, jamming):
+    return (100 - (100 - base_accuracy) * computing_power * 0.01) * (100 - jamming) * 0.01
+    
+def calcAttraction(firing_ship, weapon, target, tgt_range):
+    """Calculates the attractiveness of a target for weapson according to
+    http://wiki.starsautohost.org/wiki/%22Targeting_Order_of_Battle%22_by_Art_Lathrop_1999-04-14_v2.6/7i.
+
+    Assumes that the same weapon components will fire together, but different ones can have different targets.
+
+    """
+
+    #attractiveness = cost / attack power needed
+    tgt_class = target["class"]
+    tgt_shields = target["shields"]
+    tgt_armor = target["armor"]
+    cost = (tgt_class.bor + tgt_class.resources) * target["number"]
+    if weapon.sapper:
+        apn = tgt_shields / (0.9 ** (tgt_class.deflector_effectiveness * 10) * (1 - 0.1 * tgt_range / weapon["range"]))
+        return cost / apn
+    elif weapon.beampower:
+        apn = (tgt_armor + tgt_shields) / (0.9 ** (tgt_class.deflector_effectiveness * 10) * (1 - 0.1 * tgt_range / weapon["range"]))
+        return cost / apn
+    else:
+        coeff = 2 if weapon.doubleDamageUnshielded else 1
+        accuracy = calcAccuracy(tgt_class.computing_power, weapon.accuracy, tgt_class.jamming_effectiveness)
+        if tgt_shields > tgt_armor:
+            apn = tgt_armor * 2 / accuracy
+            return cost / apn
+        else:
+            apn = tgt_shields * 2 / accuracy + (tgt_armor - tgt_shield) / (accuracy * coeff)            
+            return cost / apn
