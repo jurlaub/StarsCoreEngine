@@ -149,9 +149,12 @@ class Game(object):
                 if tmpKey in tmpPlayers:
                     player = tmpPlayers[tmpKey]
 
+                    #bonusMinerals = (0,0,0)  # per template? or RW setup
+
                     planetHW = universe.createHomeworldPlanet(player.raceName)
 
-                    homeworld = Colony(planetHW, template.starting_population)
+                    homeworld = Colony(player, planetHW, template.starting_population)
+                    #homeworld = player.colonizePlanet(planetHW, template.starting_population, bonusMinerals)
                     homeworld.scanner = True
 
                     player.colonies[planetHW.ID] = homeworld

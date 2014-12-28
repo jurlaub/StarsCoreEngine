@@ -153,10 +153,12 @@ class Player(object):
                 fleetMinerals = colony fleet object that has been salvaged
 
         '''
-        newColony = Colony(planet, pop)
+        newColony = Colony(self.raceData, planet, pop)
         planet.updateSurfaceMinerals(fleetMinerals)
+
         newColony.planetValue = self.planetValue(planet)
-        newColony.calcGrowthRate(self.growthRate)
+        newColony.growthRate = self.growthRate
+
         planet.owner = self.raceName
 
         self.colonies[planet.ID] = newColony
