@@ -192,16 +192,20 @@ class Component(BaseTech):
         self.freeSpeed = None
         self.safeSpeed = None   # still necessary with warp10safe?
         self.radiation = False
-        self.warp1 = None
-        self.warp2 = None 
-        self.warp3 = None 
-        self.warp4 = None 
-        self.warp5 = None 
-        self.warp6 = None
-        self.warp7 = None 
-        self.warp8 = None 
-        self.warp9 = None 
-        self.warp10 = None
+        #self.warp1 = None
+        #self.warp2 = None 
+        #self.warp3 = None 
+        #self.warp4 = None 
+        #self.warp5 = None 
+        #self.warp6 = None
+        #self.warp7 = None 
+        #self.warp8 = None 
+        #self.warp9 = None 
+        #self.warp10 = None
+        
+        #fuel & battleSpeed calculations easier to do if fuel efficiency is in a list, then can
+        #just do eff = fuelEff[speed]
+        self.fuelEfficiencies = []
         self.warp10safe = False
 
 
@@ -432,6 +436,9 @@ class ShipDesign(Component):
                 "B":{"itemID": None, "itemQuantity": None}}  # capacity
 
         self.seen = [] #? necessary?
+        
+        self.fuel_capacity = 0  #can be different to hull due to fuel tanks
+        self.cargo_capacity = 0 #can be different to hull due to cargo tanks
 
         #need to be reevaluated every turn to take into account tech changes, need to know them both 
         #for production cost and for evaluating attractiveness in battle
