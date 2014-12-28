@@ -119,6 +119,9 @@ Custom Tech Options
 class CoreStats(object):
     """CoreStats captures the parts of a Component and ShipDesign that are shared.
 
+    Note: with ShipDesign subclassing Component - there may not be a need to 
+    seperate this out anymore. 
+
     """
 
     def __init__(self):
@@ -370,7 +373,7 @@ class Hull(BaseTech):
         self.shipType = None    # Miner, Transport, Armed, ect.
 
         self.fuel = None           # amount of current fuel
-        self.armor = 0
+        self.armorDP = 0
         self.fuelCapacity = 0      # max fuel transported in the ship
         
         self.mineLayerDouble = False
@@ -382,8 +385,8 @@ class Hull(BaseTech):
 
         # slot defines the hull component composition
         self.slot = {
-            "A":{"objectType": "engine", "slotsAvalable":1 }, 
-            "B":{"objectType":"itemType",  "slotsAvalable":2}}  # each key == specific slot
+            "A":{"objectType": ["engine"], "slotsAvalable":1 }, 
+            "B":{"objectType":["itemType"],  "slotsAvalable":2}}  # each key == specific slot
 
         # identify slots:
         #   slot type -> General, Engine, Weap, Mech, Elect, etc
