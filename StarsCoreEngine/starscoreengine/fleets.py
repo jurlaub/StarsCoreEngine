@@ -89,33 +89,35 @@ class Fleets(SpaceObjects):
 
     def calculateFuelUsePerLY(self):
         fuelUsed = 0
+        mg_coeff = 0.0005
         #no cargo, just use design mass
         if self.cargoMass == 0:
             for t in self.tokens:
-                fuelUsed += t.mass * t.design.fuelEfficiency[self.speed] * self.raceFuelEfficiency * 0.0005 
+                fuelUsed += t.mass * t.design.fuelEfficiency[self.speed] * self.raceFuelEfficiency * mg_coeff 
         #full of cargo, use design mass + cargo capacity for every ship
         elif self.cargoMass == self.cargoCapacity:
             for t in self.tokens:
-                fuelUsed += (t.cargo_capacity + t.mass) * t.design.fuelEfficiency[self.speed] * self.raceFuelEfficiency * 0.0005
+                fuelUsed += (t.cargo_capacity + t.mass) * t.design.fuelEfficiency[self.speed] * self.raceFuelEfficiency * mg_coeff
         #partially loaded, arrange cargo between ships to use the least fuel, so fill the most efficient ships first
         else:
             def _sortByFuelEff(self, token):
                 return token.design.fuelEfficiency[self.speed]
-                
+
+            #should sort tokens by fuel efficiency at this speed, so that cargo is distributed over the most fuel efficient ships
             self.tokens = sorted(self.tokens, key=_sortByFuelEff)
             for t in self.tokens:
                 #no cargo capacity or no cargo left
                 if t.cargo_capacity == 0 or self.cargoMass == 0:
-                    fuelUsed = t.mass * t.design.fuelEfficiency[self.speed] * self.raceFuelEfficiency * 0.0005 
+                    fuelUsed = t.mass * t.design.fuelEfficiency[self.speed] * self.raceFuelEfficiency * mg_coeff 
 
                 #more cargo than will fit in this token, fill it up
                 elif self.cargoMass > t.cargo_capacity:
                     self.cargoMass -= t.cargo_capcacity
-                    fuelUsed += (t.cargo_capacity + t.mass) * t.design.fuelEfficiency[self.speed] * self.raceFuelEfficiency * 0.0005
+                    fuelUsed += (t.cargo_capacity + t.mass) * t.design.fuelEfficiency[self.speed] * self.raceFuelEfficiency * mg_coeff
 
                 #cargo will fit in token - partially or completely fill it
                 elif self.cargoMass > 0:
-                    fuelUsed += (self.cargoMass + t.mass) * t.design.fuelEfficiency[self.speed] * self.raceFuelEfficiency * 0.0005
+                    fuelUsed += (self.cargoMass + t.mass) * t.design.fuelEfficiency[self.speed] * self.raceFuelEfficiency * mg_coeff
                     self.cargoMass = 0
 
                     
