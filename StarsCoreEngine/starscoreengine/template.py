@@ -319,9 +319,20 @@ def planetNameTemplate():
      ]
     return planet_names
 
-def planetNamesFromFile():
-    #--TODO--
-    pass
+
+def planetNamesFromFile(fName):
+    """Read planet names from fName, assumes the format is csv or name on each line,
+    returns a list of unique planet names as strings.
+    """
+    planet_names = []
+    with open(fName) as f:
+        fList = f.read()
+        for i in fList.split("\n"):
+            for j in i.split(","):
+                if j != "" and j not in planet_names:
+                    planet_names.append(j)
+    return planet_names
+
 
 
 
