@@ -183,7 +183,7 @@ class Component(BaseTech):
         super(Component, self).__init__()
         # self.name = None
         self.itemID = None
-        self.typeDict = {}
+        #self.typeDict = {}   # unnecessary as the types are handled prior to instantiation
 
 
 
@@ -253,6 +253,11 @@ class Component(BaseTech):
 
 
     def updateElements(self):
+        """ 
+        updateElements is probably not needed. Something like this would 
+        work better in ShipDesign for updating the Ship Design values.
+
+        """
         extraItems = {}
 
         for eachKey in self.typeDict:

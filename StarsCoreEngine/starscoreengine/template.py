@@ -133,7 +133,7 @@ class StandardGameTemplate(object):
         
         return standard_universe
 
-    # test of classmethod - 
+    # test of classmethod - # depreciate if possible. 
     @classmethod
     def homeworld():
         iron = 78
@@ -146,7 +146,13 @@ class StandardGameTemplate(object):
         input: dict1, dict2
         output: dict1
 
-        if items in dict2 are in dict1, merge those items into dict1
+        If items in dict2 are in dict1, merge those items into dict1.
+        Items in dict2 that do not have an existing key already in dict1 should 
+        NOT be added. 
+
+        The point here is that a custom file may have a key:value pair which is
+        not supported by the game. 
+
         '''
 
         for n in dict2:
@@ -184,7 +190,11 @@ class StandardGameTemplate(object):
 
     def techTreeIterator(self, tmpTree, techDict):
         """
-            Tech tree iterator needs work.
+            Tech tree iterator needs work.  
+
+            Want to use the concept described by mergeDictionaryData() 
+            > the dict1 'template' would be the Component attributes
+            > dict2 would be the custom or standard values. 
         """
 
         for eachKey in techDict:
