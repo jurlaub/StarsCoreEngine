@@ -42,10 +42,22 @@ class SpaceObjects(object):
         self.ID = ID
         self.xy = xy   # tuple (x,y)
         self.speed = 0
+
+        #needs to pull its value from self.waypoints?
         self.destinationXY = self.xy  # tuple (x,y)
         self.newSpeed = self.speed
 
-
+        #need to be able to store waypoints (with speed), and then to know what the waypoints are (need to figure out howto do intercepts)
+        self.waypoints = None #[((x,y), speed), (other_space_object, speed)...
+        
+        #perhaps sort fleets by waypoint type, if type of next waypoint (of fleet A) is static (x, y) then fleet A can move easily,
+        #then a following intercept fleet (B) can move to the new location of fleet A. 
+        #What to do if A is following B, B is following C and C is following A - no way to know which to resolve first - not sure how Stars! does it now
+        #could do it iteratively, store the objects origional coords and then move each one 1 ly towards its target, 
+        #eventually:
+        #   all three will have moved as far as they can towards one another,
+        #   two will meet, and the third will have a fixed target
+        #   three will meet 
 
     def printCurrentCoord(self):
         print ("(x = %, y = %)" % (self.xy))

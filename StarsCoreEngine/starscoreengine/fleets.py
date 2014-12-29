@@ -37,6 +37,22 @@
 
 from .space_objects import SpaceObjects
 
+class Token:
+    """Ships of the same design in a fleet form a single token, contains everything needed
+    for the battles, needs to persist after battles to keep damage"""
+
+    def __init__(self, shipDesign, numbers, damage):
+        self.design = shipDesign
+        self.number = numbers
+        #list of [[number, damage (%)], ..., so [100, 0.5], [100, 0] is a token of 200 ships, 100 of which have 50% damage
+        self.damage = damage  
+       
+        #used in battle
+        self.armor = None
+        self.shields = None
+        #modified every turn in battle
+        self.mass = None
+
 
 class Fleets(SpaceObjects):
     """
@@ -44,6 +60,66 @@ class Fleets(SpaceObjects):
 
     """
 
-    def __init__(self,args):
+    def __init__(self,args, raceFuelEfficiency):
         super(Fleets, self).__init__()
-        pass
+        self.tokens = []
+        self.fuel_capacity = 0
+        self.fuel_availiable = 0
+        self.cargo_mass = 0
+        self.cargo_capacity = 0
+        self.cloaking = 0
+        self.raceFuelEfficiency = raceFuelEfficiency
+
+    def setCapacities(self):
+        self.fuel_capacity = 0
+        self.cargo_capacity = 0
+        for t in self.tokens:
+            self.fuel_capacity += t.design.fuel_capacity * t.number
+            self.cargo_capacity += t.design.cargo_capacity * t.number
+        
+    def move(self):
+        pos = self.xy
+        tgtPos = self.destinationXY
+        distance = math.sqrt((tgtPos[0] - pos[0]) **2 + (tgtPos[0] - pos[0]) **2)
+        #can make it in one year
+        if self.speed ** 2 <= math.ceil(distance):
+            return distance
+        else:
+            return self.speed ** 2
+
+    def calculateFuelUsePerLY(self):
+        fuelUsed = 0
+        mg_coeff = 0.0005
+        #no cargo, just use design mass
+        if self.cargoMass == 0:
+            for t in self.tokens:
+                fuelUsed += t.mass * t.design.fuelEfficiency[self.speed] * self.raceFuelEfficiency * mg_coeff 
+        #full of cargo, use design mass + cargo capacity for every ship
+        elif self.cargoMass == self.cargoCapacity:
+            for t in self.tokens:
+                fuelUsed += (t.cargo_capacity + t.mass) * t.design.fuelEfficiency[self.speed] * self.raceFuelEfficiency * mg_coeff
+        #partially loaded, arrange cargo between ships to use the least fuel, so fill the most efficient ships first
+        else:
+            def _sortByFuelEff(self, token):
+                return token.design.fuelEfficiency[self.speed]
+
+            #should sort tokens by fuel efficiency at this speed, so that cargo is distributed over the most fuel efficient ships
+            self.tokens = sorted(self.tokens, key=_sortByFuelEff)
+            for t in self.tokens:
+                #no cargo capacity or no cargo left
+                if t.cargo_capacity == 0 or self.cargoMass == 0:
+                    fuelUsed = t.mass * t.design.fuelEfficiency[self.speed] * self.raceFuelEfficiency * mg_coeff 
+
+                #more cargo than will fit in this token, fill it up
+                elif self.cargoMass > t.cargo_capacity:
+                    self.cargoMass -= t.cargo_capcacity
+                    fuelUsed += (t.cargo_capacity + t.mass) * t.design.fuelEfficiency[self.speed] * self.raceFuelEfficiency * mg_coeff
+
+                #cargo will fit in token - partially or completely fill it
+                elif self.cargoMass > 0:
+                    fuelUsed += (self.cargoMass + t.mass) * t.design.fuelEfficiency[self.speed] * self.raceFuelEfficiency * mg_coeff
+                    self.cargoMass = 0
+
+                    
+                    
+                    
