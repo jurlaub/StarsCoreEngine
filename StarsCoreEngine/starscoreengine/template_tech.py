@@ -29,7 +29,7 @@ from .template_race import get_PRT_list
 
 
 
-def hull_slot_allocation():
+def ship_slots():
     return {"Small Freighter" : {"Armor" : [],
                                  "Armor Scanner Elect Mech" : [],
                                  "Bomb" : [],
@@ -1574,8 +1574,10 @@ def order_tech():
             raise ValueError("Trying to apply a restriction to tech '{}' but it wasn't found in tech".format(k1))
     return tech
 
+
+
 def hull_slots(hullDatabase):
-  
+
     hullDicts = {}
     for k, v in hullDatabase.items():
         name = k
@@ -1590,4 +1592,35 @@ def hull_slots(hullDatabase):
                     letterNum += 1
         hullDicts[k] = hullDict
     return hullDicts
-    
+  
+
+
+
+def standard_tech_tree():
+    """ standard_tech_tree combines the tech dictionary found in order_tech and 
+    the slots for the ship and starbase hulls.
+
+    returns a dictionary
+    """
+
+    techDict = order_tech()
+    slotDict = hull_slots(ship_slots())
+    slotDict.update(hull_slots(starbase_slots()))
+
+
+    for eachHull in slotDict:
+        slotObj = slotDict[eachHull]
+
+        if eachHull in techDict['shipHulls']:
+            techDict['shipHulls'][eachHull]['slot'] = slotObj
+        elif eachHull in techDict["starbaseHulls"]:
+            techDict["starbaseHulls"][eachHull]['slot'] = slotObj
+        else:
+            raise ValueError("%s not found when attempting to merge 'slots' into hull in template_tech.py" % eachHull)
+
+    return techDict
+
+
+
+
+

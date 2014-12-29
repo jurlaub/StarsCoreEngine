@@ -23,7 +23,7 @@
 """
 import random
 from .player import RaceData
-from .template_tech import order_tech
+from .template_tech import standard_tech_tree
 
 
 
@@ -350,7 +350,7 @@ def planetNamesFromFile(fName):
 
 
 def TechTree():
-    v = order_tech()
+    v = standard_tech_tree()
 
     return v
 
