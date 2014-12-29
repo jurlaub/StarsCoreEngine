@@ -137,6 +137,14 @@ class CoreStats(object):
         self.cloaking = None
         self.battleMovement = None
 
+        # 20141228 ju -> It would be nice to have a consitent value across all compononets for fuel/cargo capacity
+        # the capacity is a function of Hull and components. The currently stored value is a part of the specific design
+
+        self.fuelCapacity = None       # max fuel capacity
+        self.cargoCapacity = None   # max cargo capacity    
+
+
+
 
 class BaseTech(CoreStats):
     """BaseTech captures the parts of a Component and Hull that are shared.
@@ -151,6 +159,8 @@ class BaseTech(CoreStats):
 
         self.special = None     
         self.fuelGeneration = None
+
+        # fuel & cargo in CoreStats
 
         self.hasPRT = None
         self.hasLRT = None
@@ -192,6 +202,12 @@ class Component(BaseTech):
         self.freeSpeed = None
         self.safeSpeed = None   # still necessary with warp10safe?
         self.radiation = False
+        
+        # 20141228 ju -> seems like a nicer solution for warp to use fuelEfficiencies list
+        # but the warp# seems more explicit. The question becomes - what is more readable and maintanable? 
+        # And does it matter in this case?  BTW - the list seems better for expansion (like ships moving warp10+ :) )
+        # perhaps a function in custom tech tree can then feed into the fuelEfficiencies list. 
+        # 
         #self.warp1 = None
         #self.warp2 = None 
         #self.warp3 = None 
@@ -205,20 +221,20 @@ class Component(BaseTech):
         
         #fuel & battleSpeed calculations easier to do if fuel efficiency is in a list, then can
         #just do eff = fuelEff[speed]
-        self.fuelEfficiencies = []
+        self.fuelEfficiencies = []  #  
         self.warp10safe = False
 
 
         #weapons
         self.range = None
         self.beamPower = None
-        self.sapper = False 
+        self.sapper = False         # sapper = shield damage only
         self.missilePower = None    # both torpedo & missile damage power 
         self.minesSwept = None
         self.accuracy = None
 
         self.hitChance = None 
-        self.doubleDamageUnshielded = False
+        self.doubleDamageUnshielded = False     # for 'Missile' (as opposed to 'Torpedos') 
 
 
         #bombs
@@ -232,14 +248,13 @@ class Component(BaseTech):
 
         #Electrical
         self.tachyon = None
-        self.deflection = None
+        self.deflector = None
         self.capacitor = None
 
         #Mechanical
         self.beamDeflector = None
         #self.movement = None
-        self.extraFuel = None
-        self.extraCargo = None
+
         # self.fuel = None
         self.colonizer = None
         # self.cargo = None  
@@ -299,7 +314,7 @@ class Component(BaseTech):
         return {'name': 'None', 'itemType': 'None', 'initative': 'None', 
                 'cloaking': 'None', 'battleMovement': 'None', 'special': 'None',     
                 'fuelGeneration': 'None', 'hasPRT': 'None', 'hasLRT': 'None', 
-                'notLRT': 'None'}
+                'notLRT': 'None', 'fuelCapacity': 'None', 'cargoCapacity': 'None'}
 
 
     @staticmethod
@@ -326,7 +341,7 @@ class Component(BaseTech):
 
     @staticmethod
     def electronics():
-        return {'tachyon': 'None', 'deflection': 'None', 'capacitor': 'None', 
+        return {'tachyon': 'None', 'deflector': 'None', 'capacitor': 'None', 
                 'cloaking': 'None' }      # may need to change cloaking
 
     @staticmethod
@@ -336,8 +351,7 @@ class Component(BaseTech):
         
     @staticmethod
     def planetaryInstallations():
-        return {'normalScanRange': 'None', 'penScanRange': 'None', 
-                'defenses40': 'None', 'defenses80': 'None'}
+        return {'normalScanRange': 'None', 'penScanRange': 'None'} # 'defenses40': 'None', 'defenses80': 'None'
 
     @staticmethod
     def terraforming():
@@ -345,8 +359,8 @@ class Component(BaseTech):
 
     @staticmethod
     def mechanical():
-        return {'beamDeflector': 'None', 'extraFuel': 'None', 'extraCargo': 'None', 
-                'colonizer': 'None'}
+        return {'beamDeflector': 'None', 'fuelCapacity': 'None', 'cargoCapacity': 'None', 
+                'colonizer': 'None'}        # 'fuelCapacity' & 'cargoCapacity' are held within BaseTech
  
     @staticmethod
     def scanner():
@@ -367,7 +381,7 @@ class Component(BaseTech):
         """
         The items in Hull may need to be incorporated into the component object.
         """
-        pass
+        print("Component().hull() custom component Not Implemented")
 
     # method for checking that static methods match component attributes.
 
@@ -382,9 +396,10 @@ class Hull(BaseTech):
         super(Hull,self).__init__()
         self.shipType = None    # Miner, Transport, Armed, ect.
 
-        self.fuel = None           # amount of current fuel
+        # self.fuel = None           # amount of current fuel
+        # self.fuelCapacity = 0      # max fuel transported in the ship
+
         self.armorDP = 0
-        self.fuelCapacity = 0      # max fuel transported in the ship
         
         self.mineLayerDouble = False
         self.shipsHeal = False
@@ -408,13 +423,13 @@ class Hull(BaseTech):
 class ShipDesign(Component):
     ''' ShipDesign is a specific user defined design of the Hull class 
 
-    --TODO--
+
     ShipDesign is a subclass of CoreStats. As components are added or removed, 
     these values are updated. Perhaps subclassing Component would be better. 
     As Components are added/removed they could update the ShipDesign Component values. 
     The final design would capture all the designs capabilities. 
+    
     20141226 - ju - I think subclassing Component is better.
-
 
 
 
@@ -437,15 +452,25 @@ class ShipDesign(Component):
 
         self.seen = [] #? necessary?
         
-        self.fuel_capacity = 0  #can be different to hull due to fuel tanks
-        self.cargo_capacity = 0 #can be different to hull due to cargo tanks
+        # 20141228 ju -> "capacity" should be captured by the BaseTech.fuelCapacity
+        #               A value is needed to capture the currently held fuel/cargo
+        # self.fuel_capacity = 0  #can be different to hull due to fuel tanks
+        # self.cargo_capacity = 0 #can be different to hull due to cargo tanks
+        self.fuel = 0            # amount of currently held fuel  
+        self.cargo = 0           # amount contained in cargo hold
 
+        # 20141228 ju -> this information is already captured in Ship Design by 
+        #               it subclassing Component (inherits from CoreStats)
         #need to be reevaluated every turn to take into account tech changes, need to know them both 
         #for production cost and for evaluating attractiveness in battle
-        self.iron = None
-        self.bor  = None
-        self.germ = None
-        self.resources = None
+        # self.iron = None
+        # self.bor  = None
+        # self.germ = None
+        # self.resources = None
+
+        #20141228 ju -> These are calculated values and are somewhat different 
+        #   from fuelCapacity (which is basically the sum of all fuelCapacity in a design)
+        #   It seems better for this sort of value to be separate.
         self.deflector_effectiveness = None
         self.jamming_effectiveness = None
         self.computing_power = None

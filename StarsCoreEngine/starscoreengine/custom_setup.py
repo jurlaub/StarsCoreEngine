@@ -321,15 +321,22 @@ def customTechOption1(customTechDict):
 
     """
     typeValues = """
-    (a)rmor, (s)hields, (w)eapons, (e)ngines, (b)ombs, (mi)nelayer, (El)ectrical,
-    (O)rbital, (P)lanetary Installation, (m)echanical, (sc)anner
+    All components have : (c)osts, (b)ase, (t)ech requirements
+
+    Plus:   (a)rmor, (s)hields, (w)eapons, (e)ngines, (bo)mbs, (mi)nelayer, (El)ectrical,
+            (O)rbital, (P)lanetary Installation, (m)echanical, (sc)anner, (h)ull,
+            (T)erraforming <special> 
             
     (q)uit -> end adding types
     """
 
+    cmpt = Component()
+
+
     print("----- Adding a New Component ----")
 
     while True:
+        
         newItem = input("(n)ew component, (q)uit:")
         if newItem == "q":
             break
@@ -339,12 +346,12 @@ def customTechOption1(customTechDict):
 
         tmpComponentDict = {}
         tmpName = input("name:")
-        tmpType = input("type:")
+        tmpType = input("type:")        # need a list of types and names
 
         tmpComponentDict['name'] = tmpName
-        tmpComponentDict['itemType'] = tmpType
+        tmpComponentDict['itemType'] = tmpType  
 
-        tmpComponentDict = addCustomTechType(tmpComponentDict, BaseTech())
+        #tmpComponentDict = addCustomTechType(tmpComponentDict, BaseTech())
 
         while True:
 
@@ -352,28 +359,38 @@ def customTechOption1(customTechDict):
             tmpAddType = input("Add another type:")
             if tmpAddType == "q":
                 break
-            elif tmpAddType == "a":
-                tmpObj = Armor()
-            elif tmpAddType == "s":
-                tmpObj = Shields()
-            elif tmpAddType == "w":
-                tmpObj = Weapons()
-            elif tmpAddType == "e":
-                tmpObj = Engines()
+            elif tmpAddType == "c":
+                tmpObj = cmpt.costs()
             elif tmpAddType == "b":
-                tmpObj = Bombs()
+                tmpObj = cmpt.base()              
+            elif tmpAddType == "t":
+                tmpObj = cmpt.techRequirements()
+            elif tmpAddType == "a":
+                tmpObj = cmpt.armor()
+            elif tmpAddType == "s":
+                tmpObj = cmpt.shields()
+            elif tmpAddType == "w":
+                tmpObj = cmpt.weapons()
+            elif tmpAddType == "e":
+                tmpObj = cmpt.engines()
+            elif tmpAddType == "bo":
+                tmpObj = cmpt.bombs()
             elif tmpAddType == "mi":
-                tmpObj = Minelayer()
+                tmpObj = cmpt.minelayer()
             elif tmpAddType == "El":
-                tmpObj = Electrical()
+                tmpObj = cmpt.electronics()
             elif tmpAddType == "O":
-                tmpObj = Orbital()
+                tmpObj = cmpt.orbital()
             elif tmpAddType == "P":
-                tmpObj = PlanetaryInstallations()
+                tmpObj = cmpt.planetaryInstallations()
             elif tmpAddType == "m":
-                tmpObj = Mechanical()
+                tmpObj = cmpt.mechanical()
+            elif tmpAddType == "h":
+                tmpObj = cmpt.hull()
             elif tmpAddType == "sc":
-                tmpObj = Scanner()
+                tmpObj = cmpt.scanner()
+            elif tmpAddType == "T":
+                tmpObj = cmpt.terraforming()
             else:
                 print("*** Warning *** \nEntry not understood, try again")
                 continue
