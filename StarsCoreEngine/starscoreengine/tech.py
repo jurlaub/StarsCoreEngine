@@ -150,11 +150,16 @@ class BaseTech(CoreStats):
     """BaseTech captures the parts of a Component and Hull that are shared.
 
     """
+
+    # each component should be one of the following object types
+    objectTypes =  ["Armor", "Scanner", "Elect", "Mech", "Bomb", "Engine",  
+                    "GeneralPurpose", "Minelayer", "Mining", "Scanner",
+                    "Shield", "Armor","Weapon"]
     
     def __init__(self):
         super(BaseTech,self).__init__()
         self.name = None            # tech object name (game name for object)
-        self.itemType = None
+        self.itemType = None        # should be one of the above objectTypes
 
 
         self.special = None     

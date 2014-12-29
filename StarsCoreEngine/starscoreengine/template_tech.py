@@ -29,7 +29,7 @@ from .template_race import get_PRT_list
 
 
 
-def hull_slots():
+def hull_slot_allocation():
     return {"Small Freighter" : {"Armor" : [],
                                  "Armor Scanner Elect Mech" : [],
                                  "Bomb" : [],
@@ -1575,6 +1575,7 @@ def order_tech():
     return tech
 
 def hull_slots(hullDatabase):
+  
     hullDicts = {}
     for k, v in hullDatabase.items():
         name = k
@@ -1584,7 +1585,8 @@ def hull_slots(hullDatabase):
         for k2, v2 in v.items():
             if v2: #skip empty types of slots
                 for i in v2:
-                    hullDict[slotNames[letterNum]] = {"objectType": k2, "slotsAvalable": i}
+                    otList = k2.split(' ')  # make list key and split on ' ' >>> must match ObjectTypes
+                    hullDict[slotNames[letterNum]] = {"objectType": otList, "slotsAvalable": i}
                     letterNum += 1
         hullDicts[k] = hullDict
     return hullDicts
