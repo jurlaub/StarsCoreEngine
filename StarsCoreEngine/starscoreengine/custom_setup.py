@@ -35,6 +35,7 @@
 import json
 from .game_utility import saveFileToJSON
 from .tech import *
+from .template_tech import standard_tech_tree
 
 
 
@@ -282,6 +283,7 @@ def customTechDialog():
         if (tech_file_name[-5:] != '.tech'):
             tech_file_name = tech_file_name + '.tech'
 
+    print("Ok... %s" % tech_file_name)
 
 
 
@@ -299,9 +301,12 @@ def customTechDialog():
     if opts == '1':
         customTechDict = customTechOption1(customTechDict)
     
+    elif opts == '2':       # not implemented 
+        customTechDict = customTechOption2(customTechDict)
+
     elif opts == '3':
         print("Saving the tech tree to .tech file. ")
-        customTechDict = customTechOption3(customTechDict)
+        customTechDict = customTechOption3(customTechDict)  # currently overwrites customTechDict
     
     else:
         print("%s not a valid option- exit" % opt)
@@ -317,7 +322,7 @@ def customTechDialog():
 def customTechOption1(customTechDict):
     """ Users can add a component via command line interactive dialog.
 
-    Needs a better user experience. 
+    
 
     """
     typeValues = """
@@ -346,17 +351,19 @@ def customTechOption1(customTechDict):
 
         tmpComponentDict = {}
         tmpName = input("name:")
-        tmpType = input("type:")        # need a list of types and names
+        tmpType = input("type (%s):" % cmpt.objectTypes)        # need a list of types and names
 
         tmpComponentDict['name'] = tmpName
         tmpComponentDict['itemType'] = tmpType  
 
         #tmpComponentDict = addCustomTechType(tmpComponentDict, BaseTech())
+        tmpComponentDict = addCustomTechType(tmpComponentDict, cmpt.costs())
+        tmpComponentDict = addCustomTechType(tmpComponentDict, cmpt.techRequirements())
 
         while True:
 
             print(typeValues)
-            tmpAddType = input("Add another type:")
+            tmpAddType = input("Add special features:")
             if tmpAddType == "q":
                 break
             elif tmpAddType == "c":
@@ -397,7 +404,7 @@ def customTechOption1(customTechDict):
 
             tmpComponentDict = addCustomTechType(tmpComponentDict, tmpObj)
 
-        print("after inner break")
+        #print("after inner break")
 
         customTechDict[tmpName] = tmpComponentDict
 
@@ -430,8 +437,26 @@ def mergeTechTree(d1, d2):
 
     return d1
 
+
+def customTechOption2(customTechDict):
+
+    y = """Add 1 to N generic components to the tech tree JSON file. This allows 
+editing of the tech component using a text file. 
+
+*** Warning - do not modify the 'keys' part of the JSON file. ***
+
+    """
+    # use the Component() static methods along with collections.OrderedDict to 
+    # create a usable structure for text editing
+
+    print("Custom Tech Option 2 is not implemented")
+
+    return customTechDict
+
+
+
 def customTechOption3(customTechDict):
-    customTechDict = TechTree()     # overwrites custom tech tree. 
+    customTechDict = standard_tech_tree()     # overwrites custom tech tree. 
 
     customTechDict["OnlyUseCustomTechTree"] = True  # Only use this tech tree
 
