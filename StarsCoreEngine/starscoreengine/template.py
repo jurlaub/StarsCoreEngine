@@ -89,6 +89,10 @@ class StandardGameTemplate(object):
             self.technology = techDict
 
         else:
+            # handle: blank, additions, modifications
+            # if techDict contains Standard Tech Tree components then it will 
+            # overwrite the standard versions
+
             self.technology = self.getTechTree(techDict)      
 
 
@@ -127,6 +131,7 @@ class StandardGameTemplate(object):
 
     def standardUniverse(self):
         # standard universe comprises standard settings for 1 universe.
+        # Will eventually move to a different setup class.
 
         standard_universe = {"UniverseNumber":0, "UniverseSizeXY": (200,200), \
         "UniverseName": "Prime", "UniversePlanets":6, "Players":1}
@@ -195,32 +200,68 @@ class StandardGameTemplate(object):
             Want to use the concept described by mergeDictionaryData() 
             > the dict1 'template' would be the Component attributes
             > dict2 would be the custom or standard values. 
+
+
+            'customComponents' -> done after standard tech tree
+            on the odd chance that "OnlyUseCustomTechTree"] == "False"
+
+            Assumes a structure like:
+
+            armor: {componentName1: {attributes: value, attributes: value },
+                    componentName2: {attributes: value, attributes: value }},
+            weapon: {componentName3: {attributes: value, attributes: value },
+                    componentName4: {attributes: value, attributes: value }},
+            customComponents : {componentName1: {attributes: modValue, attributes: value },
+                                NewComponent: {attributes: value, attributes: value }}
+
+            Rational:
+            Changes to the tech tree should be in CustomComponents, however,
+            If the user captured the tech tree to file, made changes to a few 
+            of the components, those edits will be captured in the tech tree. 
+            
+            Priority is: 
+            1) entries in CustomComponents
+            2) changes made to anything in the Tech Tree file
+            3) Standard tech tree
+
         """
+        trouble = {}
+
+        flatDict = {}
+        tmpCustomComponents = None
 
         for eachKey in techDict:
-            each = techDict[eachKey]
             
-            if isinstance(each, dict):
+            if eachKey == 'customComponents': 
+                tmpCustomComponents = techDict[eachKey]     # add it at the end
+                continue
+            elif eachKey not in tmpTree:       # should catch the few non - dictionary items
+                continue
+            
+            eachCustom = techDict[eachKey]
+            eachStandard = tmpTree[eachKey]
 
-                d = self.techTreeIterator(tmpTree, techDict)
-                tmpTree = self.mergeAllItems(tmpTree, d) # combine d into tmpTree
+
+
+            for componentName in eachCustom:
+                componentCustom = eachCustom[componentName] 
+
+
+                if componentName in eachStandard:
+
+                    standardComponent = eachStandard[componentName]
+                    g = self.mergeDictionaryData(standardComponent, componentCustom)
+                    flatDict[componentName] = g
                 
-            else:
-                tmpTree[eachKey] = each 
+                else:
+                    trouble[componentName] = componentCustom
+                    
+
+        flatDict.update(tmpCustomComponents)          
+        
 
 
-        return tmpTree
-
-    def mergeAllItems(self, dict1, dict2):
-        '''
-        Merges all dictionary items from dict2 into dict1. There must be a built
-        in method that does this but I don't have access to documentation.
-        '''
-        for eachKey in dict2:
-            each = dict2[eachKey]
-            dict1[eachKey] = each
-
-        return dict1
+        return flatDict
 
 
 
