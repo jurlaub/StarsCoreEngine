@@ -152,10 +152,10 @@ class BaseTech(CoreStats):
     """
 
     # each component should be one of the following object types
-    objectTypes =  ["Armor", "Scanner", "Elect", "Mech", "Bomb", "Engine",  
+    objectTypes =  ("Armor", "Scanner", "Elect", "Mech", "Bomb", "Engine",  
                     "GeneralPurpose", "Minelayer", "Mining", "Scanner",
                     "Shield", "Armor", "Weapon", "Terraforming", 
-                    "PlanetaryInstallations"]
+                    "PlanetaryInstallations")
     
     def __init__(self):
         super(BaseTech,self).__init__()
@@ -304,16 +304,16 @@ class Component(BaseTech):
         print("%s" % extraItems)
 
     @staticmethod
-    def costs():
+    def sm_costs():
         return {'iron': 0, 'bor': 0, 'germ': 0, 'resources': 0, 'mass': 0}
 
     @staticmethod
-    def techRequirements():
+    def sm_techRequirements():
         return {'energy': 0, 'weapons': 0, 'propulsion': 0, 
         'construction': 0,'electronics': 0, 'biotechnology': 0}
 
     @staticmethod
-    def base():
+    def sm_base():
         """ 
         'special' is most likely to be removed
         """
@@ -324,7 +324,7 @@ class Component(BaseTech):
 
 
     @staticmethod
-    def engines():
+    def sm_engines():
         return { 'optimalSpeed' : 'None',
                 'freeSpeed' : 'None', 'safeSpeed' : 'None', 'radiation' : 'False', 
                 'warp1' : 'None', 'warp2' : 'None', 'warp3' : 'None', 'warp4' : 'None', 
@@ -332,58 +332,57 @@ class Component(BaseTech):
                 'warp9' : 'None', 'warp10' : 'None', 'warp10safe' : 'False'}
 
     @staticmethod
-    def weapons():
+    def sm_weapons():
         return {'range': 'None', 'sapper' : 'None', 'beamPower': 'None', 'missilePower': 'None', 
                 'minesSwept': 'None', 'accuracy': 'None'}
 
     @staticmethod
-    def bombs():
+    def sm_bombs():
         return {'popKillPercent': 'None', 'minKill': 'None', 
                 'installations': 'None'}
 
     @staticmethod
-    def mineLayer():
+    def sm_mineLayer():
         return  {'minesPerYear': 'None', 'terraform': 'False'}
 
     @staticmethod
-    def electronics():
-        return {'tachyon': 'None', 'deflector': 'None', 'capacitor': 'None', 
-                'cloaking': 'None' }      # may need to change cloaking
+    def sm_electronics():
+        return {'tachyon': 'None', 'deflector': 'None', 'capacitor': 'None'}      # may need to change cloaking
 
     @staticmethod
-    def orbital():
+    def sm_orbital():
         return {'safeGatableMass': 'None', 'safeRange': 'None', 
                 'warpDriverSpeed': 'None'}
         
     @staticmethod
-    def planetaryInstallations():
+    def sm_planetaryInstallations():
         return {'normalScanRange': 'None', 'penScanRange': 'None'} # 'defenses40': 'None', 'defenses80': 'None'
 
     @staticmethod
-    def terraforming():
+    def sm_terraforming():
         return {'modGrav' : 'None', 'modTemp': 'None', 'modRad': 'None'}
 
     @staticmethod
-    def mechanical():
+    def sm_mechanical():
         return {'beamDeflector': 'None', 'fuelCapacity': 'None', 'cargoCapacity': 'None', 
                 'colonizer': 'None'}        # 'fuelCapacity' & 'cargoCapacity' are held within BaseTech
  
     @staticmethod
-    def scanner():
+    def sm_scanner():
         return {'normalScanRange': 'None', 'penScanRange': 'None', 
                 'stealFromShips': 'False', 'stealFromPlanets': 'False'}
 
     @staticmethod
-    def armor():
+    def sm_armor():
         return {'armorDP': 'None'}
 
     @staticmethod
-    def shields():
+    def sm_shields():
         return {'shieldDP': 'None'}
 
 
     @staticmethod
-    def hull():
+    def sm_hull():
         """
         The items in Hull may need to be incorporated into the component object.
         """
@@ -391,6 +390,34 @@ class Component(BaseTech):
 
     # method for checking that static methods match component attributes.
 
+    @staticmethod
+    def sm_orderedAtt():
+        """collects all static methods into groups that aims to provide an 
+        easier way to customize
+
+        """
+        import collections
+
+        tmpDict = collections.OrderedDict()
+        v = Component()
+
+        tmpDict.update(v.sm_costs())
+        tmpDict.update(v.sm_techRequirements())
+        tmpDict.update(v.sm_base())
+        tmpDict.update(v.sm_armor())
+        tmpDict.update(v.sm_shields())
+        tmpDict.update(v.sm_electronics())
+        tmpDict.update(v.sm_mechanical())
+        tmpDict.update(v.sm_weapons())
+        tmpDict.update(v.sm_bombs())
+        tmpDict.update(v.sm_scanner())
+        tmpDict.update(v.sm_engines())
+        tmpDict.update(v.sm_terraforming())
+        tmpDict.update(v.sm_planetaryInstallations())
+        tmpDict.update(v.sm_orbital())
+        tmpDict.update(v.sm_mineLayer())
+
+        return tmpDict
 
 
 

@@ -60,7 +60,12 @@ class Game(object):
     Game() accepts game data from the StandardGameTemplate and turns it into
     a complete game with its cooresponding game obects.
 
-    StandardGameTemplate grabs race (r1) files from the cwd
+    StandardGameTemplate grabs race (r1) files from the cwd.
+
+    NOTE:
+    Game should be the primary source connected to all data objects in the game. 
+    No data objects should be independent of the Game object. 
+    OrderOfEvents processes the Game object.
 
     """
 
@@ -211,8 +216,12 @@ def cmdLineParseArgs():
     
     # Load an existing game  
     parser.add_argument('-l', action='store', default=None, dest='gameFile', \
-        help='Load .hst file for game. Specify game to load. \nNo other arguments viable. ')
+        help='Load .hst file for game. Specify game to load. Generates 1 Year. ')
 
+
+    parser.add_argument('-T', action='store', default=1, dest='gameTurns', \
+        help='''The number of years to generate after loading a game. 
+        Default is 1. Is unnecessary if generating a single game turn''')
 
     
     # generate a new game from the standard template.
@@ -241,9 +250,6 @@ def cmdLineParseArgs():
 
         ''')
 
-    parser.add_argument('-T', action='store', default=1, dest='gameTurns', \
-        help='''The number of years to generate after loading a game. Default is 1. ''')
-
 
     parser.add_argument('-r', action='store', default=None, dest='newRace', \
         help='''Enter race name. Name must be unique within the same 
@@ -264,19 +270,19 @@ def cmdLineParseArgs():
             will be generated in the correct format for the desired number of 
             items. The user can fill in the data from a plain text editor. 
         
-        \n3)  Existing tech can be modified by including the tech identifier 
-            and the dictionary key:value to replace. User must provide the exact
-            standard tech template - tech identifier and the correct dictionary 
-            value in order for a change to occur. Changes to standard tech will
-            affect the common tech tree for all players. 
-        
-        \n4) Existing Tech tree will be saved to file. 
+        \n3) Existing Tech tree will be saved to file. 
              Set "OnlyUseCustomTechTree" : "True" in the file to replace standard 
              tech tree. 
 
         \nNo other arguments viable.
 
         ''')
+
+            # \n4)  Existing tech can be modified by including the tech identifier 
+            # and the dictionary key:value to replace. User must provide the exact
+            # standard tech template - tech identifier and the correct dictionary 
+            # value in order for a change to occur. Changes to standard tech will
+            # affect the common tech tree for all players. 
 
     # generate a custom universe json object file using command line.
     parser.add_argument('-c_setup', action='store', default=None, dest='customSetup', help='''
@@ -309,11 +315,11 @@ def CustomSetupFile(fileName):
     # simplified version is now: create a file. Then use it to generate a game. 
     return customSetupDict
 
-def CustomTechTreeFile():
+def CustomTechTreeFile(fileName):
     print("Custom Tech Tree module is still under development ")
     # tech expansion here
-    treeFileName, techTree = customTechDialog()
-    saveFileToJSON(techTree, treeFilename)
+    treeFileName, techTree = customTechDialog(fileName)
+    saveFileToJSON(techTree, treeFileName)
 
 
 def CustomRaceFile():
@@ -465,7 +471,7 @@ def main():
     #***************************** 
     elif results.customTechTree:
 
-        CustomTechTreeFile()    
+        CustomTechTreeFile(results.customTechTree)    
         sys.exit()
 
 
@@ -505,7 +511,7 @@ def main():
 
         # ------- TODO ---------
         # test for .hst file matching results.gameFile in cwd 
-        gameTemplate, game = GamePickle.unPickle(results.gameFile)
+        gameTemplate, game = GamePickle.unPickle(results.gameFile)  # gameTemplate to be removed
 
         # ---TODO--- import each players .x file
 

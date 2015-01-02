@@ -96,7 +96,7 @@ def saveFileToJSON(customDict, fileName = 'testSetupFile.json'):
     '''
 
     with open(fileName, 'w') as fp:
-        json.dump(customDict, fp, indent=4)
+        json.dump(customDict, fp, indent=6)
 
 
 def loadFileFromJSON(fileName):

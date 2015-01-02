@@ -76,7 +76,7 @@ def OrderOfEvents(game):
 
 
 
-    pass
+    
 
 
 def colonyIterator(players, action):

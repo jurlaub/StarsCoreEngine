@@ -33,6 +33,8 @@
 
 '''
 import json
+import collections
+
 from .game_utility import saveFileToJSON
 from .tech import *
 from .template_tech import standard_tech_tree
@@ -240,28 +242,29 @@ def printCustomSetup(customDict, uniVals = "Universe"):
 
 
 
-def customTechDialog():
+def customTechDialog(fileName = 'customTechTree'):
     """Create Technology Components File from Command Line
     """
 
     customTechDict = {}
 
-    fileName = 'customTechTree'
+    
 
     techTreeHelp = ''' Modifying the file values will result in changes to the 
-    tech components. Modified Keys require changes to the code and is discouraged.
+tech components. Modified Keys require changes to the code and is discouraged.
 
-    If you want a custom component with "composite" properties (say both 
-        electrical and a shield) - both types can be added to the one component.
+If you want a custom component with "composite" properties (say both 
+electrical and a shield) - both types can be added to the one component.
 
     '''
 
     options = '''
-    # option 1 - add a custom component - until user wants to stop
-    # option 2 - (saved for later)
-    # option 3 - (saved for later) (save standard tech tree to file) (overwrites)
-    (1), (2), (3) ? 
-    '''
+# option 1 - add a custom component - until user wants to stop
+# option 2 - add user defined custom componets to file for later modifications
+# option 3 - Save standard tech tree to file for modification 
+                 (file will override standard tech tree)
+# (q)uit
+    (1), (2), (3), (q) ?:'''
 
 
 
@@ -285,31 +288,28 @@ def customTechDialog():
 
     print("Ok... %s" % tech_file_name)
 
-
-
     customTechDict["help"] = techTreeHelp
 
 
-    # option 1 - add a custom component - until user wants to stop
-    # option 2 - (saved for later)
-    # option 3 - (saved for later) (save all tech to file - new Custom Dictionary)
-
-
     # add while loop to allow for modifications of dict from command line
+    while True:
+        opts = input(options)
+        if opts == '1':
+            customTechDict = customTechOption1(customTechDict)
+        
+        elif opts == '2':       # not implemented 
+            customTechDict = customTechOption2(customTechDict)
 
-    opts = input(options)
-    if opts == '1':
-        customTechDict = customTechOption1(customTechDict)
-    
-    elif opts == '2':       # not implemented 
-        customTechDict = customTechOption2(customTechDict)
+        elif opts == '3':
+            print("Saving the tech tree to .tech file. ")
+            customTechDict = customTechOption3(customTechDict)  # currently overwrites customTechDict
 
-    elif opts == '3':
-        print("Saving the tech tree to .tech file. ")
-        customTechDict = customTechOption3(customTechDict)  # currently overwrites customTechDict
-    
-    else:
-        print("%s not a valid option- exit" % opt)
+
+        elif opts == 'q':
+            break
+        
+        else:
+            print("%s not a valid option" % opt)
 
     
     printCustomSetup(customTechDict, "Technology")
@@ -328,15 +328,16 @@ def customTechOption1(customTechDict):
     typeValues = """
     All components have : (c)osts, (b)ase, (t)ech requirements
 
-    Plus:   (a)rmor, (s)hields, (w)eapons, (e)ngines, (bo)mbs, (mi)nelayer, (El)ectrical,
-            (O)rbital, (P)lanetary Installation, (m)echanical, (sc)anner, (h)ull,
-            (T)erraforming <special> 
+    Plus:   
+(a)rmor, (s)hields, (w)eapons, (e)ngines, (bo)mbs, (mi)nelayer, (El)ectrical,
+(O)rbital, (P)lanetary Installation, (m)echanical, (sc)anner, (h)ull,
+(T)erraforming <special> 
             
-    (q)uit -> end adding types
+(q)uit -> end adding types
     """
 
     cmpt = Component()
-
+    tmpCustomDict = {}
 
     print("----- Adding a New Component ----")
 
@@ -351,14 +352,14 @@ def customTechOption1(customTechDict):
 
         tmpComponentDict = {}
         tmpName = input("name:")
-        tmpType = input("type (%s):" % cmpt.objectTypes)        # need a list of types and names
+        tmpType = input("type (%s):" % ', '.join(cmpt.objectTypes))        # need a list of types and names
 
         tmpComponentDict['name'] = tmpName
         tmpComponentDict['itemType'] = tmpType  
 
         #tmpComponentDict = addCustomTechType(tmpComponentDict, BaseTech())
-        tmpComponentDict = addCustomTechType(tmpComponentDict, cmpt.costs())
-        tmpComponentDict = addCustomTechType(tmpComponentDict, cmpt.techRequirements())
+        tmpComponentDict = addCustomTechType(tmpComponentDict, cmpt.sm_costs())
+        tmpComponentDict = addCustomTechType(tmpComponentDict, cmpt.sm_techRequirements())
 
         while True:
 
@@ -367,46 +368,53 @@ def customTechOption1(customTechDict):
             if tmpAddType == "q":
                 break
             elif tmpAddType == "c":
-                tmpObj = cmpt.costs()
+                tmpObj = cmpt.sm_costs()
             elif tmpAddType == "b":
-                tmpObj = cmpt.base()              
+                tmpObj = cmpt.sm_base()              
             elif tmpAddType == "t":
-                tmpObj = cmpt.techRequirements()
+                tmpObj = cmpt.sm_techRequirements()
             elif tmpAddType == "a":
-                tmpObj = cmpt.armor()
+                tmpObj = cmpt.sm_armor()
             elif tmpAddType == "s":
-                tmpObj = cmpt.shields()
+                tmpObj = cmpt.sm_shields()
             elif tmpAddType == "w":
-                tmpObj = cmpt.weapons()
+                tmpObj = cmpt.sm_weapons()
             elif tmpAddType == "e":
-                tmpObj = cmpt.engines()
+                tmpObj = cmpt.sm_engines()
             elif tmpAddType == "bo":
-                tmpObj = cmpt.bombs()
+                tmpObj = cmpt.sm_bombs()
             elif tmpAddType == "mi":
-                tmpObj = cmpt.minelayer()
+                tmpObj = cmpt.sm_minelayer()
             elif tmpAddType == "El":
-                tmpObj = cmpt.electronics()
+                tmpObj = cmpt.sm_electronics()
             elif tmpAddType == "O":
-                tmpObj = cmpt.orbital()
+                tmpObj = cmpt.sm_orbital()
             elif tmpAddType == "P":
-                tmpObj = cmpt.planetaryInstallations()
+                tmpObj = cmpt.sm_planetaryInstallations()
             elif tmpAddType == "m":
-                tmpObj = cmpt.mechanical()
+                tmpObj = cmpt.sm_mechanical()
             elif tmpAddType == "h":
-                tmpObj = cmpt.hull()
+                tmpObj = cmpt.sm_hull()
             elif tmpAddType == "sc":
-                tmpObj = cmpt.scanner()
+                tmpObj = cmpt.sm_scanner()
             elif tmpAddType == "T":
-                tmpObj = cmpt.terraforming()
+                tmpObj = cmpt.sm_terraforming()
             else:
                 print("*** Warning *** \nEntry not understood, try again")
                 continue
 
-            tmpComponentDict = addCustomTechType(tmpComponentDict, tmpObj)
+            tmpComponentDict = addCustomTechType(tmpComponentDict, tmpObj) 
 
         #print("after inner break")
 
-        customTechDict[tmpName] = tmpComponentDict
+        tmpCustomDict[tmpName] = tmpComponentDict
+
+    if 'customComponents' in customTechDict:
+        customTechDict.update(tmpCustomDict)
+    else: 
+        customTechDict['customComponents'] = tmpCustomDict
+
+
 
     return customTechDict
 
@@ -415,7 +423,8 @@ def addCustomTechType(tmpComponentDict, typeObj):
     """
 
     """
-    d = typeObj.__dict__
+    # d = typeObj.__dict__
+    d = typeObj
 
     print("\nEnter to keep '<value>' ")
 
@@ -449,14 +458,51 @@ editing of the tech component using a text file.
     # use the Component() static methods along with collections.OrderedDict to 
     # create a usable structure for text editing
 
-    print("Custom Tech Option 2 is not implemented")
+    #print("Custom Tech Option 2 is not implemented")
+    print("\n\n----- Adding 'Blank' Custom Components to JSON Tech Tree file ----")
+
+    print("How many generic custom components do you want to add?")
+    while True:
+        
+        numb = int(input("(0) to quit\n   (0 to n):"))
+        if numb == 0:
+            break
+        elif numb > 0:
+            customComponent = customTechComponentTemplate()
+            tmpCustomDict = {}    
+            for i in range(0, numb):
+                kee = 'custom' + str(i)
+                tmpCustomDict[kee] = customComponent
+
+            # avoid overwriting prior created custom components
+            if 'customComponents' in customTechDict:
+                customTechDict.update(tmpCustomDict)
+            else: 
+                customTechDict['customComponents'] = tmpCustomDict
+
+            print("%d blank components entered" % numb)
+        else:
+            print("*** Warning *** \nEntry not understood, try again. (0) to quit")
+            continue
 
     return customTechDict
+
+def customTechComponentTemplate():
+    """ customTechComponentTemplate returns an Ordered Dict of Component attributes.
+    This is for ease of customization
+
+    """
+    return Component().sm_orderedAtt()
+
+    
+
+
+
 
 
 
 def customTechOption3(customTechDict):
-    customTechDict = standard_tech_tree()     # overwrites custom tech tree. 
+    customTechDict.update(standard_tech_tree())      # custom tech tree. 
 
     customTechDict["OnlyUseCustomTechTree"] = True  # Only use this tech tree
 
