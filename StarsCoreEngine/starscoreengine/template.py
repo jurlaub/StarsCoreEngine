@@ -228,7 +228,7 @@ class StandardGameTemplate(object):
         trouble = {}
 
         flatDict = {}
-        tmpCustomComponents = None
+        tmpCustomComponents = {}
 
         for eachKey in techDict:
             
