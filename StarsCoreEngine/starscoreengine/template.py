@@ -24,6 +24,7 @@
 import random
 from .player import RaceData
 from .template_tech import standard_tech_tree
+from .tech import Component, Hull
 
 
 
@@ -158,6 +159,13 @@ class StandardGameTemplate(object):
         The point here is that a custom file may have a key:value pair which is
         not supported by the game. 
 
+        Note: 
+        As used by the standard tech tree & custom variations this assumes the
+        standard tech tree contains all the relevant information. The true 
+        litmus test is Component attributes NOT the Standard Tech Tree. If/when
+        standard tech tree key:value pairs are verified then this method will be 
+        better suited.
+
         '''
 
         for n in dict2:
@@ -165,6 +173,9 @@ class StandardGameTemplate(object):
                 dict1[n] = dict2[n]
 
         return dict1
+
+    
+
 
     def getPlayerRaceFile(self, fileList):
         # 'race name'.r1
@@ -186,12 +197,111 @@ class StandardGameTemplate(object):
         return RaceData(raceName)
 
 
+
+    def verifyTech(targetDict, customComponent):
+        """ verifyTech verifies the keys in customComponent exist in targetDict.
+
+        input: target dictionary, customComponent dictionary, component key
+        output: component dictionary with verified keys,
+                trouble dictionary with keys that did not match
+
+        """
+        troubleDict = {}
+        component =  {}
+
+        for n in customComponent:
+            if n in targetDict:
+                component[n] = customComponent[n]
+            else:
+                troubleDict[n] = customComponent[n]
+
+
+        return troubleDict, component
+
+    def flattenStandardTree(techDict):
+        """ flattenStandardTree 'collapses' the Standard Tech Tree. 
+
+        Output: dictionary of technology components. 
+                Key = Name :: Value = Component attributes 
+        """
+        tmpDict = {}
+
+        for eachKey in techDict:        
+            
+            if eachKey == 'customComponents': 
+                continue
+
+            eachObj = techDict[eachKey]
+
+            if isinstance(eachObj, dict):
+
+                for componentName in eachObj:
+                    tmpDict[componentName] = eachObj[componentName] 
+        
+        return tmpDict       
+        
+    def iteratorOverTree(flatTree):
+        """ iteratorOverTree verifies each component in its dictionary
+
+        uses: verifyTech
+
+        Input: flatTechTree
+        Output: trouble dictionary, techTree dictionary, 
+
+        """
+        targetDict = Hull().__dict__
+        targetDict.update(Component().__dict__)
+
+        troubleDict = {}
+        techTree = {}
+
+        for eachKey in flatTree:
+            eachObj = flatTree[eachKey]
+
+            if eachKey == "OnlyUseCustomTechTree":
+                continue
+
+            if isinstance(eachObj, dict):
+                t, tech = verifyTech(targetDict, eachObj)
+
+                troubleDict.update(t)
+                techTree.update(tech)
+                
+            else:
+                print("Problem with template.iteratorOverTree() & %s" % (eachKey))
+                troubleDict[eachKey] = eachObj
+
+        return troubleDict, techTree
+
+
+
+     def dictionaryVerifyAndMakeNew(self, dict1, dict2):
+        """ 
+        Acts Like a "filter". 
+
+        if dict2 keys are in dict1 add to a new dictionary and return it. 
+
+
+        Output: 
+            
+
+        """
+        tmpDict = {}
+        
+        for n in dict2:
+            if n in dict1:
+                tmpDict[n] = dict2[n]
+
+        return tmpDict       
+
+
     def getTechTree(self, techDict):
         tmpTree = TechTree()
 
         tmpTree = self.techTreeIterator(tmpTree, techDict)
 
         return tmpTree
+
 
     def techTreeIterator(self, tmpTree, techDict):
         """
@@ -229,8 +339,9 @@ class StandardGameTemplate(object):
 
         flatDict = {}
         tmpCustomComponents = {}
+        
 
-        for eachKey in techDict:
+        for eachKey in techDict:        
             
             if eachKey == 'customComponents': 
                 tmpCustomComponents = techDict[eachKey]     # add it at the end
@@ -247,9 +358,10 @@ class StandardGameTemplate(object):
                 componentCustom = eachCustom[componentName] 
 
 
-                if componentName in eachStandard:
-
+                if componentName in eachStandard:   # update standard component
                     standardComponent = eachStandard[componentName]
+                    exampleComponent = Component().__dict__
+
                     g = self.mergeDictionaryData(standardComponent, componentCustom)
                     flatDict[componentName] = g
                 

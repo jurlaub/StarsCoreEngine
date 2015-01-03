@@ -168,9 +168,9 @@ class BaseTech(CoreStats):
 
         # fuel & cargo in CoreStats
 
-        self.hasPRT = None
-        self.hasLRT = None
-        self.notLRT = None
+        self.hasPRT = []
+        self.hasLRT = []
+        self.notLRT = []
 
         # Tech Requirements
         self.energy = 0
@@ -319,8 +319,8 @@ class Component(BaseTech):
         """
         return {'name': 'None', 'itemType': 'None', 'initative': 'None', 
                 'cloaking': 'None', 'battleMovement': 'None', 'special': 'None',     
-                'fuelGeneration': 'None', 'hasPRT': 'None', 'hasLRT': 'None', 
-                'notLRT': 'None', 'fuelCapacity': 'None', 'cargoCapacity': 'None'}
+                'fuelGeneration': 'None', 'hasPRT': [], 'hasLRT': [], 
+                'notLRT': [], 'fuelCapacity': 'None', 'cargoCapacity': 'None'}
 
 
     @staticmethod
