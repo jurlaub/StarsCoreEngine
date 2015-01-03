@@ -71,69 +71,11 @@ class StandardGameTemplate(object):
         self.universeNumber = int(universeNumber)
         self.universe_data = []    # list of universe dictionary data
 
-        '''Technology 
-            Standard Tech is dictionary of Vanilla tech components.
-            Key = Vanilla name
-            Value = key:value pairs which will update the tech component's values
-
-            key = "OnlyUseCustomTechTree"  : value   == "True" 
-                Template will ignore standard tech tree and assume custom tree 
-                covers all the tech that is needed 
-        '''
-
-        # 
-
-        self.technology = {}
 
 
-        if not techDict:
-            techTree = self.flattenStandardTree(TechTree())
-            troubleDict, self.technology = self.iteratorOverTree(techTree)
-
-            print(troubleDict)
+        self.technology = self.technologyTree(techDict)
 
 
-        elif "OnlyUseCustomTechTree" in techDict:
-
-
-            if techDict["OnlyUseCustomTechTree"] == True:  #"True" or "true" or #True or true    #this needs help
-
-                techTree = self.flattenStandardTree(techDict)
-                troubleDict, self.technology = self.iteratorOverTree(techTree)
-
-            else: 
-
-                standardTree = self.flattenStandardTree(TechTree())
-                customTree = self.flattenStandardTree(techDict)
-
-                troubleDict, tmpStandardTree = self.iteratorOverTree(standardTree)
-                tmpTrouble, self.technology = self.customizeTree(tmpStandardTree, customTree)
-
-                if troubleDict or tmpTrouble:
-                    troubleDict.update(tmpTrouble)
-                    print(troubleDict)
-
-
-        else:
-            # handle: blank, additions, modifications
-            # if techDict contains Standard Tech Tree components then it will 
-            # overwrite the standard versions
-
-            #self.technology = self.getTechTree(techDict)    
-            print("Potential problem with SGT - technology template")
-
-        if 'customComponents' in techDict:
-            troubleDict, self.technology = self.customizeTree(self.technology, 
-                techDict['customComponents'])
-            if troubleDict:
-                print(troubleDict)
-
-
-
-
-
-
-        #self.technology       #template would have technology
         #self.victory_conditions    # standard VC template with changes        
 
 
@@ -192,13 +134,6 @@ class StandardGameTemplate(object):
         The point here is that a custom file may have a key:value pair which is
         not supported by the game. 
 
-        Note: 
-        As used by the standard tech tree & custom variations this assumes the
-        standard tech tree contains all the relevant information. The true 
-        litmus test is Component attributes NOT the Standard Tech Tree. If/when
-        standard tech tree key:value pairs are verified then this method will be 
-        better suited.
-
         '''
 
         for n in dict2:
@@ -229,6 +164,80 @@ class StandardGameTemplate(object):
 
         return RaceData(raceName)
 
+
+    def technologyTree(self, techDict):
+        """ technologyTree determines how the custom techDict is merged with 
+        the Standard Technology Tree.
+
+        inputs: techDict => the customized technology dictionary (typically from
+                            file)
+                Standard Technology Tree => TechTree() => from template_tech
+
+        outputs: technologyTree -> merged tech tree
+
+        generates: trouble dictionary => describe any Unknown keys in files
+
+        """
+
+        '''Technology 
+            Standard Tech is dictionary of Vanilla tech components.
+            Key = Vanilla name
+            Value = key:value pairs which will update the tech component's values
+
+            key = "OnlyUseCustomTechTree"  : value   == "True" 
+                Template will ignore standard tech tree and assume custom tree 
+                covers all the tech that is needed 
+        '''
+
+        technologyTree = {}
+
+        if not techDict:
+            flatTechTree = self.flattenStandardTree(TechTree())
+            troubleDict, technologyTree = self.iteratorOverTree(flatTechTree)
+            print("SGT.technologyTree troubleDict - not techDict ")
+            print(troubleDict)
+
+
+        elif "OnlyUseCustomTechTree" in techDict:
+
+
+            if techDict["OnlyUseCustomTechTree"] == True:  #"True" or "true" or #True or true    #this needs help
+
+                flatTechTree = self.flattenStandardTree(techDict)
+                troubleDict, technologyTree = self.iteratorOverTree(flatTechTree)
+                print("SGT.technologyTree troubleDict - OnlyUseCustomTechTree == True ")
+                print(troubleDict)
+           
+            else: 
+
+                flatStandardTree = self.flattenStandardTree(TechTree())
+                flatCustomTree = self.flattenStandardTree(techDict)
+
+                troubleDict, tmpStandardTree = self.iteratorOverTree(flatStandardTree)
+                tmpTrouble, technologyTree = self.customizeTree(tmpStandardTree, flatCustomTree)
+
+                if troubleDict or tmpTrouble:
+                    troubleDict.update(tmpTrouble)
+                    print("SGT.technologyTree troubleDict - OnlyUseCustomTechTree & else")
+                    print(troubleDict)
+
+
+        else:
+            # handle: blank, additions, modifications
+            # if techDict contains Standard Tech Tree components then it will 
+            # overwrite the standard versions
+
+            #self.technology = self.getTechTree(techDict)    
+            print("Potential problem with SGT - technology template")
+
+        if 'customComponents' in techDict:
+            troubleDict, technologyTree = self.customizeTree(self.technology, 
+                techDict['customComponents'])
+            if troubleDict:
+                print("SGT.technologyTree troubleDict - 'customComponents' ")
+                print(troubleDict)
+
+        return technologyTree
 
 
     def verifyTech(self, targetDict, customComponent):
