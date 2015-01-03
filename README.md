@@ -1,5 +1,5 @@
 
-[See the Wiki for More Information](https://github.com/jurlaub/StarsCoreEngine/wiki)
+[See the Wiki for More Information](https://github.com/jurlaub/StarsCoreEngine/wiki)  
 [Technology](https://github.com/jurlaub/StarsCoreEngine/wiki/Technology)
 
 #Reason / Motivation
