@@ -85,16 +85,48 @@ class StandardGameTemplate(object):
 
         self.technology = {}
 
-        if "OnlyUseCustomTechTree" in techDict and techDict["OnlyUseCustomTechTree"] == "True":
 
-            self.technology = techDict
+        if not techDict:
+            techTree = flattenStandardTree(TechTree())
+            troubleDict, self.technology = iteratorOverTree(techTree)
+
+            print(troubleDict)
+
+
+        elif "OnlyUseCustomTechTree" in techDict:
+
+            if techDict["OnlyUseCustomTechTree"] == True #"True" or "true" or True or true    #this needs help
+
+                techTree = flattenStandardTree(techDict)
+                troubleDict, self.technology = iteratorOverTree(techTree)
+
+            else: 
+
+                standardTree = flattenStandardTree(TechTree())
+                customTree = flattenStandardTree(techDict)
+
+                troubleDict, tmpStandardTree = iteratorOverTree(standardTree)
+                tmpTrouble, self.technology = customizeTree(tmpStandardTree, customTree)
+
+                if troubleDict or tmpTrouble:
+                    troubleDict.update(tmpTrouble)
+                    print(troubleDict)
+
 
         else:
             # handle: blank, additions, modifications
             # if techDict contains Standard Tech Tree components then it will 
             # overwrite the standard versions
 
-            self.technology = self.getTechTree(techDict)      
+            #self.technology = self.getTechTree(techDict)    
+            print("Potential problem with SGT - technology template")
+
+        if techDict['customComponents']:
+            troubleDict, self.technology = customizeTree(self.technology, 
+                techDict['customComponents'])
+            if troubleDict:
+                print(troubleDict)
+            
 
 
 
@@ -264,8 +296,12 @@ class StandardGameTemplate(object):
             if isinstance(eachObj, dict):
                 t, tech = verifyTech(targetDict, eachObj)
 
-                troubleDict.update(t)
-                techTree.update(tech)
+                if t:
+                    tmpT = {eachKey : t}
+                    troubleDict.update(tmpT)
+
+                tmpTech = {eachKey : tech}                
+                techTree.update(tmpTech)
                 
             else:
                 print("Problem with template.iteratorOverTree() & %s" % (eachKey))
@@ -273,107 +309,117 @@ class StandardGameTemplate(object):
 
         return troubleDict, techTree
 
+    def customizeTree(techTreeDict, customDict):
+        """ customizeTree takes in a complete tech tree and custom components. 
+        Custom components are either modifications of components in the Tech Tree
+        or new and need to be added.
 
+        techTreeDict is considered verified.
+        customDict is not considered verified.
 
-     def dictionaryVerifyAndMakeNew(self, dict1, dict2):
-        """ 
-        Acts Like a "filter". 
-
-        if dict2 keys are in dict1 add to a new dictionary and return it. 
-
-
-        Output: 
-            
 
         """
-        tmpDict = {}
-        
-        for n in dict2:
-            if n in dict1:
-                tmpDict[n] = dict2[n]
 
-        return tmpDict       
+        troubleDict, customDict = iteratorOverTree(customDict)  # verified customDict
 
 
-    def getTechTree(self, techDict):
-        tmpTree = TechTree()
+        # merge
+        for eachKey in customDict:
+            eachObj = customDict[eachKey]
 
-        tmpTree = self.techTreeIterator(tmpTree, techDict)
-
-        return tmpTree
-
-
-    def techTreeIterator(self, tmpTree, techDict):
-        """
-            Tech tree iterator needs work.  
-
-            Want to use the concept described by mergeDictionaryData() 
-            > the dict1 'template' would be the Component attributes
-            > dict2 would be the custom or standard values. 
-
-
-            'customComponents' -> done after standard tech tree
-            on the odd chance that "OnlyUseCustomTechTree"] == "False"
-
-            Assumes a structure like:
-
-            armor: {componentName1: {attributes: value, attributes: value },
-                    componentName2: {attributes: value, attributes: value }},
-            weapon: {componentName3: {attributes: value, attributes: value },
-                    componentName4: {attributes: value, attributes: value }},
-            customComponents : {componentName1: {attributes: modValue, attributes: value },
-                                NewComponent: {attributes: value, attributes: value }}
-
-            Rational:
-            Changes to the tech tree should be in CustomComponents, however,
-            If the user captured the tech tree to file, made changes to a few 
-            of the components, those edits will be captured in the tech tree. 
-            
-            Priority is: 
-            1) entries in CustomComponents
-            2) changes made to anything in the Tech Tree file
-            3) Standard tech tree
-
-        """
-        trouble = {}
-
-        flatDict = {}
-        tmpCustomComponents = {}
-        
-
-        for eachKey in techDict:        
-            
-            if eachKey == 'customComponents': 
-                tmpCustomComponents = techDict[eachKey]     # add it at the end
-                continue
-            elif eachKey not in tmpTree:       # should catch the few non - dictionary items
-                continue
-            
-            eachCustom = techDict[eachKey]
-            eachStandard = tmpTree[eachKey]
-
-
-
-            for componentName in eachCustom:
-                componentCustom = eachCustom[componentName] 
-
-
-                if componentName in eachStandard:   # update standard component
-                    standardComponent = eachStandard[componentName]
-                    exampleComponent = Component().__dict__
-
-                    g = self.mergeDictionaryData(standardComponent, componentCustom)
-                    flatDict[componentName] = g
+            if eachKey in techTreeDict:         # if the component is in the tree
                 
+                if isinstance(techTreeDict[eachKey], dict):
+
+                    techTreeDict[eachKey].update(eachObj)
                 else:
-                    trouble[componentName] = componentCustom
+                    troubleDict[eachKey] = [eachObj, 'Obj is not a dict in techTreeDict (customizeTree())']
+            else:
+                techTreeDict[eachKey] = eachObj
+
+
+        return troubleDict, techTreeDict
+
+
+    # def getTechTree(self, techDict):
+    #     tmpTree = TechTree()
+
+    #     tmpTree = self.techTreeIterator(tmpTree, techDict)
+
+    #     return tmpTree
+
+
+    # def techTreeIterator(self, tmpTree, techDict):
+    #     """
+    #         Tech tree iterator needs work.  
+
+    #         Want to use the concept described by mergeDictionaryData() 
+    #         > the dict1 'template' would be the Component attributes
+    #         > dict2 would be the custom or standard values. 
+
+
+    #         'customComponents' -> done after standard tech tree
+    #         on the odd chance that "OnlyUseCustomTechTree"] == "False"
+
+    #         Assumes a structure like:
+
+    #         armor: {componentName1: {attributes: value, attributes: value },
+    #                 componentName2: {attributes: value, attributes: value }},
+    #         weapon: {componentName3: {attributes: value, attributes: value },
+    #                 componentName4: {attributes: value, attributes: value }},
+    #         customComponents : {componentName1: {attributes: modValue, attributes: value },
+    #                             NewComponent: {attributes: value, attributes: value }}
+
+    #         Rational:
+    #         Changes to the tech tree should be in CustomComponents, however,
+    #         If the user captured the tech tree to file, made changes to a few 
+    #         of the components, those edits will be captured in the tech tree. 
+            
+    #         Priority is: 
+    #         1) entries in CustomComponents
+    #         2) changes made to anything in the Tech Tree file
+    #         3) Standard tech tree
+
+    #     """
+    #     trouble = {}
+
+    #     flatDict = {}
+    #     tmpCustomComponents = {}
+        
+
+    #     for eachKey in techDict:        
+            
+    #         if eachKey == 'customComponents': 
+    #             tmpCustomComponents = techDict[eachKey]     # add it at the end
+    #             continue
+    #         elif eachKey not in tmpTree:       # should catch the few non - dictionary items
+    #             continue
+            
+    #         eachCustom = techDict[eachKey]
+    #         eachStandard = tmpTree[eachKey]
+
+
+
+    #         for componentName in eachCustom:
+    #             componentCustom = eachCustom[componentName] 
+
+
+    #             if componentName in eachStandard:   # update standard component
+    #                 standardComponent = eachStandard[componentName]
+    #                 exampleComponent = Component().__dict__
+
+    #                 g = self.mergeDictionaryData(standardComponent, componentCustom)
+    #                 flatDict[componentName] = g
+                
+    #             else:
+    #                 trouble[componentName] = componentCustom
                     
 
-        flatDict.update(tmpCustomComponents)          
+    #     flatDict.update(tmpCustomComponents)          
         
 
 
-        return flatDict
+    #     return flatDict
 
 
 
