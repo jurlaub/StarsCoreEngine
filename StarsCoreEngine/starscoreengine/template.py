@@ -87,26 +87,27 @@ class StandardGameTemplate(object):
 
 
         if not techDict:
-            techTree = flattenStandardTree(TechTree())
-            troubleDict, self.technology = iteratorOverTree(techTree)
+            techTree = self.flattenStandardTree(TechTree())
+            troubleDict, self.technology = self.iteratorOverTree(techTree)
 
             print(troubleDict)
 
 
         elif "OnlyUseCustomTechTree" in techDict:
 
-            if techDict["OnlyUseCustomTechTree"] == True #"True" or "true" or True or true    #this needs help
 
-                techTree = flattenStandardTree(techDict)
-                troubleDict, self.technology = iteratorOverTree(techTree)
+            if techDict["OnlyUseCustomTechTree"] == True:  #"True" or "true" or #True or true    #this needs help
+
+                techTree = self.flattenStandardTree(techDict)
+                troubleDict, self.technology = self.iteratorOverTree(techTree)
 
             else: 
 
-                standardTree = flattenStandardTree(TechTree())
-                customTree = flattenStandardTree(techDict)
+                standardTree = self.flattenStandardTree(TechTree())
+                customTree = self.flattenStandardTree(techDict)
 
-                troubleDict, tmpStandardTree = iteratorOverTree(standardTree)
-                tmpTrouble, self.technology = customizeTree(tmpStandardTree, customTree)
+                troubleDict, tmpStandardTree = self.iteratorOverTree(standardTree)
+                tmpTrouble, self.technology = self.customizeTree(tmpStandardTree, customTree)
 
                 if troubleDict or tmpTrouble:
                     troubleDict.update(tmpTrouble)
@@ -121,12 +122,12 @@ class StandardGameTemplate(object):
             #self.technology = self.getTechTree(techDict)    
             print("Potential problem with SGT - technology template")
 
-        if techDict['customComponents']:
-            troubleDict, self.technology = customizeTree(self.technology, 
+        if 'customComponents' in techDict:
+            troubleDict, self.technology = self.customizeTree(self.technology, 
                 techDict['customComponents'])
             if troubleDict:
                 print(troubleDict)
-            
+
 
 
 
@@ -230,7 +231,7 @@ class StandardGameTemplate(object):
 
 
 
-    def verifyTech(targetDict, customComponent):
+    def verifyTech(self, targetDict, customComponent):
         """ verifyTech verifies the keys in customComponent exist in targetDict.
 
         input: target dictionary, customComponent dictionary, component key
@@ -250,7 +251,7 @@ class StandardGameTemplate(object):
 
         return troubleDict, component
 
-    def flattenStandardTree(techDict):
+    def flattenStandardTree(self, techDict):
         """ flattenStandardTree 'collapses' the Standard Tech Tree. 
 
         Output: dictionary of technology components. 
@@ -272,7 +273,7 @@ class StandardGameTemplate(object):
         
         return tmpDict       
         
-    def iteratorOverTree(flatTree):
+    def iteratorOverTree(self, flatTree):
         """ iteratorOverTree verifies each component in its dictionary
 
         uses: verifyTech
@@ -294,7 +295,7 @@ class StandardGameTemplate(object):
                 continue
 
             if isinstance(eachObj, dict):
-                t, tech = verifyTech(targetDict, eachObj)
+                t, tech = self.verifyTech(targetDict, eachObj)
 
                 if t:
                     tmpT = {eachKey : t}
@@ -309,7 +310,7 @@ class StandardGameTemplate(object):
 
         return troubleDict, techTree
 
-    def customizeTree(techTreeDict, customDict):
+    def customizeTree(self, techTreeDict, customDict):
         """ customizeTree takes in a complete tech tree and custom components. 
         Custom components are either modifications of components in the Tech Tree
         or new and need to be added.
@@ -320,7 +321,7 @@ class StandardGameTemplate(object):
 
         """
 
-        troubleDict, customDict = iteratorOverTree(customDict)  # verified customDict
+        troubleDict, customDict = self.iteratorOverTree(customDict)  # verified customDict
 
 
         # merge
