@@ -83,7 +83,7 @@ class StandardGameTemplate(object):
         # ---- HARDCODED =>> requires updating custom setup
         # -- TODO --- Template grabs data from r1 files
         self.players_data = self.getPlayerRaceFile(playerFileList)    # list of player race file names 
-        self.player_by_universe = None  # method to sort players into respective universes
+        self.player_by_universe = None  # --TODO-- method to sort players into respective universes
 
 
 

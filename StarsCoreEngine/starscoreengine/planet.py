@@ -47,19 +47,19 @@ class Planet(SpaceObjects):
 
         #detail current Concentration, random by default
         if not origConc: 
-            self.concIron = random.randint(1,100)
-            self.concBora = random.randint(1,100)
-            self.concGerm = random.randint(1,100)
+            self.concIron = random.randint(1,135)
+            self.concBor = random.randint(1,135)
+            self.concGerm = random.randint(1,135)
         else:
             self.concIron = origConc[0]
-            self.concBora = origConc[1]
+            self.concBor = origConc[1]
             self.concGerm = origConc[2]
         
 
 
         self.currSurfaceMinerals = 0  # depreciate  (should be  3 values in a list)
         self.surfaceIron = 0
-        self.surfaceBora = 0
+        self.surfaceBor = 0
         self.surfaceGerm = 0
 
 
@@ -75,16 +75,16 @@ class Planet(SpaceObjects):
     def changeHab(self):
         pass
 
-    def changeConc(self, concIron, concBora, concGerm):
+    def changeConc(self, concIron, concBor, concGerm):
         #set concentrations to new values, perhaps best to let the mines\mining fleets decide how much and have them set the values?
         self.concIron = concIron
-        self.concBora = concBora
+        self.concBor = concBor
         self.concGerm = concGerm
 
 
     def updateSurfaceMinerals(self, minerals):
         self.surfaceIron += minerals[0]
-        self.surfaceBora += minerals[1]
+        self.surfaceBor += minerals[1]
         self.surfaceGerm += minerals[2]
 
 

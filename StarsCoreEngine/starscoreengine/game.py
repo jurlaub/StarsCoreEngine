@@ -29,9 +29,8 @@ http://starsautohost.org/sahforum2/index.php?t=msg&th=2780&start=0&rid=0
 
 '''
 import sys
-
-
 import argparse
+
 from .space_objects import SpaceObjects
 from .universe import UniverseObject
 from .planet import Colony
@@ -46,6 +45,7 @@ from .game_utility import printGameValues
 from .game_utility import GamePickle, createXYFile, createMFile
 from .game_utility import loadFileFromJSON, saveFileToJSON
 from .order_of_events import OrderOfEvents
+from .tech import Component, Hull, ShipDesign
 
 
 
@@ -79,8 +79,8 @@ class Game(object):
         # -- A dictionary of Universe Objects
         self.game_universe = self.generateUniverses(template)
 
-        # -- a dictionary (?) of Technology items
-        #self.technology = self.generateTechnology(template)
+        # -- a dictionary of Technology Component Objects
+        self.technology = self.generateTechnology(template)
 
         # -- a dictionary of Player Objects
         self.players = self.generatePlayers(template)
@@ -109,6 +109,33 @@ class Game(object):
 
         return tmpUniverses
 
+    def generateTechnology(self, template):
+        """ generateTechnology translates the Technology Tree from 
+        StandardGameTemplate into a mix of Hull and Component objects. 
+
+        input: (vetted) Technology Tree from StandardGameTemplate
+        output: dictionary of Component and Hull objects - key is Component Name
+
+        """
+        tmpTechnology = {}
+        techTree = template.technology
+
+        for eachKey in techTree:
+            eachObj = techTree[eachKey]
+
+            if 'slot' in eachObj:  
+                newTech = Hull()
+            else:    
+                newTech = Component()
+
+            # newTech.__dict__.update(eachObj.__dict__)   # ?
+            for i in eachObj:
+                newTech.__dict__[i] = eachObj[i]
+
+
+            tmpTechnology[eachKey] = newTech
+
+        return tmpTechnology
 
     def generatePlayers(self, template):
         '''
@@ -338,9 +365,9 @@ def GenerateMFiles(game):
     createMFile(game)
 
 
-def SaveGameFile(game, gameTemplate):
+def SaveGameFile(game):
     fileName = game.game_name + '.hst'
-    pickleTest = (gameTemplate, game)
+    pickleTest = (game)
     GamePickle.makePickle(fileName, pickleTest)
 
 
@@ -511,7 +538,7 @@ def main():
 
         # ------- TODO ---------
         # test for .hst file matching results.gameFile in cwd 
-        gameTemplate, game = GamePickle.unPickle(results.gameFile)  # gameTemplate to be removed
+        game = GamePickle.unPickle(results.gameFile)  # gameTemplate to be removed
 
         # ---TODO--- import each players .x file
 
@@ -528,7 +555,7 @@ def main():
     #   Save .hst files after turn is finished
     #***************************** 
 
-    SaveGameFile(game, gameTemplate)
+    SaveGameFile(game)
 
 
  

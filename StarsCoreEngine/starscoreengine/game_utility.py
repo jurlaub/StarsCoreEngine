@@ -52,12 +52,15 @@ def createMFile(game):
 def createXYFile(game):
     ''' Generates the game .xy file for users.
 
-    --TODO-- add tech tree. (.m file will contain list of tech ids that player can use)
+    --TODO-- add tech tree. 
     
     '''
     # for each planet in universe, capture: ID, Name, XY, 
     xy_filename = game.game_name + '.xy'
-    planets_in_game = {} # key is existing key
+    xy_data = {}
+
+    planets_in_game = {} # key is existing key -> name
+    technology_tree = {}    
 
     for universeKey in game.game_universe:
         universe = game.game_universe[universeKey]
@@ -75,8 +78,34 @@ def createXYFile(game):
 
             planets_in_game[planetKey] = planetDict
 
+    tmpTree = game.technology
 
-    saveFileToJSON(planets_in_game, xy_filename)
+
+    #     for eachKey in componentObj:
+    #         eachObj = componentObj[eachKey]
+    for componentKey, componentObj in tmpTree.items():
+        tmpAttributes = {}
+        componentDict = componentObj.__dict__
+
+        
+        for k, v in componentDict.items():
+            if v:
+                tmpAttributes[k] = v 
+
+        technology_tree[componentKey] = tmpAttributes
+
+
+
+
+
+    xy_data['gamename'] = game.game_name
+    xy_data['planets'] = planets_in_game
+    xy_data['technology'] = technology_tree
+
+
+
+
+    saveFileToJSON(xy_data, xy_filename)
     # call json encoder
     # with open(xy_filename, 'w') as fp:
     #     json.dump(planetList, fp, indent=4)
@@ -147,8 +176,8 @@ def printGameValues(game):
             
             nn = game.game_universe[zz].planets[x]
 
-            temp, grav, rad = nn.origHab
-            ironC, borC, germC = nn.origConc 
+            temp, grav, rad = nn.origTemp, nn.origGrav, nn.origRad
+            ironC, borC, germC = nn.concIron, nn.concBor, nn.concGerm 
             print("ID:%s, %s:  %s  - Owner:%s" % (nn.ID, nn.name, nn.xy, nn.owner))
             print("\tEnvironment: \t\t(%sc, %sg, %smr) " % (temp, grav, rad))
             print("\tMineral Concentration: \t(i:%skt, b:%skt, g:%skt)" % (ironC, borC, germC))

@@ -31,6 +31,7 @@ from ..starscoreengine.player import Player
 from ..starscoreengine.player import RaceData as Race
 from ..starscoreengine.game_utility import GamePickle
 from ..starscoreengine.order_of_events import *
+from ..starscoreengine.tech import Component, Hull
 
 #old - for reference -  use test classes
 def test_spaceobjects():
@@ -216,7 +217,29 @@ class TestGame(object):
 
     def test_GenerateTechnology(self):
         ''' send in a template and return a dictionary of tech items '''
-        assert_true(isinstance(self.game.generateTechnology(template), dict))
+        tmpDict = self.game.generateTechnology(self.gameTemplate)
+        assert_true(isinstance(tmpDict, dict))
+
+
+    def test_Game_StandardTech(self):
+        tmpTech = self.game.technology
+
+        o1 = tmpTech.pop("Scout")
+        assert_true(isinstance(o1, Hull))
+        assert_true('slot' in o1.__dict__)
+        s = o1.slot
+        assert_true(isinstance(s, dict))
+        assert_true(len(s) == 3)
+
+
+        o2 = tmpTech.pop("X-Ray Laser")
+        assert_true(isinstance(o2, Component))
+        assert_equal(o2.beamPower, 16)
+
+
+
+
+
 
 
 class TestPickling(object):
@@ -243,13 +266,13 @@ class TestPickling(object):
 
         tmpUniverse.planets['0_1'].name = "Starbuck_Straw"
 
-        pickleTest = (self.tmpGameTemplate, self.tmpGame)
+        pickleTest = (self.tmpGame)
         
 
 
         GamePickle.makePickle(self.tmpPickleName, pickleTest)
 
-        savedTemplate, savedGame = GamePickle.unPickle(self.tmpPickleName)
+        savedGame = GamePickle.unPickle(self.tmpPickleName)
         print("test_Pickle: has HARDCODED SpaceObjects(planets) keys: '0_1', '0_2'")
         savedUniverse = savedGame.game_universe[0]    
 
