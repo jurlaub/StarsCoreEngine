@@ -24,6 +24,7 @@ from nose.tools import with_setup, assert_equal, assert_not_equal, \
  assert_raises, raises, assert_in, assert_true, assert_false
 #import nose
 import os
+import os.path
 from ..starscoreengine import *
 from ..starscoreengine.universe import UniverseObject
 from ..starscoreengine.player import Player
@@ -114,6 +115,14 @@ class TestGame(object):
 
     def teardown(self):
         print("TestGame: Teardown")
+        try:
+            tmpFileName = self.testGameName + '_TechTreeDataError'
+            cwd = os.getcwd()
+            tmpFileName = r"%s/%s"% (cwd, tmpFileName)
+            if os.path.isfile(tmpFileName):
+                os.remove(tmpFileName)
+        except IOError as e:
+            print("Unable to remove file: %s" % (tmpFileName))
 
     # def dtest_Planet_Objects(self):
     #     tmpPlanet = self.game.planets 
@@ -405,6 +414,17 @@ class TestOrderOfEvents(object):
 
     def teardown(self):
         print("TestOrderOfEvents: Teardown")
+        try:
+            tmpFileName = self.testGameName + '_TechTreeDataError'
+            cwd = os.getcwd()
+            tmpFileName = r"%s/%s"% (cwd, tmpFileName)
+            if os.path.isfile(tmpFileName):
+                os.remove(tmpFileName)
+        except IOError as e:
+            print("Unable to remove file: %s" % (tmpFileName))
+
+
+
 
     def test_Population(self):
         

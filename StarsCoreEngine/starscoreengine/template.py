@@ -25,6 +25,7 @@ import random
 from .player import RaceData
 from .template_tech import standard_tech_tree
 from .tech import Component, Hull
+from .game_utility import saveFileToJSON
 
 
 
@@ -183,6 +184,8 @@ class StandardGameTemplate(object):
         outputs: 
                 technologyTree -> merged tech tree
 
+                GameName_Debug_TechTree -> file with any errors
+
         generates: 
                 trouble dictionary => describe any Unknown keys in files
 
@@ -276,8 +279,23 @@ done
                 g = {'Problems with Custom Component' : customTroubleDict}
                 troubleDict.update(g)
 
-        print("SGT.technologyTree - %s" % tmpMessage)
-        print(troubleDict)
+        #print("SGT.technologyTree - %s" % tmpMessage)
+        #print(troubleDict)
+
+
+        #*****************************
+        #This section saves the troubleDict to file. It allows a user to make 
+        # corrections to the tech file. If items are in troubleDict then most 
+        # likely an error occured in the Custom Tech Tree file.
+        #
+        #*****************************
+        # if troubleDict:
+        #     troubleDict['Error with Technology Tree Conversion'] = tmpMessage
+
+        #     fileName = self.game_name + "_TechTreeDataError"
+
+        #     saveFileToJSON(troubleDict, fileName)
+
 
         return technologyTree
 

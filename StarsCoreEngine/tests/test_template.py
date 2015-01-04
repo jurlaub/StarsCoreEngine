@@ -61,7 +61,8 @@ class TestTechnologyTemplate(object):
 
 
     def teardown(self):
-        print("TestGameTemplate: Teardown")    
+        print("TestGameTemplate: Teardown")
+            
 
     def test_Template_technology(self):
 
@@ -603,6 +604,17 @@ class TestTechnologyTemplate(object):
         assert_equal(tmpTree["Beam Deflector"]["weapons"], 18)
         assert_equal(tmpTree["Galaxy Scoop"]["warp10safe"], True)
 
+    def test_technologyTree_hull(self):
+
+        tmpHulls = items_hulls()
+        tmpHulls.update(items_starbases())
+
+        for eachHull in tmpHulls:
+
+            targetHull = self.gameTemplate.technology[eachHull]
+
+            assert_true('slot' in targetHull)
+            assert_true(len(targetHull['slot']) > 1)
 
 
 
