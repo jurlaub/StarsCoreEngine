@@ -31,7 +31,8 @@ use.
 
 """
 
-
+import os
+import os.path
 
 from nose.tools import with_setup, assert_equal, assert_not_equal, \
  assert_raises, raises, assert_in, assert_true, assert_false
@@ -54,14 +55,22 @@ class TestTechnologyTemplate(object):
     def setup(self):
         print("TestTechnologyTemplate: Setup")
         self.playerFileList = ['playerTest1', 'playerTest2', 'playerTest3']
-        self.gameName = "rabidTest"
-        self.gameTemplate = StandardGameTemplate(self.gameName, self.playerFileList)
+        self.testGameName = "rabidTest"
+        self.gameTemplate = StandardGameTemplate(self.testGameName, self.playerFileList)
 
         self.StandardTree = TechTree()
 
 
     def teardown(self):
         print("TestGameTemplate: Teardown")
+        try:
+            tmpFileName = self.testGameName + '_TechTreeDataError'
+            cwd = os.getcwd()
+            tmpFileName = r"%s/%s"% (cwd, tmpFileName)
+            if os.path.isfile(tmpFileName):
+                os.remove(tmpFileName)
+        except IOError as e:
+            print("Unable to remove file: %s" % (tmpFileName))
             
 
     def test_Template_technology(self):
@@ -231,10 +240,10 @@ class TestTechnologyTemplate(object):
                                             'name': "Brave Little Toaster" }
                         }
                         }
-        testTemplate = StandardGameTemplate('RWIABII', self.playerFileList, {}, 1, tmpCustomTree)
+        testTemplate = StandardGameTemplate(self.testGameName, self.playerFileList, {}, 1, tmpCustomTree)
 
         tmpTree = testTemplate.technology
-        assert_true(testTemplate.game_name == 'RWIABII')
+        assert_true(testTemplate.game_name == self.testGameName)
 
         assert_true("Brave Little Toaster" in testTemplate.technology)
         assert_equal(tmpTree["Overthruster"]["resources"], 500)
@@ -624,8 +633,8 @@ class TestGameTemplate(object):
     def setup(self):
         print("TestGameTemplate: Setup")
         self.playerFileList = ['playerTest1', 'playerTest2', 'playerTest3']
-        self.gameName = "rabidTest"
-        self.gameTemplate = game.StandardGameTemplate(self.gameName, self.playerFileList)
+        self.testGameName = "rabidTest"
+        self.gameTemplate = game.StandardGameTemplate(self.testGameName, self.playerFileList)
 
     def teardown(self):
         print("TestGameTemplate: Teardown")
@@ -672,8 +681,8 @@ class TestGameTemplate_Multi(object):
         self.universe_count = 5
         self.universe_player = 3
         self.playerFileList = ['playerTest1', 'playerTest2', 'playerTest3']
-        self.gameName = "rabidTest"
-        self.gameTemplate = game.StandardGameTemplate(self.gameName, self.playerFileList, {}, self.universe_count)
+        self.testGameName = "rabidTest"
+        self.gameTemplate = game.StandardGameTemplate(self.testGameName, self.playerFileList, {}, self.universe_count)
 
     def teardown(self):
         print("TestGameTemplate_Multi: Teardown")

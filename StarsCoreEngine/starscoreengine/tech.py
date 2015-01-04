@@ -133,7 +133,7 @@ class CoreStats(object):
 
         # Some witty 'Mass' related grouping
         self.mass = 0
-        self.initative = None
+        self.initiative = None
         self.cloaking = None
         self.battleMovement = None
 
@@ -245,12 +245,15 @@ class Component(BaseTech):
 
         #bombs
         self.popKillPercent = None
-        self.minKill = None
+        self.minPopKill = None
         self.installations = None
 
         #minelayer
         self.minesPerYear = None
         self.terraform = False
+
+        # mining
+        self.mineralKTPerYear = None
 
         #Electrical
         self.tachyon = None
@@ -276,6 +279,15 @@ class Component(BaseTech):
 
         #Shields
         self.shieldDP = None
+
+        #Terraform
+        self.terraformVariable = None
+        self.teffaformRate = None
+
+        #Orbital
+        self.safeGateableMass = None
+        self.safeGateableRange = None
+        self.warpDriverSpeed = None
 
 
     def updateElements(self):
@@ -317,7 +329,7 @@ class Component(BaseTech):
         """ 
         'special' is most likely to be removed
         """
-        return {'name': 'None', 'itemType': 'None', 'initative': 'None', 
+        return {'name': 'None', 'itemType': 'None', 'initiative': 'None', 
                 'cloaking': 'None', 'battleMovement': 'None', 'special': 'None',     
                 'fuelGeneration': 'None', 'hasPRT': [], 'hasLRT': [], 
                 'notLRT': [], 'fuelCapacity': 'None', 'cargoCapacity': 'None'}
@@ -338,7 +350,7 @@ class Component(BaseTech):
 
     @staticmethod
     def sm_bombs():
-        return {'popKillPercent': 'None', 'minKill': 'None', 
+        return {'popKillPercent': 'None', 'minPopKill': 'None', 
                 'installations': 'None'}
 
     @staticmethod
@@ -360,7 +372,7 @@ class Component(BaseTech):
 
     @staticmethod
     def sm_terraforming():
-        return {'modGrav' : 'None', 'modTemp': 'None', 'modRad': 'None'}
+        return {'terraformVariable' : 'None', 'teffaformRate': 'None'}
 
     @staticmethod
     def sm_mechanical():
