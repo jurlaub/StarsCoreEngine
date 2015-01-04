@@ -21,19 +21,59 @@
     in the COPYING.Interpretation document.
 
 """
+"""
+Purpose: To test technology as it is used in the Game. 
+
+Areas of Concern: 
+
+1) game.technology objects
+
+
+
+
+"""
+
+
+#import unittest
+from nose.tools import with_setup, assert_equal, assert_not_equal, \
+ assert_raises, raises, assert_in, assert_true, assert_false
+from math import fabs
+
 
 from ..starscoreengine import *
 from ..starscoreengine.template_tech import *
-import unittest
-from math import fabs
 
-class TestTech(unittest.TestCase):
+
+# Test_CustomTechTree ?
+
+# class TestTech(unittest.TestCase):
+class Test_StandardTechTree(object):
+
+    #setup
+
+    #teardown
+
+
+
+    # tests --TODO--
+    # standard co
+
+    # assert each standard component has the correct object type
+    # assert / validate basic component object type values -> 
+    #   weapons have power, initiative
+    #   shields have shieldDP
+    #   engines have engine stuff
+    #   etc 
+
+
     def test_order(self):
+
+
         tech = order_tech()
-        self.assertEqual(tech["shields"]["Croby Sharmor"], {"energy" : 7, "weapons" : 0, "propulsion" : 0, "construction" : 4, 
+        assert_equal(tech["shields"]["Croby Sharmor"], {"energy" : 7, "weapons" : 0, "propulsion" : 0, "construction" : 4, 
                                                             "electronics" : 0, "biotechnology" : 0, "mass" : 10, "resources" : 15, 
                                                             "iron" : 7, "bor" : 0, "germ" : 4, "shieldDP" : 60, "hasPRT" : ["IS"], "hasLRT" : [], "notLRT" : []})
-        self.assertNotEqual(tech["shields"]["Croby Sharmor"], {"energy" : 7, "weapons" : 0, "propulsion" : 0, "construction" : 4, 
+        assert_not_equal(tech["shields"]["Croby Sharmor"], {"energy" : 7, "weapons" : 0, "propulsion" : 0, "construction" : 4, 
                                                             "electronics" : 0, "biotechnology" : 0, "mass" : 10, "resources" : 15, 
                                                             "iron" : 7, "bor" : 0, "germ" : 4, "shieldDP" : 60, "hasPRT" : ["SS"], "hasLRT" : [], "notLRT" : []})
 
@@ -82,7 +122,7 @@ class TestTech(unittest.TestCase):
             #print("%s" % tmpTarget)
 
             for n in tmpTarget:
-                self.assertTrue(n in tmpExpected)
+                assert_true(n in tmpExpected)
 
 
 

@@ -164,78 +164,120 @@ class StandardGameTemplate(object):
 
         return RaceData(raceName)
 
+    def prepTechTree(self, techDict):
 
+        flatTechTree = self.flattenStandardTree(techDict)
+        troubleDict, technologyTree = self.iteratorOverTree(flatTechTree)
+
+        return troubleDict, technologyTree
+    
     def technologyTree(self, techDict):
         """ technologyTree determines how the custom techDict is merged with 
         the Standard Technology Tree.
 
-        inputs: techDict => the customized technology dictionary (typically from
-                            file)
-                Standard Technology Tree => TechTree() => from template_tech
+        inputs: 
+            techDict => the customized technology dictionary (typically from file)
+            Standard Technology Tree => TechTree() => from template_tech
 
-        outputs: technologyTree -> merged tech tree
+       
+        outputs: 
+                technologyTree -> merged tech tree
 
-        generates: trouble dictionary => describe any Unknown keys in files
+        generates: 
+                trouble dictionary => describe any Unknown keys in files
+
+
+Standard Tech Tree flow:
+1) flatten
+2) iterateOverTree
+2.5) verify
+done
+
+Custom Tech Tree Only Flow:
+1) flatten
+2) iterateOverTree
+2.5) verify
+done
+
+Standard Tree and Custom Tree Flow:
+1) flatten standard & custom
+2) iterateOverTree standard & custom
+3) combine using Customize Tree
+> trouble dict may be a problem
+done
+
+CustomComponent flow:
+1) after 1 of above items occur
+2) customTree
+done
+
+
 
         """
 
-        '''Technology 
-            Standard Tech is dictionary of Vanilla tech components.
-            Key = Vanilla name
-            Value = key:value pairs which will update the tech component's values
-
+        '''
             key = "OnlyUseCustomTechTree"  : value   == "True" 
                 Template will ignore standard tech tree and assume custom tree 
                 covers all the tech that is needed 
         '''
 
         technologyTree = {}
+        tmpMessage = ''
 
-        if not techDict:
-            flatTechTree = self.flattenStandardTree(TechTree())
-            troubleDict, technologyTree = self.iteratorOverTree(flatTechTree)
-            print("SGT.technologyTree troubleDict - not techDict ")
-            print(troubleDict)
+        if not techDict:    # if techDict is empty use Standard Tech Tree
 
-
-        elif "OnlyUseCustomTechTree" in techDict:
+            troubleDict, technologyTree = self.prepTechTree(TechTree())
+            tmpMessage = "not techDict "
 
 
-            if techDict["OnlyUseCustomTechTree"] == True:  #"True" or "true" or #True or true    #this needs help
+        elif "OnlyUseCustomTechTree" in techDict:   # if techDict has 
 
-                flatTechTree = self.flattenStandardTree(techDict)
-                troubleDict, technologyTree = self.iteratorOverTree(flatTechTree)
-                print("SGT.technologyTree troubleDict - OnlyUseCustomTechTree == True ")
-                print(troubleDict)
+            tmpOptionsTrue = ["True", "true", True]
+            tmpOptionsFalse = ["False", "false", False]
+
+            if techDict["OnlyUseCustomTechTree"] in tmpOptionsTrue:  
+
+                troubleDict, technologyTree = self.prepTechTree(techDict)
+                tmpMessage = "OnlyUseCustomTechTree == True "
            
-            else: 
+            elif techDict["OnlyUseCustomTechTree"] in tmpOptionsFalse: 
 
-                flatStandardTree = self.flattenStandardTree(TechTree())
+                troubleDict, tmpStandardTree = self.prepTechTree(TechTree())  
                 flatCustomTree = self.flattenStandardTree(techDict)
-
-                troubleDict, tmpStandardTree = self.iteratorOverTree(flatStandardTree)
                 tmpTrouble, technologyTree = self.customizeTree(tmpStandardTree, flatCustomTree)
 
+                tmpMessage = "OnlyUseCustomTechTree == False"
+                
                 if troubleDict or tmpTrouble:
                     troubleDict.update(tmpTrouble)
-                    print("SGT.technologyTree troubleDict - OnlyUseCustomTechTree & else")
-                    print(troubleDict)
+                     
+                
+            else:
+                print("""SGT.technologyTree - 
+                OnlyUseCustomTechTree & neither True nor False.
+                'OnlyUseCustomTechTree':(%s) is incorrect. 
+                Using Standard Technology Tree""" % techDict["OnlyUseCustomTechTree"])
 
-
+                troubleDict, technologyTree = self.prepTechTree(TechTree())
+                tmpMessage = "techDict exists but does not contain a valid 'OnlyUseCustomTechTree' value" 
         else:
-            # handle: blank, additions, modifications
-            # if techDict contains Standard Tech Tree components then it will 
-            # overwrite the standard versions
+  
+            print("Potential problem with SGT - technology template. Using Standard Technology Tree")
+            
+            troubleDict, technologyTree = self.prepTechTree(TechTree())
+            tmpMessage = "techDict exists but does not contain the key 'OnlyUseCustomTechTree' " 
 
-            #self.technology = self.getTechTree(techDict)    
-            print("Potential problem with SGT - technology template")
 
         if 'customComponents' in techDict:
-            troubleDict, technologyTree = self.customizeTree(self.technology, 
+            customTroubleDict, technologyTree = self.customizeTree(technologyTree, 
                 techDict['customComponents'])
+            
             if troubleDict:
-                print("SGT.technologyTree troubleDict - 'customComponents' ")
-                print(troubleDict)
+                g = {'Problems with Custom Component' : customTroubleDict}
+                troubleDict.update(g)
+
+        print("SGT.technologyTree - %s" % tmpMessage)
+        print(troubleDict)
 
         return technologyTree
 
@@ -260,6 +302,7 @@ class StandardGameTemplate(object):
 
         return troubleDict, component
 
+    #@staticmethod()
     def flattenStandardTree(self, techDict):
         """ flattenStandardTree 'collapses' the Standard Tech Tree. 
 
@@ -310,12 +353,13 @@ class StandardGameTemplate(object):
                     tmpT = {eachKey : t}
                     troubleDict.update(tmpT)
 
-                tmpTech = {eachKey : tech}                
-                techTree.update(tmpTech)
+                if tech:#add a test for tech -> make sure its not empty
+                    tmpTech = {eachKey : tech}                
+                    techTree.update(tmpTech)
                 
             else:
                 print("Problem with template.iteratorOverTree() & %s" % (eachKey))
-                troubleDict[eachKey] = eachObj
+                troubleDict[eachKey] = [eachObj, 'Obj is not a dictionary.  Not a valid component']
 
         return troubleDict, techTree
 
@@ -339,11 +383,14 @@ class StandardGameTemplate(object):
 
             if eachKey in techTreeDict:         # if the component is in the tree
                 
-                if isinstance(techTreeDict[eachKey], dict):
+                # if isinstance(techTreeDict[eachKey], dict):
+                if isinstance(eachObj, dict):
 
                     techTreeDict[eachKey].update(eachObj)
-                else:
-                    troubleDict[eachKey] = [eachObj, 'Obj is not a dict in techTreeDict (customizeTree())']
+                
+                # this branch is probably impossible to reach
+                else:           
+                    troubleDict[eachKey] = [eachObj, 'Obj is not a dictionary.  Not a valid component']
             else:
                 techTreeDict[eachKey] = eachObj
 

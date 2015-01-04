@@ -83,42 +83,6 @@ class TestSpaceObject(object):
         assert_equal(4433, self.t1.ID)
 
 
-class TestGameTemplate(object):
-
-    def setup(self):
-        print("TestGameTemplate: Setup")
-        self.playerFileList = ['playerTest1', 'playerTest2', 'playerTest3']
-        self.gameName = "rabidTest"
-        self.gameTemplate = game.StandardGameTemplate(self.gameName, self.playerFileList)
-
-    def teardown(self):
-        print("TestGameTemplate: Teardown")
-
-    def test_SGT_Contains_UniverseData(self):
-        '''
-        Validates the existance of specific keys in each universe dictionary. 
-        The values are not validated. 
-
-        '''
-
-        tmpSGT = self.gameTemplate
-
-        for uni in tmpSGT.universe_data:
-            assert_in("UniverseSizeXY", uni)
-            assert_in("UniverseName", uni)
-            assert_in("UniverseNumber", uni)
-            assert_in("UniversePlanets", uni)
-            assert_in("Players", uni)
-
-    def test_SGT_Contains_PlayerData(self):
-        tmpSGT = self.gameTemplate
-
-        players = tmpSGT.players_data
-
-        assert_true(isinstance(players, list))
-        assert(len(players) > 0)    # a game must have at least 1 player
-        assert(len(players) == len(self.playerFileList))  
-        
 
 
 
@@ -126,60 +90,7 @@ class TestGameTemplate(object):
 
 
     
-class TestGameTemplate_Multi(object):
-    '''
-    Test multiuniverse games
-
-
-    '''
-    def setup(self):
-        print("TestGameTemplate_Multi: Setup")
-        self.universe_count = 5
-        self.universe_player = 3
-        self.playerFileList = ['playerTest1', 'playerTest2', 'playerTest3']
-        self.gameName = "rabidTest"
-        self.gameTemplate = game.StandardGameTemplate(self.gameName, self.playerFileList, {}, self.universe_count)
-
-    def teardown(self):
-        print("TestGameTemplate_Multi: Teardown")
-
-    
-    def test_SGT_MultiUniverse(self):
-        '''
-        Tests the number of universes inside self.gameTemplate.universe_data
-        the count should match. 
-        '''
-
-        tmp = self.gameTemplate.universe_data
-        #tmp.universe_data = tmp.multiUniverse()
-        x = self.universe_count - 1
-        assert_true(len(tmp) > 1)
-        assert_true(len(tmp) == self.universe_count)
-        assert_true(x == int(tmp[x]['UniverseNumber']))
-        print("UniverseNumber = %d" % (tmp[x]['UniverseNumber'],))
-        assert_true(self.gameTemplate.universeNumber == self.universe_count)  
-    
-    def test_SGT_Contains_MultiUniverseData(self):
-        '''
-        Validates the existance of specific keys in each universe dictionary. 
-        The values are not validated. 
-
-        '''
-
-        tmpSGT = self.gameTemplate
-
-        for uni in tmpSGT.universe_data:
-            assert_in("UniverseSizeXY", uni)
-            assert_in("UniverseName", uni)
-            assert_in("UniverseNumber", uni)
-            assert_in("UniversePlanets", uni)
-            assert_in("Players", uni)
-
-    def test_SGT_Contains_TechTree(self):
-        tech = self.gameTemplate.technology
-        assert_true(isinstance(tech, dict))
-        assert_true(len(tech) > 0)
-        
+      
 
 
 class TestGame(object):
