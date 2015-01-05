@@ -293,6 +293,7 @@ electrical and a shield) - both types can be added to the one component.
 
     # add while loop to allow for modifications of dict from command line
     while True:
+        print("******** Main Technology Menu *********")
         opts = input(options)
         if opts == '1':
             customTechDict = customTechOption1(customTechDict)
@@ -343,7 +344,7 @@ def customTechOption1(customTechDict):
 
     while True:
         
-        newItem = input("(n)ew component, (q)uit:")
+        newItem = input("(n)ew component, (q)uit to main menu:")
         if newItem == "q":
             break
 
@@ -476,7 +477,7 @@ editing of the tech component using a text file.
 
             # avoid overwriting prior created custom components
             if 'customComponents' in customTechDict:
-                customTechDict.update(tmpCustomDict)
+                customTechDict['customComponents'].update(tmpCustomDict)
             else: 
                 customTechDict['customComponents'] = tmpCustomDict
 

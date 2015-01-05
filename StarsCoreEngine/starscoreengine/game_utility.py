@@ -89,7 +89,8 @@ def createXYFile(game):
 
         
         for k, v in componentDict.items():
-            if v:
+            tmpOpts = ['None', None, 'none']
+            if v not in tmpOpts:
                 tmpAttributes[k] = v 
 
         technology_tree[componentKey] = tmpAttributes

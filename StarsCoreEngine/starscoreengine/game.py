@@ -384,43 +384,33 @@ def CreateNewGameTemplate(results):
     generate game files. 
 
     '''
-
-    # ('-n' + '-g') + '-t' options handled here
-    if results.newGame and results.customGame:
-        #"Generates a new game using a custom dictionary."
-        customSetupDict = loadFileFromJSON(results.customGame)
-        
-        gameName = results.newGame
-        gameUniverseNumber = customSetupDict['number_of_universes']
-        #gamePlayerNumber = customSetupDict['number_of_players']
-        playerFileList = customSetupDict['player_file_names']
-
-        gameTemplate = StandardGameTemplate(gameName, playerFileList, customSetupDict, 
-            gameUniverseNumber)
-
-
-
-    elif results.newGame:
-        #*****************************
-        #   The Standard Game Template can be modifed to create game variations
-        #*****************************
-        gameTemplate = StandardGameTemplate(results.newGame)
-
-
-    else: 
-        print("Unexpected command line option. Please review options and try again.")
-        sys.exit()
-
-    
-    """ Tech Data Added To Game Template:
-    Adds an existing tech file to be used with a game.
+    """
+    options:
+    1) new game
+    2) new game with customGame
+    3) new game with customTechTree
+    4) new game with customGame and customTechTree
 
     """
+
+    gameName = results.newGame
+    gameUniverseNumber = 1
+    playerFileList = ['testPlayer1', 'testPlayer2', 'testPlayer3']
+    techDict = {}
+
+    if results.customGame:
+
+        customSetupDict = loadFileFromJSON(results.customGame)
+        
+        if 'number_of_universes' in customSetupDict:
+            gameUniverseNumber = customSetupDict['number_of_universes']
+
+        if 'player_file_names' in customSetupDict:
+            playerFileList = customSetupDict['player_file_names']
+
     if results.techTree:
-        print("Tech Tree import under development: tech file name %s" % results.techTree)
-        print("*** need to add detection and loading of the tech file")
 
-
+        techDict = loadFileFromJSON(results.techTree)
 
 
     #***************************
@@ -438,7 +428,8 @@ def CreateNewGameTemplate(results):
     print("Victory Conditions under development")
 
     
-
+    gameTemplate = StandardGameTemplate(gameName, playerFileList, customSetupDict, 
+            gameUniverseNumber, techDict)
 
     #print("create new game %s" %results.standardGame)
 
