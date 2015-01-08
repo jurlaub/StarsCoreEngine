@@ -188,7 +188,7 @@ class Game(object):
                     # Need to add the HW colony manually. Cannot use 
                     # colonizePlanet as it does not have the flexibility 
                     # necessary to setup a HW
-                    homeworld = Colony(player, planetHW, template.starting_population)
+                    homeworld = Colony(player.raceData, planetHW, template.starting_population)
                     homeworld.scanner = True
 
                     player.colonies[planetHW.ID] = homeworld

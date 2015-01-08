@@ -465,7 +465,7 @@ editing of the tech component using a text file.
     print("How many generic custom components do you want to add?")
     while True:
         
-        numb = int(input("(0) to quit\n   (0 to n):"))
+        numb = int(input("(0) to quit \t (0 to n):"))
         if numb == 0:
             break
         elif numb > 0:

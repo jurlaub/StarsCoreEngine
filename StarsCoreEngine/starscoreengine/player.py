@@ -94,42 +94,7 @@ class Player(object):
         self.raceData = raceData        # 
 
 
-        self.growthRate = raceData.growthRate
-        self.popEfficiency = raceData.popEfficiency
-
-        self.habGravityCenter = raceData.habGravityCenter  # (centerpoint, Click width)?  
-        self.habGravRange = raceData.habGravRange  # pos range from Center. Total range doubled  
-        
-        self.habTempCenter = raceData.habTempCenter
-        self.habTempRange = raceData.habTempRange
-
-        self.habRadCenter = raceData.habRadCenter
-        self.habRadRange = raceData.habRadRange
-
-        self.factoryProduce = raceData.factoryProduce   # 10 factories produce n resources a year
-        self.factoryOperate = raceData.factoryOperate   # 10,000 colonist operate n factories       
-        self.mineProduce = raceData.mineProduce     # 10 mines produce n kt of each mineral a year
-        self.mineOperate = raceData.mineOperate       #  10,000 colonist operate n mines
-
-        self.factoryCost = raceData.factoryCost      # a factory cost n resources to build
-        self.factoryGermCost = raceData.factoryGermCost # True = cost 1kt less of Germanium to build
-        self.mineCost = raceData.mineCost         # a mine costs n resources to build
-
-
-
-        # Research costs = (75% extra, standard amount, 50% less)
-        self.techCostEner = raceData.techCostEner 
-        self.techCostWeap = raceData.techCostWeap
-        self.techCostProp = raceData.techCostProp
-        self.techCostCon = raceData.techCostCon 
-        self.techCostElec = raceData.techCostElec
-        self.techCostBio = raceData.techCostBio
-        
-        self.techJumpStart = raceData.techJumpStart # True = All 'Costs 75% extra' fields start at Tech 4
-
-
-        #self.homeUniverse = None
-        #self.race = raceData #RaceData()
+   
         self.colonies = {}  # colony objects
         self.tech = set_base_tech(self.PRT, self.LRT)  # tech object
         self.shipDesign = {} # ship design objects
@@ -157,7 +122,7 @@ class Player(object):
         planet.updateSurfaceMinerals(fleetMinerals)
 
         newColony.planetValue = self.planetValue(planet)
-        newColony.growthRate = self.growthRate
+        #newColony.growthRate = self.raceData.growthRate
 
         planet.owner = self.raceName
 
@@ -270,14 +235,15 @@ class Player(object):
         
         return planetValuePoints;		//Thanks ConstB for starting this
         '''
-        gc = self.habGravityCenter 
-        gr = self.habGravRange 
+        rdat = self.raceData
+        gc = rdat.habGravityCenter 
+        gr = rdat.habGravRange 
         
-        tc = self.habTempCenter 
-        gr = self.habTempRange 
+        tc = rdat.habTempCenter 
+        gr = rdat.habTempRange 
 
-        rc = self.habRadCenter 
-        rr = self.habRadRange 
+        rc = rdat.habRadCenter 
+        rr = rdat.habRadRange 
 
         # playerUpperHab = [gc + gr / 2.,tc + tr / 2. , rc + rr / 2.]
         # playerLowerHab = [gc - gr / 2.,tc - tr / 2. , rc - rr / 2.]
@@ -298,7 +264,11 @@ class Player(object):
 
 
 class RaceTraits(object):
-    ''' Most likely RaceTraits will be removed and RaceData will take its place
+    '''  RaceTraits are the values derived from PRT & LRT's. 
+
+        Custom Race Wizard uses these values in conjunction with a PRT & LRT 
+        'Template'. When a racefile is generated there are values that are a 
+        consquence of having a particular PRT & LRT. 
     '''
 
     def __init__(self):
@@ -306,11 +276,11 @@ class RaceTraits(object):
         pass
 
 
-class RaceData(object):
+class RaceData(RaceTraits):
     """
-    Contains data from RaceWizard.
+    
 
-    possible use this to hold all PRT and LRT values. 
+    
     """
     def __init__(self, raceName):
         self.raceName = raceName
@@ -336,11 +306,11 @@ class RaceData(object):
         immune =  value for centerpoint
 
         '''
-        self.habGravityCenter = 1  # (centerpoint, Click width)?  
-        self.habGravRange = 15.0  # pos range from Center. Total range doubled  
+        self.habGravityCenter = 1  # 1 (centerpoint) total range = .85 to 1.15
+        self.habGravRange = 15.0  # 15.0 pos range from Center. Total range doubled  
         
-        self.habTempCenter = 70
-        self.habTempRange = 25.0
+        self.habTempCenter = 70 
+        self.habTempRange = 25.0 
 
         self.habRadCenter = 50
         self.habRadRange = 15.0

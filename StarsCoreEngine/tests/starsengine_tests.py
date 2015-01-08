@@ -333,7 +333,7 @@ class TestColonyPlanets(object):
         assert_in(self.SO_ID, self.player.colonies)
         colony = self.player.colonies[self.SO_ID]
         assert_true(colony.planet.owner == self.raceName)
-        assert_true(colony.growthRate == self.player.growthRate)
+        assert_true(colony.growthRate == self.player.raceData.growthRate)
 
     def test_ColonyHW_Growth_Low(self):
         """ _Low tests growth for a planet with pop below the 25'%' point
