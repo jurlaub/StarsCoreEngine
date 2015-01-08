@@ -19,6 +19,9 @@
     COPYING.Interpretation document.
 
 """
+
+from math import sqrt
+
 from .planet import Colony, Planet
 from .research import set_base_tech
 
@@ -78,8 +81,6 @@ class Player(object):
 
     Case for multiple inheritance:
     > inherits a set of behaviors that changes based on the PRT
-
-
 
     """
 
@@ -213,7 +214,8 @@ class Player(object):
               	        Excentr = 100*dist2Center/habRadius;	//note: implicit conversion to integer
             	        Excentr = 100 - Excentr;		//kind of reverse excentricity
             	        planetValuePoints += Excentr*Excentr;
-                  	margin = dist2Center*2 - habRadius;
+                  	    
+                        margin = dist2Center*2 - habRadius;
             	        if (margin>0) {		//hab in the "external quarters". dist2Center > 0.5*habRadius
                             ideality *= (double)(3/2 - dist2Center/habRadius);	//decrease ideality up to ~50%
             	            /*
@@ -224,7 +226,7 @@ class Player(object):
                     } else {					/* red planet */
             	        Negativ = dist2Center-habRadius;
             	        if (Negativ>15) Negativ=15;
-            	            redValue += Negativ;
+            	        redValue += Negativ;
                     }
                 }
             }
@@ -237,28 +239,59 @@ class Player(object):
         '''
         rdat = self.raceData
         gc = rdat.habGravityCenter 
-        gr = rdat.habGravRange 
+        gr = rdat.habGravRadius     
         
         tc = rdat.habTempCenter 
-        gr = rdat.habTempRange 
+        tr = rdat.habTempRadius
 
         rc = rdat.habRadCenter 
-        rr = rdat.habRadRange 
+        rr = rdat.habRadRadius
 
-        # playerUpperHab = [gc + gr / 2.,tc + tr / 2. , rc + rr / 2.]
-        # playerLowerHab = [gc - gr / 2.,tc - tr / 2. , rc - rr / 2.]
-        # planetValuePoints=0,redValue=0,ideality=10000;	//in fact, they are never < 0
-        #WORD planetHab,habUpper,habLower,habCenter;
-        #WORD Excentr,habRadius,margin,Negativ,dist2Center;        
-        for i in range(3):
-            pass
-            #nevermind, setup to use clicks instead of actual values for hab and -1 for immune, 
-            #not sure howto proceed
-        #return 10.
+        hab = ((gc, gr, planet.currentGrav), (tc, tr, planet.currentTemp), (rc, rr, planet.currentRad))
+        
+        ideality = 10000
+        planetValuePoints = 0
+        redValue = 0
 
-        planetValue = 1.0
+        for i in hab:
+            center = i[0]
+            radius = i[1]
+            planetHab = i[2]
 
-        return planetValue
+            if radius == -1:      
+                planetValuePoints += 10000
+            else:
+                
+                dist2Center = abs(planetHab - center)  
+
+                if dist2Center <= radius:       
+
+                    Excentr = 100*dist2Center/radius
+                    Excentr = 100 - Excentr
+                    planetValuePoints += Excentr*Excentr
+
+                    margin = dist2Center*2 - radius
+                    if margin > 0:
+                        ideality *= (3/2 - dist2Center/radius)
+                else:
+                    neg = dist2Center-radius
+                    if neg > 15:
+                        neg = 15
+                    redValue += neg
+
+
+        if redValue != 0:
+            return -redValue
+
+
+        planetValuePoints = sqrt(planetValuePoints/3) + 0.9
+        planetValuePoints = planetValuePoints * ideality/10000
+
+
+
+        #planetValue = 1.0
+
+        return planetValuePoints
             
 
 
@@ -279,6 +312,8 @@ class RaceTraits(object):
 class RaceData(RaceTraits):
     """
     
+    habitat: 
+    > if radius is -1 this means immune. 
 
     
     """
@@ -303,17 +338,17 @@ class RaceData(RaceTraits):
         >> the range value captures only the positive side of the total 
         habitat values 
 
-        immune =  value for centerpoint
+        immune habitate = -1 radius
 
         '''
         self.habGravityCenter = 1  # 1 (centerpoint) total range = .85 to 1.15
-        self.habGravRange = 15.0  # 15.0 pos range from Center. Total range doubled  
+        self.habGravRadius = 15.0  # 15.0 pos range from Center. Total range doubled  
         
         self.habTempCenter = 70 
-        self.habTempRange = 25.0 
+        self.habTempRadius = 25.0 
 
         self.habRadCenter = 50
-        self.habRadRange = 15.0
+        self.habRadRadius = 15.0
 
 
         self.factoryProduce = 10    # 10 factories produce n resources a year

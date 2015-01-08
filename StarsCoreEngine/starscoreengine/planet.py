@@ -28,8 +28,7 @@ import random
 class Planet(SpaceObjects):
     """ 
         Planet is the template that provides all the data available for a planet. 
-        origHab = Tuple  --TODO-- change to individual variables
-        origConc = Tuple --TODO-- change to individual variables
+
 
     """
     def __init__(self, xy, ID, name, origHab = (90, 1.1, 65), origConc = None):
