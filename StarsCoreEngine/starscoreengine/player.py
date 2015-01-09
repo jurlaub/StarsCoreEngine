@@ -137,8 +137,8 @@ class Player(object):
         uses planetValue()
 
         '''
-        for each in self.colonies:              # for every key in dictionary
-            colony = self.colonies[each]        # assign value(colony object)
+        for each, colony in self.colonies.items():              # for every key in dictionary
+            #colony = self.colonies[each]        # assign value(colony object)
 
             value = self.planetValue(colony.planet)
 
@@ -254,25 +254,32 @@ class Player(object):
         redValue = 0
 
         for i in hab:
-            center = i[0]
             radius = i[1]
+            center = i[0]
+
             planetHab = i[2]
+            habUpper = center + radius
+            habLower =  center - radius
+            print("habUpper: %f; habLower: %f" % (habUpper, habLower))
 
             if radius == -1:      
                 planetValuePoints += 10000
             else:
                 
                 dist2Center = abs(planetHab - center)  
+                print("dist2Center:%f = abs ( planetHab:%f - center:%f" % (dist2Center,planetHab,  center))
 
                 if dist2Center <= radius:       
 
-                    Excentr = 100*dist2Center/radius
+                    Excentr = 100*dist2Center//radius
                     Excentr = 100 - Excentr
                     planetValuePoints += Excentr*Excentr
 
                     margin = dist2Center*2 - radius
+                    print("margin:%f" % margin)
                     if margin > 0:
-                        ideality *= (3/2 - dist2Center/radius)
+                        ideality *= (3/2 - dist2Center//radius)
+                        print("ideality1:%f" %ideality)
                 else:
                     neg = dist2Center-radius
                     if neg > 15:
@@ -283,10 +290,11 @@ class Player(object):
         if redValue != 0:
             return -redValue
 
-
-        planetValuePoints = sqrt(planetValuePoints/3) + 0.9
-        planetValuePoints = planetValuePoints * ideality/10000
-
+        print("planetValuePoints: %f" % planetValuePoints)
+        planetValuePoints = sqrt(planetValuePoints/3.0) + 0.9
+        print("planetValuePoints2: %f" % planetValuePoints)
+        planetValuePoints = planetValuePoints * ideality//10000
+        print("planetValuePoints3: %f" % planetValuePoints)
 
 
         #planetValue = 1.0
@@ -341,14 +349,14 @@ class RaceData(RaceTraits):
         immune habitate = -1 radius
 
         '''
-        self.habGravityCenter = 1  # 1 (centerpoint) total range = .85 to 1.15
-        self.habGravRadius = 15.0  # 15.0 pos range from Center. Total range doubled  
+        self.habGravityCenter = 1.0  # 1 (centerpoint) total range = .85 to 1.15
+        self.habGravRadius = -1  # 15.0 pos range from Center. Total range doubled  
         
         self.habTempCenter = 70 
-        self.habTempRadius = 25.0 
+        self.habTempRadius = -1
 
         self.habRadCenter = 50
-        self.habRadRadius = 15.0
+        self.habRadRadius = 13.0
 
 
         self.factoryProduce = 10    # 10 factories produce n resources a year

@@ -31,7 +31,7 @@ class Planet(SpaceObjects):
 
 
     """
-    def __init__(self, xy, ID, name, origHab = (90, 1.1, 65), origConc = None):
+    def __init__(self, xy, ID, name, origHab = (90, 1.1, 45), origConc = None):
         super(Planet, self).__init__(xy, ID)
         self.name = name    
         self.origHab = origHab              #depreciate

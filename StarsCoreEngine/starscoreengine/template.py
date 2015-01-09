@@ -111,7 +111,7 @@ class StandardGameTemplate(object):
         # Will eventually move to a different setup class.
 
         standard_universe = {"UniverseNumber":0, "UniverseSizeXY": (200,200), \
-        "UniverseName": "Prime", "UniversePlanets":6, "Players":1}
+        "UniverseName": "Prime", "UniversePlanets":60, "Players":1}
         
         return standard_universe
 

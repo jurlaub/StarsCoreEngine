@@ -212,6 +212,28 @@ class TestGame(object):
     def test_Players_HW(self):
         pass
 
+    
+    def test_PlanetValue(self):
+        player1 = self.game.players['player1']
+        rd = player1.raceData
+
+        assert_true(isinstance(player1, Player))
+
+        print("Grav(%s, %s); Temp(%s, %s); Rad(%s, %s)" % 
+            (rd.habGravityCenter, rd.habGravRadius,
+                rd.habTempCenter, rd.habTempRadius,
+                rd.habRadCenter, rd.habRadRadius))
+
+        for kee, p in self.game.game_universe[0].planets.items():
+            val = player1.planetValue(p)
+            print("%s for %s has value:%d%. (planet:%s, %s, %s)" % 
+                (rd.raceName, p.name, val, p.currentGrav, p.currentTemp, p.currentRad ))
+
+
+        assert_true(False)
+
+
+
     def test_Technology(self):
         assert_true(isinstance(self.game.technology, dict) )
 
