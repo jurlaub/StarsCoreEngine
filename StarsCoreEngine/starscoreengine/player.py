@@ -92,7 +92,7 @@ class Player(object):
         self.LRT = raceData.LRT   # apply LRT values after player is updated with PRT variables
         
 
-        self.raceData = raceData        # 
+        self.raceData = raceData    
 
 
    
@@ -137,8 +137,7 @@ class Player(object):
         uses planetValue()
 
         '''
-        for each, colony in self.colonies.items():              # for every key in dictionary
-            #colony = self.colonies[each]        # assign value(colony object)
+        for each, colony in self.colonies.items():              
 
             value = self.planetValue(colony.planet)
 
@@ -238,6 +237,9 @@ class Player(object):
         return planetValuePoints;		//Thanks ConstB for starting this
         '''
         rdat = self.raceData
+
+        # NOTE: May need to adjust to be Upper and Lower bounds because of 'odd' 
+        # low gravity click spaces 
         gc = rdat.habGravityCenter 
         gr = rdat.habGravRadius     
         
@@ -260,14 +262,14 @@ class Player(object):
             planetHab = i[2]
             habUpper = center + radius
             habLower =  center - radius
-            print("habUpper: %f; habLower: %f" % (habUpper, habLower))
+            #print("habUpper: %f; habLower: %f" % (habUpper, habLower))
 
             if radius == -1:      
                 planetValuePoints += 10000
             else:
                 
                 dist2Center = abs(planetHab - center)  
-                print("dist2Center:%f = abs ( planetHab:%f - center:%f" % (dist2Center,planetHab,  center))
+                #print("dist2Center:%f = abs ( planetHab:%f - center:%f" % (dist2Center,planetHab,  center))
 
                 if dist2Center <= radius:       
 
@@ -276,10 +278,10 @@ class Player(object):
                     planetValuePoints += Excentr*Excentr
 
                     margin = dist2Center*2 - radius
-                    print("margin:%f" % margin)
+                    #print("margin:%f" % margin)
                     if margin > 0:
                         ideality *= (3/2 - dist2Center//radius)
-                        print("ideality1:%f" %ideality)
+                        #print("ideality1:%f" %ideality)
                 else:
                     neg = dist2Center-radius
                     if neg > 15:
@@ -290,11 +292,11 @@ class Player(object):
         if redValue != 0:
             return -redValue
 
-        print("planetValuePoints: %f" % planetValuePoints)
+        #print("planetValuePoints: %f" % planetValuePoints)
         planetValuePoints = sqrt(planetValuePoints/3.0) + 0.9
-        print("planetValuePoints2: %f" % planetValuePoints)
+        #print("planetValuePoints2: %f" % planetValuePoints)
         planetValuePoints = planetValuePoints * ideality//10000
-        print("planetValuePoints3: %f" % planetValuePoints)
+        #print("planetValuePoints3: %f" % planetValuePoints)
 
 
         #planetValue = 1.0
@@ -326,7 +328,7 @@ class RaceData(RaceTraits):
     
     """
     def __init__(self, raceName):
-        self.raceName = raceName
+        self.raceName = raceName            # used by universe when generating HW
         self.raceNamePlural = raceName
         self.raceIcon = None
         self.LeftOverRWPoints = None
@@ -348,15 +350,19 @@ class RaceData(RaceTraits):
 
         immune habitate = -1 radius
 
+
+        NOTE: May need to adjust to be Upper and Lower bounds because of 'odd' 
+        low gravity click spaces 
+
         '''
         self.habGravityCenter = 1.0  # 1 (centerpoint) total range = .85 to 1.15
-        self.habGravRadius = -1  # 15.0 pos range from Center. Total range doubled  
+        self.habGravRadius = -1         # change to upper/lower bounds   # 15.0 pos range from Center. Total range doubled  
         
         self.habTempCenter = 70 
-        self.habTempRadius = -1
+        self.habTempRadius = -1         # change to upper/lower bounds
 
         self.habRadCenter = 50
-        self.habRadRadius = 13.0
+        self.habRadRadius = 13.0        # change to upper/lower bounds
 
 
         self.factoryProduce = 10    # 10 factories produce n resources a year

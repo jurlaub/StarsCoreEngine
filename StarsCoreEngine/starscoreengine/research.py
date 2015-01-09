@@ -109,9 +109,9 @@ def set_base_tech(PRT, LRTs=[]):
             startLevels[k] += 3
     else:
         raise ValueError("PRT not recognised, what is {}?".format(PRT))
-    print ("LRTs are")
-    print (LRTs)
-    print (i for i in LRTs)
+    #print ("LRTs are")
+    #print (LRTs)
+    #print (i for i in LRTs)
     for LRT in LRTs:
         if LRT in ("IFE", "CE"):
             startLevels["propulsion"] += 1
@@ -149,7 +149,7 @@ def cost_remaining(level, cost, totalLevels, alreadySpent):
         raise ValueError("cost must be one of normal, cheap, expensive, but is {}".format(cost))
         
     fibCost = fib(level + 4) * 10  
-    print (fibCost)
+    #print (fibCost)
     otherCost = 10 * totalLevels
     totalCost = (fibCost + otherCost) * _mult - alreadySpent
     return totalCost

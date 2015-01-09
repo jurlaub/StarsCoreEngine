@@ -183,7 +183,7 @@ class Game(object):
 
                     #bonusMinerals = (0,0,0)  # per template? or RW setup
 
-                    planetHW = universe.createHomeworldPlanet(player.raceName)
+                    planetHW = universe.createHomeworldPlanet(player.raceData)
 
                     # Need to add the HW colony manually. Cannot use 
                     # colonizePlanet as it does not have the flexibility 

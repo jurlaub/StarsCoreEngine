@@ -31,12 +31,12 @@ class Planet(SpaceObjects):
 
 
     """
-    def __init__(self, xy, ID, name, origHab = (90, 1.1, 45), origConc = None):
+    def __init__(self, xy, ID, name, origHab = (1.1, 90, 45), origConc = None):
         super(Planet, self).__init__(xy, ID)
         self.name = name    
         self.origHab = origHab              #depreciate
-        self.origTemp = origHab[0]
-        self.origGrav = origHab[1]
+        self.origGrav = origHab[0]
+        self.origTemp = origHab[1]
         self.origRad = origHab[2]
 
         self.currHab = self.origHab         # depreciate
@@ -115,7 +115,7 @@ class Colony(object):
         self.growthRate = raceData.growthRate  # set when colony is instantiated 
         self.totalResources = 0
         self.resourceTax = False  
-        self.planetValue = 1.0    # 1.0 = 100% Value = calculated from currHab 
+        self.planetValue = 100    # 100 = 100% Value = calculated from currHab 
         self.planetMaxPopulation = 1000000  # based on PlanetValue & PRT # HE is .5; JOAT is 1.20
 
 
@@ -150,7 +150,7 @@ class Colony(object):
         '''
         pop = self.population
         growth = self.growthRate
-        hab = self.planetValue
+        hab = self.planetValue / 100
 
         capacity = (self.population * 1.0) / self.planetMaxPopulation # 1.0 = ensure float
 

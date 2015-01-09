@@ -213,9 +213,20 @@ class TestGame(object):
         pass
 
     
-    def test_PlanetValue(self):
+    def test_Player_PlanetValue_Assessment(self):
         player1 = self.game.players['player1']
         rd = player1.raceData
+
+        rd.habGravityCenter = 1.0  # 1 (centerpoint) total range = .85 to 1.15
+        rd.habGravRadius = -1  # 15.0 pos range from Center. Total range doubled  
+        
+        rd.habTempCenter = 70 
+        rd.habTempRadius = -1
+
+        rd.habRadCenter = 50
+        rd.habRadRadius = 13.0
+
+        testPlanet = Planet((10,25), "0_1", "testPlanet", (90, 1.1, 45))
 
         assert_true(isinstance(player1, Player))
 
@@ -224,15 +235,36 @@ class TestGame(object):
                 rd.habTempCenter, rd.habTempRadius,
                 rd.habRadCenter, rd.habRadRadius))
 
-        for kee, p in self.game.game_universe[0].planets.items():
-            val = player1.planetValue(p)
-            print("%s for %s has value:%d%. (planet:%s, %s, %s)" % 
-                (rd.raceName, p.name, val, p.currentGrav, p.currentTemp, p.currentRad ))
+        assert_equal(player1.planetValue(testPlanet), 90)
 
+        # for kee, p in self.game.game_universe[0].planets.items():
+        #     val = player1.planetValue(p)
+        #     print("%s for %s has value:%d%. (planet:%s, %s, %s)" % 
+        #         (rd.raceName, p.name, val, p.currentGrav, p.currentTemp, p.currentRad ))
 
-        assert_true(False)
+    def test_Player_PlanetValue_AssessHW(self):
+        tmpPlayers = self.game.players
 
+        for kee, player1 in tmpPlayers.items():
+            #player1 = self.game.players['player1']
+            rd = player1.raceData
 
+            playerHab = (rd.habGravityCenter, rd.habTempCenter, rd.habRadCenter)
+
+            testPlanet = Planet((10,25), "0_1", "testPlanet", playerHab)
+            testPlanetVal = player1.planetValue(testPlanet)
+
+            assert_equal(testPlanetVal, 100)
+            print("PlayerName:%s; planetVal: %s; planetStats: (%d,%d,%d)" % 
+                (player1.raceName, testPlanetVal, playerHab[0], 
+                playerHab[1],playerHab[2]))
+        
+        #assert_true(False)
+
+    def test_Player_PlanetValue_AssessRandom(self):
+
+        pass
+        
 
     def test_Technology(self):
         assert_true(isinstance(self.game.technology, dict) )
@@ -328,11 +360,17 @@ class TestColonyPlanets(object):
         self.raceName = 'Wolfbane'
         self.RaceData = Race(self.raceName)
         self.player = Player(self.RaceData)
+        self.playerCenterHab = (self.RaceData.habGravityCenter, 
+                                self.RaceData.habTempCenter, 
+                                self.RaceData.habRadCenter)
+
 
         self.population = 25000
         self.SO_ID = '024'
         self.planetName = 'Abbadon'
-        self.planetOne = planet.Planet((104,300), self.SO_ID, self.planetName )
+
+        self.planetOne = planet.Planet((104,300), self.SO_ID, self.planetName, 
+                                            self.playerCenterHab )
         self.player.colonizePlanet(self.planetOne, self.population)
 
 
@@ -369,7 +407,7 @@ class TestColonyPlanets(object):
         colony.populationGrowth()
         assert_true(colony.population > self.population)
 
-        habVal = colony.planetValue
+        habVal = colony.planetValue / 100
         growRate = colony.growthRate
         tmpGrowth = self.population * habVal * growRate
 
@@ -377,10 +415,11 @@ class TestColonyPlanets(object):
         assert_true(colony.population == self.population + tmpGrowth)
 
     def test_ColonyHW_Growth_Mid(self):
-        """ _Mid tests pop growth for a planet with population at the 50'%' value
+        """ _Mid tests pop growth for a planet with population at the 50'%' 
+        capacity value @ 100% value
 
         """
-        planet = self.planetOne
+        #planet = self.planetOne
         colony = self.player.colonies[self.SO_ID]
         
         # change the pop to 'half-full' for non- JOAT & HE & AR
@@ -392,7 +431,8 @@ class TestColonyPlanets(object):
         colony.populationGrowth()
         assert_true(colony.population > popmid)
 
-        habVal = colony.planetValue
+        habVal = colony.planetValue / 100
+        print("habvalue: %s" % habVal)
         growRate = colony.growthRate
         tmpGrowth = popmid * habVal * growRate
         tmpGrowth *= 16.0/9
@@ -414,8 +454,16 @@ class TestColonyPlanets(object):
 
 
 
+    def test_Colony_PlanetValueRange(self):
+        """
+        Planet value must be a range between 100 and 0. 
+        The negative values may be reduced to 0 to (-15), -20, -30, -45? 
+        (cannot remember negative range)
 
 
+        """
+        print("After player.planetValue() is complete, assess the values for the universe planets - make sure the planet value is correct")
+        assert_true(False)
 
 
 

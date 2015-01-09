@@ -87,7 +87,10 @@ class UniverseObject(object):
             name = self.getPlanetName()
             ID = str(uNumber) + '_' + str(i)
 
-            newPlanet = self.createPlanet(ID, name)
+            #generate Random Hab range?
+            planetHab = (1.5, 123, 70)
+
+            newPlanet = self.createPlanet(ID, name, planetHab)
             
             planets[ID] = newPlanet
 
@@ -103,7 +106,7 @@ class UniverseObject(object):
 
 
 
-    def createPlanet(self, ID, name):
+    def createPlanet(self, ID, name, playerHab):
         ''' createPlanet generates the initial planet values. 
 
 
@@ -113,14 +116,14 @@ class UniverseObject(object):
 
         uSize = self.UniverseSizeXY
         xy = (random.randrange(0, uSize[0]), random.randrange(0, uSize[1]))
-        tmpVal = Planet(xy, ID, name)  # --TODO -- Add random values to Planet object
+        tmpVal = Planet(xy, ID, name, playerHab)  # --TODO -- Add random values to Planet object
         
         return tmpVal
 
 
 
 
-    def createHomeworldPlanet(self, raceName):
+    def createHomeworldPlanet(self, raceData):
         # -- TODO --- a positional location of HWs based on some number
 
         count = len(self.planets)   # 0 based count == next planet number
@@ -137,9 +140,13 @@ class UniverseObject(object):
         self.planets[ID] = switchPlanet
 
         name = self.getPlanetName()
-        homeworld = self.createPlanet(switchID, name)   # HW takes existing planet ID
+        playerHab = (raceData.habGravityCenter, raceData.habTempCenter, raceData.habRadCenter)
+        
+        homeworld = self.createPlanet(switchID, name, playerHab)   # HW takes existing planet ID
         homeworld.HW = True  
-        homeworld.owner = raceName     
+        homeworld.owner = raceData.raceName    
+
+        #homeworld.
 
         self.planets[switchID] = homeworld      # HW takes existing planet Key
 
