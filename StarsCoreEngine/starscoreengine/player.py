@@ -84,7 +84,7 @@ class Player(object):
 
     """
 
-    def __init__(self, raceData):
+    def __init__(self, raceData, techTree = {}):
         self.raceName = raceData.raceName
         self.raceNamePlural = raceData.raceName
 
@@ -97,7 +97,8 @@ class Player(object):
 
    
         self.colonies = {}  # colony objects
-        self.tech = Research(self.PRT, self.LRT)  # tech object
+        self.research = Research(self.PRT, self.LRT)  # tech object
+        self.techTree = techTree
         self.shipDesign = {} # ship design objects
         self.battleOrders = {} 
         self.production = {}

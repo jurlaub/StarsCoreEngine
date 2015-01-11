@@ -159,7 +159,7 @@ class Game(object):
         n = 0
         for race in raceObjectList:
             tmpKey = ("player%s" % str(n))
-            player = Player(race)
+            player = Player(race, self.technology)
 
             tmpPlayers[tmpKey] = player
             n+=1
