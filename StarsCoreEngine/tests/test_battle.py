@@ -22,74 +22,75 @@
 
 """
 
+from nose.tools import with_setup, assert_equal, assert_not_equal, \
+ assert_raises, raises, assert_in, assert_true, assert_false, assert_almost_equals
 
-
-import unittest
+#import unittest
 from ..starscoreengine.battle import *
 
 
-class TestBattle(unittest.TestCase):
+class TestBattle():
     def setUp(self):
         pass
 
     def test_extractBoardPositions_2(self):
         calc = extractCoords(getBoardGrid(2), 2)
         expect = [(1, 4), (8, 5)]
-        self.assertEqual(expect, calc)
+        assert_equal(expect, calc)
 
 
     def test_extractBoardPositions_3(self):
         calc = extractCoords(getBoardGrid(3), 3)
         expect = [(4, 1), (8, 8), (1, 8)]
-        self.assertEqual(expect, calc)
+        assert_equal(expect, calc)
 
     def test_extractBoardPositions_4(self):
         calc = extractCoords(getBoardGrid(4), 4)
         expect = [(1, 1), (8, 8), (1, 8), (8, 1)]
-        self.assertEqual(expect, calc)
+        assert_equal(expect, calc)
 
     def test_extractBoardPositions_5(self):
         calc = extractCoords(getBoardGrid(5), 5)
         expect = [(4, 1), (6, 8), (1, 4), (8, 4), (2, 8)]
-        self.assertEqual(expect, calc)
+        assert_equal(expect, calc)
 
     def test_extractBoardPositions_6(self):
         calc = extractCoords(getBoardGrid(6), 6)
         expect = [(1, 4), (8, 5), (2, 8), (7, 1), (6, 8), (3, 1)]
-        self.assertEqual(expect, calc)
+        assert_equal(expect, calc)
 
     def test_extractBoardPositions_7(self):
         calc = extractCoords(getBoardGrid(7), 7)
         expect = [(1, 1), (1, 5), (2, 8), (6, 8), (8, 6), (8, 2), (5, 1)]
-        self.assertEqual(expect, calc)
+        assert_equal(expect, calc)
 
     def test_extractBoardPositions_8(self):
         calc = extractCoords(getBoardGrid(8), 8)
         expect = [(1, 3), (1, 6), (3, 8), (6, 8), (8, 6), (8, 3), (6, 1), (3, 1)]
-        self.assertEqual(expect, calc)
+        assert_equal(expect, calc)
 
     def test_extractBoardPositions_9(self):
         calc = extractCoords(getBoardGrid(9), 9)
         expect = [(1, 3), (8, 6), (3, 8), (6, 1), (1, 6), (8, 3), (6, 8), (3, 1), (4, 4)]
-        self.assertEqual(expect, calc)
+        assert_equal(expect, calc)
 
     def test_extractBoardPositions_10(self):
         calc = extractCoords(getBoardGrid(10), 10)
         expect = [(2, 1), (5, 1), (8, 1), (1, 4), (8, 4), (4, 5), (1, 7), (8, 7), (3, 8), (6, 8)]
-        self.assertEqual(expect, calc)
+        assert_equal(expect, calc)
 
     def test_extractBoardPositions_11(self):
         calc = extractCoords(getBoardGrid(11), 11)
         expect = [(1, 3), (8, 6), (3, 8), (6, 1), (1, 6), (8, 3), (6, 8), (3, 1), (3, 4), (6, 3), (6, 6)]
-        self.assertEqual(expect, calc)
+        assert_equal(expect, calc)
 
     def test_extractBoardPositions_12(self):
         calc = extractCoords(getBoardGrid(12), 12)
         expect = [(1, 4), (8, 5), (2, 8), (7, 1), (6, 8), (3, 1), (1, 6), (8, 3), (1, 2), (4, 8), (5, 1), (8, 7)]
-        self.assertEqual(expect, calc)
+        assert_equal(expect, calc)
 
     def test_calcAccuracy1(self):
         computingPower = 50
         torpAccuracy = 75
         jamming = 0
-        self.assertAlmostEqual(87.5, calcAccuracy(computingPower, torpAccuracy, jamming))
+        assert_almost_equals(87.5, calcAccuracy(computingPower, torpAccuracy, jamming))
