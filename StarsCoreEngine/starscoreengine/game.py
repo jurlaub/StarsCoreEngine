@@ -76,11 +76,11 @@ class Game(object):
         self.year = 2400 
 
 
-        # -- A dictionary of Universe Objects
-        self.game_universe = self.generateUniverses(template)
-
         # -- a dictionary of Technology Component Objects
         self.technology = self.generateTechnology(template)
+
+        # -- A dictionary of Universe Objects
+        self.game_universe = self.generateUniverses(template)
 
         # -- a dictionary of Player Objects
         self.players = self.generatePlayers(template)
@@ -120,8 +120,8 @@ class Game(object):
         tmpTechnology = {}
         techTree = template.technology
 
-        for eachKey in techTree:
-            eachObj = techTree[eachKey]
+        for eachKey, eachObj in techTree.items():
+            #eachObj = techTree[eachKey]
 
             if 'slot' in eachObj:  
                 newTech = Hull()
@@ -170,8 +170,8 @@ class Game(object):
         # if Universes have less player slots then players are not assigned.
 
         playNumb = 0
-        for uniKey in self.game_universe:   
-            universe = self.game_universe[uniKey]   
+        for uniKey, universe in self.game_universe.items():   
+            #universe = self.game_universe[uniKey]   
             
             # add players' HW to each universe
             for p in range(0, int(universe.Players)):
@@ -222,7 +222,7 @@ class Game(object):
 #     return {"setupFileName": setupFile}
 
 
-
+#*********************************************************************
 
 
 def cmdLineParseArgs():

@@ -21,10 +21,17 @@
     in the COPYING.Interpretation document.
 
 """
-from ..starscoreengine import *
-from ..starscoreengine.research import *
+# from nose.tools import with_setup, assert_equal, assert_not_equal, \
+#  assert_raises, raises, assert_in, assert_true, assert_false
+
 import unittest
 from math import fabs
+
+
+from ..starscoreengine import *
+from ..starscoreengine.research import *
+
+
 
 class TestResearchCosts(unittest.TestCase):
     def test_cost_remaining(self):
@@ -74,46 +81,50 @@ class TestStartTech(unittest.TestCase):
 
     def test_startTech_JOAT1(self):
         #JOAT - 3 in all
-        JOAT_calc = set_base_tech("JOAT", [])
+        JOAT_calc = Research("JOAT", [])
         for k in self.baseTechLevels.keys():
             self.baseTechLevels[k] = 3
-        self.assertEquals(JOAT_calc, self.baseTechLevels)
+        self.assertEquals(JOAT_calc.startLevels, self.baseTechLevels)
 
     def test_startTech_JOAT2(self):
         #JOAT - 3 in all, prop 4
-        JOAT_calc = set_base_tech("JOAT", ["CE"])
+        JOAT_calc = Research("JOAT", ["CE"])
         for k in self.baseTechLevels.keys():
             self.baseTechLevels[k] = 3
         self.baseTechLevels["propulsion"] = 4
-        self.assertEquals(JOAT_calc, self.baseTechLevels)
+        self.assertEquals(JOAT_calc.startLevels, self.baseTechLevels)
 
 
     def test_startTech_JOAT3(self):
         #JOAT - 3 in all, prob 4
-        JOAT_calc = set_base_tech("JOAT", ["IFE"])
+        JOAT_calc = Research("JOAT", ["IFE"])
         for k in self.baseTechLevels.keys():
             self.baseTechLevels[k] = 3
         self.baseTechLevels["propulsion"] = 4
-        self.assertEquals(JOAT_calc, self.baseTechLevels)
+        self.assertEquals(JOAT_calc.startLevels, self.baseTechLevels)
 
 
     def test_startTech_JOAT4(self):
         #JOAT - 3 in all, prop 5
-        JOAT_calc = set_base_tech("JOAT", ["IFE", "CE"])
+        JOAT_calc = Research("JOAT", ["IFE", "CE"])
         for k in self.baseTechLevels.keys():
             self.baseTechLevels[k] = 3
         self.baseTechLevels["propulsion"] = 5
-        self.assertEquals(JOAT_calc, self.baseTechLevels)
+        self.assertEquals(JOAT_calc.startLevels, self.baseTechLevels)
         
-    def test_startTech_wrongPTR(self):
-        self.assertRaises(ValueError, set_base_tech, "fish")
+    # def test_startTech_wrongPTR(self):
+    #     self.assertRaises(TypeError, Research())
 
     def test_startTech_HE1(self):
-        self.assertEquals(set_base_tech("HE"), self.baseTechLevels)
+        tmpHE = Research("HE")
+        self.assertEquals(tmpHE.startLevels, self.baseTechLevels)
 
     def test_startTech_HE2(self):
         self.baseTechLevels["propulsion"] = 1
-        self.assertEquals(set_base_tech("HE", ["IFE"]), self.baseTechLevels)
+        tmpHE = Research("HE", ["IFE"])
+        self.assertEquals(tmpHE.startLevels, self.baseTechLevels)
+
+
 
 
 class TestRaceTechFieldsCost(unittest.TestCase):

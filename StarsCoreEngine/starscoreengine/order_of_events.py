@@ -149,6 +149,17 @@ def mineralMining():
 
 def production():
     # (incl. research, packet launch, fleet/starbase construction)
+    """
+    iterate through all the player objects.
+    > player objects have .x file player.turnOrder information are separated
+    > sequence for production: 
+        >> each productionQ is cycled through
+        >>>> Total resources for the year is calculated
+        >>>> research tax is taken and in research object added to .yearPlayerResearch? or class object?
+        >>>> 
+
+    """
+
     pass
 
 def universeResearchCapture():

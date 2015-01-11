@@ -23,7 +23,7 @@
 from math import sqrt
 
 from .planet import Colony, Planet
-from .research import set_base_tech
+from .research import Research
 
 '''
     Player Data
@@ -97,11 +97,34 @@ class Player(object):
 
    
         self.colonies = {}  # colony objects
-        self.tech = set_base_tech(self.PRT, self.LRT)  # tech object
+        self.tech = Research(self.PRT, self.LRT)  # tech object
         self.shipDesign = {} # ship design objects
         self.battleOrders = {} 
-        self.production = {} 
+        self.production = {}
+
+        """ turnOrders:
+        when created    - should be sequentially numbered
+                        - should be classifiable (where possible - should be possible in all cases)
+        When imported:  - grouped by OrderOfEvents 
+                        - within each event, the player order will be maintained
+                        - for example: (player research)
+                        -- the player may change intentions regarding player research multiple times
+                        -- 1st - currentResearch = 'weapons'; currentResearchTax = .15 %
+                        -- 2nd - currentResearch = 'energy'; currentResearchTax = .50 %
+                        -- 3rd - currentResearch = 'construction'; currentResearchTax = .35 %
+                        each order would be processed. (this may be reconsidered)
+                        Some orders may have only one state. Some orders may have multiple states
+                        One state orders could maintain only 1 set of orders (like research)
+
+                        what else fits in this category? Waypoint 0 orders? 
+                        The tricky one seems to be splitting and merging fleets.
+
+
+        """
+
         self.turnOrders = {}
+
+
         self.diplomacy = {} # diplomacy object?
         self.intel = {} 
 
