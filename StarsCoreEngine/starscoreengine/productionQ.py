@@ -19,3 +19,16 @@
     COPYING.Interpretation document.
 
 """
+
+"""
+
+Note:   See research.py for interaction between productionQ, research, and Order 
+        of Events. 
+
+
+
+Question:   does .x file update productionQ (at player level?) 
+            Is each colony updated? 
+
+
+"""

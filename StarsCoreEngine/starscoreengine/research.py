@@ -71,8 +71,21 @@ research:
 
 
 class Research(object):
+    """ Research
+
+    Works in cooperation with ProductionQ, Player.colonies, and OrderOfEvents.
+    During the production event, the ProductionQ's and planetary resources are 
+    checked. If the planet provides resources, then those resources are pooled 
+    with the other colonies accross the empire. (the remaining resources are used
+    for production.) After all the colonies are checked, the research resources 
+    are applied to the remaining cost for the current research. If any are left
+    over, (the new research value is calculated?) and the remaining resources 
+    are applied to the nextToResearch technology level.
+
+    """
     
     # this collects all races research for the year. Its to calculate the SS spy bonus
+    # must be zeroed out each year.
     yearsResearch = {"energy" : {"racesResearchingField" : 0, "resourcesSpent" : 0}, 
               "weapons" : {"racesResearchingField" : 0, "resourcesSpent" : 0},
               "propulsion" : {"racesResearchingField" : 0, "resourcesSpent" : 0},
@@ -80,12 +93,19 @@ class Research(object):
               "electronics" : {"racesResearchingField" : 0, "resourcesSpent" : 0},
               "biotechnology" : {"racesResearchingField" : 0, "resourcesSpent" : 0}
           }
+    
+    # class variable used for tech research reference
+    #"energy": 0; "weapons":1; "propulsion":2; "construction":3; "electronics":4; "biotechnology":5;
+    techResearch = ("energy", "weapons", "propulsion", "construction", 
+                    "electronics","biotechnology")
+
+    researchCost =  ("normal", "cheap", "expensive")
 
 
 
-    def __init__(self, PRT, LRTs = []):
+    def __init__(self, PRT, LRTs = [], raceData = [], tech4 = False):   # modify raceData to be a dictionary?
         
-        self.startLevels = {"energy" : 0, 
+        self.techLevels = {"energy" : 0, 
                   "weapons" : 0,
                   "propulsion" : 0,
                   "construction" : 0,
@@ -93,7 +113,97 @@ class Research(object):
                   "biotechnology" : 0
               }
 
-        self.startLevels = Research.set_base_tech(self.startLevels, PRT, LRTs)
+        # tracks the amount spent per level, MUST RESET when level is reached
+        self.alreadySpent = {"energy" : 0, 
+                  "weapons" : 0,
+                  "propulsion" : 0,
+                  "construction" : 0,
+                  "electronics" : 0,
+                  "biotechnology" : 0
+              }
+
+        self.currentResearch = Research.techResearch[3] 
+        self.nextToResearch = Research.techResearch[4]
+        self.currentResourcesSpent = 0
+        self.nextResourcesSpent = 0
+        self.totalResources = 0     # Collected by player changes each year
+        self.researchTax = 50   # a percentage of total resources
+
+
+        # technology costs from Player raceData
+        # use Research class variable for cost assessment
+        self.techCostEner = Research.researchCost[1]  # raceData[0] -> or something else from raceData
+        self.techCostWeap = 1 
+        self.techCostProp = 1 
+        self.techCostCon = 1 
+        self.techCostElec = 1 
+        self.techCostBio = 1 
+        self.startAtTech4 = tech4
+
+
+        # sets the starting tech levels according to the race PRT and LRT's
+        self.techLevels = Research.set_base_tech(self.techLevels, PRT, LRTs)
+
+        if tech4:
+            # if a techLevel expensive bump starting level to tech4?
+            pass
+
+
+    # for SS PRT update total spent on resources -> if levels attained follow process outlined in spendResearchTax
+    def globalResearchSpying(self):
+        pass
+
+
+    # def to spend total research on approapriate technology level
+    def spendResearchTax(self):
+        """
+        input: 
+            self.totalResources
+            self.currentResearch
+            self.nextToResearch
+
+        output: 
+            calculates amount left to spend on level. 
+            researches level
+            if reached, update level, zero out alreadySpent, add value to 
+                    yearsResearched class variable, update other variables
+            repeat if resources left over (multiple levels may be attained this way)
+
+
+
+        """
+        pass
+
+    # def to 'collect' planetary research tax and return remainder 
+    def colonyResearchTax(self, colony):
+        """
+        input: colony object with .totalResources amount
+
+        output: 
+            >   returns to colony (or ProductionQ) the portion not used for 
+                research according to self.researchTax
+            >   updates Research.totalResources with the researched tax amount
+
+
+        """
+
+        pass
+
+
+    def yearsResearch_add(self):
+        """ Add total research resources spent on a tech level for a player"""
+        pass
+
+    #@staticmethod
+    def yearsResearch_zero(self):
+        """ set shared class variable Research.yearsResearch to 0.
+        After all SS races in game have used research bonus class data 
+        """
+
+        for techKey, techObj in self.yearsResearch.items():
+            for i, o in techObj.items():
+                o = 0 
+
 
 
     @staticmethod

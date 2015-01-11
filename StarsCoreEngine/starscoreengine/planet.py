@@ -105,7 +105,7 @@ class Colony(object):
 
         self.scanner = False
         self.orbital = False
-        self.prodQ = False   # this would be good to have as a seperate object for AR races and (future) none-planet starbase production
+        self.productionQ = False   # this would be good to have as a seperate object for AR races and (future) none-planet starbase production
 
         self.population = population
         self.defenses = 0

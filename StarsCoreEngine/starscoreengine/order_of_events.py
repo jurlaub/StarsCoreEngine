@@ -151,12 +151,21 @@ def production():
     # (incl. research, packet launch, fleet/starbase construction)
     """
     iterate through all the player objects.
-    > player objects have .x file player.turnOrder information are separated
+    > player objects have .x file player.turnOrder information separated
     > sequence for production: 
         >> each productionQ is cycled through
         >>>> Total resources for the year is calculated
-        >>>> research tax is taken and in research object added to .yearPlayerResearch? or class object?
-        >>>> 
+        >>>> call:    
+
+                resourcesForProduction = Research.colonyResearchTax(colony)
+                
+                (research tax is taken and in research tax added to Research object)
+        >>>> remaining resources can be sent to productionQ for production 
+            (or call Research from inside ProductionQ, and then spend resources)
+
+        
+
+        REFERENCE: Research comment for more explaination.
 
     """
 
@@ -164,7 +173,7 @@ def production():
 
 def universeResearchCapture():
     # SS Spy bonus obtained
-    # in a multiverse situation does the ss capture other universe research?
+    # in a multiverse situation does the ss capture other universe research? - yes? 
     # could the SS races have their own version of Walter (see Fringe :) )
     pass
 
@@ -175,8 +184,8 @@ def population(game):
         playerObject = game.players[player]
         colonies = playerObject.colonies
 
-        for each in colonies:
-            colony = colonies[each]
+        for each, colony in colonies.items():
+            #update colony value
             colony.populationGrowth()
     
 

@@ -97,11 +97,13 @@ class Player(object):
 
    
         self.colonies = {}  # colony objects
+
+        # --TODO--- add technology cost to Research
         self.research = Research(self.PRT, self.LRT)  # tech object
         self.techTree = techTree
         self.shipDesign = {} # ship design objects
         self.battleOrders = {} 
-        self.production = {}
+        self.productionQ = {}
 
         """ turnOrders:
         when created    - should be sequentially numbered
