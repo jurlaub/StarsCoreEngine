@@ -84,7 +84,7 @@ class TestStartTech(object):
         JOAT_calc = Research("JOAT", [])
         for k in self.baseTechLevels.keys():
             self.baseTechLevels[k] = 3
-        assert_equal(JOAT_calc.startLevels, self.baseTechLevels)
+        assert_equal(JOAT_calc.techLevels, self.baseTechLevels)
 
     def test_startTech_JOAT2(self):
         #JOAT - 3 in all, prop 4
@@ -92,7 +92,7 @@ class TestStartTech(object):
         for k in self.baseTechLevels.keys():
             self.baseTechLevels[k] = 3
         self.baseTechLevels["propulsion"] = 4
-        assert_equal(JOAT_calc.startLevels, self.baseTechLevels)
+        assert_equal(JOAT_calc.techLevels, self.baseTechLevels)
 
 
     def test_startTech_JOAT3(self):
@@ -101,7 +101,7 @@ class TestStartTech(object):
         for k in self.baseTechLevels.keys():
             self.baseTechLevels[k] = 3
         self.baseTechLevels["propulsion"] = 4
-        assert_equal(JOAT_calc.startLevels, self.baseTechLevels)
+        assert_equal(JOAT_calc.techLevels, self.baseTechLevels)
 
 
     def test_startTech_JOAT4(self):
@@ -110,19 +110,19 @@ class TestStartTech(object):
         for k in self.baseTechLevels.keys():
             self.baseTechLevels[k] = 3
         self.baseTechLevels["propulsion"] = 5
-        assert_equal(JOAT_calc.startLevels, self.baseTechLevels)
+        assert_equal(JOAT_calc.techLevels, self.baseTechLevels)
         
     # def test_startTech_wrongPTR(self):
     #     self.assertRaises(TypeError, Research())
 
     def test_startTech_HE1(self):
         tmpHE = Research("HE")
-        assert_equal(tmpHE.startLevels, self.baseTechLevels)
+        assert_equal(tmpHE.techLevels, self.baseTechLevels)
 
     def test_startTech_HE2(self):
         self.baseTechLevels["propulsion"] = 1
         tmpHE = Research("HE", ["IFE"])
-        assert_equal(tmpHE.startLevels, self.baseTechLevels)
+        assert_equal(tmpHE.techLevels, self.baseTechLevels)
 
 
 
