@@ -81,8 +81,13 @@ class ProductionQ(object):
     def addToQueue(self):
         """
         updates the self.prodQueue list with a dictionary?
-        {'itemType':'type', 'itemName': 'name', 'quantity': 3, 'progress': 'resources',
+        {'itemType':'type', 'itemName': 'name', 'quantity': 3, 'progress': 'resources',      #progress is a percentage?
             'reqIron': 0, 'reqBor':0, 'reqGerm':0, 'reqResources':0 }
+
+        to prevent the starbase bug (or whatever its called when you 99% complete an empty hull and then
+        edit the design to get all of the components for free, it might be useful to have both reqIron and
+        spentIron, so that if the design changes the reqIron can be increased, rather than the way I've implemented
+        it which just sets reqIron to 0 once production starts
 
             --TODO-- figure out if 'progress' includes percentage of minerals. 
                 it would seem that the total project would be reviewed, if any 
@@ -92,6 +97,11 @@ class ProductionQ(object):
             --TODO-- Default and Auto queue orders should be added the same way?
             perhaps they are merely settings - but I seem to remember that they 
             were entries in the queue.
+        
+            #110115 MF - How about treat them as entries (with their own itemType) in the Q, and then
+                         have the productionController temporarily remove them, insert the appropriate itemType 
+                         and quantity, taking into account the available miners etc so that it won't block the Q,
+                         and then re-insert the auto entry once its finished production, ready for the next turn?
 
 
         """
@@ -123,9 +133,79 @@ class ProductionQ(object):
 
 
         """
+        iron = self.colony.surfaceIron
+        bor  = self.colony.surfaceBor
+        germ = self.colony.surfaceGerm
+        res = 0
+        if self.ExcludedFromResearch:
+            res  = self.colony.totalResources
+        else:
+            res  = self.colony.totalResources - Research.colonyResearchTax(self.colony)
 
         # handle the produceAutoMineral setting?
 
+        for line in self.prodQueue:
+            #if line["itemType"] not autobuild something 
+            for item in range(line["quantity"]):
+                #if item isn't completed then want to create a new line at the start of the Q, can't really
+                #change the current line as if quantity > 1 then the following items would have less cost
+
+                #enough minerals, at least one res can start
+                if iron >= line["reqIron"] and bor >= line["reqBor"] and ger >= line["reqGerm"] and res > 0: 
+                    #remove minerals
+                    iron -= line["reqIron"]
+                    bor  -= line["reqBor"]
+                    germ -= line["reqGerm"]
+                    #build one
+                    if res >= line["reqResources"]:
+                        if line["itemType"] == 'Ship':
+                            self.produceShip()
+                        elif line["itemType"] == 'Starbase':
+                            self.produceStarbase()
+                            
+                        #--TODO-- similar elifs for rest
+
+                        #remove from Q
+                        line["quantity"] -= 1
+                        if line["quantity"] == 0:
+                            self.prodQueue.pop(0)
+                        res -= line["reqResources"]
+
+                    #start building but don't finish
+                    else:
+                        progress = float(res) / line["reqResources"]
+                        partiallyBuiltItem = {}
+                        for k, v in line.items():
+                            partiallyBuiltItem[k] = v
+                        partiallyBuiltItem["reqIron"] = 0
+                        partiallyBuiltItem["reqBor"]  = 0
+                        partiallyBuiltItem["reqGerm"] = 0
+                        partiallyBuiltItem["reqResouces"] -= res
+                        partiallyBuiltItem["progress"] = progress
+                        partiallyBuiltItem["quantity"] = 1
+                        #replace line in Q
+                        if line["quantity"] == 1:
+                            self.prodQueue[0] = partiallyBuiltItem 
+                        else:
+                            line["quantity"] -= 1
+                            self.prodQueue.insert(partiallyBuiltItem, 0)
+                #Q either blocked as not enough mineral left, or no resources left     
+                else:
+                    break
+
+        self.colony.surfaceIron = iron
+        self.colony.surfaceBor = bor
+        self.colony.surfaceGerm = germ
+        
+        #--TODO-- if Q blocked then left over res should be put into research, currently prodQ doesn't tell colony how much it has leftover
+        
+    def updateQCosts(self):
+        """
+        Q persists across turns, but the cost of ships\starbases will change due to tech changes or redesign,
+        not sure how to change the dict of items in the prodQ list with changes to ship designs?
+
+        also need to change costs of design of starbase if upgrading
+        """
         pass
 
     def produceAutoMinerals(self):
@@ -165,6 +245,7 @@ class ProductionQ(object):
         """
 
         pass
+
     def produceStarbase(self):
         """produces starbase, instantiates Token, assigns to Colony. """
         pass
