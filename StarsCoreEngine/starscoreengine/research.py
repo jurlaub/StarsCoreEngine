@@ -126,7 +126,7 @@ class Research(object):
         self.nextToResearch = Research.techResearch[4]
         self.currentResourcesSpent = 0
         self.nextResourcesSpent = 0
-        self.totalResources = 0     # Collected by player changes each year
+        self.yearlyResearchResources = 0     # Collected by player changes each year
         self.researchTax = 50   # a percentage of total resources
 
 
@@ -158,7 +158,7 @@ class Research(object):
     def spendResearchTax(self):
         """
         input: 
-            self.totalResources
+            self.yearlyResearchResources
             self.currentResearch
             self.nextToResearch
 
@@ -175,7 +175,7 @@ class Research(object):
         pass
 
     # def to 'collect' planetary research tax and return remainder 
-    def colonyResearchTax(self, colony):
+    def colonyResourcesAfterTax(self, colony):
         """
         input: colony object with .totalResources amount
 
@@ -186,7 +186,9 @@ class Research(object):
 
 
         """
-        return self.researchTax * colony.totalResources
+        researchTax = self.researchTax * colony.totalResources
+        self.yearlyResearchResources += researchTax
+        return colony.totalResources - researchTax 
 
 
     def yearsResearch_add(self):
