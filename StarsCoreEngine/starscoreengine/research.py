@@ -186,8 +186,7 @@ class Research(object):
 
 
         """
-
-        pass
+        return self.researchTax * colony.totalResources
 
 
     def yearsResearch_add(self):

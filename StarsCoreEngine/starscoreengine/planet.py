@@ -113,17 +113,31 @@ class Colony(object):
         #calculated values
         #! this is race figure and then the true growth rate is calculate in populationGrowth function, taking into account hab\capacity?
         self.growthRate = raceData.growthRate  # set when colony is instantiated 
+
+        self.mineProduce = raceData.mineProduce
+        self.mineOperate = raceData.mineOperate
+         
+        self.factoryProduce = raceData.factoryProduce
+        self.factorOperate  = raceDace.factoryOperate
         self.totalResources = 0
         self.resourceTax = False  
         self.planetValue = 100    # 100 = 100% Value = calculated from currHab 
         self.planetMaxPopulation = 1000000  # based on PlanetValue & PRT # HE is .5; JOAT is 1.20
 
-
     def calcTotalResources(self, popEfficiency):
+        """Pop <= maxPop, everyone works at 100%,
+           Pop between 100% and 300% of maxPop work at 50%, 
+           Pop above 300% enjoy a life of leisure and don't work
+        """
+        if self.population <= self.planetMaxPopulation:
+            self.totalResources = self.population / popEfficiency
+        elif self.population <= 3 * self.planetMaxPopulation:
+            self.totalResources = self.planetMaxPopulation / popEfficiency
+            self.totalResources += (self.population - self.planetMaxPopulation) / (popEfficiency / 2.)
+        else:
+            self.totalResources = self.planetMaxPopulation * 2 / popEfficiency
 
-        # -- TODO -- include operating factory resources
-        self.totalResources = self.population / popEfficiency
-
+        self.totalResources += self.operatingFactories() * self.factoryProduce
 
     def operatingFactories(self):
         '''
@@ -131,7 +145,9 @@ class Colony(object):
         returns the number of factories that can be run
 
         '''
-        pass
+        #--TODO-- calculate and use the maximum available factories (due to hab & race settings, e.g. a -f popdrop a developed HP colony won't be able to use them all
+        return  min(int(self.population / self.factorOperate), self.factories)
+        
 
     def operateMines(self):
         ''' Extract minerals from planet and turn into surface minerals
@@ -151,24 +167,28 @@ class Colony(object):
         pop = self.population
         growth = self.growthRate
         hab = self.planetValue / 100
+        popgrowth = 0
 
         capacity = (self.population * 1.0) / self.planetMaxPopulation # 1.0 = ensure float
 
-        if capacity > 1.0:
-            # --TODO--- negative growth
-            
-            return  
-        
+        if hab < 0:
+            popgrowth = pop * hab / 10. 
         else:
-            popgrowth = pop * growth * hab
+            if capacity > 1.0:
+                # --TODO--- negative growth
+            
+                return  
+        
+            else:
+                popgrowth = pop * growth * hab
 
-            if (capacity > .25):
-                popgrowth = popgrowth * 16.0/9
-                popgrowth = popgrowth * (1.0 - capacity) * (1.0 - capacity)
+                if (capacity > .25):
+                    popgrowth = popgrowth * 16.0/9
+                    popgrowth = popgrowth * (1.0 - capacity) * (1.0 - capacity)
 
 
-            self.population += popgrowth
-            print("(planet.Colony): %s had %d population growth. Total Population: %d" % (self.planet.name, popgrowth, self.population))
+        self.population += popgrowth
+        print("(planet.Colony): %s had %d population growth. Total Population: %d" % (self.planet.name, popgrowth, self.population))
             
 
 
