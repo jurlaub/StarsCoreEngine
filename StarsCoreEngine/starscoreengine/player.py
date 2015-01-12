@@ -98,7 +98,7 @@ class Player(object):
    
         self.colonies = {}  # colony objects
 
-        # --TODO--- add technology cost to Research
+        # --TODO--- add technology 'research' costs (cheap, normal, expensive) to Research
         self.research = Research(self.PRT, self.LRT)  # tech object
         self.techTree = techTree
         self.shipDesign = {} # ship design objects

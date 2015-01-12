@@ -118,7 +118,7 @@ class Colony(object):
         self.mineOperate = raceData.mineOperate
          
         self.factoryProduce = raceData.factoryProduce
-        self.factorOperate  = raceDace.factoryOperate
+        self.factorOperate  = raceData.factoryOperate
         self.totalResources = 0
         self.resourceTax = False  
         self.planetValue = 100    # 100 = 100% Value = calculated from currHab 
@@ -146,7 +146,7 @@ class Colony(object):
 
         '''
         #--TODO-- calculate and use the maximum available factories (due to hab & race settings, e.g. a -f popdrop a developed HP colony won't be able to use them all
-        return  min(int(self.population / self.factorOperate), self.factories)
+        return  min(int(self.population / self.factorOperate), self.planet.factories)
         
 
     def operateMines(self):
