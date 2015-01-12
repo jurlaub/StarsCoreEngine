@@ -140,6 +140,8 @@ class ProductionQ(object):
         if self.ExcludedFromResearch:
             res  = self.colony.totalResources
         else:
+            # now I've thought about it, this won't update the yearlyResearchResources as it isn't an
+            # instance of research, only the class?
             res  = Research.colonyResourcesAfterTax(self.colony)
 
         # handle the produceAutoMineral setting?
@@ -162,8 +164,20 @@ class ProductionQ(object):
                             self.produceShip()
                         elif line["itemType"] == 'Starbase':
                             self.produceStarbase()
-                            
-                        #--TODO-- similar elifs for rest
+                        elif line["itemType"] == 'Scanner':
+                            self.producePlanetaryInstallation()
+                        elif line["itemType"] == 'Defenses':
+                            self.producePlanetaryInstallation()
+                        elif line["itemType"] == 'Mines':
+                            self.producePlanetUpgrades()
+                        elif line["itemType"] == 'Factories':
+                            self.producePlanetUpgrades()
+                        elif line["itemType"] == 'Terraform':
+                            self.producePlanetUpgrades()
+                        elif line["itemType"] == 'Minerals':
+                            self.producePlanetUpgrades()
+                        elif line["itemType"] == 'Special':
+                            self.produceSpecial()
 
                         #remove from Q
                         line["quantity"] -= 1
@@ -249,6 +263,7 @@ class ProductionQ(object):
     def produceStarbase(self):
         """produces starbase, instantiates Token, assigns to Colony. """
         pass
+
 
     def producePlanetaryInstallation(self):
         """
