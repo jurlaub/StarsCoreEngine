@@ -32,42 +32,83 @@ def OrderOfEvents(game):
 
     """
 
+    """
+    Note on OrderOfEvents comments and marks.
 
-    # scrappingFleets(game):
-    # waypointZeroLoadTasks(game):
-    # waypointZeroTasks():
-    # MTMoves(
-    # inSpacePackets()
-    # fleetsMove():
-    # ISFleetgrowth():
-    # mineralDecay():
-    # wormholesMove():
-    # minefieldDetonate():
-    # mineralMining():
-    # production():
-    # universeResearchCapture():
+
+    !       == ballpark estimation of effort for completion
+    !!!!    == most work needed (relative to other marks)
+    ^^!!    == work partially complted
+
+
+
+    # after method call is an attempt to get a feel for where the method or class 
+    would be located. 
+
+
+    fleet_controller.py - contains class FleetController()
+        The idea is that it would handle things like: 
+            > a fleet splitting into multiple fleets
+            > fleet mergine
+            > travel between universes
+        I am thinking that when the specific situations described above occur,
+        then OrderOfEvents would call FleetController with the relavant objects 
+        and order and FleetController would act as an intermediary - stepping in 
+        when necessary.
+
+    wormholes.py - because their behavior will be expanded when multi-universe
+        is in play.
+
+    intel.py - captures information for each other detected player - constructed toward the end of the project
+
+    scanning.py - does the work of detecting data. - constructed toward the end of the project
+
+
+
+
+    """
+
+
+    # !!!! Fleet merge and split    (by player action during turn)  # Fleet Controller
+    
+    # !   scrappingFleets(game):           # Fleet Controller  -> maybe not.
+    # waypointZeroLoadTasks(game):      # Fleet
+    # waypointZeroTasks():                  # Fleet
+    # !    MTMoves()
+    # !    inSpacePackets()                  # space_objects (new File? packets_minerals? )
+    # !!!  fleetsMove():                     # Fleet Controller (may move between universes); Fuel usage, minefield impacts, Fuel gathering
+    # !    ISFleetgrowth():                  # Fleet
+    # !    mineralDecay():                   # space_objects (new File? packets_minerals? )
+    # !    wormholesMove():                  # wormholes  (new file -> necessary to expand upon multi-universe)
+    # !!   minefieldDetonate():              # space_objects.py = Minefield
+    # !    mineralMining():                  # planet.py
+    # ^^!!  production():                     # ProductionQ
+    # ^!   universeResearchCapture():        # Research
 
     population(game)
 
-    # newPacketCollisions():
-    # fleetsRefuel():
-    # randomEvents():
+    # !    newPacketCollisions():            # space_objects (new File? packets_minerals? )
+    # !    fleetsRefuel():                   # Fleet
+    # !!   randomEvents():
 
-    # fleetBattles():
-    # bombing():
-    # meetMT():
-    # remoteMining():
-    # waypointOneTasks():   
-    # minefieldDecay():
-    # mineLaying():
+    # !!!!  fleetBattles():                   # Fleet  + ? Global Controller => Battle Controller -> references each fleet at a location
+    # !!   bombing():                        # Fleet
+    # !    meetMT():                         # Fleet 
+    # !!   remoteMining():                   # Fleet
+    # !!!  waypointOneTasks():               # Fleet     held in fleet and reuse waypoint 0
+    # !    minefieldDecay():                 # space_objects.py = Minefield
+    # !    mineLaying():                     # Fleet
 
-    # fleetTransfer():
-    # waypointOneFleetMerge():
-    # instaforming():
-    # mineSweeping():
-    #  repair():
-    # remoteTerraforming():
-    # Intel():
+    # !!   fleetTransfer():                  # Fleet calls player object. A player object has a method to make the fleet transition
+    # !!   waypointOneFleetMerge():          # Fleet Controller
+    # !    instaforming():                   # Colony + Player (player is checked for 'CA'; if true calls the Colony Method on each colony)
+    # !!    mineSweeping():                   # Fleet  (!! due to multiple overlapping fields?)
+    # !    repair():                        # Fleet
+    # !    remoteTerraforming():             # Fleet ? 
+    
+
+    #                                 intel must wait till other parts are complete
+    # !!!! Intel():                          # scanning/intel ?
 
 
     game.year += 1

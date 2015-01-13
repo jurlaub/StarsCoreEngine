@@ -66,6 +66,20 @@ class UniverseObject(object):
         # other space objects
         # this is where a universe would initialize special rules and tech tree
 
+          
+        """
+            use a dictionary of (x,y,z) coords along with space object id's to collect locations and other data
+
+            d = {}
+            l = d.setdefault((25,45), [])   # it returns the list associated with the first value or a new list
+            l.append(355)
+            l.append(655)
+        """
+        self.objectsAtXY = {} 
+
+
+    #  need isAPlanet(XYLocation)
+
 
     def createPlanetObjects(self):
         """
