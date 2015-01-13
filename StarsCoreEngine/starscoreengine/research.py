@@ -127,7 +127,7 @@ class Research(object):
         self.currentResourcesSpent = 0
         self.nextResourcesSpent = 0
         self.totalResources = 0     # Collected by player changes each year
-        self.researchTax = 50   # a percentage of total resources
+        self.researchTax = .5   # a percentage of total resources
 
 
         # technology costs from Player raceData

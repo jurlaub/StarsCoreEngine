@@ -32,42 +32,45 @@ def OrderOfEvents(game):
 
     """
 
-
-    # scrappingFleets(game):
-    # waypointZeroLoadTasks(game):
-    # waypointZeroTasks():
-    # MTMoves(
-    # inSpacePackets()
-    # fleetsMove():
-    # ISFleetgrowth():
-    # mineralDecay():
-    # wormholesMove():
-    # minefieldDetonate():
-    # mineralMining():
-    # production():
-    # universeResearchCapture():
+    # !!!! Fleet merge and split    (by player action during turn)  # Fleet Controller
+    
+    # !   scrappingFleets(game):           # Fleet Controller
+    # waypointZeroLoadTasks(game):      # Fleet
+    # waypointZeroTasks():                  # Fleet
+    # !    MTMoves()
+    # !    inSpacePackets()                  # space_objects (new File? packets_minerals? )
+    # !!!  fleetsMove():                     # Fleet Controller (may move between universes); Fuel usage, minefield impacts, Fuel gathering
+    # !    ISFleetgrowth():                  # Fleet
+    # !    mineralDecay():                   # space_objects (new File? packets_minerals? )
+    # !    wormholesMove():                  # wormholes  (new file -> necessary to expand upon multi-universe)
+    # !!   minefieldDetonate():              # space_objects.py = Minefield
+    # !    mineralMining():                  # planet.py
+    # ^^!!  production():                     # ProductionQ
+    # ^!   universeResearchCapture():        # Research
 
     population(game)
 
-    # newPacketCollisions():
-    # fleetsRefuel():
-    # randomEvents():
+    # !    newPacketCollisions():            # space_objects (new File? packets_minerals? )
+    # !    fleetsRefuel():                   # Fleet
+    # !!   randomEvents():
 
-    # fleetBattles():
-    # bombing():
-    # meetMT():
-    # remoteMining():
-    # waypointOneTasks():   
-    # minefieldDecay():
-    # mineLaying():
+    # !!!!  fleetBattles():                   # Fleet  + ? Global Controller => Battle Controller -> references each fleet at a location
+    # !!   bombing():                        # Fleet
+    # !    meetMT():                         # Fleet 
+    # !!   remoteMining():                   # Fleet
+    # !!!  waypointOneTasks():               # Fleet     held in fleet and reuse waypoint 0
+    # !    minefieldDecay():                 # space_objects.py = Minefield
+    # !    mineLaying():                     # Fleet
 
-    # fleetTransfer():
-    # waypointOneFleetMerge():
-    # instaforming():
-    # mineSweeping():
-    #  repair():
-    # remoteTerraforming():
-    # Intel():
+    # !!   fleetTransfer():                  # Fleet calls player object. A player object has a method to make the fleet transition
+    # !!   waypointOneFleetMerge():          # Fleet Controller
+    # !    instaforming():                   # Colony + Player (player is checked for 'CA'; if true calls the Colony Method on each colony)
+    # !!    mineSweeping():                   # Fleet  (!! due to multiple overlapping fields?)
+    # !    repair():                        # Fleet
+    # !    remoteTerraforming():             # Fleet ? 
+    
+
+    # !!!! Intel():                          # scanning/intel ?
 
 
     game.year += 1
