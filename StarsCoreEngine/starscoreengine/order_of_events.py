@@ -32,9 +32,46 @@ def OrderOfEvents(game):
 
     """
 
+    """
+    Note on OrderOfEvents comments and marks.
+
+
+    !       == ballpark estimation of effort for completion
+    !!!!    == most work needed (relative to other marks)
+    ^^!!    == work partially complted
+
+
+
+    # after method call is an attempt to get a feel for where the method or class 
+    would be located. 
+
+
+    fleet_controller.py - contains class FleetController()
+        The idea is that it would handle things like: 
+            > a fleet splitting into multiple fleets
+            > fleet mergine
+            > travel between universes
+        I am thinking that when the specific situations described above occur,
+        then OrderOfEvents would call FleetController with the relavant objects 
+        and order and FleetController would act as an intermediary - stepping in 
+        when necessary.
+
+    wormholes.py - because their behavior will be expanded when multi-universe
+        is in play.
+
+    intel.py - captures information for each other detected player - constructed toward the end of the project
+
+    scanning.py - does the work of detecting data. - constructed toward the end of the project
+
+
+
+
+    """
+
+
     # !!!! Fleet merge and split    (by player action during turn)  # Fleet Controller
     
-    # !   scrappingFleets(game):           # Fleet Controller
+    # !   scrappingFleets(game):           # Fleet Controller  -> maybe not.
     # waypointZeroLoadTasks(game):      # Fleet
     # waypointZeroTasks():                  # Fleet
     # !    MTMoves()
@@ -70,6 +107,7 @@ def OrderOfEvents(game):
     # !    remoteTerraforming():             # Fleet ? 
     
 
+    #                                 intel must wait till other parts are complete
     # !!!! Intel():                          # scanning/intel ?
 
 
