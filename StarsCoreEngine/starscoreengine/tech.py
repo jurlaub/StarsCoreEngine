@@ -290,30 +290,30 @@ class Component(BaseTech):
         self.warpDriverSpeed = None
 
 
-    def updateElements(self):
-        """ 
-        updateElements is probably not needed. Something like this would 
-        work better in ShipDesign for updating the Ship Design values.
+    # def updateElements(self):
+    #     """ 
+    #     updateElements is probably not needed. Something like this would 
+    #     work better in ShipDesign for updating the Ship Design values.
 
-        """
-        extraItems = {}
+    #     """
+    #     extraItems = {}
 
-        for eachKey in self.typeDict:
-            each = self.typeDict[eachKey]
+    #     for eachKey in self.typeDict:
+    #         each = self.typeDict[eachKey]
             
-            # -- TODO -- test if each is a dictionary -> if not then should be a value
+    #         # -- TODO -- test if each is a dictionary -> if not then should be a value
 
-            for item in each.__dict__:
-                if item in self.__dict__:
-                    #print("key:%s\t self:%s; other:%s" % (item, self.__dict__[item], each.__dict__[item] ))
-                    self.__dict__[item] = each.__dict__[item]
-                    #print("a %s:%s" % (item, self.__dict__[item]))
-                else:
-                    # 
-                    extraItems[item] = each.__dict__[item]
+    #         for item in each.__dict__:
+    #             if item in self.__dict__:
+    #                 #print("key:%s\t self:%s; other:%s" % (item, self.__dict__[item], each.__dict__[item] ))
+    #                 self.__dict__[item] = each.__dict__[item]
+    #                 #print("a %s:%s" % (item, self.__dict__[item]))
+    #             else:
+    #                 # 
+    #                 extraItems[item] = each.__dict__[item]
 
-        print("Component:%s had %d items which were not added to the component" % (self.name, len(extraItems)))
-        print("%s" % extraItems)
+    #     print("Component:%s had %d items which were not added to the component" % (self.name, len(extraItems)))
+    #     print("%s" % extraItems)
 
     @staticmethod
     def sm_costs():

@@ -102,6 +102,8 @@ class Player(object):
         self.research = Research(self.PRT, self.LRT)  # tech object
         self.techTree = techTree
         self.shipDesign = {} # ship design objects
+        self.historicalShipDesign = {}
+        self.fleets = {}  # ? fleetID : fleetObj
         self.battleOrders = {} 
         self.productionQ = {}
 
@@ -131,6 +133,22 @@ class Player(object):
         self.diplomacy = {} # diplomacy object?
         self.intel = {} 
 
+
+    def ISFleetGrowth(self):
+
+        if self.PRT is not 'IS':
+            return
+
+        # for fltID, flt in self.fleets.items():
+
+        """
+        # iterate throught fleets. If they have cargo of population, popGrowth.
+        If they over grow cargoCapacity, check if they are around a planet, if so,
+        offload (invasion?) If not, fill up to capacity.
+
+
+        """
+        pass
 
     def colonyMining(self):
         pass

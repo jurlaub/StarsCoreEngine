@@ -72,11 +72,16 @@ def OrderOfEvents(game):
     # !!!! Fleet merge and split    (by player action during turn)  # Fleet Controller
     
     # !   scrappingFleets(game):           # Fleet Controller  -> maybe not.
-    # waypointZeroLoadTasks(game):      # Fleet
+    # waypointZeroLoadTasks(game):         # Fleet
     # waypointZeroTasks():                  # Fleet
     # !    MTMoves()
     # !    inSpacePackets()                  # space_objects (new File? packets_minerals? )
-    # !!!  fleetsMove():                     # Fleet Controller (may move between universes); Fuel usage, minefield impacts, Fuel gathering
+    
+    # !!!  fleetsMove():                     # Fleet, Wormhole updates a 
+    ######   Universe Class dictionary with fleet object and destination. At the
+    ######   end of movement (may move between universes); Fuel usage, minefield
+    ######   impacts, Fuel gathering
+
     # !    ISFleetgrowth():                  # Fleet
     # !    mineralDecay():                   # space_objects (new File? packets_minerals? )
     # !    wormholesMove():                  # wormholes  (new file -> necessary to expand upon multi-universe)
@@ -92,12 +97,12 @@ def OrderOfEvents(game):
     # !!   randomEvents():
 
     # !!!!  fleetBattles():                   # Fleet  + ? Global Controller => Battle Controller -> references each fleet at a location
-    # !!   bombing():                        # Fleet
-    # !    meetMT():                         # Fleet 
-    # !!   remoteMining():                   # Fleet
+    # !!   bombing():                        # Fleet + Fleet Controller  (Fleets and planets)
+    # !    meetMT():                         # Fleet Controller (all MT locations for fleets with merge orders)
+    # !!   remoteMining():                   # Fleet + Fleet Controller
     # !!!  waypointOneTasks():               # Fleet     held in fleet and reuse waypoint 0
     # !    minefieldDecay():                 # space_objects.py = Minefield
-    # !    mineLaying():                     # Fleet
+    # !    mineLaying():                     # Fleet + Fleet Controller
 
     # !!   fleetTransfer():                  # Fleet calls player object. A player object has a method to make the fleet transition
     # !!   waypointOneFleetMerge():          # Fleet Controller

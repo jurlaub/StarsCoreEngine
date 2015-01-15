@@ -29,6 +29,10 @@
     l.append(655)
 
     
+    Removing a fleet occurs at the level above Fleet. Typically a player, but also a universe?
+
+
+
 
 """
 

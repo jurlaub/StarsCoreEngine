@@ -74,7 +74,7 @@ class Game(object):
 
         self.game_name = template.game_name
         self.year = 2400 
-
+        self.game_variables = {}
 
         # -- a dictionary of Technology Component Objects
         self.technology = self.generateTechnology(template)
@@ -199,7 +199,10 @@ class Game(object):
         return tmpPlayers
 
         
+    def generateGameVariables(self, template):
 
+        #return dict of variables
+        pass
       
 
 
