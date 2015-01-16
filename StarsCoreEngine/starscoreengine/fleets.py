@@ -59,9 +59,11 @@ class Token:
         self.mass = None
 
 
-class Fleets(SpaceObjects):
+class Fleets(SpaceObjects): #  additionally subclass Component 
     """
         Fleets - can exist as a single ship. 
+
+
 
     """
 
