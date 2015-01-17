@@ -139,6 +139,10 @@ def fleetIterator():
     pass
 
 
+
+
+
+
 def scrappingFleets(game):
     # (w/possible tech gain)
     pass

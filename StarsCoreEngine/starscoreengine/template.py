@@ -165,6 +165,8 @@ class StandardGameTemplate(object):
 
         return RaceData(raceName)
 
+    
+
     def prepTechTree(self, techDict):
 
         flatTechTree = self.flattenStandardTree(techDict)

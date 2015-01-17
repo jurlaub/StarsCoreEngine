@@ -203,7 +203,30 @@ class Game(object):
 
         #return dict of variables
         pass
-      
+
+
+
+    def ImportTurnFiles(self):
+        """ ImportTurnFiles is used to import players .x files into the Game Object.
+
+
+        """
+
+        # for each player number, check xFileSubmissionForYear()
+        # ###if True, then JSON object. else None
+        
+        # process new ship design
+        
+        # updatePlayerShipDesign()
+
+
+        # sort/direct orders to the approprate place in game/player object.
+
+
+        pass
+
+  
+
 
 
 
@@ -335,6 +358,8 @@ def cmdLineParseArgs():
 
     return parser.parse_args()
 
+
+
 def CustomSetupFile(fileName):
 
     standardTemplate = StandardGameTemplate.standardUniverse(None) 
@@ -445,7 +470,6 @@ def CreateNewGameTemplate(results):
 
 
 
-
 def main():
 
     """
@@ -535,7 +559,10 @@ def main():
         game = GamePickle.unPickle(results.gameFile)  # gameTemplate to be removed
 
         # ---TODO--- import each players .x file
+        # --TODO-- process each players .x file data
+        game.ImportTurnFiles()
 
+        # all .x player data should be in place before OrderOfEvents.
         for year in range(0, int(results.gameTurns)):
             OrderOfEvents(game)
         # ---TODO--- intel and any other turn actions (in order of events?)

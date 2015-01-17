@@ -55,13 +55,12 @@ RemoveShipDesign : [ShipDesign number],
 
 
 
-def xFileController():
-    """ xFileController 
+# def xFileController():
+#     """ xFileController is used to import players .x files into the Game Object
 
+#     """
 
-    """
-
-    pass
+#     pass
 
 # method to call the game year? to find the current year?
 
@@ -75,12 +74,12 @@ def submissionsReady():
     pass
 
 
-def xFileExist(gameName, playerNumber, currentYear):
+def xFileSubmissionForYear(gameName, playerNumber, currentYear):
     """
     Looks in CWD for an <gameName>.x<playerNumber> file 
     > does it contain the correct year?
 
-    returns True/False
+    returns JSON Object, else None
 
     """
     pass
@@ -89,6 +88,36 @@ def xFileExist(gameName, playerNumber, currentYear):
 
 # method to mv all years .x files to new directory <gamename_year> for 
 # historical purposes, this process should be part of game configuration
+
+def createHistoryFolder():
+
+    pass
+
+
+def mvXFile():
+    pass
+
+
+
+def updatePlayerShipDesign():
+    """ 
+    input: player, gamespec, NewShipDesign, RemoveShipDesign
+
+    output: updates player ship designs
+
+
+    """
+
+    # check remove ship design
+
+    # check player ship designs count < game specification
+
+    # if count below maximum, and new designs in NewShipDesign
+
+    # then generate new design object from data in NewShipDesign
+
+
+    pass
 
 
 
