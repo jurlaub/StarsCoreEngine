@@ -219,6 +219,12 @@ def production():
 
     """
 
+
+    # productionQ
+    # for each player in game
+    # iterate through (productionQ or colonies.productionQ)
+    # call productionController( player.research.techLevels) # note: techLevels is for miniaturization
+
     pass
 
 def universeResearchCapture():

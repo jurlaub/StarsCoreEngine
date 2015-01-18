@@ -70,6 +70,8 @@ class ProductionQ(object):
 
     def __init__(self, colony, defaultSetting):         # defaultSetting may not be necessary.
         
+
+
         self.colony = colony
         self.defaultSetting = defaultSetting
         self.prodQueue = []
@@ -107,7 +109,7 @@ class ProductionQ(object):
         """
         pass
 
-    def productionController(self):
+    def productionController(self, techLevel = {}):
         """
         The productionController is used to 'parse' through the production list == self.prodQueue 
         
@@ -137,6 +139,8 @@ class ProductionQ(object):
             called to determine if Miniaturization occurs. The required minerals
             and resources should be updated to reflect Miniaturization. 
             Actual Values in ShipDesign should NOT be updated/revised. 
+
+            techLevel added to accomodate this. NOTE: production is called from OrderOfEvents.
 
  20150117 ju - NOTE: ProductionQ instructions may specifiy to produce 'n' of a 
               ShipDesign. Only 1 of a design should be produced at a time.

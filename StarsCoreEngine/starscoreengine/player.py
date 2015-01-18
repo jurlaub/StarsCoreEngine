@@ -103,7 +103,7 @@ class Player(object):
         self.research = Research(self.PRT, self.LRT)  # tech object
         self.techTree = techTree
         self.shipDesign = PlayerDesigns(self.techTree) # ship design objects
-        self.historicalShipDesign = {}
+        self.historicalShipDesign = {}  #? 
         self.fleets = {}  # ? fleetID : fleetObj
         self.battleOrders = {} 
         self.productionQ = {}
