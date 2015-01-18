@@ -485,7 +485,9 @@ class ShipDesign(Component):
         self.designName = None  # user specified ship design name
         self.designID = None
         self.isDesignLocked = False   # once a player has built a design- it cannot change
+        self.canOwnerBuild = True      
         self.owner = None
+
 
         self.hullID = hullID # points to a Hull object.  one for each type of ship.
 
