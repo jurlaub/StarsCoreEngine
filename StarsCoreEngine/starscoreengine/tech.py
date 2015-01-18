@@ -108,12 +108,13 @@ Custom Tech Options
         - modify existing tech tree
 
 
-
-
-
-
-
 '''
+
+"""
+
+
+"""
+
 
 
 class CoreStats(object):
@@ -121,6 +122,11 @@ class CoreStats(object):
 
     Note: with ShipDesign subclassing Component - there may not be a need to 
     seperate this out anymore. 
+
+
+    Miniaturization: 
+    Actual ship values should never be updated. Miniaturization
+    values should always be calculated when design is to be built. 
 
     """
 
@@ -485,7 +491,10 @@ class ShipDesign(Component):
         self.designName = None  # user specified ship design name
         self.designID = None
         self.isDesignLocked = False   # once a player has built a design- it cannot change
-        self.canOwnerBuild = True      
+        
+        # restriction due to tech; PRT & LRT
+        self.canOwnerBuild = True   
+
         self.owner = None
 
 
@@ -521,6 +530,35 @@ class ShipDesign(Component):
         self.deflector_effectiveness = None
         self.jamming_effectiveness = None
         self.computing_power = None
+
+    
+    def designMiniaturizationStats(self, techLevel, LRT = []):
+        """designMiniaturizationStats() used to get the CoreStats required to 
+        build the design. When a user produces the ship, the productionQ should 
+        call this method to determine what values to put in the production que. 
+
+        Miniaturization should not change the actual component values.
+
+        Input: ShipDesign, techLevel, LRT
+        Output: tuple of CoreStats (related to building)
+
+        NOTE: Returns core stats after applying Miniaturization (if any)
+
+        tuple = (iron, bor, germ, resources)
+
+        """
+        pass
+
+    # static method?
+    def canOwnerBuildDesign(self, techLevel, techTree, PRT, LRT = []):
+        """
+        method updates self.canOwnerBuild
+
+        checks Hull, components, 
+
+        """
+        pass
+
 
     def componentDict(self, key, value):
 

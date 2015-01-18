@@ -24,6 +24,7 @@ from math import sqrt
 
 from .planet import Colony, Planet
 from .research import Research
+from .player_designs import PlayerDesigns
 
 '''
     Player Data
@@ -101,7 +102,7 @@ class Player(object):
         # --TODO--- add technology 'research' costs (cheap, normal, expensive) to Research
         self.research = Research(self.PRT, self.LRT)  # tech object
         self.techTree = techTree
-        self.shipDesign = {} # ship design objects
+        self.shipDesign = PlayerDesigns(self.techTree) # ship design objects
         self.historicalShipDesign = {}
         self.fleets = {}  # ? fleetID : fleetObj
         self.battleOrders = {} 

@@ -24,8 +24,14 @@ from .tech import ShipDesign, Hull, Component
 
 
 class PlayerDesigns(object):
+    """
 
-    def __init__(self):
+
+    """
+
+    def __init__(self, techTree):
+
+        self.techTree = techTree
 
         self.currentShips = {}
         self.currentStarbases = {}
@@ -39,10 +45,16 @@ class PlayerDesigns(object):
         appropriate dictionary.
 
         Current name uses shipName. May need a Unique ID.
+
+        Method NOT USED for a transferred design. Use transferDesign.
+
         """
 
         # check that capacity has not been reached
         # check that name is not a duplicate
+
+        # validate Technology level?
+        # validate PRT/LRT access?
 
         # Instantiate ShipDesign
         # update values
@@ -51,22 +63,67 @@ class PlayerDesigns(object):
 
         pass
 
+    def validDesignForProduction(self, newDesign):
+        """ 
+        input: newDesign (according to JSON or template file format )
+        
+        validates: 
+            Tech used is within tech Range
+            Tech used is permitted per PRT
+            Tech used is permitted per LRT
+
+        output:
+            True = Design is valid for production 
+            False = Design is not valid for production
+
+        """
+        pass
+
     def removeDesign(self):
+        """ 
+        Removing design can come in two ways.
+        1) all built ships in game have been scrapped or destroyed
+        2) deleting design will remove 'active' ships from gameplay
+
+        input: design to delete.
+        output: the design is removed from the appropriate current dictionary
+                any active ships are removed from the game
+                    > perhaps immediately deleting active ships are not possible?
+                      Deleting requires one turn?
+                    > perhaps deleting active ships results in a salvage? 
+                    
+                    > all player's fleets are searched.
+                        > any fleet with a token ShipDesign that matches design 
+                          must be zeroed out. The token removed from the fleet.
+                          If the fleet consists only of the token then the fleet
+                          would be removed.
+                    > other players' fleets may target the deleted fleet, at a 
+                      minimum that order should be removed. (all orders searched
+                        and all orders referencing that fleet should be removed)
+
+                any references to active ships are removed from game
+
+
+
+        Future: Possible that deleted design will end up in a 'history' dictionary
+
+        """
         pass
 
-    def transferredDesign(self):
+    def transferDesign(self):
         """
-        used if a design is transferred to a player. This method makes sure there
-        is no name conflict. 
+        used if a design is transferred to a player. 
+
+        This method makes sure there is no name conflict. 
+
+        And tests to ensure that the user can build design - if not 
+        ShipDesign.canOwnerBuild = False
+
+
+
         """
         pass
 
-    def designMiniaturization(self):
-        """
-        updates component values based on the tech level of a player. 
 
-        """
-
-        pass
 
 

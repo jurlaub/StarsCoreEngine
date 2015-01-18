@@ -132,6 +132,19 @@ class ProductionQ(object):
         Misc) removes completed item if approprate
 
 
+ 20150117 ju - Miniaturization:
+            when starting work, prior to work being finished. The design should 
+            called to determine if Miniaturization occurs. The required minerals
+            and resources should be updated to reflect Miniaturization. 
+            Actual Values in ShipDesign should NOT be updated/revised. 
+
+ 20150117 ju - NOTE: ProductionQ instructions may specifiy to produce 'n' of a 
+              ShipDesign. Only 1 of a design should be produced at a time.
+              (This is when the Miniaturization value would be calculated) Once 
+              produced the 'n' value should be decremented. If '0' then proceed
+              to the next instruction.
+
+
         """
         iron = self.colony.surfaceIron
         bor  = self.colony.surfaceBor
