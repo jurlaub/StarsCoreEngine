@@ -29,16 +29,15 @@ class PlayerDesigns(object):
 
     """
 
-    def __init__(self, techTree):
+    def __init__(self):
 
-        self.techTree = techTree
 
         self.currentShips = {}
         self.currentStarbases = {}
 
 
 
-    def addDesign(self, newDesign):
+    def addDesign(self, newDesign, techTree):
         """
         Input: dict = { shipName, hullID, components, }
         Output: instantiates a new ShipDesign (from tech) and adds to the 
@@ -50,22 +49,24 @@ class PlayerDesigns(object):
 
         """
 
+        # check newDesign.hull for starbase or ship type
         # check that capacity has not been reached
         # check that name is not a duplicate
 
-        # validate Technology level?
-        # validate PRT/LRT access?
+        # validate Technology level?  = No -> should be assessed at xFile Import level
+        # validate PRT/LRT access?  = No   -> should be assessed at xFile Import level
 
-        # Instantiate ShipDesign
+        # Instantiate ShipDesign  # ShipDesign Validates itself?
         # update values
-        # check hull for starbase or ship
+        
         # add to appropriate currentDict
 
         pass
 
-    def validDesignForProduction(self, newDesign):
+    @staticmethod
+    def validDesignForProduction(design, techTree, techLevel, PRT, LRT):
         """ 
-        input: newDesign (according to JSON or template file format )
+        input: design (ShipDesign),techTree, techLevel, PRT, LRT
         
         validates: 
             Tech used is within tech Range
@@ -84,6 +85,11 @@ class PlayerDesigns(object):
         Removing design can come in two ways.
         1) all built ships in game have been scrapped or destroyed
         2) deleting design will remove 'active' ships from gameplay
+
+        !!!!!
+        NOTE: part of the overall "remove Design" functionality will have to occur
+        outside of this class - 
+        !!!!!
 
         input: design to delete.
         output: the design is removed from the appropriate current dictionary

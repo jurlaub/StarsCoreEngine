@@ -483,6 +483,7 @@ class ShipDesign(Component):
     20141226 - ju - I think subclassing Component is better.
 
 
+    20150117 - ju - ShipDesign should validate itself
 
     '''
 
@@ -532,6 +533,22 @@ class ShipDesign(Component):
         self.computing_power = None
 
     
+    def isShipDesignValid(self, techTree):
+        """ validShipDesign assesses itself to determine if it is a valid ship 
+        design. 
+
+        input: self, techTree
+        output: 
+            True = Ship Design has correct components, correct number of components
+            False = Ship Design has an error
+
+        """
+        pass
+
+
+
+
+    
     def designMiniaturizationStats(self, techLevel, LRT = []):
         """designMiniaturizationStats() used to get the CoreStats required to 
         build the design. When a user produces the ship, the productionQ should 
@@ -568,6 +585,7 @@ class ShipDesign(Component):
             update BaseTech values + objects values?
         '''
         pass
+
 
 
 

@@ -123,6 +123,10 @@ class Test_StandardTechTree(object):
 
             for n in tmpTarget:
                 assert_true(n in tmpExpected)
+                #print(n)
+
+
+
 
 
 

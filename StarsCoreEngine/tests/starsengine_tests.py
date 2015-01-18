@@ -32,6 +32,7 @@ from ..starscoreengine.player import RaceData as Race
 from ..starscoreengine.game_utility import GamePickle
 from ..starscoreengine.order_of_events import *
 from ..starscoreengine.tech import Component, Hull
+from ..starscoreengine.player_designs import PlayerDesigns
 
 #old - for reference -  use test classes
 def test_spaceobjects():
@@ -291,6 +292,26 @@ class TestGame(object):
         assert_equal(o2.beamPower, 16)
 
 
+    """
+    PlayerDesign integration tests
+    """
+
+    def test_PlayerDesign_Exist(self):
+        """
+        PlayerDesign object exist
+        """
+        p = self.game.players
+
+        for kee, obj in p.items():
+            assert_true(isinstance(obj.design, PlayerDesigns))
+            
+            ship = obj.design.currentShips
+            starbase = obj.design.currentStarbases
+
+            assert_true(isinstance(ship, dict))
+            assert_true(isinstance(starbase, dict))
+            
+
 
 
 
@@ -471,25 +492,6 @@ class TestColonyPlanets(object):
     def test_Planet_Resources(self):
         pass
 
-
-
-class TestPlayerObject(object):
-
-    def setup(self):
-        print("TestPlayerObject: Setup")
-        self.raceName = 'Wolfbane'
-        self.RaceData = Race(self.raceName)
-        self.player = Player(self.RaceData, {})
-
-
-    def teardown(self):
-        print("TestPlayerObject: Teardown")
-
-    def test_PlayerValues(self):
-        player = self.player
-        race = self.RaceData
-
-        assert(self.raceName == player.raceName)
 
 
 
