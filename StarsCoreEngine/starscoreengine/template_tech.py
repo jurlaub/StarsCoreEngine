@@ -837,10 +837,10 @@ def items_electrical():
                            "iron" : 2, "bor" : 0, "germ" : 7, "ability" : 50},
             "Energy Capacitor" : {"energy" : 7, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                   "electronics" : 4, "biotechnology" : 0, "mass" : 1, "resources" : 5, 
-                                  "iron" : 0, "bor" : 0, "germ" : 8, "ability" : 10},
+                                  "iron" : 0, "bor" : 0, "germ" : 8, "capacitor" : 10},
             "Flux Capacitor" : {"energy" : 14, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                 "electronics" : 8, "biotechnology" : 0, "mass" : 1, "resources" : 5, 
-                                "iron" : 0, "bor" : 0, "germ" : 8, "ability" : 20},
+                                "iron" : 0, "bor" : 0, "germ" : 8, "capacitor" : 20},
             "Energy Dampener" : {"energy" : 14, "weapons" : 0, "propulsion" : 8, "construction" : 0, 
                                  "electronics" : 0, "biotechnology" : 0, "mass" : 2, "resources" : 50, 
                                  "iron" : 5, "bor" : 10, "germ" : 0, "ability" : -4},
@@ -1225,7 +1225,8 @@ def items_scanners():
                                 "iron" : 3, "bor" : 0, "germ" : 3, "normalScanRange" : 150, "penScanRange" : 0},
             "Pick Pocket Scanner" : {"energy" : 4, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                      "electronics" : 4, "biotechnology" : 4, "mass" : 15, "resources" : 35, 
-                                     "iron" : 8, "bor" : 10, "germ" : 6, "normalScanRange" : 80, "penScanRange" : 0},
+                                     "iron" : 8, "bor" : 10, "germ" : 6, "normalScanRange" : 80, "penScanRange" : 0,
+                                     "stealFromShips": True},
             "Chameleon Scanner" : {"energy" : 3, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                    "electronics" : 6, "biotechnology" : 0, "mass" : 6, "resources" : 25, 
                                    "iron" : 4, "bor" : 6, "germ" : 4, "normalScanRange" : 160, "penScanRange" : 45},
@@ -1252,7 +1253,8 @@ def items_scanners():
                                    "iron" : 3, "bor" : 2, "germ" : 21, "normalScanRange" : 335, "penScanRange" : 0},
             "Robber Baron Scanner" : {"energy" : 10, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                       "electronics" : 15, "biotechnology" : 10, "mass" : 20, "resources" : 90, 
-                                      "iron" : 10, "bor" : 10, "germ" : 10, "normalScanRange" : 220, "penScanRange" : 120},
+                                      "iron" : 10, "bor" : 10, "germ" : 10, "normalScanRange" : 220, "penScanRange" : 120,
+                                      "stealFromShips": True, "stealFromPlanets": True},
             "Peerless Scanner" : {"energy" : 7, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                   "electronics" : 24, "biotechnology" : 0, "mass" : 4, "resources" : 90, 
                                   "iron" : 3, "bor" : 2, "germ" : 30, "normalScanRange" : 500, "penScanRange" : 0}}
@@ -1424,11 +1426,11 @@ def items_restrictions():
     _notIS   = [x for x in _allPRT if x != "IS"]
     _notWM_AR= [x for x in _allPRT if x not in ["AR", "WM"]]
     return {
-        "SDI" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : []},
-        "Missile Battery" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : []},
-        "Laser Battery" : {"hasPRT" : [_notWM_AR], "hasLRT" : [], "notLRT" : []},
-        "Planetary Shield" : {"hasPRT" : [_notWM_AR], "hasLRT" : [], "notLRT" : []},
-        "Neutron Shield" : {"hasPRT" : [_notWM_AR], "hasLRT" : [], "notLRT" : []},
+        "SDI" : {"hasPRT" : _notAR, "hasLRT" : [], "notLRT" : []},
+        "Missile Battery" : {"hasPRT" : _notAR, "hasLRT" : [], "notLRT" : []},
+        "Laser Battery" : {"hasPRT" : _notWM_AR, "hasLRT" : [], "notLRT" : []},
+        "Planetary Shield" : {"hasPRT" : _notWM_AR, "hasLRT" : [], "notLRT" : []},
+        "Neutron Shield" : {"hasPRT" : _notWM_AR, "hasLRT" : [], "notLRT" : []},
         "Mini-Colony Ship" : {"hasPRT" : ["HE"], "hasLRT" : [], "notLRT" : []},
         "Total Terraform ±3" : {"hasPRT" : [], "hasLRT" : ["TT"], "notLRT" : []},
         "Total Terraform ±5" : {"hasPRT" : [], "hasLRT" : ["TT"], "notLRT" : []},
@@ -1462,19 +1464,19 @@ def items_restrictions():
         "Ferret Scanner" : {"hasPRT" : [], "hasLRT" : [], "notLRT" : ["NAS"]},
         "Dolphin Scanner" : {"hasPRT" : [], "hasLRT" : [], "notLRT" : ["NAS"]},
         "Elephant Scanner" : {"hasPRT" : [], "hasLRT" : [], "notLRT" : ["NAS"]},
-        "Viewer 50" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : []},
-        "Viewer 90" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : []},
-        "Scoper 150" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : []},
-        "Scoper 220" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : []},
-        "Scoper 280" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : []},
-        "Snooper 320X" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : ["NAS"]},
-        "Snooper 400X" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : ["NAS"]},
-        "Snooper 500X" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : ["NAS"]},
-        "Snooper 620X" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : ["NAS"]},
-        "Stargate 100/250" : {"hasPRT" : [_notHE], "hasLRT" : [], "notLRT" : []},
+        "Viewer 50" : {"hasPRT" : _notAR, "hasLRT" : [], "notLRT" : []},
+        "Viewer 90" : {"hasPRT" : _notAR, "hasLRT" : [], "notLRT" : []},
+        "Scoper 150" : {"hasPRT" : _notAR, "hasLRT" : [], "notLRT" : []},
+        "Scoper 220" : {"hasPRT" : _notAR, "hasLRT" : [], "notLRT" : []},
+        "Scoper 280" : {"hasPRT" : _notAR, "hasLRT" : [], "notLRT" : []},
+        "Snooper 320X" : {"hasPRT" : _notAR, "hasLRT" : [], "notLRT" : ["NAS"]},
+        "Snooper 400X" : {"hasPRT" : _notAR, "hasLRT" : [], "notLRT" : ["NAS"]},
+        "Snooper 500X" : {"hasPRT" : _notAR, "hasLRT" : [], "notLRT" : ["NAS"]},
+        "Snooper 620X" : {"hasPRT" : _notAR, "hasLRT" : [], "notLRT" : ["NAS"]},
+        "Stargate 100/250" : {"hasPRT" : _notHE, "hasLRT" : [], "notLRT" : []},
         "Stargate any/300" : {"hasPRT" : ["IT"], "hasLRT" : [], "notLRT" : []},
-        "Stargate 150/600" : {"hasPRT" : [_notHE], "hasLRT" : [], "notLRT" : []},
-        "Stargate 300/500" : {"hasPRT" : [_notHE], "hasLRT" : [], "notLRT" : []},
+        "Stargate 150/600" : {"hasPRT" : _notHE, "hasLRT" : [], "notLRT" : []},
+        "Stargate 300/500" : {"hasPRT" : _notHE, "hasLRT" : [], "notLRT" : []},
         "Stargate 100/any" : {"hasPRT" : ["IT"], "hasLRT" : [], "notLRT" : []},
         "Stargate any/800" : {"hasPRT" : ["IT"], "hasLRT" : [], "notLRT" : []},
         "Stargate any/any" : {"hasPRT" : ["IT"], "hasLRT" : [], "notLRT" : []},
@@ -1501,7 +1503,7 @@ def items_restrictions():
         "Speed Trap 20" : {"hasPRT" : ["SD", "IS"], "hasLRT" : [], "notLRT" : []},
         "Speed Trap 30" : {"hasPRT" : ["SD"], "hasLRT" : [], "notLRT" : []},
         "Speed Trap 50" : {"hasPRT" : ["SD"], "hasLRT" : [], "notLRT" : []},
-        "Colonization Module" : {"hasPRT" : [_notAR], "hasLRT" : [], "notLRT" : []},
+        "Colonization Module" : {"hasPRT" : _notAR, "hasLRT" : [], "notLRT" : []},
         "Orbital Construction Module" : {"hasPRT" : ["AR"], "hasLRT" : [], "notLRT" : []},
         "Settler's Delight" : {"hasPRT" : ["HE"], "hasLRT" : [], "notLRT" : []},
         "Fuel Mizer" : {"hasPRT" : [], "hasLRT" : ["IFE"], "notLRT" : []},
@@ -1558,9 +1560,10 @@ def order_tech():
     combineWeap = ('BeamWeapons', 'Torpedoes')
     
     #add empty lists as the restriction for all tech
-    for v1 in tech.values():
+    for k1, v1 in tech.items():
         for v2 in v1.values():
-            v2.update({"hasPRT" : [], "hasLRT" : [], "notLRT" : []})
+            v2.update({"hasPRT" : [], "hasLRT" : [], "notLRT" : [], "itemType": k1})
+
 
 
     
