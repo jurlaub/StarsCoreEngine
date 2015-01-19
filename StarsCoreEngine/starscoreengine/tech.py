@@ -159,7 +159,7 @@ class BaseTech(CoreStats):
 
     # each component should be one of the following object types
     objectTypes =  ("Armor", "Scanner", "Elect", "Mech", "Bomb", "Engine",  
-                    "GeneralPurpose", "Minelayer", "Mining", "Scanner",
+                    "Minelayer", "Mining", "Scanner",
                     "Shield", "Armor", "Weapon", "Terraforming", 
                     "PlanetaryInstallations", "Ships", "Starbases", "Orbital")
     

@@ -1561,8 +1561,13 @@ def order_tech():
     
     #add empty lists as the restriction for all tech
     for k1, v1 in tech.items():
+        itemType = k1
+        
+        if itemType in combineWeap:  
+            itemType = "Weapon"
+
         for v2 in v1.values():
-            v2.update({"hasPRT" : [], "hasLRT" : [], "notLRT" : [], "itemType": k1})
+            v2.update({"hasPRT" : [], "hasLRT" : [], "notLRT" : [], "itemType": itemType})
 
 
 

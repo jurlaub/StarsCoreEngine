@@ -170,6 +170,7 @@ class Test_StandardTechnologyTemplate(object):
         assert_equal(x["mass"], 1)
         assert_equal(x["initiative"], 9)
         assert_in("itemType", x)
+        assert_equal(x["itemType"], 'Weapon')
 
         # assert_equal(x["itemType"], "Weapon")
 
@@ -199,6 +200,7 @@ class Test_StandardTechnologyTemplate(object):
         assert_equal(x["hasLRT"], ["IFE"])
         assert_equal(x["mass"], 6)
         assert_in("itemType", x)
+        assert_equal(x["itemType"], 'Engine')
 
 
     def test_shield_cowhide(self):
@@ -221,6 +223,7 @@ class Test_StandardTechnologyTemplate(object):
         assert_equal(x["shieldDP"], 40)
         assert_equal(x["mass"], 1)
         assert_in("itemType", x)
+        assert_equal(x["itemType"], 'Shield')
 
     def test_weap_jihad(self):
         x = self.techTree["Jihad Missile"]
@@ -246,6 +249,7 @@ class Test_StandardTechnologyTemplate(object):
         assert_equal(x["doubleDamageUnshielded"], True)
         assert_equal(x["mass"], 35)
         assert_in("itemType", x)
+        assert_equal(x["itemType"], 'Weapon')
 
     def test_hull_rogue(self):
         pass
@@ -271,6 +275,7 @@ class Test_StandardTechnologyTemplate(object):
         assert_equal(x["armorDP"], 500)
         assert_equal(x["mass"], 40)
         assert_in("itemType", x)
+        assert_equal(x["itemType"], 'Armor')
 
     def test_elec_caps(self):
         x = self.techTree["Energy Capacitor"]
@@ -295,6 +300,7 @@ class Test_StandardTechnologyTemplate(object):
 
         assert_in("capacitor", x)
         assert_in("itemType", x)
+        assert_equal(x["itemType"], 'Elect')
 
     def test_scanner_ferret(self):
         x = self.techTree["Ferret Scanner"]
@@ -319,6 +325,7 @@ class Test_StandardTechnologyTemplate(object):
         assert_equal(x["normalScanRange"], 185)
         assert_equal(x["mass"], 2)
         assert_in("itemType", x)
+        assert_equal(x["itemType"], 'Scanner')
 
     def test_scanner_RobberBarron(self):
         x = self.techTree["Robber Baron Scanner"]
@@ -349,6 +356,7 @@ class Test_StandardTechnologyTemplate(object):
         assert_equal(x["stealFromShips"], True)
         assert_equal(x["stealFromPlanets"], True)
         assert_in("itemType", x)
+        assert_equal(x["itemType"], 'Scanner')
 
     def test_miner_RoboMiner(self):
         x = self.techTree["Robo-Miner"]
@@ -373,6 +381,7 @@ class Test_StandardTechnologyTemplate(object):
 
         assert_equal(x["mineralKTPerYear"], 12)
         assert_in("itemType", x)
+        assert_equal(x["itemType"], 'Mining')
 
 
 
@@ -400,6 +409,7 @@ class Test_StandardTechnologyTemplate(object):
         assert_in("popKillPercent", x)
         assert_equal(x["popKillPercent"], 0.6)
         assert_in("itemType", x)
+        assert_equal(x["itemType"], 'Bomb')
 
     def test_orbital_gate100_250(self):
         x = self.techTree["Stargate 100/250"]
@@ -425,6 +435,7 @@ class Test_StandardTechnologyTemplate(object):
         assert_equal(x["safeGateableMass"], 100)
         assert_equal(x["safeGateableRange"], 250)
         assert_in("itemType", x)
+        assert_equal(x["itemType"], 'Orbital')
 
     def test_orbital_massDriver(self):
         x = self.techTree["Ultra Driver 11"]
@@ -447,6 +458,7 @@ class Test_StandardTechnologyTemplate(object):
         assert_equal(x["notLRT"], [])
 
         assert_in("itemType", x)
+        assert_equal(x["itemType"], 'Orbital')
         assert_in("warpDriverSpeed", x)
         assert_equal(x["warpDriverSpeed"], 11)
 
