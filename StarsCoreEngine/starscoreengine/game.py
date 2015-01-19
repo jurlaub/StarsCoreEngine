@@ -74,7 +74,7 @@ class Game(object):
 
         self.game_name = template.game_name
         self.year = 2400 
-        self.game_variables = {}
+        self.game_variables = {"DesignCapacity" : 12 }
 
         # -- a dictionary of Technology Component Objects
         self.technology = self.generateTechnology(template)

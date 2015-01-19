@@ -20,12 +20,19 @@
     
 """
 
+import os
+import os.path
+
 from nose.tools import with_setup, assert_equal, assert_not_equal, \
  assert_raises, raises, assert_in, assert_true, assert_false
 
+
+from ..starscoreengine.game import Game
+from ..starscoreengine.template import *
 from ..starscoreengine.player import Player
 from ..starscoreengine.player import RaceData as Race
 from ..starscoreengine.player_designs import PlayerDesigns
+from ..starscoreengine.tech import ShipDesign as SuperShipDesign
 
 
 
@@ -50,6 +57,18 @@ class TestPlayerObject(object):
         race = self.RaceData
 
         assert(self.raceName == player.raceName)
+
+
+class ShipDesign(SuperShipDesign):
+
+    def __init__(self):
+        super(ShipDesign, self).__init__()
+
+    def isShipDesignValid(self, techTree = {}):
+
+        if techTree: return False
+
+        return True
 
 
 
@@ -100,9 +119,9 @@ class TestPlayerDesign(object):
         self.testGameName = 'rabidTest'
         #self.testCustomSetup = {"UniverseNumber0": { "Players": "2"}}
 
-        self.gameTemplate = game.StandardGameTemplate(self.testGameName, self.playerFileList, {"UniverseNumber0": { "Players": "2"}})
+        self.gameTemplate = StandardGameTemplate(self.testGameName, self.playerFileList, {"UniverseNumber0": { "Players": "2"}})
         self.universe_data = self.gameTemplate.universe_data
-        self.game = game.Game(self.gameTemplate)
+        self.game = Game(self.gameTemplate)
         self.player1 = self.game.players['player1']
 
 
@@ -124,9 +143,6 @@ class TestPlayerDesign(object):
         # check newDesign.hull for starbase or ship type
         # check that capacity has not been reached
         # check that name is not a duplicate
-
-        # validate Technology level?  = No -> should be assessed at xFile Import level
-        # validate PRT/LRT access?  = No   -> should be assessed at xFile Import level
 
         # Instantiate ShipDesign
         # update values

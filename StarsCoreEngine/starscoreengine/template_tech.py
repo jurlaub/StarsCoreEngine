@@ -1538,27 +1538,31 @@ def order_tech():
     This function also adds the restrictions to the tech obtained from items_restrictions
     """
     #get all of the dicts
-    tech = {"armor" : items_armor(),
-            "beamWeapons" : items_beams(),
-            "bombs" : items_bombs(),
-            "electrical" : items_electrical(),
-            "engines" : items_engines(),
-            "mechanical" : items_mechanical(),
-            "mineLayers" : items_minelayers(),
-            "miningRobots" : items_miningrobots(),
-            "orbital" : dict(list(items_stargates().items()) +  list(items_mass_drivers().items())),
-            "planetary" : dict(list(items_planetary_defenses().items()) + list(items_planetary_scanners().items())),
-            "scanners" : items_scanners(),
-            "shields" : items_shields(),
-            "shipHulls" : items_hulls(),
-            "starbaseHulls" : items_starbases(),
-            "terraforming" : items_terraforming(),
-            "torpedoes" : items_torpedoes()}
+    tech = {"Armor" : items_armor(),
+            "BeamWeapons" : items_beams(),
+            "Bomb" : items_bombs(),
+            "Elect" : items_electrical(),
+            "Engine" : items_engines(),
+            "Mech" : items_mechanical(),
+            "Minelayer" : items_minelayers(),
+            "Mining" : items_miningrobots(),
+            "Orbital" : dict(list(items_stargates().items()) +  list(items_mass_drivers().items())),
+            "PlanetaryInstallations" : dict(list(items_planetary_defenses().items()) + list(items_planetary_scanners().items())),
+            "Scanner" : items_scanners(),
+            "Shield" : items_shields(),
+            "Ships" : items_hulls(),
+            "Starbases" : items_starbases(),
+            "Terraforming" : items_terraforming(),
+            "Torpedoes" : items_torpedoes()}
 
+    combineWeap = ('BeamWeapons', 'Torpedoes')
+    
     #add empty lists as the restriction for all tech
     for v1 in tech.values():
         for v2 in v1.values():
             v2.update({"hasPRT" : [], "hasLRT" : [], "notLRT" : []})
+
+
     
     restrictions = items_restrictions()
 
@@ -1610,10 +1614,10 @@ def standard_tech_tree():
     for eachHull in slotDict:
         slotObj = slotDict[eachHull]
 
-        if eachHull in techDict['shipHulls']:
-            techDict['shipHulls'][eachHull]['slot'] = slotObj
-        elif eachHull in techDict["starbaseHulls"]:
-            techDict["starbaseHulls"][eachHull]['slot'] = slotObj
+        if eachHull in techDict['Ships']:
+            techDict['Ships'][eachHull]['slot'] = slotObj
+        elif eachHull in techDict["Starbases"]:
+            techDict["Starbases"][eachHull]['slot'] = slotObj
         else:
             raise ValueError("%s not found when attempting to merge 'slots' into hull in template_tech.py" % eachHull)
 

@@ -120,8 +120,50 @@ def updatePlayerShipDesign():
     pass
 
 
+"""
+Validate Ship Designs. 
+
+1) validDesignForProduction - 
+        Tech used is within tech Range
+        Tech used is permitted per PRT
+        Tech used is permitted per LRT
+2) isShipDesignValid
+        validates components correctly match the slots in Hull.
+"""
 
 
 
+def validDesignForProduction(newDesign, techTree, techLevel, PRT, LRT):
+    """ 
+    input: design (ShipDesign),techTree, techLevel, PRT, LRT,
+            
+            calls PlayerDesigns.validDesignForProduction()
+                which validates: 
+                    Tech used is within tech Range
+                    Tech used is permitted per PRT
+                    Tech used is permitted per LRT
+
+
+    output - returns newDesign with updated 'designValidForProduction':
+        True = Design is valid for production 
+        False = Design is not valid for production
+
+    """
+    pass
+
+def isShipDesignValid(newDesign, techTree):
+    """ validShipDesign assesses itself to determine if it is a valid ship 
+    design. 
+
+    Validates that the components added to the design align with the 
+    Hull.slots. 
+
+    input: newDesign, techTree
+    output: 
+        True = Ship Design has correct components, correct number of components
+        False = Ship Design has an error
+
+    """
+    pass
 
 

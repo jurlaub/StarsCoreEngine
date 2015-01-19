@@ -161,7 +161,7 @@ class BaseTech(CoreStats):
     objectTypes =  ("Armor", "Scanner", "Elect", "Mech", "Bomb", "Engine",  
                     "GeneralPurpose", "Minelayer", "Mining", "Scanner",
                     "Shield", "Armor", "Weapon", "Terraforming", 
-                    "PlanetaryInstallations")
+                    "PlanetaryInstallations", "Ships", "Starbases", "Orbital")
     
     def __init__(self):
         super(BaseTech,self).__init__()
@@ -494,7 +494,7 @@ class ShipDesign(Component):
         self.isDesignLocked = False   # once a player has built a design- it cannot change
         
         # restriction due to tech; PRT & LRT
-        self.canOwnerBuild = True   
+        self.designValidForProduction = False   
 
         self.owner = None
 
@@ -532,18 +532,21 @@ class ShipDesign(Component):
         self.jamming_effectiveness = None
         self.computing_power = None
 
-    
-    def isShipDesignValid(self, techTree):
-        """ validShipDesign assesses itself to determine if it is a valid ship 
-        design. 
 
-        input: self, techTree
-        output: 
-            True = Ship Design has correct components, correct number of components
-            False = Ship Design has an error
+    # def isShipDesignValid(self, techTree):
+    #     """ validShipDesign assesses itself to determine if it is a valid ship 
+    #     design. 
 
-        """
-        pass
+    #     Validates that the components added to the design align with the 
+    #     Hull.slots. PlayerDesign validate PRT, LRT and Tech Level -> for production.
+
+    #     input: self, techTree
+    #     output: 
+    #         True = Ship Design has correct components, correct number of components
+    #         False = Ship Design has an error
+
+    #     """
+    #     pass
 
 
 

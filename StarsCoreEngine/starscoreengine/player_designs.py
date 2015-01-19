@@ -55,8 +55,10 @@ class PlayerDesigns(object):
 
         # validate Technology level?  = No -> should be assessed at xFile Import level
         # validate PRT/LRT access?  = No   -> should be assessed at xFile Import level
+        # ShipDesign Validates itself? = No   -> should be assessed at xFile Import level
 
-        # Instantiate ShipDesign  # ShipDesign Validates itself?
+
+        # Instantiate ShipDesign  
         # update values
         
         # add to appropriate currentDict
@@ -64,21 +66,25 @@ class PlayerDesigns(object):
         pass
 
     @staticmethod
-    def validDesignForProduction(design, techTree, techLevel, PRT, LRT):
+    def validDesignForProduction(newDesign, techTree, techLevel, PRT, LRT):
         """ 
         input: design (ShipDesign),techTree, techLevel, PRT, LRT
+        
         
         validates: 
             Tech used is within tech Range
             Tech used is permitted per PRT
             Tech used is permitted per LRT
 
-        output:
+
+        output - returns:
             True = Design is valid for production 
             False = Design is not valid for production
 
         """
         pass
+
+
 
     def removeDesign(self):
         """ 

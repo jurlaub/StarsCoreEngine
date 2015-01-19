@@ -168,8 +168,8 @@ class TestTechnologyTemplate(object):
         input: StandardTechTree
 
         """
-        assert_true("beamWeapons" in self.StandardTree )
-        assert_true("Heavy Blaster" in self.StandardTree["beamWeapons"] )     
+        assert_true("BeamWeapons" in self.StandardTree )
+        assert_true("Heavy Blaster" in self.StandardTree["BeamWeapons"] )     
 
 
         assert_false("Heavy Blaster" in self.StandardTree)
@@ -269,7 +269,7 @@ class TestTechnologyTemplate(object):
         """ 'OnlyUseCustomTechTree' == OUCTT
         """ 
         techDict = {"OnlyUseCustomTechTree": 'True',
-                    "mechanical" : { "Beam Deflector": {
+                    "Mech" : { "Beam Deflector": {
                                         "weapons": 6,
                                         "construction": 6,
                                         "iron": 0,
@@ -284,7 +284,7 @@ class TestTechnologyTemplate(object):
                                         "iron": 10}
                                     },
 
-                    "torpedoes" : {"Delta Torpedo": {
+                    "Torpedoes" : {"Delta Torpedo": {
                                         "hitChance": 60,
                                         "weapons": 10,
                                         "construction": 0},
@@ -292,7 +292,7 @@ class TestTechnologyTemplate(object):
                                         "hitChance": 20,
                                         "weapons": 16}
                                     },
-                    "scanner" : {"Eagle Eye Scanner": {
+                    "Scanner" : {"Eagle Eye Scanner": {
                                     "weapons": 0,
                                     "construction": 0,
                                     "penScanRange": 0},
@@ -316,7 +316,7 @@ class TestTechnologyTemplate(object):
         """ 'OnlyUseCustomTechTree' == OUCTT
         """ 
         techDict = {"OnlyUseCustomTechTree": 'False',
-                    "mechanical" : { "Beam Deflector": {
+                    "Mech" : { "Beam Deflector": {
                                         "weapons": 18,          # changed
                                         "construction": 6,
                                         "iron": 0,
@@ -331,7 +331,7 @@ class TestTechnologyTemplate(object):
                                         "iron": 10}
                                     },
 
-                    "torpedoes" : {"Delta Torpedo": {
+                    "Torpedoes" : {"Delta Torpedo": {
                                         "hitChance": 60,
                                         "weapons": 20,          # changed
                                         "construction": 0},
@@ -339,7 +339,7 @@ class TestTechnologyTemplate(object):
                                         "hitChance": 80,        # changed
                                         "weapons": 16}         
                                     },
-                    "scanner" : {"Eagle Eye Scanner": {
+                    "Scanner" : {"Eagle Eye Scanner": {
                                     "weapons": 0,
                                     "construction": 0,  
                                     "penScanRange": 500},       # changed
@@ -368,7 +368,7 @@ class TestTechnologyTemplate(object):
 
         """ 
         techDict = {"OnlyUseCustomTechTree": 'ya da yada',
-                    "mechanical" : { "Beam Deflector": {
+                    "Mech" : { "Beam Deflector": {
                                         "weapons": 18,          # changed
                                         "construction": 6,
                                         "iron": 0,
@@ -383,7 +383,7 @@ class TestTechnologyTemplate(object):
                                         "iron": 10}
                                     },
 
-                    "torpedoes" : {"Delta Torpedo": {
+                    "Torpedoes" : {"Delta Torpedo": {
                                         "hitChance": 60,
                                         "weapons": 20,          # changed
                                         "construction": 0},
@@ -391,7 +391,7 @@ class TestTechnologyTemplate(object):
                                         "hitChance": 80,        # changed
                                         "weapons": 16}          
                                     },
-                    "scanner" : {"Eagle Eye Scanner": {
+                    "Scanner" : {"Eagle Eye Scanner": {
                                     "weapons": 0,
                                     "construction": 0,  
                                     "penScanRange": 500},       # changed
@@ -476,7 +476,7 @@ class TestTechnologyTemplate(object):
                 },
 
                 "OnlyUseCustomTechTree": 'True',
-                    "mechanical" : { "Beam Deflector": {
+                    "Mech" : { "Beam Deflector": {
                                         "weapons": 6,
                                         "construction": 6,
                                         "iron": 0,
@@ -492,7 +492,7 @@ class TestTechnologyTemplate(object):
                                         "resources" : 8}
                                     },
 
-                    "torpedoes" : {"Delta Torpedo": {
+                    "Torpedoes" : {"Delta Torpedo": {
                                         "hitChance": 60,
                                         "weapons": 10,
                                         "construction": 0},
@@ -500,7 +500,7 @@ class TestTechnologyTemplate(object):
                                         "hitChance": 20,
                                         "weapons": 16}
                                     },
-                    "scanner" : {"Eagle Eye Scanner": {
+                    "Scanner" : {"Eagle Eye Scanner": {
                                     "weapons": 0,
                                     "construction": 0,
                                     "penScanRange": 0},
@@ -558,7 +558,7 @@ class TestTechnologyTemplate(object):
                 },
 
                 "OnlyUseCustomTechTree": 'False',
-                    "mechanical" : { "Beam Deflector": {
+                    "Mech" : { "Beam Deflector": {
                                         "weapons": 18,
                                         "construction": 6,
                                         "iron": 0,
@@ -574,7 +574,7 @@ class TestTechnologyTemplate(object):
                                         "resources" : 8}
                                     },
 
-                    "torpedoes" : {"Delta Torpedo": {
+                    "Torpedoes" : {"Delta Torpedo": {
                                         "hitChance": 60,
                                         "weapons": 10,
                                         "construction": 0},
@@ -582,7 +582,7 @@ class TestTechnologyTemplate(object):
                                         "hitChance": 80,
                                         "weapons": 16}
                                     },
-                    "scanner" : {"Eagle Eye Scanner": {
+                    "Scanner" : {"Eagle Eye Scanner": {
                                     "weapons": 0,
                                     "construction": 0,
                                     "penScanRange": 0},
