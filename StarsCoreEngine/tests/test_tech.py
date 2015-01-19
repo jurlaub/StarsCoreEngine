@@ -412,7 +412,7 @@ class Test_StandardTechnologyTemplate(object):
         assert_equal(x["itemType"], 'Bomb')
 
     def test_orbital_gate100_250(self):
-        x = self.techTree["Stargate 100/250"]
+        x = self.techTree["Stargate 100_250"]
 
         assert_equal(x["weapons"], 0)
         assert_equal(x["propulsion"], 5)
