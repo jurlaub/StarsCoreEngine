@@ -120,9 +120,10 @@ class TestPlayerDesign(object):
         #self.testCustomSetup = {"UniverseNumber0": { "Players": "2"}}
 
         self.gameTemplate = StandardGameTemplate(self.testGameName, self.playerFileList, {"UniverseNumber0": { "Players": "2"}})
-        self.universe_data = self.gameTemplate.universe_data
         self.game = Game(self.gameTemplate)
         self.player1 = self.game.players['player1']
+
+        self.techTree = self.game.technology
 
 
     def teardown(self):
@@ -150,9 +151,67 @@ class TestPlayerDesign(object):
         # add to appropriate currentDict
 
         """
+        # design is added to correct dictionary (ship/starbase)
+        #if we are at capacity, what should be done?
+
+        #Ship Design added
+
+        # values are correct
+
+        for player in self.game.players.values():
+            designs = player.designs
+
+            shipCount = len(designs.currentShips)
+            starbaseCount = len(designs.currentStarbases)
+
+
+            #see PlayerDesigns.AddDesign for design name
+            assert_not_in(self.testShip1['designName'], designs.currentShips)
+
+            # add design
+
+            #assert count for ship went up
+            # assert count for starbase is same
+
+            #assert ship now in design
+            #assert ship component or two are in ShipDesign object
+
+
+
+        
+
+
+    def test_AddDesign_OverCapacity(self):
+        """PlayerDesigns.AddDesign unit tests
+
+        # check newDesign.hull for starbase or ship type
+        # check that capacity has not been reached
+        # check that name is not a duplicate
+
+        # Instantiate ShipDesign
+        # update values
+        
+        # add to appropriate currentDict
+
+        """
+        
         pass
 
+    def test_AddDesign_DuplicateEntries(self):
+        """PlayerDesigns.AddDesign unit tests
 
+        # check newDesign.hull for starbase or ship type
+        # check that capacity has not been reached
+        # check that name is not a duplicate
+
+        # Instantiate ShipDesign
+        # update values
+        
+        # add to appropriate currentDict
+
+        """
+        
+        pass
 
 
     def test_RemoveDesign(self):

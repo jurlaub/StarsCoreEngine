@@ -303,10 +303,10 @@ class TestGame(object):
         p = self.game.players
 
         for kee, obj in p.items():
-            assert_true(isinstance(obj.design, PlayerDesigns))
+            assert_true(isinstance(obj.designs, PlayerDesigns))
             
-            ship = obj.design.currentShips
-            starbase = obj.design.currentStarbases
+            ship = obj.designs.currentShips
+            starbase = obj.designs.currentStarbases
 
             assert_true(isinstance(ship, dict))
             assert_true(isinstance(starbase, dict))

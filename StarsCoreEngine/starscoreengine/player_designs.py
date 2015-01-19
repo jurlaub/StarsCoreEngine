@@ -29,11 +29,12 @@ class PlayerDesigns(object):
 
     """
 
-    def __init__(self):
+    def __init__(self, shipCap = 12):
 
 
         self.currentShips = {}
         self.currentStarbases = {}
+        self.DesignCapacity = shipCap   # for ships. Starbases are the same?
 
 
 

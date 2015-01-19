@@ -161,6 +161,13 @@ class Game(object):
             tmpKey = ("player%s" % str(n))
             player = Player(race, self.technology)
 
+            # updating players design capacity
+            if self.game_variables['DesignCapacity'] != player.designs.DesignCapacity:
+
+                designCapacity = self.game_variables['DesignCapacity']
+                player.design.DesignCapacity = designCapacity
+
+
             tmpPlayers[tmpKey] = player
             n+=1
 
