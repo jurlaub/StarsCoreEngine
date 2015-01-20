@@ -149,6 +149,17 @@ def validDesignForProduction(newDesign, techTree, techLevel, PRT, LRT):
         False = Design is not valid for production
 
     """
+
+    # obtain hull
+    # does it meet techLevel?
+
+    # for each component, 
+    #       does it meet techLevel?
+    #       does the PRT meet the Component requirements
+    #       does the LRT meet the Component requirements
+
+    # return newDesign
+
     pass
 
 def isShipDesignValid(newDesign, techTree):
@@ -164,6 +175,21 @@ def isShipDesignValid(newDesign, techTree):
         False = Ship Design has an error
 
     """
+
+    # find newDesign Hull
+    # find hull in techTree
+
+    # find component slot in hull
+
+    # for each entry in newDesign.component
+    #   is compared to the hull.slot entry
+    #   the hull.slot  'objectType' value must match 
+    #   the component 'itemType' 
+    #   the component number must be less then or equal to the hull.slot "slotsAvalable" number
+    #   if any item is not a match return False
+
+    #return True
+
     pass
 
 

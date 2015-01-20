@@ -205,7 +205,7 @@ class Component(BaseTech):
     def __init__(self):
         super(Component, self).__init__()
 
-        self.itemID = None
+        self.itemID = None      # name of item
 
 
 
