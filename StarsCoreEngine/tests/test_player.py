@@ -345,6 +345,148 @@ class Test_ShipDesign(object):
         print("Test_ShipDesign: Teardown")
 
 
+    def test_testShip3(self):
+        """
+        Destroyer + DaddyLongLegs + E_cap + BearShield + Crobmnium + X-Ray + X-Ray + Manoeuvring jet
+
+        hull    = (iron, bor, germ, resources, mass)
+        HULL    = (15, 3, 5, 35, 30)
+        Engine  = (11, 0, 3, 12, 13)
+        E_cap   = ( 0, 0, 8,  5,  1)
+        shield  = ( 4, 0, 4,  8,  1)
+        armor   = ( 6, 0, 0, 13, 56)
+        X-Ray   = ( 0, 3, 0,  6,  1)
+        X-Ray   = ( 0, 3, 0,  6,  1)
+        Jet     = ( 5, 0, 5, 10, 35)
+        total   = (41, 9, 25, 95, 138)
+
+
+        fuelCapacity = (280)
+        armorDP = 200 + 75
+        shieldDP = 100
+        scanning = 0
+
+        range = 1
+        beamPower = 16 + 16
+        sapper = False
+        capacitor = [.1]
+        battleMovement = NOT TESTED YET!
+
+
+        """
+        # assert_equal(len(self.player.design.currentShips), 0)
+        # self.player.design.addDesign(self.testShip1, self.techTree)
+        # assert_equal(len(self.player.design.currentShips), 1)
+        target = self.testShip3
+        ship = ShipDesign(target, self.techTree) #self.testShip1['hullID'], self.testShip1, self.testShip1['designName']
+        
+        assert_equal(ship.iron, 41)
+        assert_equal(ship.bor, 9)
+        assert_equal(ship.germ, 25)
+        assert_equal(ship.resources, 95)
+        assert_equal(ship.mass, 138)
+
+        assert_equal(ship.normalScanRange, 0)
+        assert_equal(ship.armorDP, 275)
+        assert_equal(ship.fuelCapacity, 280)
+        assert_equal(ship.hasLRT, [])
+
+        assert_equal(ship.owner, None)      # owner is added when assigned to a players.design object
+        assert_equal(ship.isDesignLocked, False)
+        assert_equal(ship.designValidForProduction, False)
+
+        assert_equal(ship.hullID, target['hullID'])
+
+        # tech values are different
+        assert_equal(ship.energy, 10)         #should only show the max tech (not a sum)
+        assert_equal(ship.weapons, 3)        #should only show the max tech (not a sum)
+        assert_equal(ship.propulsion, 5)     #should only show the max tech (not a sum)
+        assert_equal(ship.construction, 3)   #should only show the max tech (not a sum)
+        assert_equal(ship.electronics, 7)    #should only show the max tech (not a sum)
+        assert_equal(ship.biotechnology, 0)  #should only show the max tech (not a sum)
+
+        assert_equal(ship.range, 1)
+        assert_equal(ship.beamPower, 32)
+        assert_equal(ship.sapper, False)
+        assert_equal(ship.capacitor, [.1])
+        assert_equal(ship.shieldDP, 100)
+
+
+
+        # other values should not change
+        assert_equal(ship.stealFromPlanets, False)
+        assert_equal(ship.terraform, False)
+        assert_equal(ship.warp10safe, False)
+
+        assert_equal(ship.fuelGeneration, None)
+        assert_equal(ship.cloaking, None)
+        assert_equal(ship.cargoCapacity, None)
+
+
+
+    def test_testShip2(self):
+        """
+        scout + quick jump 5 + fuel tank + Bat scanner
+
+        hull    = (iron, bor, germ, resources, mass)
+        scout   = (4,  2,  4, 10,  8)
+        qJump5  = (5,  0,  1,  3,  4)
+        fTank   = (6,  0,  0,  4,  3)
+        bScan   = (1,  0,  1,  1,  2)
+        total   = (16, 2,  6, 18, 17)
+
+
+        fuelCapacity = (50 + 250)
+        armorDP = 20
+        scanning = 0
+
+
+        """
+        # assert_equal(len(self.player.design.currentShips), 0)
+        # self.player.design.addDesign(self.testShip1, self.techTree)
+        # assert_equal(len(self.player.design.currentShips), 1)
+        target = self.testShip2
+
+        ship = ShipDesign(target, self.techTree) #self.testShip1['hullID'], self.testShip1, self.testShip1['designName']
+
+        assert_equal(ship.iron, 16)
+        assert_equal(ship.bor, 2)
+        assert_equal(ship.germ, 6)
+        assert_equal(ship.resources, 18)
+        assert_equal(ship.mass, 17)
+
+        assert_equal(ship.normalScanRange, 0)
+        assert_equal(ship.armorDP, 20)
+        assert_equal(ship.fuelCapacity, 300)
+        assert_equal(ship.hasLRT, [])
+
+        assert_equal(ship.owner, None)      # owner is added when assigned to a players.design object
+        assert_equal(ship.isDesignLocked, False)
+        assert_equal(ship.designValidForProduction, False)
+
+        assert_equal(ship.hullID, target['hullID'])
+
+        # tech values are different
+        assert_equal(ship.energy, 0)         #should only show the max tech (not a sum)
+        assert_equal(ship.weapons, 0)        #should only show the max tech (not a sum)
+        assert_equal(ship.propulsion, 0)     #should only show the max tech (not a sum)
+        assert_equal(ship.construction, 0)   #should only show the max tech (not a sum)
+        assert_equal(ship.electronics, 0)    #should only show the max tech (not a sum)
+        assert_equal(ship.biotechnology, 0)  #should only show the max tech (not a sum)
+
+
+        # other values should not change
+        assert_equal(ship.stealFromPlanets, False)
+        assert_equal(ship.terraform, False)
+        assert_equal(ship.warp10safe, False)
+
+        assert_equal(ship.fuelGeneration, None)
+        assert_equal(ship.cloaking, None)
+        assert_equal(ship.cargoCapacity, None)
+
+
+
+
     def test_testShip1(self):
         """
         scout + fuel mizer + fuel tank + Mole scanner
@@ -366,8 +508,8 @@ class Test_ShipDesign(object):
         # assert_equal(len(self.player.design.currentShips), 0)
         # self.player.design.addDesign(self.testShip1, self.techTree)
         # assert_equal(len(self.player.design.currentShips), 1)
-
-        ship = ShipDesign(self.testShip1, self.techTree) #self.testShip1['hullID'], self.testShip1, self.testShip1['designName']
+        target = self.testShip1
+        ship = ShipDesign(target, self.techTree) #self.testShip1['hullID'], self.testShip1, self.testShip1['designName']
 
         assert_equal(ship.iron, 20)
         assert_equal(ship.bor, 2)
@@ -384,7 +526,7 @@ class Test_ShipDesign(object):
         assert_equal(ship.isDesignLocked, False)
         assert_equal(ship.designValidForProduction, False)
 
-        assert_equal(ship.hullID, self.testShip1['hullID'])
+        assert_equal(ship.hullID, target['hullID'])
 
         # tech values are different
         assert_equal(ship.energy, 0)         #should only show the max tech (not a sum)
@@ -403,9 +545,6 @@ class Test_ShipDesign(object):
         assert_equal(ship.fuelGeneration, None)
         assert_equal(ship.cloaking, None)
         assert_equal(ship.cargoCapacity, None)
-
-
-
 
 
 

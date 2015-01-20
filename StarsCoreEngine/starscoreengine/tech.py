@@ -141,7 +141,8 @@ class CoreStats(object):
         self.mass = 0
         self.initiative = None
         self.cloaking = None
-        self.battleMovement = None
+        self.battleMovement = None  #  ['/', 'fi', 'fl', '1', '1/', '1fi', '1fl', '2', '2/', '2fi']
+                                    #  [.25, .5, .75, 1, 1.25 ... ]  # what is up with the use of 'fi'    
 
         # 20141228 ju -> It would be nice to have a consitent value across all compononets for fuel/cargo capacity
         # the capacity is a function of Hull and components. The currently stored value is a part of the specific design
@@ -169,8 +170,8 @@ class BaseTech(CoreStats):
         self.itemType = None        # should be one of the above objectTypes
 
 
-        self.special = None     
-        self.fuelGeneration = None
+        #self.special = None        # depreciated (probably)
+        self.fuelGeneration = None  # None or amount fuel generated per year
 
         # fuel & cargo in CoreStats
 
@@ -262,12 +263,13 @@ class Component(BaseTech):
         self.mineralKTPerYear = None
 
         #Electrical
-        self.tachyon = None
-        self.deflector = None
-        self.capacitor = None
+        self.jammer = []      # [10, ]
+        self.dampener = []    # [1, 1, 1]
+        self.tachyon = []       
+        self.capacitor = []       # [.1, .2, .1] = 2x energy cap & 1x Flux cap. records number of caps
 
         #Mechanical
-        self.beamDeflector = None
+        self.beamDeflector = []   # [.1, .1, .1]   3x defectors
         #self.movement = None
 
         # self.fuel = None
@@ -287,7 +289,7 @@ class Component(BaseTech):
         self.shieldDP = None
 
         #Terraform
-        self.terraformVariable = None
+        self.terraformVariable = []     # ['Temp', 'Grav', 'Rad']
         self.teffaformRate = None
 
         #Orbital

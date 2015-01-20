@@ -825,16 +825,16 @@ def items_electrical():
                               "iron" : 0, "bor" : 0, "germ" : 30, "ability" : 50},
             "Jammer 10" : {"energy" : 2, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                            "electronics" : 6, "biotechnology" : 0, "mass" : 1, "resources" : 6, 
-                           "iron" : 0, "bor" : 0, "germ" : 2, "ability" : 10},
+                           "iron" : 0, "bor" : 0, "germ" : 2, "jammer" : 10},
             "Jammer 20" : {"energy" : 4, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                            "electronics" : 10, "biotechnology" : 0, "mass" : 1, "resources" : 20, 
-                           "iron" : 1, "bor" : 0, "germ" : 5, "ability" : 20},
+                           "iron" : 1, "bor" : 0, "germ" : 5, "jammer" : 20},
             "Jammer 30" : {"energy" : 8, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                            "electronics" : 16, "biotechnology" : 0, "mass" : 1, "resources" : 20, 
-                           "iron" : 1, "bor" : 0, "germ" : 6, "ability" : 30},
+                           "iron" : 1, "bor" : 0, "germ" : 6, "jammer" : 30},
             "Jammer 50" : {"energy" : 16, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                            "electronics" : 22, "biotechnology" : 0, "mass" : 1, "resources" : 20, 
-                           "iron" : 2, "bor" : 0, "germ" : 7, "ability" : 50},
+                           "iron" : 2, "bor" : 0, "germ" : 7, "jammer" : 50},
             "Energy Capacitor" : {"energy" : 7, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                   "electronics" : 4, "biotechnology" : 0, "mass" : 1, "resources" : 5, 
                                   "iron" : 0, "bor" : 0, "germ" : 8, "capacitor" : 10},
@@ -843,13 +843,13 @@ def items_electrical():
                                 "iron" : 0, "bor" : 0, "germ" : 8, "capacitor" : 20},
             "Energy Dampener" : {"energy" : 14, "weapons" : 0, "propulsion" : 8, "construction" : 0, 
                                  "electronics" : 0, "biotechnology" : 0, "mass" : 2, "resources" : 50, 
-                                 "iron" : 5, "bor" : 10, "germ" : 0, "ability" : -4},
+                                 "iron" : 5, "bor" : 10, "germ" : 0, "dampener" : 1},
             "Tachyon Detector" : {"energy" : 8, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                   "electronics" : 14, "biotechnology" : 0, "mass" : 1, "resources" : 70, 
-                                  "iron" : 1, "bor" : 5, "germ" : 0, "ability" : -5},
+                                  "iron" : 1, "bor" : 5, "germ" : 0, "tachyon" : .5},
             "Anti-matter Generator" : {"energy" : 0, "weapons" : 12, "propulsion" : 0, "construction" : 0, 
                                        "electronics" : 0, "biotechnology" : 7, "mass" : 10, "resources" : 10, 
-                                       "iron" : 8, "bor" : 3, "germ" : 3, "ability" : 200}}
+                                       "iron" : 8, "bor" : 3, "germ" : 3, "fuelCapacity" : 200, 'fuelGeneration' : 50}}
 
 def items_engines():
     return {"Settler's Delight" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
@@ -1060,7 +1060,7 @@ def items_mechanical():
                               "iron" : 10, "bor" : 0, "germ" : 8, "ability" : 2},
             "Beam Deflector" : {"energy" : 6, "weapons" : 6, "propulsion" : 0, "construction" : 6, 
                                 "electronics" : 6, "biotechnology" : 0, "mass" : 1, "resources" : 8, 
-                                "iron" : 0, "bor" : 0, "germ" : 10, "ability" : -10}}
+                                "iron" : 0, "bor" : 0, "germ" : 10, "beamDeflector" : .1}}
 
 
 def items_minelayers():
