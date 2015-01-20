@@ -203,9 +203,9 @@ class Component(BaseTech):
 
     def __init__(self):
         super(Component, self).__init__()
-        # self.name = None
+
         self.itemID = None
-        #self.typeDict = {}   # unnecessary as the types are handled prior to instantiation
+
 
 
 
@@ -442,6 +442,14 @@ class Component(BaseTech):
 
 
 class Hull(BaseTech):
+    """
+
+    --TODO-- shipType classifcation. A hull has a basic type. Some types can be 
+    modified. Armed or Unarmed. Some have multiple, (Rogue hull could be an 
+        armed transport.) Some stay the same. 
+
+    """
+
 
     def __init__(self):
         super(Hull,self).__init__()
@@ -450,7 +458,7 @@ class Hull(BaseTech):
         # self.fuel = None           # amount of current fuel
         # self.fuelCapacity = 0      # max fuel transported in the ship
 
-        self.armorDP = 0
+        self.armorDP = 0            # hulls have innate armor values -> remove if armorDP moves from Component
         
         self.mineLayerDouble = False
         self.shipsHeal = False
@@ -485,12 +493,25 @@ class ShipDesign(Component):
 
     20150117 - ju - ShipDesign should validate itself
 
+
+
+
+    vals = {'designName': 'doomShip1', 
+            'hullID': 'Scout',
+            'component': {"B": {"itemID": "Fuel Mizer", "itemQuantity": 1 },
+                          "A": {"itemID": "Fuel Tank", "itemQuantity": 1},
+                          "C": {"itemID": "Mole Scanner", "itemQuantity": 1}
+                         }
+            }
+
+
     '''
 
-    def __init__(self, hullID):
+    def __init__(self, vals, techTree):  # vals is a dictionary defined above    
         super(ShipDesign,self).__init__()
-        self.designName = None  # user specified ship design name
-        self.designID = None
+        #self.techTree = techTree  # ?references universal tech tree? 
+        self.designName = vals['designName']  # user specified ship design name
+        self.designID = None      # ? -> not, better to track and auto assign.
         self.isDesignLocked = False   # once a player has built a design- it cannot change
         
         # restriction due to tech; PRT & LRT
@@ -499,13 +520,13 @@ class ShipDesign(Component):
         self.owner = None
 
 
-        self.hullID = hullID # points to a Hull object.  one for each type of ship.
+        self.hullID = vals['hullID'] # points to a Hull object.  one for each type of ship.
 
         # component holds the number of items assigned to a design
-        #self.component = {"A":["itemID", "itemID"], "B":["itemID", "itemID", "itemID"]}  # capacity
-        self.component = {  
-                "A":{"itemID": None, "itemQuantity": None }, 
-                "B":{"itemID": None, "itemQuantity": None}}  # capacity
+        # self.component = {  
+        #         "A":{"itemID": None, "itemQuantity": None }, 
+        #         "B":{"itemID": None, "itemQuantity": None}}  # capacity
+        self.component = vals['component']
 
         self.seen = [] #? necessary?
         
@@ -531,6 +552,25 @@ class ShipDesign(Component):
         self.deflector_effectiveness = None
         self.jamming_effectiveness = None
         self.computing_power = None
+
+
+        self.updateDesign(techTree)
+
+
+    def updateDesign(self, techTree):
+        """ collect and update all of the components and hull values. 
+        Input: self (hull + components), techTree
+        Output: all values of hull and components are updated in the ShipDesign.
+                (e.x. self.iron = sum(hull.iron + each_component.iron values))
+
+        
+        Design can be updated after instantiation, however, must a tech tree 
+        must be provided.
+
+        """
+
+
+        pass
 
 
     # def isShipDesignValid(self, techTree):

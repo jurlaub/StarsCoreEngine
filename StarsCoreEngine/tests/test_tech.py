@@ -22,7 +22,8 @@
 
 """
 """
-Purpose: To test the Standard Technology Tree. 
+Purpose:    To test the Standard Technology Tree. 
+
 
 """
 
@@ -39,6 +40,7 @@ from math import fabs
 from ..starscoreengine import *
 from ..starscoreengine.template import *
 from ..starscoreengine.template_tech import *
+# from ..starscoreengine.player_designs import PlayerDesigns
 
 
 
@@ -106,7 +108,11 @@ def test_hulls():
 
 # Test_CustomTechTree ?
 
-# class TestTech(unittest.TestCase):
+
+
+
+
+
 class Test_StandardTechnologyTemplate(object):
     """Test_StandardTechnologyTemplate examines the StandardGameTemplate.Technology
     to certify that the standard components are valid.  
@@ -134,7 +140,6 @@ class Test_StandardTechnologyTemplate(object):
 
         self.gameTemplate = StandardGameTemplate(self.testGameName, self.playerFileList, {"UniverseNumber0": { "Players": "2"}})
         self.techTree = self.gameTemplate.technology
-
 
 
     def teardown_class():
