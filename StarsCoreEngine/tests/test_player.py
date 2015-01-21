@@ -193,7 +193,7 @@ class TestPlayerDesign(object):
             
             t1 = designs.currentShips[self.testShip1["designName"]]
             tmpHull = self.testShip1['hullID']       
-            tmpScanner = 100  #Mole scanner normal range is 0
+            tmpScanner = [100]  #Mole scanner normal range is 0
             assert_not_in("NAS", player.LRT)
 
 
@@ -402,13 +402,13 @@ class Test_ShipDesign(object):
         assert_equal(ship.weapons, 3)        #should only show the max tech (not a sum)
         assert_equal(ship.propulsion, 5)     #should only show the max tech (not a sum)
         assert_equal(ship.construction, 3)   #should only show the max tech (not a sum)
-        assert_equal(ship.electronics, 7)    #should only show the max tech (not a sum)
+        assert_equal(ship.electronics, 4)    #should only show the max tech (not a sum)
         assert_equal(ship.biotechnology, 0)  #should only show the max tech (not a sum)
 
         assert_equal(ship.range, 1)
         assert_equal(ship.beamPower, 32)
         assert_equal(ship.sapper, False)
-        assert_equal(ship.capacitor, [.1])
+        assert_equal(ship.capacitor, [10])
         assert_equal(ship.shieldDP, 100)
 
 
@@ -419,8 +419,8 @@ class Test_ShipDesign(object):
         assert_equal(ship.warp10safe, False)
 
         assert_equal(ship.fuelGeneration, None)
-        assert_equal(ship.cloaking, None)
-        assert_equal(ship.cargoCapacity, None)
+        assert_equal(ship.cloaking, [0])
+        assert_equal(ship.cargoCapacity, 0)
 
 
 
@@ -455,7 +455,7 @@ class Test_ShipDesign(object):
         assert_equal(ship.resources, 18)
         assert_equal(ship.mass, 17)
 
-        assert_equal(ship.normalScanRange, 0)
+        assert_equal(ship.normalScanRange, [0])
         assert_equal(ship.armorDP, 20)
         assert_equal(ship.fuelCapacity, 300)
         assert_equal(ship.hasLRT, [])
@@ -481,8 +481,8 @@ class Test_ShipDesign(object):
         assert_equal(ship.warp10safe, False)
 
         assert_equal(ship.fuelGeneration, None)
-        assert_equal(ship.cloaking, None)
-        assert_equal(ship.cargoCapacity, None)
+        assert_equal(ship.cloaking, [0])
+        assert_equal(ship.cargoCapacity, 0)
 
 
 
@@ -517,7 +517,7 @@ class Test_ShipDesign(object):
         assert_equal(ship.resources, 34)
         assert_equal(ship.mass, 19)
 
-        assert_equal(ship.normalScanRange, 100)
+        assert_equal(ship.normalScanRange, [100])
         assert_equal(ship.armorDP, 20)
         assert_equal(ship.fuelCapacity, 300)
         assert_equal(ship.hasLRT, ["IFE"])
@@ -543,8 +543,8 @@ class Test_ShipDesign(object):
         assert_equal(ship.warp10safe, False)
 
         assert_equal(ship.fuelGeneration, None)
-        assert_equal(ship.cloaking, None)
-        assert_equal(ship.cargoCapacity, None)
+        assert_equal(ship.cloaking, [0])
+        assert_equal(ship.cargoCapacity, 0)
 
 
 

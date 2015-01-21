@@ -139,16 +139,16 @@ class CoreStats(object):
 
         # Some witty 'Mass' related grouping
         self.mass = 0
-        self.initiative = None
-        self.cloaking = None
-        self.battleMovement = None  #  ['/', 'fi', 'fl', '1', '1/', '1fi', '1fl', '2', '2/', '2fi']
+        self.initiative = 0
+        self.cloaking = 0
+        self.battleMovement = 0  #  ['/', 'fi', 'fl', '1', '1/', '1fi', '1fl', '2', '2/', '2fi']
                                     #  [.25, .5, .75, 1, 1.25 ... ]  # what is up with the use of 'fi'    
 
         # 20141228 ju -> It would be nice to have a consitent value across all compononets for fuel/cargo capacity
         # the capacity is a function of Hull and components. The currently stored value is a part of the specific design
 
-        self.fuelCapacity = None       # max fuel capacity
-        self.cargoCapacity = None   # max cargo capacity    
+        self.fuelCapacity = 0       # max fuel capacity
+        self.cargoCapacity = 0   # max cargo capacity    
 
 
 
@@ -243,7 +243,12 @@ class Component(BaseTech):
         self.warp10safe = False
 
 
-        #weapons
+        """ #weapons
+        All weapons attribues need to be redone. 
+
+        this is to cover random cases where a user may put varied ranged weapons
+        on a ship. 
+        """
         self.range = None
         self.beamPower = None
         self.sapper = False         # sapper = shield damage only
@@ -268,13 +273,13 @@ class Component(BaseTech):
         self.mineralKTPerYear = None
 
         #Electrical
-        self.jammer = []      # [10, ]
-        self.dampener = []    # [1, 1, 1]
-        self.tachyon = []       
-        self.capacitor = []       # [.1, .2, .1] = 2x energy cap & 1x Flux cap. records number of caps
+        self.jammer = None      # [10, ]
+        self.dampener = None    # [1, 1, 1]
+        self.tachyon = None       
+        self.capacitor = None       # [.1, .2, .1] = 2x energy cap & 1x Flux cap. records number of caps
 
         #Mechanical
-        self.beamDeflector = []   # [.1, .1, .1]   3x defectors
+        self.beamDeflector = None   # [.1, .1, .1]   3x defectors
         #self.movement = None
 
         # self.fuel = None
@@ -294,13 +299,21 @@ class Component(BaseTech):
         self.shieldDP = None
 
         #Terraform
-        self.terraformVariable = None # replace with value     # ['Temp', 'Grav', 'Rad']
+        self.terraformVariable = None # replace with value     
         self.teffaformRate = None
 
         #Orbital
         self.safeGateableMass = None
         self.safeGateableRange = None
         self.warpDriverSpeed = None
+
+
+        self.shipType = None 
+        self.mineLayerDouble = False
+        self.shipsHeal = False
+        self.ARPopulation = None
+        self.spaceDockSize = None
+
 
 
     # def updateElements(self):
@@ -465,13 +478,13 @@ class Hull(BaseTech):
         # self.fuel = None           # amount of current fuel
         # self.fuelCapacity = 0      # max fuel transported in the ship
 
-        self.armorDP = 0            # hulls have innate armor values -> remove if armorDP moves from Component
+        #self.armorDP = 0            # hulls have innate armor values -> remove if armorDP moves from Component
         
-        self.mineLayerDouble = False
-        self.shipsHeal = False
+        # self.mineLayerDouble = False
+        # self.shipsHeal = False
 
-        self.ARPopulation = None
-        self.spaceDockSize = None
+        # self.ARPopulation = None
+        # self.spaceDockSize = None
 
 
         # slot defines the hull component composition
@@ -604,11 +617,22 @@ class ShipDesign(Component):
         # if attribute is []:
         #       add
         skipKey = ('slot', 'component')
-        tLevel = ('energy', 'weapons', 'propulsion', 'construction', 'electronics', 'biotechnology')  
+        highestLevel = ('energy', 'weapons', 'propulsion', 'construction', 'electronics', 'biotechnology')          
+        oneList = ('fuelEfficiencies', 'itemType', 'range' )
+        #extendList = ()
+
+        eachInstanceList = ('jammer', 'dampener', 'tachyon', 'capacitor', 
+            'beamDeflector', 'cloaking', 'battleMovement', 'accuracy', 
+            'hitChance', 'normalScanRange', 'penScanRange', 'hasPRT', 'hasLRT', 'notLRT')
+
         
-        specialList = ('fuelEfficiencies', 'itemType', )
-        noneVals = (False, None, []) 
-        tmpVal = None     
+        sumItUpList = ('iron', 'bor', 'germ', 'resources', 'mass','fuelCapacity',
+         'cargoCapacity', 'initiative', 'armorDP', 'shieldDP', 'beamPower', 'sapper', 'minesSwept' )
+
+
+        
+        noneVals = ( None, []) 
+        tmpVal = False     
 
         for kee, obj in comp.__dict__.items():
 
@@ -622,39 +646,41 @@ class ShipDesign(Component):
             if kee in skipKey:        # these should not be changed
                 continue
             
-            elif kee in tLevel:
-                if int(self.__dict__[kee]) >= int(obj):   #  only want the highest tech level
+            elif kee in highestLevel:
+                if int(self.__dict__[kee]) > int(obj):   #  only want the highest tech level
                     continue
                 
                 tmpVal = int(obj)
 
-            elif kee in specialList:
-                if isinstance(obj, list):
+            elif kee in oneList:
+                if self.__dict__[kee] in ('Ships', 'Starbases'):
+                    continue
+                else:
                     tmpVal = obj
 
-
-
-
-            elif isinstance(self.__dict__[kee], list):      # for all other lists, extend the list to self
+            elif kee in eachInstanceList:     # for all other lists, extend the list to self
                 if isinstance(obj, list):
                     self.__dict__[kee].extend(obj)              # is this form valid?
                 else:
-                    self.__dict__[kee].append(obj)
+                    self.__dict__[kee] = [obj]
                 
                 continue
 
 
-            elif obj is True:
-                tmpVal = True
+            elif kee in sumItUpList:
 
-            else:
-                
                 if self.__dict__[kee] is None: 
                     self.__dict__[kee] = 0      # 
 
                 tmpVal = int(self.__dict__[kee]) + (int(obj) * int(quant))
-
-
+            
+            elif obj is True:
+                tmpVal = obj
+            
+            else:
+                #print(kee)
+                #print(obj)
+                continue
             self.__dict__[kee] = tmpVal
 
 
