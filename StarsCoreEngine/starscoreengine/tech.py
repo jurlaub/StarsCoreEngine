@@ -460,7 +460,7 @@ class Component(BaseTech):
 
 
 
-
+# --TODO-- change to inherit from Component?
 class Hull(BaseTech):
     """
 
