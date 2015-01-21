@@ -1050,16 +1050,16 @@ def items_mechanical():
                            "electronics" : 0, "biotechnology" : 0, "mass" : 3, "resources" : 4, 
                            "iron" : 6, "bor" : 0, "germ" : 0, "fuelCapacity" : 250},
             "Super Fuel Tank" : {"energy" : 6, "weapons" : 0, "propulsion" : 4, "construction" : 14, 
-                                 "electronics" : 0, "biotechnology" : 0, "mass" : 8, "resources" : 8, 
+                                 "electronics" : 0, "biotechnology" : 0, "mass" : 25, "resources" : 8, 
                                  "iron" : 8, "bor" : 0, "germ" : 0, "fuelCapacity" : 500},
             "Manoeuvring Jet" : {"energy" : 2, "weapons" : 0, "propulsion" : 3, "construction" : 0, 
-                                 "electronics" : 0, "biotechnology" : 0, "mass" : 5, "resources" : 10, 
+                                 "electronics" : 0, "biotechnology" : 0, "mass" : 35, "resources" : 10, 
                                  "iron" : 5, "bor" : 0, "germ" : 5, "ability" : 1},
             "Overthruster" : {"energy" : 5, "weapons" : 0, "propulsion" : 12, "construction" : 0, 
-                              "electronics" : 0, "biotechnology" : 0, "mass" : 5, "resources" : 20, 
+                              "electronics" : 0, "biotechnology" : 0, "mass" : 35, "resources" : 20, 
                               "iron" : 10, "bor" : 0, "germ" : 8, "ability" : 2},
             "Beam Deflector" : {"energy" : 6, "weapons" : 6, "propulsion" : 0, "construction" : 6, 
-                                "electronics" : 6, "biotechnology" : 0, "mass" : 1, "resources" : 8, 
+                                "electronics" : 6, "biotechnology" : 0, "mass" : 35, "resources" : 8, 
                                 "iron" : 0, "bor" : 0, "germ" : 10, "beamDeflector" : .1}}
 
 

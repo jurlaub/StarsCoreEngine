@@ -175,9 +175,9 @@ class BaseTech(CoreStats):
 
         # fuel & cargo in CoreStats
 
-        self.hasPRT = []
-        self.hasLRT = []
-        self.notLRT = []
+        self.hasPRT = []    # if empty, all can use. If not empty, only that value can use (all not appearing in list are excluded)
+        self.hasLRT = []    # must have LRT to produce, 
+        self.notLRT = []    # if it appears in this list, you are excluded
 
         # Tech Requirements
         self.energy = 0
@@ -200,6 +200,11 @@ class Component(BaseTech):
     'staticmethods' should capture the component attributes. They are used in the
     custom tech dialog.
 
+
+    All base attributes:
+    True / False : they must be False in this file
+
+
     """
 
     def __init__(self):
@@ -214,7 +219,7 @@ class Component(BaseTech):
         self.optimalSpeed = None
         self.freeSpeed = None
         self.safeSpeed = None   # still necessary with warp10safe?
-        self.radiation = False
+        self.radiation = False  
         
         # 20141228 ju -> seems like a nicer solution for warp to use fuelEfficiencies list
         # but the warp# seems more explicit. The question becomes - what is more readable and maintanable? 
@@ -234,7 +239,7 @@ class Component(BaseTech):
         
         #fuel & battleSpeed calculations easier to do if fuel efficiency is in a list, then can
         #just do eff = fuelEff[speed]
-        self.fuelEfficiencies = []  #  
+        self.fuelEfficiencies = None  #  replace with list
         self.warp10safe = False
 
 
@@ -289,7 +294,7 @@ class Component(BaseTech):
         self.shieldDP = None
 
         #Terraform
-        self.terraformVariable = []     # ['Temp', 'Grav', 'Rad']
+        self.terraformVariable = None # replace with value     # ['Temp', 'Grav', 'Rad']
         self.teffaformRate = None
 
         #Orbital
@@ -509,26 +514,30 @@ class ShipDesign(Component):
 
     '''
 
-    def __init__(self, vals, techTree):  # vals is a dictionary defined above    
+    def __init__(self, vals, techTree):                      # vals is a dictionary described in notes above    
         super(ShipDesign,self).__init__()
-        #self.techTree = techTree  # ?references universal tech tree? 
-        self.designName = vals['designName']  # user specified ship design name
-        self.designID = None      # ? -> not, better to track and auto assign.
-        self.isDesignLocked = False   # once a player has built a design- it cannot change
         
-        # restriction due to tech; PRT & LRT
+        #self.techTree = techTree  # ?references universal tech tree? 
+
+        self.designName = vals['designName']    # user specified ship design name
+        self.designID = None                     # ? -> not, better to track and auto assign.
+        self.owner = None        
+
+        self.isDesignLocked = False             # once a player has built a design- it cannot change
         self.designValidForProduction = False   
 
-        self.owner = None
+
+        self.hullID = vals['hullID'] # points to a Hull object ID.  one for each type of ship.
 
 
-        self.hullID = vals['hullID'] # points to a Hull object.  one for each type of ship.
-
+        # ------------------------- self.component --------------------------
         # component holds the number of items assigned to a design
         # self.component = {  
         #         "A":{"itemID": None, "itemQuantity": None }, 
         #         "B":{"itemID": None, "itemQuantity": None}}  # capacity
         self.component = vals['component']
+        # --------------------------------------------------------------------- 
+
 
         self.seen = [] #? necessary?
         
@@ -570,9 +579,84 @@ class ShipDesign(Component):
         must be provided.
 
         """
+        
+        hullObj = techTree[self.hullID]
+
+        self.tally(1, hullObj)              # there can be only one... (1) Hull :)
+
+        for k1, obj1 in self.component.items():
+
+            componentName = obj1['itemID']
+            componentObj = techTree[componentName]
+
+            componentQuant = obj1['itemQuantity']
 
 
-        pass
+            self.tally(componentQuant, componentObj)
+
+        
+
+    def tally(self, quant, comp ):
+
+        # tech levels = highest number not sum
+        # True/False
+        # if attribute starts with None need to 0 out.? 
+        # if attribute is []:
+        #       add
+        skipKey = ('slot', 'component')
+        tLevel = ('energy', 'weapons', 'propulsion', 'construction', 'electronics', 'biotechnology')  
+        
+        specialList = ('fuelEfficiencies', 'itemType', )
+        noneVals = (False, None, []) 
+        tmpVal = None     
+
+        for kee, obj in comp.__dict__.items():
+
+            """ obj either contain noneVals or are trumped by a value (True, a number, not None, a non empty object) """     
+            # if obj is 0:
+            #     obj = '0'
+
+            if obj in noneVals:         
+                continue
+            
+            if kee in skipKey:        # these should not be changed
+                continue
+            
+            elif kee in tLevel:
+                if int(self.__dict__[kee]) >= int(obj):   #  only want the highest tech level
+                    continue
+                
+                tmpVal = int(obj)
+
+            elif kee in specialList:
+                if isinstance(obj, list):
+                    tmpVal = obj
+
+
+
+
+            elif isinstance(self.__dict__[kee], list):      # for all other lists, extend the list to self
+                if isinstance(obj, list):
+                    self.__dict__[kee].extend(obj)              # is this form valid?
+                else:
+                    self.__dict__[kee].append(obj)
+                
+                continue
+
+
+            elif obj is True:
+                tmpVal = True
+
+            else:
+                
+                if self.__dict__[kee] is None: 
+                    self.__dict__[kee] = 0      # 
+
+                tmpVal = int(self.__dict__[kee]) + (int(obj) * int(quant))
+
+
+            self.__dict__[kee] = tmpVal
+
 
 
     # def isShipDesignValid(self, techTree):

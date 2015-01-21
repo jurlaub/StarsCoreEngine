@@ -29,20 +29,28 @@ class PlayerDesigns(object):
 
     """
 
-    def __init__(self, shipCap = 12):
+    def __init__(self, raceName, shipCap = 12):
 
+        self.DesignCapacity = shipCap   # for ships. Starbases are the same?
+        self.raceName = raceName
 
         self.currentShips = {}
         self.currentStarbases = {}
-        self.DesignCapacity = shipCap   # for ships. Starbases are the same?
+        
+
 
 
 
     def addDesign(self, newDesign, techTree):
         """
-        Input: dict = { shipName, hullID, components, }
-        Output: instantiates a new ShipDesign (from tech) and adds to the 
-        appropriate dictionary.
+        Input: newDesign = { shipName, hullID, components, }
+        Output: 
+            > instantiates a new ShipDesign (from tech) and adds to the 
+            appropriate dictionary. 
+            > if name already exists, existing design stays and method returns None
+            > if itemType is not 'Ships' or 'Starbases' method returns None
+            > if capacity is > DesignCapacity, method returns None
+
 
         Current name uses shipName. May need a Unique ID.
 
@@ -50,21 +58,53 @@ class PlayerDesigns(object):
 
         """
 
-        # check newDesign.hull for starbase or ship type
-        # check that capacity has not been reached
-        # check that name is not a duplicate
-
-        # validate Technology level?  = No -> should be assessed at xFile Import level
-        # validate PRT/LRT access?  = No   -> should be assessed at xFile Import level
-        # ShipDesign Validates itself? = No   -> should be assessed at xFile Import level
-
-
-        # Instantiate ShipDesign  
-        # update values
         
-        # add to appropriate currentDict
+        tmpName = newDesign['designName']
 
-        pass
+        tmpHull = newDesign['hullID']
+        tmpType = techTree[tmpHull].itemType    # should be Ships or Starbases
+
+
+        if tmpType not in ('Ships', 'Starbases'):
+            # raise TypeError("Attempted to add a design, but the design did not specify 'Ships' or 'Starbases'")
+            return None
+
+
+        elif tmpType == 'Ships':
+            if len(self.currentShips) >= int(self.DesignCapacity):
+                # Log message
+                return None
+            
+            elif newDesign['designName'] in self.currentShips:
+                # Log message
+                return None
+
+            x = self.currentShips
+
+
+        elif tmpType == 'Starbases':
+            if len(self.currentStarbases) >= int(self.DesignCapacity):
+                # Log message
+                return None
+            elif newDesign['designName'] in self.currentStarbases:
+                # Log message
+                return None
+
+            x = self.currentStarbases
+
+
+        else:                # don't expect this to be reached
+            print("Error in PlayerDesigns.addDesign()")
+            return None
+
+
+
+        newObject = ShipDesign(newDesign, techTree) 
+        newObject.owner = self.raceName      
+        
+        x[tmpName] = newObject
+
+        
 
     @staticmethod
     def validDesignForProduction(newDesign, techTree, techLevel, PRT, LRT):

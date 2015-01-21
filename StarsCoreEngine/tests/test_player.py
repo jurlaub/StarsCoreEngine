@@ -192,7 +192,7 @@ class TestPlayerDesign(object):
             assert_in(self.testShip1["designName"], designs.currentShips) #assert ship now in design
             
             t1 = designs.currentShips[self.testShip1["designName"]]
-            tmpHull = self.testShip1[hullID]       
+            tmpHull = self.testShip1['hullID']       
             tmpScanner = 100  #Mole scanner normal range is 0
             assert_not_in("NAS", player.LRT)
 
@@ -319,7 +319,7 @@ class Test_ShipDesign(object):
                             } }
 
 
-        self.testShip3 = {'designName': 'doomShip2', 
+        self.testShip3 = {'designName': 'doomShip3', 
                           'designID': 2,
                           'hullID': 'Destroyer',
                           'component': {"G": {"itemID": "Daddy Long Legs 7", "itemQuantity": 1 },
@@ -330,7 +330,7 @@ class Test_ShipDesign(object):
                                         "B": {"itemID": "X-Ray Laser", "itemQuantity": 1},
                                         "A": {"itemID": "Manoeuvring Jet", "itemQuantity": 1}
                                                                     } }
-        self.testShip4 = {'designName': 'doomShip3', 
+        self.testShip4 = {'designName': 'doomShip4', 
                           'designID': 3,
                           'hullID': "Privateer",
                           'component': {"A": {"itemID": "Bear Neutrino Barrier", "itemQuantity": 2 },
@@ -355,10 +355,10 @@ class Test_ShipDesign(object):
         E_cap   = ( 0, 0, 8,  5,  1)
         shield  = ( 4, 0, 4,  8,  1)
         armor   = ( 6, 0, 0, 13, 56)
-        X-Ray   = ( 0, 3, 0,  6,  1)
-        X-Ray   = ( 0, 3, 0,  6,  1)
+        X-Ray   = ( 0, 6, 0,  6,  1)
+        X-Ray   = ( 0, 6, 0,  6,  1)
         Jet     = ( 5, 0, 5, 10, 35)
-        total   = (41, 9, 25, 95, 138)
+        total   = (41, 15, 25, 95, 138)
 
 
         fuelCapacity = (280)
@@ -381,12 +381,12 @@ class Test_ShipDesign(object):
         ship = ShipDesign(target, self.techTree) #self.testShip1['hullID'], self.testShip1, self.testShip1['designName']
         
         assert_equal(ship.iron, 41)
-        assert_equal(ship.bor, 9)
+        assert_equal(ship.bor, 15)
         assert_equal(ship.germ, 25)
         assert_equal(ship.resources, 95)
         assert_equal(ship.mass, 138)
 
-        assert_equal(ship.normalScanRange, 0)
+        assert_equal(ship.normalScanRange, None)
         assert_equal(ship.armorDP, 275)
         assert_equal(ship.fuelCapacity, 280)
         assert_equal(ship.hasLRT, [])
@@ -430,10 +430,10 @@ class Test_ShipDesign(object):
 
         hull    = (iron, bor, germ, resources, mass)
         scout   = (4,  2,  4, 10,  8)
-        qJump5  = (5,  0,  1,  3,  4)
+        qJump5  = (3,  0,  1,  3,  4)
         fTank   = (6,  0,  0,  4,  3)
         bScan   = (1,  0,  1,  1,  2)
-        total   = (16, 2,  6, 18, 17)
+        total   = (14, 2,  6, 18, 17)
 
 
         fuelCapacity = (50 + 250)
@@ -449,7 +449,7 @@ class Test_ShipDesign(object):
 
         ship = ShipDesign(target, self.techTree) #self.testShip1['hullID'], self.testShip1, self.testShip1['designName']
 
-        assert_equal(ship.iron, 16)
+        assert_equal(ship.iron, 14)
         assert_equal(ship.bor, 2)
         assert_equal(ship.germ, 6)
         assert_equal(ship.resources, 18)
@@ -496,7 +496,7 @@ class Test_ShipDesign(object):
         fMizer  = (8,  0,  0, 11,  6)
         fTank   = (6,  0,  0,  4,  3)
         mScan   = (2,  0,  2,  9,  2)
-        total   = (20, 2,  8, 34, 19)
+        total   = (20, 2,  6, 34, 19)
 
 
         fuelCapacity = (50 + 250)
@@ -513,14 +513,14 @@ class Test_ShipDesign(object):
 
         assert_equal(ship.iron, 20)
         assert_equal(ship.bor, 2)
-        assert_equal(ship.germ, 8)
+        assert_equal(ship.germ, 6)
         assert_equal(ship.resources, 34)
         assert_equal(ship.mass, 19)
 
         assert_equal(ship.normalScanRange, 100)
         assert_equal(ship.armorDP, 20)
         assert_equal(ship.fuelCapacity, 300)
-        assert_equal(ship.hasLRT, "IFE")
+        assert_equal(ship.hasLRT, ["IFE"])
 
         assert_equal(ship.owner, None)      # owner is added when assigned to a players.design object
         assert_equal(ship.isDesignLocked, False)
