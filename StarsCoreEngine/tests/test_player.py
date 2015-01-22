@@ -219,8 +219,25 @@ class TestPlayerDesign(object):
         # add to appropriate currentDict
 
         """
+
+        designs = self.player1.designs
+        maxDesigns = 19
+
+        shipCount = len(designs.currentShips)
+
+        for i in range(0, maxDesigns):
+            tmpName = self.testShip1['designName']
+            tmpName = tmpName + str(i)
+            self.testShip1['designName'] = tmpName
+
+            designs.addDesign(self.testShip1, self.techTree)
+
+        assert_equal(designs.DesignCapacity, len(designs.currentShips))
+
+
+
         
-        pass
+        
 
     def test_AddDesign_DuplicateEntries(self):
         """PlayerDesigns.AddDesign unit tests
@@ -235,8 +252,26 @@ class TestPlayerDesign(object):
         # add to appropriate currentDict
 
         """
+        designs = self.player1.designs
+
+        shipCount = len(designs.currentShips)
+        starbaseCount = len(designs.currentStarbases)
+
+        assert_not_in(self.testShip1['designName'], designs.currentShips)
+
+
+        designs.addDesign(self.testShip1, self.techTree)  
+        assert_in(self.testShip1['designName'], designs.currentShips)
+        assert_equal(len(designs.currentShips), shipCount + 1)
+
+        designs.addDesign(self.testShip1, self.techTree) 
+
+        assert_equal(len(designs.currentShips), shipCount + 1)
+        assert_equal(len(designs.currentStarbases), starbaseCount)
+
+
         
-        pass
+        
 
 
     def test_RemoveDesign(self):
