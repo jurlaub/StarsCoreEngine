@@ -275,7 +275,32 @@ class TestPlayerDesign(object):
 
 
     def test_RemoveDesign(self):
-        pass
+        """RemoveDesign 
+        Given any design - remove it from the list. (other remove parts are called elsewhere)
+        if a design does not exist - return None
+
+        """
+        designs = self.player1.designs
+        shipName = self.testShip1['designName']
+
+        assert_not_in(self.testShip1['designName'], designs.currentShips)
+        shipCount = len(designs.currentShips)
+
+        designs.addDesign(self.testShip1, self.techTree) 
+        secondCount = len(designs.currentShips)
+
+        assert_equal(shipCount + 1, secondCount)
+        assert_true(shipName in designs.currentShips)
+
+
+        designs.removeDesign(shipName)
+
+        
+        assert_equal(shipCount,len(designs.currentShips) )
+        assert_not_in(shipCount, designs.currentShips)
+
+
+
 
     def test_TransferDesign(self):
         pass

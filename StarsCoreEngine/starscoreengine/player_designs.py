@@ -127,7 +127,7 @@ class PlayerDesigns(object):
 
 
 
-    def removeDesign(self):
+    def removeDesign(self, designName):
         """ 
         Removing design can come in two ways.
         1) all built ships in game have been scrapped or destroyed
