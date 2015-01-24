@@ -51,6 +51,7 @@ class PlayerDesigns(object):
             > if itemType is not 'Ships' or 'Starbases' method returns None
             > if capacity is > DesignCapacity, method returns None
 
+        Starbase and Ship names must be Unique 
 
         Current name uses shipName. May need a Unique ID.
 
@@ -69,13 +70,16 @@ class PlayerDesigns(object):
             # raise TypeError("Attempted to add a design, but the design did not specify 'Ships' or 'Starbases'")
             return None
 
+        elif newDesign['designName'] in self.currentShips:          #designName must be unique in both ships and starbases
+            # Log message
+            return None
+
+        elif newDesign['designName'] in self.currentStarbases:      #designName must be unique in both ships and starbases
+            # Log message
+            return None
 
         elif tmpType == 'Ships':
             if len(self.currentShips) >= int(self.DesignCapacity):
-                # Log message
-                return None
-            
-            elif newDesign['designName'] in self.currentShips:
                 # Log message
                 return None
 
@@ -86,9 +90,7 @@ class PlayerDesigns(object):
             if len(self.currentStarbases) >= int(self.DesignCapacity):
                 # Log message
                 return None
-            elif newDesign['designName'] in self.currentStarbases:
-                # Log message
-                return None
+
 
             x = self.currentStarbases
 
