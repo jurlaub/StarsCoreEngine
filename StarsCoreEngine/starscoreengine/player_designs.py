@@ -161,7 +161,16 @@ class PlayerDesigns(object):
         Future: Possible that deleted design will end up in a 'history' dictionary
 
         """
-        pass
+        if designName in self.currentShips:
+            self.currentShips.pop(designName)
+        elif designName in self.currentStarbases:
+            self.currentStarbases.pop(designName)
+        
+        else:
+            print("Design not present")
+
+
+
 
     def transferDesign(self):
         """
