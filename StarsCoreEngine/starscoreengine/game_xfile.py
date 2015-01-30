@@ -28,9 +28,12 @@ separated from game_utility.py specifically because the x file relies on the
 client to correctly format the data. The x file format should be clearly 
 described in this file and accurately followed by a client.
 
-game_xfile.py methods should not depend on being used by the command line. 
+game_xfile.py methods are the x file interface. They should not depend on being 
+used by the command line. The StarsCoreEngine could be included as a part of
+another project where the game_xfile.py methods are called directly.
 
-
+game_xfile.py should provide a means for validating an x file from the command 
+line.
 
 
 """
@@ -52,7 +55,80 @@ RemoveShipDesign : [ShipDesign number],
 """
 
 
+def xfile_TEMPLATE():
+    """ xfile_TEMPLATE is the standard for xfiles. 
 
+    If the x file requires changes. Change this method. Then run the tests. 
+    (Tests should break if keys are revised or value types are incompatiable)
+
+
+    """
+    x = {
+        'game_name' : "game_name",
+        'fileType': "xFile",
+        'playerName' : 'playerName',
+        'currentYear' : 'submissionYear',
+        
+
+        'NewShipDesign' : 
+
+                        {'NewDesign_1' : 
+                            {
+                                'designName': 'doomShip1', 
+                                'designID': 0,
+                                'hullID': 'Scout',
+                                'component': 
+                                    {
+                                        "B": {"itemID": "Fuel Mizer", "itemQuantity": 1 },
+                                        "A": {"itemID": "Fuel Tank", "itemQuantity": 1},
+                                        "C": {"itemID": "Mole Scanner", "itemQuantity": 1}
+                                    } 
+                            },
+                        'NewDesign_2' : 
+                            {
+                                'designName': 'doomShip2', 
+                                'designID': 1,
+                                'hullID': 'Scout',
+                                'component': 
+                                    {
+                                        "B": {"itemID": "Fuel Mizer", "itemQuantity": 1 },
+                                        "A": {"itemID": "Fuel Tank", "itemQuantity": 1},
+                                        "C": {"itemID": "Mole Scanner", "itemQuantity": 1}
+                                    } 
+                            }                        
+
+                        },
+        'RemoveShipDesign' : ['ShipDesign ID', 'ShipDesign ID', 'ShipDesign ID'],
+                                        
+        'ProductionQ' : 
+            {
+                'player.colonies.ID' : 
+                    { 
+                        'productionOrder' = [ ],
+                        'productionItems' = { },  
+                    },
+                'player.colonies.ID' : 
+                    {
+                        'productionOrder' = [ ],
+                        'productionItems' = { },
+                    },
+                'player.colonies.ID' : 
+                    {
+                        'productionOrder' = [ ],
+                        'productionItems' = { },
+                    }
+
+            }
+
+
+
+
+
+    }
+
+
+
+    return x
 
 
 # def xFileController():
@@ -195,7 +271,8 @@ def isShipDesignValid(newDesign, techTree):
 
 def xFileIsValid(xfile):
     """
-    This method tests that the xfile containes the correct objects. 
+    This method tests that the xfile containes the correct objects/keys and 
+    values match expected types. 
 
     """
     pass
