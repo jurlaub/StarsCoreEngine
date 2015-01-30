@@ -133,9 +133,9 @@ Validate Ship Designs.
 
 
 
-def validDesignForProduction(newDesign, techTree, techLevel, PRT, LRT):
+def validDesignForProduction(newDesign, techTree, playerObj):
     """ 
-    input: design (ShipDesign),techTree, techLevel, PRT, LRT,
+    input: design (ShipDesign),techTree, playerObj(techLevel, PRT, LRT)
             
             calls PlayerDesigns.validDesignForProduction()
                 which validates: 
@@ -191,5 +191,15 @@ def isShipDesignValid(newDesign, techTree):
     #return True
 
     pass
+
+
+def xFileIsValid(xfile):
+    """
+    This method tests that the xfile containes the correct objects. 
+
+    """
+    pass
+
+
 
 
