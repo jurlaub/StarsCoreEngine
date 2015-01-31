@@ -104,18 +104,18 @@ def xfile_TEMPLATE():
             {
                 'player.colonies.ID' : 
                     { 
-                        'productionOrder' = [ ],
-                        'productionItems' = { },  
+                        'productionOrder' : [ ],
+                        'productionItems' : { },  
                     },
                 'player.colonies.ID' : 
                     {
-                        'productionOrder' = [ ],
-                        'productionItems' = { },
+                        'productionOrder' : [ ],
+                        'productionItems' : { },
                     },
                 'player.colonies.ID' : 
                     {
-                        'productionOrder' = [ ],
-                        'productionItems' = { },
+                        'productionOrder' : [ ],
+                        'productionItems' : { },
                     }
 
             }
