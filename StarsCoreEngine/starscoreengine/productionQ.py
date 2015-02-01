@@ -150,14 +150,16 @@ class ProductionQ(object):
 
 
         """
-        iron = self.colony.surfaceIron
-        bor  = self.colony.surfaceBor
-        germ = self.colony.surfaceGerm
+        iron = self.colony.planet.surfaceIron
+        bor  = self.colony.planet.surfaceBor
+        germ = self.colony.planet.surfaceGerm
         res = 0
         if self.ExcludedFromResearch:
             res  = self.colony.totalResources
         else:
-            res  = self.colony.totalResources - Research.colonyResearchTax(self.colony)
+            # now I've thought about it, this won't update the yearlyResearchResources as it isn't an
+            # instance of research, only the class?
+            res  = Research.colonyResourcesAfterTax(self.colony)
 
         # handle the produceAutoMineral setting?
 
@@ -179,8 +181,20 @@ class ProductionQ(object):
                             self.produceShip()
                         elif line["itemType"] == 'Starbase':
                             self.produceStarbase()
-                            
-                        #--TODO-- similar elifs for rest
+                        elif line["itemType"] == 'Scanner':
+                            self.producePlanetaryInstallation()
+                        elif line["itemType"] == 'Defenses':
+                            self.producePlanetaryInstallation()
+                        elif line["itemType"] == 'Mines':
+                            self.producePlanetUpgrades()
+                        elif line["itemType"] == 'Factories':
+                            self.producePlanetUpgrades()
+                        elif line["itemType"] == 'Terraform':
+                            self.producePlanetUpgrades()
+                        elif line["itemType"] == 'Minerals':
+                            self.producePlanetUpgrades()
+                        elif line["itemType"] == 'Special':
+                            self.produceSpecial()
 
                         #remove from Q
                         line["quantity"] -= 1
@@ -213,8 +227,8 @@ class ProductionQ(object):
         self.colony.surfaceIron = iron
         self.colony.surfaceBor = bor
         self.colony.surfaceGerm = germ
+        Research.yearlyResearchResources += res
         
-        #--TODO-- if Q blocked then left over res should be put into research, currently prodQ doesn't tell colony how much it has leftover
         
     def updateQCosts(self):
         """
@@ -266,6 +280,7 @@ class ProductionQ(object):
     def produceStarbase(self):
         """produces starbase, instantiates Token, assigns to Colony. """
         pass
+
 
     def producePlanetaryInstallation(self):
         """
