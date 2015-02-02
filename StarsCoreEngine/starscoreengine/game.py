@@ -159,7 +159,8 @@ class Game(object):
         n = 0
         for race in raceObjectList:
             tmpKey = ("player%s" % str(n))
-            player = Player(race, self.technology)
+            player = Player(race, n, self.technology)
+            #player.playerNumber = n
 
             # updating players design capacity
             if self.game_variables['DesignCapacity'] != player.designs.DesignCapacity:

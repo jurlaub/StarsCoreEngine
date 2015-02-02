@@ -85,9 +85,11 @@ class Player(object):
 
     """
 
-    def __init__(self, raceData, techTree = {}):
+    def __init__(self, raceData, playerNumber, techTree = {}):
         self.raceName = raceData.raceName
         self.raceNamePlural = raceData.raceName
+        self.playerNumber = playerNumber     # for accessing and saving x file
+        self.xfilestatus = []     # list of 'error' strings
 
         self.PRT = raceData.PRT     # apply PRT values after player variables set,
         self.LRT = raceData.LRT   # apply LRT values after player is updated with PRT variables

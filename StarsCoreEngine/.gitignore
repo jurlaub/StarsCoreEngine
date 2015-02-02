@@ -46,7 +46,7 @@ docs/_build/
 
 # Stars Core Engine files
 *.hst
-*.x*
+#*.x*
 *.m*
 *.xy
 *.json

@@ -35,12 +35,15 @@ a means of acceptance tests.
 
 """
 
+import os
 
 from nose.tools import with_setup, assert_equal, assert_not_equal, \
  assert_raises, raises, assert_in, assert_not_in, assert_true, assert_false
 
 
 from ..starscoreengine.game_xfile import *
+from ..starscoreengine.game import Game
+from ..starscoreengine.template import *
 
 
 
@@ -62,5 +65,88 @@ class TestXFileTemplate(object):
     def test_PlayerValues(self):
         pass
 
+
+class TestXFileController(object):
+
+    # create xFileTestFile for class
+
+    # teardown xFileTestFile 
+
+
+    def setup(self):
+        print("TestXFileController: Setup")
+
+        self.playerFileList = ['Wolfbane', 'Bunnybane']
+        self.testGameName = 'xFileTestFile'
+        self.playerXFile0 = 'xFileTestFile.x0'
+        self.playerXFile1 = 'xFileTestFile.x1'
+        #self.testCustomSetup = {"UniverseNumber0": { "Players": "2"}}
+
+        self.gameTemplate = StandardGameTemplate(self.testGameName, self.playerFileList, {"UniverseNumber0": { "Players": "2"}})
+        self.game = Game(self.gameTemplate)
+        #self.player1 = self.game.players['player1']
+        
+
+
+    def teardown(self):
+        print("TestXFileController: Teardown")
+        try:
+            tmpFileName = self.testGameName + '_TechTreeDataError'
+            cwd = os.getcwd()
+            tmpFileName = r"%s/%s"% (cwd, tmpFileName)
+            if os.path.isfile(tmpFileName):
+                os.remove(tmpFileName)
+        except IOError as e:
+            print("Unable to remove file: %s" % (tmpFileName))
+
+
+    def test_testForXFile0(self):
+        fileName = self.playerXFile0
+
+        print("Need xfile test file in ../StarsCoreEngine/%s:" % (self.testGameName + '.x0'))
+        assert_true(os.path.isfile(fileName))
+    
+    def test_testForXFile1(self):
+        fileName = self.playerXFile1
+
+        print("xfile test file .x1 should not exist ../StarsCoreEngine/%s:" % (self.testGameName + '.x1'))
+        assert_false(os.path.isfile(fileName))      
+
+
+    def test_xfileController(self):
+        self.game.year  = 2402
+
+        xFileController(self.game)
+
+        assert_true(False)
+
+    def test_xfileController_Handles_IncorrectYear(self):
+        self.game.year  = 2499
+
+        xFileController(self.game)
+
+        for player in self.game.players.values():
+            m = player.xfilestatus
+
+            assert_equal(len(m), 1)
+            msg = m.pop()
+            print("test: %s" % msg)
+            assert_in(str(self.game.year), msg)
+            # assert_in('Not current year', msg)      # omitted -> only .x0 file
+            
+
+    def test_xfileController_Handles_False_xfileName(self):
+        falseGameName = 'ChillyOnWrongMountain'
+        self.game.game_name = falseGameName
+
+        xFileController(self.game)
+
+        for player in self.game.players.values():
+            m = player.xfilestatus
+
+            assert_equal(len(m), 1)
+            msg = m.pop()
+            #print("test: %s" % msg)
+            assert_in('file unable to load', msg)       
 
 

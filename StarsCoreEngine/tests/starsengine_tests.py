@@ -380,7 +380,7 @@ class TestColonyPlanets(object):
         self.playerKey = 'player1'
         self.raceName = 'Wolfbane'
         self.RaceData = Race(self.raceName)
-        self.player = Player(self.RaceData, {})
+        self.player = Player(self.RaceData, 0, {})
         self.playerCenterHab = (self.RaceData.habGravityCenter, 
                                 self.RaceData.habTempCenter, 
                                 self.RaceData.habRadCenter)

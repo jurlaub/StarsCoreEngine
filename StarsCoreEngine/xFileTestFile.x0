@@ -1,0 +1,62 @@
+{
+        "game_name" : "xFileTestFile",
+        "fileType": "xFile",
+        "playerName" : "Wolfbane",
+        "currentYear" : "2402",
+        
+
+        "NewShipDesign" : 
+
+                        {"NewDesign_1" : 
+                            {
+                                "designName": "doomShip1", 
+                                "designID": 0,
+                                "hullID": "Scout",
+                                "component": 
+                                    {
+                                        "B": {"itemID": "Fuel Mizer", "itemQuantity": 1 },
+                                        "A": {"itemID": "Fuel Tank", "itemQuantity": 1},
+                                        "C": {"itemID": "Mole Scanner", "itemQuantity": 1}
+                                    } 
+                            },
+                        "NewDesign_2" : 
+                            {
+                                "designName": "doomShip2", 
+                                "designID": 1,
+                                "hullID": "Scout",
+                                "component": 
+                                    {
+                                        "B": {"itemID": "Fuel Mizer", "itemQuantity": 1 },
+                                        "A": {"itemID": "Fuel Tank", "itemQuantity": 1},
+                                        "C": {"itemID": "Mole Scanner", "itemQuantity": 1}
+                                    } 
+                            }                        
+
+                        },
+        "RemoveShipDesign" : ["ShipDesign ID", "ShipDesign ID", "ShipDesign ID"],
+                                        
+        "ProductionQ" : 
+            {
+                "player.colonies.ID" : 
+                    { 
+                        "productionOrder" : [ ],
+                        "productionItems" : { }  
+                    },
+                "player.colonies.ID" : 
+                    {
+                        "productionOrder" : [ ],
+                        "productionItems" : { }
+                    },
+                "player.colonies.ID" : 
+                    {
+                        "productionOrder" : [ ],
+                        "productionItems" : { }
+                    }
+
+            }
+
+
+
+
+
+    }

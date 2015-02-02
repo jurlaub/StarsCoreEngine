@@ -57,7 +57,7 @@ class TestPlayerObject(object):
         print("TestPlayerObject: Setup")
         self.raceName = 'Wolfbane'
         self.RaceData = Race(self.raceName)
-        self.player = Player(self.RaceData, {})
+        self.player = Player(self.RaceData, 1, {})
 
 
     def teardown(self):
@@ -130,9 +130,7 @@ class TestPlayerDesign(object):
 
 
 
-        #self.raceName = 'Wolfbane'
-        #self.RaceData = Race(self.raceName)
-        #self.player = Player(self.RaceData)
+
         self.playerFileList = ['Wolfbane', 'Bunnybane']
         self.testGameName = 'rabidTest'
         #self.testCustomSetup = {"UniverseNumber0": { "Players": "2"}}

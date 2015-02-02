@@ -38,21 +38,8 @@ line.
 
 """
 
-"""
-X file contains:
+from .game_utility import loadFileFromJSON
 
-
-playerName : <playerName>,
-currentYear : <submissionYear>,
-
-
-NewShipDesign : { all info captured in ShipDesign notes from file stars_shipdesing},
-RemoveShipDesign : [ShipDesign number],
-
-
-
-
-"""
 
 
 def xfile_TEMPLATE():
@@ -60,6 +47,12 @@ def xfile_TEMPLATE():
 
     If the x file requires changes. Change this method. Then run the tests. 
     (Tests should break if keys are revised or value types are incompatiable)
+
+    # 20150131 - ju -> this structure may be worth considering.
+    'key' : {'info': 'text about key and anything else',
+            'expectedType' : '', 
+            'value': {}
+            }
 
 
     """
@@ -131,34 +124,110 @@ def xfile_TEMPLATE():
     return x
 
 
-# def xFileController():
-#     """ xFileController is used to import players .x files into the Game Object
+def xFileController(game):
+    """ xFileController is used to import players .x files into the Game Object
+        Input:    Game object 
+                  xfiles (for current year in CWD)     
+
+
+    """
+
+    for player in game.players.values():
+        fileName = ('%s.x%s') % (game.game_name, player.playerNumber)
+        xfile = obtainXFile(fileName)
+
+        errorMSG = ("year->%s: .x%s: ") % (str(game.year), str(player.playerNumber))
+        
+        if xfile:
+
+            #test for xfile validity
+            
+            if int(xfile['currentYear']) == int(game.year):
+                """
+
+                """
+
+                processFleets(xfile, player)
+                processMinefields(xfile, player)
+                processDesign(xfile, player)
+                processProductionQ(xfile, player)
+                processMessagesFromPlayer(xfile, player)
+            else:
+                errorMSG = ("%s  Not current year -> (%s); ") % (errorMSG, xfile['currentYear'])
+
+        else:
+            errorMSG = ("%s  %s file unable to load; ") % (errorMSG, fileName)
+
+        
+        #print("%s" % errorMSG)
+        player.xfilestatus.append(errorMSG)
+
+
+def obtainXFile(fileName):
+
+    try:
+        xfile = loadFileFromJSON(fileName)
+    
+    except IOError as e:
+        print("Unable to open %s" % fileName)
+
+    else:  
+        return xfile
+
+    
+
+
+def processFleets(xfile, playerObj):
+
+    print("processing fleets for #%d: %s" % (playerObj.playerNumber, playerObj.raceName))
+
+
+def processMinefields(xfile, playerObj): # ?player object or universe?
+    
+    pass
+
+
+
+def processDesign(xfile, playerObj):
+
+    print("processing fleets for #%d: %s" % (playerObj.playerNumber, playerObj.raceName))
+
+def processProductionQ(xfile, playerObj):
+
+    print("processing fleets for #%d: %s" % (playerObj.playerNumber, playerObj.raceName))
+
+
+
+def processMessagesFromPlayer(xfile, message ):
+    """
+    This is the in game communication from one player to another. Their sent 
+    messages should be delivered to a common class - as of yet unidentified.
+    """
+    pass
+
+
+
+
+
+# def submissionsReady():
+#     """ submissionsReady - are all the .x files in the CWD? And are they all for
+#     the current year?
+
+#     call xFileExist()
 
 #     """
-
 #     pass
 
-# method to call the game year? to find the current year?
 
-def submissionsReady():
-    """ submissionsReady - are all the .x files in the CWD? And are they all for
-    the current year?
+# def xFileSubmissionForYear(gameName, playerNumber, currentYear):
+#     """
+#     Looks in CWD for an <gameName>.x<playerNumber> file 
+#     > does it contain the correct year?
 
-    call xFileExist()
+#     returns JSON Object, else None
 
-    """
-    pass
-
-
-def xFileSubmissionForYear(gameName, playerNumber, currentYear):
-    """
-    Looks in CWD for an <gameName>.x<playerNumber> file 
-    > does it contain the correct year?
-
-    returns JSON Object, else None
-
-    """
-    pass
+#     """
+#     pass
 
 
 
