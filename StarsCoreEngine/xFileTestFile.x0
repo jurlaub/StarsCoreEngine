@@ -5,7 +5,7 @@
         "currentYear" : "2402",
         
 
-        "NewShipDesign" : 
+        "NewDesign" : 
 
                         {"NewDesign_1" : 
                             {
@@ -33,7 +33,7 @@
                             }                        
 
                         },
-        "RemoveShipDesign" : ["ShipDesign ID", "ShipDesign ID", "ShipDesign ID"],
+        "RemoveDesign" : ["Design ID", "Design ID", "Design ID"],
                                         
         "ProductionQ" : 
             {

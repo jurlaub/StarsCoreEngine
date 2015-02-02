@@ -63,7 +63,7 @@ def xfile_TEMPLATE():
         'currentYear' : 'submissionYear',
         
 
-        'NewShipDesign' : 
+        'NewDesign' : 
 
                         {'NewDesign_1' : 
                             {
@@ -91,7 +91,7 @@ def xfile_TEMPLATE():
                             }                        
 
                         },
-        'RemoveShipDesign' : ['ShipDesign ID', 'ShipDesign ID', 'ShipDesign ID'],
+        'RemoveDesign' : ['Design ID', 'Design ID', 'Design ID'],
                                         
         'ProductionQ' : 
             {
@@ -143,27 +143,30 @@ def xFileController(game):
             #test for xfile validity
             
             if int(xfile['currentYear']) == int(game.year):
-                """
-
+                """process the x file by updating the player object.
                 """
 
                 processFleets(xfile, player)
                 processMinefields(xfile, player)
-                processDesign(xfile, player)
+                processDesign(xfile, player, game.technology)
                 processProductionQ(xfile, player)
                 processMessagesFromPlayer(xfile, player)
+
             else:
                 errorMSG = ("%s  Not current year -> (%s); ") % (errorMSG, xfile['currentYear'])
 
         else:
             errorMSG = ("%s  %s file unable to load; ") % (errorMSG, fileName)
 
-        
-        #print("%s" % errorMSG)
+
         player.xfilestatus.append(errorMSG)
 
 
 def obtainXFile(fileName):
+    """
+    try block should be in the loadFileFromJSON method.
+
+    """
 
     try:
         xfile = loadFileFromJSON(fileName)
@@ -188,13 +191,33 @@ def processMinefields(xfile, playerObj): # ?player object or universe?
 
 
 
-def processDesign(xfile, playerObj):
+def processDesign(xfile, playerObj, techTree):
 
-    print("processing fleets for #%d: %s" % (playerObj.playerNumber, playerObj.raceName))
+    designObj = playerObj.designs
+    newDesigns = xfile['NewDesign']
+    removeDesigns = xfile['RemoveDesign']
+
+    # remove design from PlayerDesign.currentShips/Starbase ()
+
+
+
+    # add design to PlayerDesign
+    for eachDesign in newDesigns.values():
+
+        designObj.addDesign(eachDesign, techTree)
+
+
+
+
+
+    print("processing design for #%d: %s" % (playerObj.playerNumber, playerObj.raceName))
+
+
+
 
 def processProductionQ(xfile, playerObj):
 
-    print("processing fleets for #%d: %s" % (playerObj.playerNumber, playerObj.raceName))
+    print("processing productionQ for #%d: %s" % (playerObj.playerNumber, playerObj.raceName))
 
 
 

@@ -114,11 +114,31 @@ class TestXFileController(object):
 
 
     def test_xfileController(self):
-        self.game.year  = 2402
+        """ tests overall method - unit tests for PlayerDesign etc. are in test_player.
+
+        """
+
+        self.game.year  = 2402        # match year specified in xFileTestFile.x0
+        p0Key = 'player0'
+        p0 = self.game.players[p0Key]
+
+
+        # values prior to xFileController being called  = Baseline
+        assert_true(p0.raceName, self.playerFileList[0])
+        #print("count designs:%s" % len(p0.designs.currentShips))
+        assert_equal(len(p0.designs.currentShips), 0)
+
+
 
         xFileController(self.game)
 
-        assert_true(False)
+
+        # values after to xFileController being called
+        assert_equal(len(p0.designs.currentShips), 2)
+
+
+
+
 
     def test_xfileController_Handles_IncorrectYear(self):
         self.game.year  = 2499
@@ -148,5 +168,7 @@ class TestXFileController(object):
             msg = m.pop()
             #print("test: %s" % msg)
             assert_in('file unable to load', msg)       
+
+
 
 
