@@ -78,6 +78,10 @@ class ProductionQ(object):
         self.ExcludedFromResearch = False
         self.customDefaultSettings = []
 
+        self.productionOrder = []   # each order should point to a unique item  
+        self.productionItems = {}   # 
+
+
         pass
 
     def addToQueue(self):

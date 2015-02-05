@@ -58,7 +58,7 @@ def xfile_TEMPLATE():
     """
     x = {
         'game_name' : "game_name",
-        'fileType': "xFile",
+        'fileType': "xfile",
         'playerName' : 'playerName',
         'currentYear' : 'submissionYear',
         
@@ -97,18 +97,18 @@ def xfile_TEMPLATE():
             {
                 'player.colonies.ID' : 
                     { 
-                        'productionOrder' : [ ],
-                        'productionItems' : { },  
+                        'productionOrder' : ['key1', 'key2', 'key3'],
+                        'productionItems' : { }  
                     },
                 'player.colonies.ID' : 
                     {
                         'productionOrder' : [ ],
-                        'productionItems' : { },
+                        'productionItems' : { }
                     },
                 'player.colonies.ID' : 
                     {
                         'productionOrder' : [ ],
-                        'productionItems' : { },
+                        'productionItems' : { }
                     }
 
             }
@@ -129,12 +129,16 @@ def xFileController(game):
         Input:    Game object 
                   xfiles (for current year in CWD)     
 
+        Output:     game updated with player xfile submissions
 
     """
 
     for player in game.players.values():
         fileName = ('%s.x%s') % (game.game_name, player.playerNumber)
+
+
         xfile = obtainXFile(fileName)
+
 
         errorMSG = ("year->%s: .x%s: ") % (str(game.year), str(player.playerNumber))
         
@@ -203,6 +207,10 @@ def processDesign(xfile, playerObj, techTree):
 
     # add design to PlayerDesign
     for eachDesign in newDesigns.values():
+
+        #--TODO-- isShipDesignValid here
+        #--TODO-- validDesignForProduction here
+        
 
         designObj.addDesign(eachDesign, techTree)
 
