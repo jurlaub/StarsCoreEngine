@@ -53,6 +53,23 @@ productionQ:
         Dedicate to Research (expansion)
 
 
+
+        Miniaturization:
+        Input: techLevel, techTree, LRT
+        Output: revise the values in productionItems
+ 
+        Items that Miniaturization impacts are the PlayerDesigns. No planetInstallations
+        are impacted or other items. 
+
+        Before production, the M_list is calculated based on current tech levels.
+        The productionItems list tracks currently invested or spent resources.
+        M_list contains what remains. These are compared. (no refunds of minerals 
+        or resources, if overspent)
+    
+        hmm.. could just accept the list of shipDesign objects + tech levels + tech tree. 
+ 
+
+
 """
 
 
@@ -71,7 +88,7 @@ class ProductionQ(object):
     def __init__(self, colony, defaultSetting):         # defaultSetting may not be necessary.
         
 
-
+        #self.productionList = [] # shipDesigns + starbaseDesign + planetInstallations + autoBuild
         self.colony = colony
         self.defaultSetting = defaultSetting
         self.prodQueue = []
@@ -88,7 +105,7 @@ class ProductionQ(object):
         """
         updates the self.prodQueue list with a dictionary?
         {'itemType':'type', 'itemName': 'name', 'quantity': 3, 'progress': 'resources',      #progress is a percentage?
-            'reqIron': 0, 'reqBor':0, 'reqGerm':0, 'reqResources':0 }
+            'spentIron': 0, 'spentBor':0, 'spentGerm':0, 'spentResources':0 }
 
         to prevent the starbase bug (or whatever its called when you 99% complete an empty hull and then
         edit the design to get all of the components for free, it might be useful to have both reqIron and
@@ -152,6 +169,11 @@ class ProductionQ(object):
               produced the 'n' value should be decremented. If '0' then proceed
               to the next instruction.
 
+20150204 ju - Miniaturization:
+            productionController will accept a dictionary which contains the current 
+            costs for the ship and starbase designs. This will be used to calculate 
+            the remaining costs vs what has been spent. Miniaturization can be 
+            applied later to this dictionary of values.  
 
         """
         iron = self.colony.planet.surfaceIron

@@ -49,40 +49,40 @@ def xfile_TEMPLATE():
     (Tests should break if keys are revised or value types are incompatiable)
 
     # 20150131 - ju -> this structure may be worth considering.
-    'key' : {'info': 'text about key and anything else',
-            'expectedType' : '', 
-            'value': {}
+    "key" : {"info": "text about key and anything else",
+            "expectedType" : "", 
+            "value": {}
             }
 
 
     """
     x = {
-        'game_name' : "game_name",
-        'fileType': "xfile",
-        'playerName' : 'playerName',
-        'currentYear' : 'submissionYear',
+        "game_name" : "game_name",
+        "fileType": "xfile",
+        "playerName" : "playerName",
+        "currentYear" : "submissionYear",
         
 
-        'NewDesign' : 
+        "NewDesign" : 
 
-                        {'NewDesign_1' : 
+                        {"NewDesign_1" : 
                             {
-                                'designName': 'doomShip1', 
-                                'designID': 0,
-                                'hullID': 'Scout',
-                                'component': 
+                                "designName": "doomShip1", 
+                                "designID": 0,
+                                "hullID": "Scout",
+                                "component": 
                                     {
                                         "B": {"itemID": "Fuel Mizer", "itemQuantity": 1 },
                                         "A": {"itemID": "Fuel Tank", "itemQuantity": 1},
                                         "C": {"itemID": "Mole Scanner", "itemQuantity": 1}
                                     } 
                             },
-                        'NewDesign_2' : 
+                        "NewDesign_2" : 
                             {
-                                'designName': 'doomShip2', 
-                                'designID': 1,
-                                'hullID': 'Scout',
-                                'component': 
+                                "designName": "doomShip2", 
+                                "designID": 1,
+                                "hullID": "Scout",
+                                "component": 
                                     {
                                         "B": {"itemID": "Fuel Mizer", "itemQuantity": 1 },
                                         "A": {"itemID": "Fuel Tank", "itemQuantity": 1},
@@ -91,24 +91,24 @@ def xfile_TEMPLATE():
                             }                        
 
                         },
-        'RemoveDesign' : ['Design ID', 'Design ID', 'Design ID'],
+        "RemoveDesign" : ["Design ID", "Design ID", "Design ID"],
                                         
-        'ProductionQ' : 
+        "ProductionQ" : 
             {
-                'player.colonies.ID' : 
+                "player.colonies.ID" : 
                     { 
-                        'productionOrder' : ['key1', 'key2', 'key3'],
-                        'productionItems' : { }  
+                        "productionOrder" : ["key1", "key2", "key3"],
+                        "productionItems" : { }  
                     },
-                'player.colonies.ID' : 
+                "player.colonies.ID" : 
                     {
-                        'productionOrder' : [ ],
-                        'productionItems' : { }
+                        "productionOrder" : ["entryID1", "entryID2" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {} }
                     },
-                'player.colonies.ID' : 
+                "player.colonies.ID" : 
                     {
-                        'productionOrder' : [ ],
-                        'productionItems' : { }
+                        "productionOrder" : [ ],
+                        "productionItems" : { }
                     }
 
             }
@@ -134,7 +134,7 @@ def xFileController(game):
     """
 
     for player in game.players.values():
-        fileName = ('%s.x%s') % (game.game_name, player.playerNumber)
+        fileName = ("%s.x%s") % (game.game_name, player.playerNumber)
 
 
         xfile = obtainXFile(fileName)
@@ -146,7 +146,7 @@ def xFileController(game):
 
             #test for xfile validity
             
-            if int(xfile['currentYear']) == int(game.year):
+            if int(xfile["currentYear"]) == int(game.year):
                 """process the x file by updating the player object.
                 """
 
@@ -157,7 +157,7 @@ def xFileController(game):
                 processMessagesFromPlayer(xfile, player)
 
             else:
-                errorMSG = ("%s  Not current year -> (%s); ") % (errorMSG, xfile['currentYear'])
+                errorMSG = ("%s  Not current year -> (%s); ") % (errorMSG, xfile["currentYear"])
 
         else:
             errorMSG = ("%s  %s file unable to load; ") % (errorMSG, fileName)
@@ -198,8 +198,8 @@ def processMinefields(xfile, playerObj): # ?player object or universe?
 def processDesign(xfile, playerObj, techTree):
 
     designObj = playerObj.designs
-    newDesigns = xfile['NewDesign']
-    removeDesigns = xfile['RemoveDesign']
+    newDesigns = xfile["NewDesign"]
+    removeDesigns = xfile["RemoveDesign"]
 
     # remove design from PlayerDesign.currentShips/Starbase ()
 
@@ -320,7 +320,7 @@ def validDesignForProduction(newDesign, techTree, playerObj):
                     Tech used is permitted per LRT
 
 
-    output - returns newDesign with updated 'designValidForProduction':
+    output - returns newDesign with updated "designValidForProduction":
         True = Design is valid for production 
         False = Design is not valid for production
 
@@ -359,8 +359,8 @@ def isShipDesignValid(newDesign, techTree):
 
     # for each entry in newDesign.component
     #   is compared to the hull.slot entry
-    #   the hull.slot  'objectType' value must match 
-    #   the component 'itemType' 
+    #   the hull.slot  "objectType" value must match 
+    #   the component "itemType" 
     #   the component number must be less then or equal to the hull.slot "slotsAvalable" number
     #   if any item is not a match return False
 

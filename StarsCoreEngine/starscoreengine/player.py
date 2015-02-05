@@ -108,7 +108,7 @@ class Player(object):
         self.historicalShipDesign = {}  #? 
         self.fleets = {}  # ? fleetID : fleetObj
         self.battleOrders = {} 
-        #self.productionQ = {}
+        #self.productionList = {}
 
         """ turnOrders:
         when created    - should be sequentially numbered
