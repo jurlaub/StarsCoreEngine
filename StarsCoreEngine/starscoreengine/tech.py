@@ -527,7 +527,7 @@ class ShipDesign(Component):
 
     '''
 
-    def __init__(self, vals, techTree):                      # vals is a dictionary described in notes above    
+    def __init__(self, vals, techTree, techLevel, LRT):                      # vals is a dictionary described in notes above    
         super(ShipDesign,self).__init__()
         
         #self.techTree = techTree  # ?references universal tech tree? 
@@ -537,16 +537,16 @@ class ShipDesign(Component):
         self.owner = None        
 
         self.isDesignLocked = False             # once a player has built a design- it cannot change
-        self.designValidForProduction = False   
+        self.designValidForProduction = True   
 
 
         self.hullID = vals['hullID'] # points to a Hull object ID.  one for each type of ship.
-
+        #self.hullCosts = {"costIron" : 0, "costBor" : 0, "costGerm" : 0, "costResources" : 0}
 
         # ------------------------- self.component --------------------------
         # component holds the number of items assigned to a design
         # self.component = {  
-        #         "A":{"itemID": None, "itemQuantity": None }, 
+        #         "A":{"itemID": None, "itemQuantity": None, "costIron": n, "costBor": n, "costGerm" : n, "costResources" :n }, 
         #         "B":{"itemID": None, "itemQuantity": None}}  # capacity
         self.component = vals['component']
         # --------------------------------------------------------------------- 
@@ -578,12 +578,12 @@ class ShipDesign(Component):
         self.computing_power = None
 
 
-        self.updateDesign(techTree)
+        self.updateDesign(techTree, techLevel, LRT)
 
 
-    def updateDesign(self, techTree):
+    def updateDesign(self, techTree, techLevel, LRT = []):
         """ collect and update all of the components and hull values. 
-        Input: self (hull + components), techTree
+        Input: self (hull + components), techTree, player techLevel, LRT = CuttingEdge
         Output: all values of hull and components are updated in the ShipDesign.
                 (e.x. self.iron = sum(hull.iron + each_component.iron values))
 
@@ -595,7 +595,9 @@ class ShipDesign(Component):
         
         hullObj = techTree[self.hullID]
 
-        self.tally(1, hullObj)              # there can be only one... (1) Hull :)
+        # apply hullObj miniturization if necessary
+
+        self.tally(1, hullObj, techLevel, LRT)              # there can be only one... (1) Hull :)
 
         for k1, obj1 in self.component.items():
 
@@ -604,12 +606,12 @@ class ShipDesign(Component):
 
             componentQuant = obj1['itemQuantity']
 
-
-            self.tally(componentQuant, componentObj)
+            # --TODO-- add miniturazation check and calculation to component.
+            self.tally(componentQuant, componentObj, techLevel, LRT)
 
         
 
-    def tally(self, quant, comp ):
+    def tally(self, quant, comp, techLevel, LRT ):
 
         # tech levels = highest number not sum
         # True/False
@@ -626,9 +628,10 @@ class ShipDesign(Component):
             'hitChance', 'normalScanRange', 'penScanRange', 'hasPRT', 'hasLRT', 'notLRT')
 
         
-        sumItUpList = ('iron', 'bor', 'germ', 'resources', 'mass','fuelCapacity',
+        sumItUpList = ( 'mass','fuelCapacity',
          'cargoCapacity', 'initiative', 'armorDP', 'shieldDP', 'beamPower', 'sapper', 'minesSwept' )
 
+        miniturazationList = ('iron', 'bor', 'germ', 'resources')
 
         
         noneVals = ( None, []) 
@@ -672,8 +675,22 @@ class ShipDesign(Component):
                 if self.__dict__[kee] is None: 
                     self.__dict__[kee] = 0      # 
 
+
+                tmpVal = int(self.__dict__[kee]) + (int(obj) * int(quant))
+
+            elif kee in miniturazationList:
+
+                if self.__dict__[kee] is None: 
+                    self.__dict__[kee] = 0
+                
+                # use comp == component object to figure out miniturization
+                # call designMiniaturization()
+                # tuple = (iron, bor, germ, resources)
+
+                # then add it to the ship design
                 tmpVal = int(self.__dict__[kee]) + (int(obj) * int(quant))
             
+
             elif obj is True:
                 tmpVal = obj
             
@@ -682,6 +699,7 @@ class ShipDesign(Component):
                 #print(obj)
                 continue
             self.__dict__[kee] = tmpVal
+
 
 
 
@@ -704,7 +722,7 @@ class ShipDesign(Component):
 
 
     
-    def designMiniaturizationStats(self, techLevel, LRT = []):
+    def designMiniaturization(self, techLevel, LRT = []):
         """designMiniaturizationStats() used to get the CoreStats required to 
         build the design. When a user produces the ship, the productionQ should 
         call this method to determine what values to put in the production que. 

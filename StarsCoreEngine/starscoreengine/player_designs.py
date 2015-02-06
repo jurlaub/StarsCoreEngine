@@ -29,10 +29,12 @@ class PlayerDesigns(object):
 
     """
 
-    def __init__(self, raceName, shipCap = 12):
+    def __init__(self, raceName, techLevels, LRT, shipCap = 12):
 
         self.DesignCapacity = shipCap   # for ships. Starbases are the same?
         self.raceName = raceName
+        self.techLevels = techLevels
+        self.LRT = LRT
 
         self.currentShips = {}
         self.currentStarbases = {}
@@ -101,10 +103,10 @@ class PlayerDesigns(object):
 
 
 
-        newObject = ShipDesign(newDesign, techTree) 
+        newObject = ShipDesign(newDesign, techTree, self.techLevels, self.LRT) 
         newObject.owner = self.raceName      
         
-        x[tmpName] = newObject
+        x[tmpName] = newObject  # x == self.currentShips or self.currentStarbases  
 
         
 

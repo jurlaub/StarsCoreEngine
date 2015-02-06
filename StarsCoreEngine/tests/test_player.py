@@ -337,6 +337,9 @@ class Test_ShipDesign(object):
         self.game = Game(self.gameTemplate)
         self.techTree = self.game.technology
         self.player = self.game.players['player1']
+        self.techLevels = self.player.research.techLevels
+        self.LRT = self.player.LRT
+
 
 
 
@@ -436,7 +439,7 @@ class Test_ShipDesign(object):
         # self.player.design.addDesign(self.testShip1, self.techTree)
         # assert_equal(len(self.player.design.currentShips), 1)
         target = self.testShip3
-        ship = ShipDesign(target, self.techTree) #self.testShip1['hullID'], self.testShip1, self.testShip1['designName']
+        ship = ShipDesign(target, self.techTree, self.techLevels, self.LRT) #self.testShip1['hullID'], self.testShip1, self.testShip1['designName']
         
         assert_equal(ship.iron, 41)
         assert_equal(ship.bor, 15)
@@ -451,7 +454,7 @@ class Test_ShipDesign(object):
 
         assert_equal(ship.owner, None)      # owner is added when assigned to a players.design object
         assert_equal(ship.isDesignLocked, False)
-        assert_equal(ship.designValidForProduction, False)
+        assert_equal(ship.designValidForProduction, True)
 
         assert_equal(ship.hullID, target['hullID'])
 
@@ -505,7 +508,7 @@ class Test_ShipDesign(object):
         # assert_equal(len(self.player.design.currentShips), 1)
         target = self.testShip2
 
-        ship = ShipDesign(target, self.techTree) #self.testShip1['hullID'], self.testShip1, self.testShip1['designName']
+        ship = ShipDesign(target, self.techTree, self.techLevels, self.LRT) #self.testShip1['hullID'], self.testShip1, self.testShip1['designName']
 
         assert_equal(ship.iron, 14)
         assert_equal(ship.bor, 2)
@@ -520,7 +523,7 @@ class Test_ShipDesign(object):
 
         assert_equal(ship.owner, None)      # owner is added when assigned to a players.design object
         assert_equal(ship.isDesignLocked, False)
-        assert_equal(ship.designValidForProduction, False)
+        assert_equal(ship.designValidForProduction, True)
 
         assert_equal(ship.hullID, target['hullID'])
 
@@ -567,7 +570,7 @@ class Test_ShipDesign(object):
         # self.player.design.addDesign(self.testShip1, self.techTree)
         # assert_equal(len(self.player.design.currentShips), 1)
         target = self.testShip1
-        ship = ShipDesign(target, self.techTree) #self.testShip1['hullID'], self.testShip1, self.testShip1['designName']
+        ship = ShipDesign(target, self.techTree, self.techLevels, self.LRT) #self.testShip1['hullID'], self.testShip1, self.testShip1['designName']
 
         assert_equal(ship.iron, 20)
         assert_equal(ship.bor, 2)
@@ -582,7 +585,7 @@ class Test_ShipDesign(object):
 
         assert_equal(ship.owner, None)      # owner is added when assigned to a players.design object
         assert_equal(ship.isDesignLocked, False)
-        assert_equal(ship.designValidForProduction, False)
+        assert_equal(ship.designValidForProduction, True)
 
         assert_equal(ship.hullID, target['hullID'])
 

@@ -104,7 +104,7 @@ class Player(object):
         # --TODO--- add technology 'research' costs (cheap, normal, expensive) to Research
         self.research = Research(self.PRT, self.LRT)  # tech object
         self.techTree = techTree
-        self.designs = PlayerDesigns(self.raceName) # ship design objects
+        self.designs = PlayerDesigns(self.raceName, self.research.techLevels, self.LRT) # ship design objects
         self.historicalShipDesign = {}  #? 
         self.fleets = {}  # ? fleetID : fleetObj
         self.battleOrders = {} 
