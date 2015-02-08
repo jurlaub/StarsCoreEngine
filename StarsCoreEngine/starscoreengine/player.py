@@ -25,6 +25,7 @@ from math import sqrt
 from .planet import Colony, Planet
 from .research import Research
 from .player_designs import PlayerDesigns
+from .productionQ import ProductionQ
 
 '''
     Player Data
@@ -173,6 +174,9 @@ class Player(object):
         #newColony.growthRate = self.raceData.growthRate
 
         planet.owner = self.raceName
+
+        productionQ = ProductionQ(newColony, self)
+        newColony.productionQ = productionQ
 
         self.colonies[planet.ID] = newColony
         
