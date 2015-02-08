@@ -34,6 +34,7 @@ import argparse
 from .space_objects import SpaceObjects
 from .universe import UniverseObject
 from .planet import Colony
+from .productionQ import ProductionQ
 from . import fleets
 from .custom_setup import customSetupDialog
 from .custom_setup import customSetupController
@@ -198,6 +199,9 @@ class Game(object):
                     # necessary to setup a HW
                     homeworld = Colony(player.raceData, planetHW, template.starting_population)
                     homeworld.scanner = True
+
+                    productionQ = ProductionQ(homeworld, player)
+                    homeworld.productionQ = productionQ
 
                     player.colonies[planetHW.ID] = homeworld
 
