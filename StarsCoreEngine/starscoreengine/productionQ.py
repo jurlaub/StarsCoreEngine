@@ -197,7 +197,9 @@ class ProductionQ(object):
         producitonQ
         while True:
         > Find next entry
-        >> if empty -> break
+        >> if at the end
+        >> start at beginning, if "finishedForThisTurn" == True, move to next entry
+        >> if empty(or at end of list) -> break
         >> Act on autoBuild orders only once (unless its autoBuild minerals in order to complete a project)
         
         > obtain target materials and resources (access to colony.planet, raceData, research, PlayerDesign)
