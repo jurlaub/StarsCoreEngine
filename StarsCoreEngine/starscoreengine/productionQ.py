@@ -195,28 +195,26 @@ class ProductionQ(object):
 
 
         producitonQ
+
+        "finishedForThisTurn" for all items on the list set to "false"
+
+
         while True:
         > Find next entry
-        >> if at the end
+        >> 
         >> start at beginning, if "finishedForThisTurn" == True, move to next entry
-        >> if empty(or at end of list) -> break
+        >> if empty(or at end of list) -> break, left over resources applied to research
         >> Act on autoBuild orders only once (unless its autoBuild minerals in order to complete a project)
         
         > obtain target materials and resources (access to colony.planet, raceData, research, PlayerDesign)
-
-        > Do I have the resources to complete the entry?
-        > Do I have the materials to complete the entry?
-        >> if yes -> complete entry
         
-        >> if no -> 
-        >>> is quantity > 1:
-        >>>> if yes -> create a single entry, add to beginning, (continue - or use as many resources as possible, break.)
-        >>>> if no -> (does the Q need to autobuild minerals? if yes, add to beginning, continue) 
-                    -> use as many resources and materials as are available, update ironUsed etc.
+        send to self.entryController() --> how many of entry to produce, 
+
 
         > Do I have resources left? 
         >> if yes -> continue
         >> if no -> break
+
 
 
 
@@ -319,6 +317,57 @@ class ProductionQ(object):
         # Research.yearlyResearchResources += res
         
         
+    def entryController(self):
+        """
+
+
+        ------------------------------------------
+    Iterative -> solution for entry -> how many can be completed
+        Input: entry, target materials & resources, 
+        Output: produced items
+                update productionList and productionQ
+
+        > Do I have the resources to complete the entry?
+        
+        >> Do I have the materials to complete the entry?
+        >> if yes -> complete entry
+
+        
+        >> if no -> 
+        >>> How many can be completed and what quantity is left over?
+
+        >>>> if quantity >= 2: create 1 single entry at beginning, current results in a single entry. 
+        >>>> if quantity == 1:  use as many resources as possible (by percentage rules), break
+        
+
+        >>>> if no -> (does the Q need to autobuild minerals? if yes, add to beginning, continue) 
+                    -> use as many resources and materials as are available, update ironUsed etc.
+        ------------------------------------------
+
+        count = 0
+
+        while count < quantity: #break when count equals quantity
+            n = 1
+            do I have the resources for 1 of object?
+            do I have the materials for 1 of object?
+            if yes, count += 1, continue
+            
+            if no, 
+                break
+
+            
+
+        if count greater then 0:
+            produce that many of object
+
+        figure out portion of entry to complete.
+
+            what percentage can be used in construction?
+
+        """
+
+        pass
+
     def updateQCosts(self):
         """
         Q persists across turns, but the cost of ships\starbases will change due to tech changes or redesign,
