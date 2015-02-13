@@ -134,19 +134,7 @@ class ProductionQ(object):
         (Calling the self equivalent of Research.colonyResearchTax(colony) method to obtain the # 
         of resources available )
         
-        2)  loop to examine the entries in the Q. 
-            if "finishedForThisTurn" == True, move to next entry
-            if quantity = 0, remove from Q
-
-            if entry is next on list:
-                send to entryController
-                elif quantity >= 2: break quantity into two, create 1 single entry at beginning, existing is finishedForThisTurn
-                elif new single entry or quantity == 1 : use as many resources as possible (by percentage rules), 
-
-
-                if AutoMinerals on, minerals are holding up single entry and resources are available, add a build mineral to the beginning of q
-                reset loop to 0, continue
-
+        2)  
 
         3) if items in the queue cannot be completed due to lack of resources, 
         follows AutoMinerals, and tries again, until production is completed or
@@ -189,21 +177,25 @@ class ProductionQ(object):
         while True:
         > Find next entry
         >> 
-        >> start at beginning, if "finishedForThisTurn" == True, move to next entry
+        >> if quantity = 0, remove from Q;        --> if quantity == 0: entry to be deleted
+        >> if "finishedForThisTurn" == True, move to next entry
         >> if empty(or at end of list) -> break, left over resources applied to research
         >> Act on autoBuild orders only once (unless its autoBuild minerals in order to complete a project)
         
         
-        
-        send entry to self.entryController()  
+            if entry is next on list:
+                send to entryController -- send entry to self.entryController()  
+                elif quantity >= 2: break quantity into two, create 1 single entry at beginning, existing is finishedForThisTurn
+                elif new single entry or quantity == 1 : use as many resources as possible (by percentage rules), 
+
+
+                if AutoMinerals on, minerals are holding up single entry and resources are available, add a build mineral to the beginning of q
+                reset loop to 0, continue
 
         
-        if quantity == 0: entry to be deleted
-        elif quantity >= 2: break quantity into two, create 1 single entry at beginning, existing is finishedForThisTurn
-        elif quantity == 1: use as many resources as possible (by percentage rules)
-        else:   # less then 0 -> not good. should not happen
+        
 
-
+    
         > Do I have resources left? 
         >> if yes -> continue
         >> if no -> break
