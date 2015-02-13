@@ -134,33 +134,20 @@ class ProductionQ(object):
         (Calling the self equivalent of Research.colonyResearchTax(colony) method to obtain the # 
         of resources available )
         
-        2) next it examines the next item in the Q. 
-    
-        2b) if "quantity" : n > 1,
-            call a special helper method dealing with producing multiples of an 
-            item, the method will determine how many 'whole' items can be built 
-            with the available resources & materials. The respective items will 
-            be built by calling the approprate method.
+        2)  loop to examine the entries in the Q. 
+            if "finishedForThisTurn" == True, move to next entry
+            if quantity = 0, remove from Q
 
-        2ba) if more of the 'item' needs to be built, quantity > 2,
-             A new quantity 1 entry should be entered into the productionQ at 
-             the beginning of the list. It should consume as many resources as 
-             possible. 
-             The quantity > 2 entry should be decremented
-        2bb) if the 'item' is quantity == 2:
-             A new quantity 1 entry should be entered into the productionQ at 
-             the beginning of the list. It should consume as many resources as 
-             possible.
-             The quantity > 2 entry should be decremented to 1, it should have
-             all the 'attributes' necessary for a quantity 1 entry      
-        2bc) if 'item' quantity == 1:
-             It should consume as many resources as 
-             possible.
-        2bd) if 'item' quantity == 0:
-             item should be removed from productionQ and productionList
-     
-         
-        !!  
+            if entry is next on list:
+                send to entryController
+                elif quantity >= 2: break quantity into two, create 1 single entry at beginning, existing is finishedForThisTurn
+                elif new single entry or quantity == 1 : use as many resources as possible (by percentage rules), 
+
+
+                if AutoMinerals on, minerals are holding up single entry and resources are available, add a build mineral to the beginning of q
+                reset loop to 0, continue
+
+
         3) if items in the queue cannot be completed due to lack of resources, 
         follows AutoMinerals, and tries again, until production is completed or
         resources depletion.
@@ -206,9 +193,15 @@ class ProductionQ(object):
         >> if empty(or at end of list) -> break, left over resources applied to research
         >> Act on autoBuild orders only once (unless its autoBuild minerals in order to complete a project)
         
-        > obtain target materials and resources (access to colony.planet, raceData, research, PlayerDesign)
         
-        send to self.entryController() --> how many of entry to produce, 
+        
+        send entry to self.entryController()  
+
+        
+        if quantity == 0: entry to be deleted
+        elif quantity >= 2: break quantity into two, create 1 single entry at beginning, existing is finishedForThisTurn
+        elif quantity == 1: use as many resources as possible (by percentage rules)
+        else:   # less then 0 -> not good. should not happen
 
 
         > Do I have resources left? 
@@ -342,14 +335,42 @@ class ProductionQ(object):
 
         >>>> if no -> (does the Q need to autobuild minerals? if yes, add to beginning, continue) 
                     -> use as many resources and materials as are available, update ironUsed etc.
-        ------------------------------------------
+        
+    
+        2b) if "quantity" : n > 1,
+            call a special helper method dealing with producing multiples of an 
+            item, the method will determine how many 'whole' items can be built 
+            with the available resources & materials. The respective items will 
+            be built by calling the approprate method.
 
+        2ba) if more of the 'item' needs to be built, quantity > 2,
+             A new quantity 1 entry should be entered into the productionQ at 
+             the beginning of the list. It should consume as many resources as 
+             possible. 
+             The quantity > 2 entry should be decremented
+        2bb) if the 'item' is quantity == 2:
+             A new quantity 1 entry should be entered into the productionQ at 
+             the beginning of the list. It should consume as many resources as 
+             possible.
+             The quantity > 2 entry should be decremented to 1, it should have
+             all the 'attributes' necessary for a quantity 1 entry      
+        2bc) if 'item' quantity == 1:
+             It should consume as many resources as 
+             possible.
+        2bd) if 'item' quantity == 0:
+             item should be removed from productionQ and productionList
+
+
+        ------------------------------------------
+        obtain entry
+    
+        > obtain target materials and resources (access to colony.planet, raceData, research, PlayerDesign)
         count = 0
 
         while count < quantity: #break when count equals quantity
-            n = 1
-            do I have the resources for 1 of object?
-            do I have the materials for 1 of object?
+            #n = 1
+            do I have the resources for count + 1 of object?
+            do I have the materials for count + 1 of object?
             if yes, count += 1, continue
             
             if no, 
@@ -359,13 +380,24 @@ class ProductionQ(object):
 
         if count greater then 0:
             produce that many of object
+            quantity = quantity - count
+            minerals & resources decremented
 
-        figure out portion of entry to complete.
 
-            what percentage can be used in construction?
+
 
         """
 
+        pass
+
+    def partialProduction(self, entry):
+        """
+        input: self, entry in list 
+        output: entry is partially produced, materials and resources are partially used,
+                    figure out portion of entry to complete.
+            what percentage can be used in construction?
+
+        """
         pass
 
     def updateQCosts(self):
