@@ -84,7 +84,7 @@ class TestXFileController(object):
 
         self.gameTemplate = StandardGameTemplate(self.testGameName, self.playerFileList, {"UniverseNumber0": { "Players": "2"}})
         self.game = Game(self.gameTemplate)
-        #self.player1 = self.game.players['player1']
+        self.player = self.game.players["player0"]
         
 
 
@@ -171,4 +171,44 @@ class TestXFileController(object):
 
 
 
+    def test_xfileController_ProcessProductionQ_Correctly(self):
+        """
+        Input: xfile, playerObj
+        Output: the player colonies ProductionQ's are updated with values.
+        """
+        #_____ setup _________________________
+        self.target_colony = None
+        for each in self.player.colonies.values():
+            if each.planet.HW:
+                self.target_colony = each
+                break
+        
+        xfileSetup_PQ = {"ProductionQ" : 
+                {
+                self.target_colony : 
+                    {
+                        "productionOrder" : ["entryID1", "entryID2" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, "entryID2" : {"quantity": 10, "productionID": "factories"} }
+                    }
+
+                }
+            }
+        #______________________________
+
+        assert_true(self.target_colony)
+        target = self.target_colony.productionQ
+
+        assert_equal(target.productionOrder, [])
+        assert_equal(target.productionItems, {}) 
+
+        processProductionQ(xfileSetup_PQ, self.player)      # process the ProductionQ
+
+        assert_equal(len(target.productionOrder), 2)
+        assert_equal(target.productionOrder[1], "entryID2")
+
+        assert_equal(len(target.productionItems), 2)
+        assert_equal(target.productionItems["entryID1"]["productionID"], "mines")
+
+
+        
 

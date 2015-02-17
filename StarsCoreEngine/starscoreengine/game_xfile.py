@@ -224,6 +224,13 @@ def processDesign(xfile, playerObj, techTree):
 
 
 def processProductionQ(xfile, playerObj):
+    """processProductionQ
+    Input:  xfile, playerObj
+    Output: Returns nothing
+            all the player colonies ProductionQ objects have updated ProductionQ
+            and ProductionLists
+
+    """
 
     print("processing productionQ for #%d: %s" % (playerObj.playerNumber, playerObj.raceName))
 
