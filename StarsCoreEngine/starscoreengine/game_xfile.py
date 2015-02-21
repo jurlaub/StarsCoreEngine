@@ -230,9 +230,28 @@ def processProductionQ(xfile, playerObj):
             all the player colonies ProductionQ objects have updated ProductionQ
             and ProductionLists
 
+    If there is a change to the P_Q or P_L, then the whole thing is resent. 
+
     """
 
-    print("processing productionQ for #%d: %s" % (playerObj.playerNumber, playerObj.raceName))
+    colonyProduction = xfile["ProductionQ"]
+
+    playerColonies = playerObj.colonies
+
+    for kee, obj in colonyProduction.items():
+        if kee in playerColonies:
+            colonyQ = playerColonies[kee].productionQ
+            
+            if "productionOrder" in obj:
+                colonyQ.productionOrder = obj["productionOrder"]
+            
+            if "productionItems" in obj:
+                colonyQ.productionItems = obj["productionItems"]
+        #print("Processed Q for %s" % kee)
+        #print("%s" % obj)
+
+
+    #print("processing productionQ for #%d: %s" % (playerObj.playerNumber, playerObj.raceName))
 
 
 

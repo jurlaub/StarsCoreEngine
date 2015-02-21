@@ -179,8 +179,9 @@ class TestXFileController(object):
         #_____ setup _________________________
         self.target_colony = None
         for each in self.player.colonies.values():
+            print("each: %s" % each.planet.ID)
             if each.planet.HW:
-                self.target_colony = each
+                self.target_colony = each.planet.ID
                 break
         
         xfileSetup_PQ = {"ProductionQ" : 
@@ -196,7 +197,7 @@ class TestXFileController(object):
         #______________________________
 
         assert_true(self.target_colony)
-        target = self.target_colony.productionQ
+        target = self.player.colonies[self.target_colony].productionQ
 
         assert_equal(target.productionOrder, [])
         assert_equal(target.productionItems, {}) 

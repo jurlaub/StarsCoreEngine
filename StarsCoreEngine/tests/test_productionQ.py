@@ -158,6 +158,9 @@ class TestProductionQ(object):
 
                 }
             }
+        
+        # set a number of variables to the same value - so they can be reused
+
         pass
 
 
