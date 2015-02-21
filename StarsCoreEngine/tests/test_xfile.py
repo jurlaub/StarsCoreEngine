@@ -85,7 +85,27 @@ class TestXFileController(object):
         self.gameTemplate = StandardGameTemplate(self.testGameName, self.playerFileList, {"UniverseNumber0": { "Players": "2"}})
         self.game = Game(self.gameTemplate)
         self.player = self.game.players["player0"]
+
+        self.target_colony = None
+        for each in self.player.colonies.values():
+            print("each: %s" % each.planet.ID)
+            if each.planet.HW:
+                self.target_colony = each.planet.ID
+                break
         
+        self.newColony = []
+        self.universePlanets = self.game.game_universe[0].planets
+
+        for kee, obj in self.universePlanets.items():
+            if len(self.newColony) > 2:
+                break
+
+            if not obj.owner:
+                self.newColony.append(kee)
+
+        for each in self.newColony:
+            self.player.colonizePlanet(self.universePlanets[each], 150000)
+
 
 
     def teardown(self):
@@ -177,19 +197,28 @@ class TestXFileController(object):
         Output: the player colonies ProductionQ's are updated with values.
         """
         #_____ setup _________________________
-        self.target_colony = None
-        for each in self.player.colonies.values():
-            print("each: %s" % each.planet.ID)
-            if each.planet.HW:
-                self.target_colony = each.planet.ID
-                break
-        
+        # self.target_colony = None
+        # for each in self.player.colonies.values():
+        #     print("each: %s" % each.planet.ID)
+        #     if each.planet.HW:
+        #         self.target_colony = each.planet.ID
+        #         break
+        colony2 = self.newColony[0]
+
         xfileSetup_PQ = {"ProductionQ" : 
                 {
                 self.target_colony : 
                     {
                         "productionOrder" : ["entryID1", "entryID2" ],
                         "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, "entryID2" : {"quantity": 10, "productionID": "factories"} }
+                    },
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
+                                            "entryID4" : {"quantity": 455, "productionID": "mines"} 
+                                            }
                     }
 
                 }
@@ -198,12 +227,23 @@ class TestXFileController(object):
 
         assert_true(self.target_colony)
         target = self.player.colonies[self.target_colony].productionQ
+        target2 = self.player.colonies[colony2].productionQ
 
+        # HW
         assert_equal(target.productionOrder, [])
         assert_equal(target.productionItems, {}) 
 
+
+        # 2nd colony
+        assert_equal(target2.productionOrder, [])
+        assert_equal(target2.productionItems, {}) 
+
+
+        # only need to call 1 time
         processProductionQ(xfileSetup_PQ, self.player)      # process the ProductionQ
 
+
+        # HW
         assert_equal(len(target.productionOrder), 2)
         assert_equal(target.productionOrder[1], "entryID2")
 
@@ -211,5 +251,10 @@ class TestXFileController(object):
         assert_equal(target.productionItems["entryID1"]["productionID"], "mines")
 
 
-        
+        # 2nd colony
+        assert_equal(len(target2.productionOrder), 3)
+        assert_equal(target2.productionOrder[0], "entryID4")
+
+        assert_equal(len(target2.productionItems), 3)
+        assert_equal(target2.productionItems["entryID4"]["quantity"], 455)        
 

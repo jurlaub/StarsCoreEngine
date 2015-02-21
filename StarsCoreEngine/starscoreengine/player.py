@@ -164,7 +164,9 @@ class Player(object):
         '''
         input:  planet = planet object; 
                 pop = colonists - typically cargo of colony ship
-                fleetMinerals = colony fleet object that has been salvaged
+                fleetMinerals = colony fleet object that has been salvaged from the ship hulls.
+
+        precondition: all minerals in colony fleet cargo has been offloaded to the planet
 
         '''
         newColony = Colony(self.raceData, planet, pop)

@@ -230,7 +230,7 @@ def processProductionQ(xfile, playerObj):
             all the player colonies ProductionQ objects have updated ProductionQ
             and ProductionLists
 
-    If there is a change to the P_Q or P_L, then the whole thing is resent. 
+    If there is a change to the P_Q or P_L, then the whole thing should be modified. 
 
     """
 
