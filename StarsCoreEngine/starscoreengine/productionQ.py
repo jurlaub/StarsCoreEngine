@@ -123,6 +123,14 @@ class ProductionQ(object):
         need to have a {"finishedForThisTurn" : false} entry. 
 
 
+
+        xfile addToQueue:
+        1) q is empty
+        2) change part of existing q
+
+
+
+
         """
         pass
 

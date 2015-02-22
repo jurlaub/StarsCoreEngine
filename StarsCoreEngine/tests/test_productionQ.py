@@ -186,7 +186,7 @@ class TestProductionQ(object):
         print(self.target_colony.planet.ID)
         print("%s:%s" % (self.target_colony.planet.owner, self.target_colony.planet.name))
         print(self.player.designs.currentShips.keys())
-        assert_true(False)
+        #assert_true(False)
 
 
 

@@ -73,6 +73,7 @@ class TestXFileController(object):
     # teardown xFileTestFile 
 
 
+
     def setup(self):
         print("TestXFileController: Setup")
 
@@ -86,6 +87,9 @@ class TestXFileController(object):
         self.game = Game(self.gameTemplate)
         self.player = self.game.players["player0"]
 
+
+
+        # --------- productionQ grab planets --------
         self.target_colony = None
         for each in self.player.colonies.values():
             print("each: %s" % each.planet.ID)
@@ -131,6 +135,10 @@ class TestXFileController(object):
 
         print("xfile test file .x1 should not exist ../StarsCoreEngine/%s:" % (self.testGameName + '.x1'))
         assert_false(os.path.isfile(fileName))      
+
+
+
+
 
 
     def test_xfileController(self):
@@ -189,6 +197,184 @@ class TestXFileController(object):
             #print("test: %s" % msg)
             assert_in('file unable to load', msg)       
 
+    def test_xfile_HasCorrectProductionQFormat(self):
+
+
+        tmp_xfile = xfile_TEMPLATE()
+
+        isValid = xFile_ProductionQ_StructureIsValid(tmp_xfile)
+
+        assert_true(isValid)
+
+    def test_xFile_ProductionQ_StructureIsValid_CorrectNumber(self):
+        tmp_xfile_ProductionQ = {
+        "ProductionQ" : 
+            {
+                "player.colonies.ID1" : 
+                    { 
+                        "productionOrder" : ["key1", "key2", "key3"],
+                        "productionItems" : { }  
+                    }
+
+            }
+            }
+
+        isValid = xFile_ProductionQ_StructureIsValid(tmp_xfile_ProductionQ)
+        assert_false(isValid)
+        
+    def test_xFile_ProductionQ_StructureIsValid_EmptyPlusContentsInQ(self):
+        """
+        test a mix of empty colony ProductionQ and Q with entries
+
+        """
+        tmp_xfile_ProductionQ = {
+        "ProductionQ" : 
+            {
+                "player.colonies.ID1" : 
+                    { 
+                        "productionOrder" : [ ],
+                        "productionItems" : { }  
+                    },
+                "player.colonies.ID2" : 
+                    {
+                        "productionOrder" : ["entryID1", "entryID2" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {"quantity": 5, "productionID": "item1"} }
+                    },
+                "player.colonies.ID3" : 
+                    {
+                        "productionOrder" : [ "entryID2" ],
+                        "productionItems" : { "entryID2" : {"quantity": 5, "productionID": "item1"}}
+                    }
+
+            }
+            }
+        isValid = xFile_ProductionQ_StructureIsValid(tmp_xfile_ProductionQ)
+        assert_true(isValid)
+        
+    def test_xFile_ProductionQ_StructureIsValid_ValidItemValues(self):
+        tmp_xfile_ProductionQ1 = {
+        "ProductionQ" : 
+            {
+
+                "correct colony Q" : 
+                    {
+                        "productionOrder" : ["entryID1", "entryID2" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {"quantity": 34, "productionID": "item2"} }
+                    }
+
+            }
+            }
+        tmp_xfile_ProductionQ2 = {
+        "ProductionQ" : 
+            {
+
+                "error colony Q2" : 
+                    {
+                        "productionOrder" : ["entryID1", "entryID2" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {} }
+                    }
+
+            }
+            }
+        tmp_xfile_ProductionQ3 = {
+        "ProductionQ" : 
+            {
+
+                "error colony Q3" : 
+                    {
+                        "productionOrder" : ["entryID1", "entryID2" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {"quantity": 2} }
+                    }
+
+            }
+            }
+        tmp_xfile_ProductionQ4 = {
+        "ProductionQ" : 
+            {
+
+                "error colony Q4" : 
+                    {
+                        "productionOrder" : ["entryID1", "entryID2" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {"productionID": "item1"} }
+                    }
+
+            }
+            }
+        tmp_xfile_ProductionQ5 = {
+        "ProductionQ" : 
+            {
+
+                "error colony Q5" : 
+                    {
+                        "productionOrder" : ["entryID1", "entryID2" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1", "CrazySauce" : "hello"}, "entryID2" : {"productionID": "item1"} }
+                    }
+
+            }
+            }
+
+        isValid = xFile_ProductionQ_StructureIsValid(tmp_xfile_ProductionQ1)
+        assert_true(isValid) 
+
+        isValid = xFile_ProductionQ_StructureIsValid(tmp_xfile_ProductionQ2) 
+        assert_false(isValid)   
+
+        isValid = xFile_ProductionQ_StructureIsValid(tmp_xfile_ProductionQ3) 
+        assert_false(isValid) 
+
+        isValid = xFile_ProductionQ_StructureIsValid(tmp_xfile_ProductionQ4) 
+        assert_false(isValid) 
+
+        isValid = xFile_ProductionQ_StructureIsValid(tmp_xfile_ProductionQ5) 
+        assert_false(isValid) 
+
+    def test_xFile_ProductionQ_StructureIsValid_ValidOrderItemEntries(self):
+        tmp_xfile_ProductionQ1 = {
+        "ProductionQ" : 
+            {
+
+                "correct colony Q" : 
+                    {
+                        "productionOrder" : ["entryID1", "entryID2" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {"quantity": 34, "productionID": "item2"} }
+                    }
+
+            }
+            }
+
+        tmp_xfile_ProductionQ2 = {
+        "ProductionQ" : 
+            {
+
+                "error colony Q2" : 
+                    {
+                        "productionOrder" : ["ERROREntry", "entryID2" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {"quantity": 34, "productionID": "item2"} }
+                    }
+
+            }
+            }
+        tmp_xfile_ProductionQ3 = {
+        "ProductionQ" : 
+            {
+
+                "error colony Q3" : 
+                    {
+                        "productionOrder" : ["entryID1", "entryID1" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {"quantity": 34, "productionID": "item2"} }
+                    }
+
+            }
+            }
+        
+        isValid = xFile_ProductionQ_StructureIsValid(tmp_xfile_ProductionQ1)
+        assert_true(isValid) 
+
+        isValid = xFile_ProductionQ_StructureIsValid(tmp_xfile_ProductionQ2)
+        assert_false(isValid) 
+
+        isValid = xFile_ProductionQ_StructureIsValid(tmp_xfile_ProductionQ3)
+        assert_false(isValid) 
 
 
     def test_xfileController_ProcessProductionQ_Correctly(self):

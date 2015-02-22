@@ -95,17 +95,17 @@ def xfile_TEMPLATE():
                                         
         "ProductionQ" : 
             {
-                "player.colonies.ID" : 
+                "player.colonies.ID1" : 
                     { 
-                        "productionOrder" : ["key1", "key2", "key3"],
-                        "productionItems" : { }  
+                        "productionOrder" : ["key1"],
+                        "productionItems" : {"key1" : {"quantity": 5, "productionID": "item1"} }  
                     },
-                "player.colonies.ID" : 
+                "player.colonies.ID2" : 
                     {
                         "productionOrder" : ["entryID1", "entryID2" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {} }
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {"quantity": 5, "productionID": "item1"} }
                     },
-                "player.colonies.ID" : 
+                "player.colonies.ID3" : 
                     {
                         "productionOrder" : [ ],
                         "productionItems" : { }
@@ -404,5 +404,54 @@ def xFileIsValid(xfile):
     pass
 
 
+def xFile_ProductionQ_StructureIsValid(xfile):
+    """
+    Input: xfile 
+    Output: True/False
 
+    method checks xfile for the following:N
+    1) ProductionQ entry exists in xfile (can be empty but must always exist)
+    2) if empty, return True
+    3) if 1 to N entries:
+        1) key must be a colony ID (thi is NOT tested in the method)
+        2) value containes correct xfile key:value pairs.
+
+    """
+
+    try:
+        colonyProduction = xfile["ProductionQ"]
+        for colonyName, orders in colonyProduction.items():
+            PO = orders["productionOrder"]
+            PL = orders["productionItems"]
+            print("%s: PO:%d PL:%d" % (colonyName, len(PO), len(PL)))
+
+            if len(set(PO)) != len(PL):         # PO must be unique entries
+                raise ValueError("Production Order and Production Items counts do not match or orders are not unique")
+            
+            for entry in PO:
+                if entry not in PL:
+                    raise NameError("%s order missing from %s Q" % (entry, colonyName))
+
+
+            for kee, each in PL.items():
+
+                # if len(each) == 0:
+                #     # #empty Q's are valid
+                #     # continue
+
+                if len(each) != 2:
+                    raise ValueError("productionItems entries should only contain Quantity and ProductionID; colony: %s" % kee)
+                quantity = each["quantity"]
+                productionID = each["productionID"]
+
+
+    except NameError as ne:
+        print("xfile ProductionQ is missing: %s" % ne )
+        return False
+    
+    except ValueError as ve:
+        print("xfile ProductionQ values is incorrectly recorded: %s" % ve)
+        return False
+
+    return True
 
