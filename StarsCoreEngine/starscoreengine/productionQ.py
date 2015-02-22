@@ -78,12 +78,12 @@ Multiple types of entries:
         2) quantity 1 items
         3) quantity n items
         #----------------------
-        {'itemType':'type', 'itemName': 'name', 'quantity': 3,
+        {'itemType':'type', 'productionID': 'ID', 'quantity': 3,
         "ironUsed" : 0, "borUsed" : 0, "germUsed" :0, "resourcesUsed" : 0 }
 
         or
 
-        "materialsUsed" : (0, 0, 0, 0)  == (iron, bor, germ, resources)
+        "materialsUsed" : [0, 0, 0, 0]  == (iron, bor, germ, resources) 
 
         ironUsed, borUsed, etc. are only used when quantity == 1. 
         #----------------------
@@ -128,9 +128,6 @@ class ProductionQ(object):
     def addToQueueFromXFile(self):
         """
 
-        
-        need to have a {"finishedForThisTurn" : false} entry. 
-
 
         addToQueueFromXFile()
 
@@ -140,14 +137,17 @@ class ProductionQ(object):
         conditions:
         1) user adds 1 to N items
             - if item is not in Q, add it.
+            - --TODO-- addToQueue method
+            - >>> addToQueue method should 'add' the other elements necessary for ProductionQ
         2) user modifies 1 to N item contents
             - if a quantity 1 item has a quantity increase after production has begun on the item, a new item is added to the productionOrder and productionItems
             - --TODO-- newProductionID() method - > that returns a new productionQ key
-            - a change in productionID (what should be built) is not allowed. The result is a new item - with the existing item 'zeroed' out
+            - a change in productionID (what should be built) is not allowed. The result is the existing item 'zeroed' out
 
             
         3) user deletes item 
-            - if not in productionList then set quantity to 0
+            - if item in productionQ is not in productionList then set quantity to 0
+            - --TODO-- setQuantityToZero() method
             - quantity 0 items handled by productionController at end of colony production
         4) user changes order of completion
             - handled by the productionOrder list   
@@ -155,6 +155,93 @@ class ProductionQ(object):
 
 
         """
+        pass
+
+    def addToQueue(self, entryDict, insertOrder = None):
+        """ addToQueue
+        - could be called when items are added from addToQueueFromXFile()
+        - could be called during entryController() 
+
+        Input: {kee: {quantity, productionID}}, insertOrder = None
+        Output:
+            kee is modified to be unique
+            item is added to productionOrder, productionItems
+            item adds other elements 
+            
+
+
+        Note:
+        insertOrder => inserts new item into productionOrder list as specified, None = results in an append
+        entryDict["quantity"] => target quantity, no modifications
+        "materialsUsed" : [0, 0, 0, 0]  == (iron, bor, germ, resources)
+
+        """
+        try:
+            if len(entryDict) != 1:
+                raise ValueError("addToQueue requires entryDict to a dictionary with 1 key:value entry. %d detected" % len(entryDict))
+
+            entryKey, entryObj = entryDict.popitem()
+            
+            tmpItem = { "quantity" : entryObj["quantity"], 
+                        "productionID" : entryObj["productionID"],
+                        "finishedForThisTurn" : False,
+                        "itemType":"itemType",
+                        "materialsUsed" : [0, 0, 0, 0]
+            }           
+
+
+            tmpKey = self.obtainNewKey(entryKey)
+
+
+            if insertOrder:
+                self.productionOrder.insert(insertOrder, tmpKey)
+            else:
+                self.productionOrder.append(tmpKey)
+
+            self.productionItems[tmpKey] = tmpItem
+
+
+
+        except NameError as ne:
+            print("ProductionQ.addToQueue() is missing: %s" % ne )
+
+        except ValueError as ve:
+            print("%s" % ve)
+
+
+    def obtainNewKey(self, kee):
+        """
+        Input: kee
+        Output: a unique kee that is not used in that colony productionQ
+
+        note: not thread safe within colony productionQ. 
+
+        """
+        tmpKey = kee
+        count = 0
+
+        while True:
+            if tmpKey not in self.productionOrder:
+                if tmpKey not in self.productionItems:
+                    return tmpKey
+            tmpKey = ("%s%s" %(kee, str(count)))
+            count += 1
+
+
+        
+
+        
+
+    def setQuantityToZero(self, entryKee):
+        """ setQuantityToZero
+        changes the entry quantity to zeroed
+
+        """
+
+        pass
+
+    def removeQuantityZeroItems(self):
+
         pass
 
     def productionController(self):
