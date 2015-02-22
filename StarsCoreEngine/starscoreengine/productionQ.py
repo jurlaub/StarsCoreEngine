@@ -123,15 +123,12 @@ class ProductionQ(object):
         self.productionItems = {}   # 
 
 
-        pass
+        
 
     def addToQueueFromXFile(self):
-        """
+        """addToQueueFromXFile()
 
-
-        addToQueueFromXFile()
-
-        Input: productionQ Order & Items for colony.
+        Input:  {productionOrder, productionItems} for colony.
         Output: updates colony productionQ
 
         conditions:
@@ -167,7 +164,7 @@ class ProductionQ(object):
             kee is modified to be unique
             item is added to productionOrder, productionItems
             item adds other elements 
-            
+
 
 
         Note:
@@ -181,11 +178,13 @@ class ProductionQ(object):
                 raise ValueError("addToQueue requires entryDict to a dictionary with 1 key:value entry. %d detected" % len(entryDict))
 
             entryKey, entryObj = entryDict.popitem()
+
+            # --TODO-- find ItemType method
             
             tmpItem = { "quantity" : entryObj["quantity"], 
                         "productionID" : entryObj["productionID"],
                         "finishedForThisTurn" : False,
-                        "itemType":"itemType",
+                        "itemType":"itemType Ship",
                         "materialsUsed" : [0, 0, 0, 0]
             }           
 
