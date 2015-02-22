@@ -26,6 +26,12 @@ Note:   See research.py for interaction between productionQ, research, and Order
         of Events. 
 
 
+ProductionQ Requirements:
+    - Client is required to provide a unique identifier for each productionQ item per colony
+    - Client is required to filter production Items producable by a Colony based on colony limitations 
+    - If user modifies the productionOrder, Client needs to submit the entire productionOrder. If anything is missing from the order, it will be deleted from the Q
+
+
 
 Question:   does .x file update productionQ (at player level?) 
             Is each colony updated with orders or do the orders stay at the 
@@ -33,7 +39,7 @@ Question:   does .x file update productionQ (at player level?)
 
 
 
-productionQ:
+productionQ "Items to Produce" :
         
         ShipDesign:
             Ships 
@@ -52,7 +58,7 @@ productionQ:
 
 
 
-        Miniaturization:
+Miniaturization:
         Input: techLevel, techTree, LRT
         Output: revise the values in productionItems
  
@@ -65,6 +71,24 @@ productionQ:
         due to Miniaturization then that is unfortunate. (no refunds of minerals 
         or resources, if overspent)
 
+
+# thoughts on Q
+Multiple types of entries:
+        1) autoBuild orders
+        2) quantity 1 items
+        3) quantity n items
+        #----------------------
+        {'itemType':'type', 'itemName': 'name', 'quantity': 3,
+        "ironUsed" : 0, "borUsed" : 0, "germUsed" :0, "resourcesUsed" : 0 }
+
+        or
+
+        "materialsUsed" : (0, 0, 0, 0)  == (iron, bor, germ, resources)
+
+        ironUsed, borUsed, etc. are only used when quantity == 1. 
+        #----------------------
+
+        autoBuild & everything -> 
 
 
 """
@@ -101,33 +125,32 @@ class ProductionQ(object):
 
         pass
 
-    def addToQueue(self):
+    def addToQueueFromXFile(self):
         """
-        Multiple types of entries:
-        1) autoBuild orders
-        2) quantity 1 items
-        3) quantity n items
 
-        {'itemType':'type', 'itemName': 'name', 'quantity': 3,
-        "ironUsed" : 0, "borUsed" : 0, "germUsed" :0, "resourcesUsed" : 0 }
-
-        or
-
-        "materialsUsed" : (0, 0, 0, 0)  == (iron, bor, germ, resources)
-
-        ironUsed, borUsed, etc. are only used when quantity == 1. 
-
-
-
-        autoBuild & everything -> 
+        
         need to have a {"finishedForThisTurn" : false} entry. 
 
 
+        addToQueueFromXFile()
 
-        xfile addToQueue:
-        1) q is empty
-        2) change part of existing q
+        Input: productionQ Order & Items for colony.
+        Output: updates colony productionQ
 
+        conditions:
+        1) user adds 1 to N items
+            - if item is not in Q, add it.
+        2) user modifies 1 to N item contents
+            - if a quantity 1 item has a quantity increase after production has begun on the item, a new item is added to the productionOrder and productionItems
+            - --TODO-- newProductionID() method - > that returns a new productionQ key
+            - a change in productionID (what should be built) is not allowed. The result is a new item - with the existing item 'zeroed' out
+
+            
+        3) user deletes item 
+            - if not in productionList then set quantity to 0
+            - quantity 0 items handled by productionController at end of colony production
+        4) user changes order of completion
+            - handled by the productionOrder list   
 
 
 
