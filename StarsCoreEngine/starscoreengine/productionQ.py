@@ -125,34 +125,75 @@ class ProductionQ(object):
 
         
 
-    def addToQueueFromXFile(self):
+    def addToQueueFromXFile(self, colonyQ):
         """addToQueueFromXFile()
 
         Input:  {productionOrder, productionItems} for colony.
         Output: updates colony productionQ
 
+        Requires:
+        ProductionQ items must have unique id's
+        ProductionQ item "productionID"'s are not changed
+
         conditions:
-        1) user adds 1 to N items
-            - if item is not in Q, add it.
-            - --TODO-- addToQueue method
-            - >>> addToQueue method should 'add' the other elements necessary for ProductionQ
+    x   1) user adds 1 to N items
+            - if item is not in Q, add it. -> addToQueue method
+    
         2) user modifies 1 to N item contents
-            - if a quantity 1 item has a quantity increase after production has begun on the item, a new item is added to the productionOrder and productionItems
-            - --TODO-- newProductionID() method - > that returns a new productionQ key
+            - if a quantity 1 item has a quantity increase after production has 
+            begun on the item, a new item is added to the productionOrder and productionItems
+            - if a quantity N item has a different quantity, then quantity is set to the new quantity number
+            - obtainNewKey() method - > that returns a new productionQ key
             - a change in productionID (what should be built) is not allowed. The result is the existing item 'zeroed' out
 
             
-        3) user deletes item 
-            - if item in productionQ is not in productionList then set quantity to 0
+    x   3) user deletes item 
+    x       - if item in productionQ is not in productionList then set quantity to 0
             - --TODO-- setQuantityToZero() method
             - quantity 0 items handled by productionController at end of colony production
-        4) user changes order of completion
+    x   4) user changes order of completion
             - handled by the productionOrder list   
 
 
 
         """
-        pass
+        colonyQOrders = colonyQ["productionOrder"]  # list
+        colonyQItems = colonyQ["productionItems"]   # contents
+
+        # find items in productionQ not in the new ProductionQ orders
+        tmpRemoveFromCurrentQ = set(colonyQOrders).intersection(self.productionOrder)
+        
+        # update the productionItems "quantity" = 0 for entries to remove
+        for each in tmpRemoveFromCurrentQ:
+            self.setQuantityToZero(each)
+
+        # New orders are added or update existing ProductionQ
+        for each in colonyQOrders:
+            
+            if each in self.productionItems:
+                # update Queue
+                targetItem = colonyQItems[each]
+                existingItem = self.productionItems[each]
+
+                if hasWorkBeenDone(existingItem):
+                    # work has not been done
+                    pass
+                else:
+                    # work has been done
+                    # if new order quantity is greater then 1, 
+                    #>> add a new entry to items, insert new Order immediately after the quantity 1 item
+                    pass
+
+
+                pass
+            
+            else:
+                v = { each : colonyQItems[each] }
+                self.addToQueue(v)
+
+
+        self.productionOrder = colonyQ["productionOrder"]
+        
 
     def addToQueue(self, entryDict, insertOrder = None):
         """ addToQueue
@@ -208,6 +249,10 @@ class ProductionQ(object):
             print("%s" % ve)
 
 
+    def updateQueue(self, kee, ):
+
+        pass
+
     def obtainNewKey(self, kee):
         """
         Input: kee
@@ -229,15 +274,47 @@ class ProductionQ(object):
 
         
 
-        
+    @staticmethod
+    def hasWorkBeenDone(existingItem):
+        """
+        Input: productionItem dictionary
+        Output: 
+            True - work has been done == i.e. an element in "materialsUsed" != 0
+            False - work not done == all elements in "materialsUsed" == 0
+
+        Conditions:
+            productionItems["quantity"] == 1; "work" should not be done when 
+            quantity > 1
+
+        """
+        try:
+            # quan
+            correctQuantity = True
+            if existingItem["quantity"] != 0:
+                correctQuantity = False
+
+            for each in existingItem["materialsUsed"]:
+                if each != 0 and correctQuantity == False:
+                    raise ValueError("ProductionQ.hasWorkBeenDone: materialsUsed and quantity not aligned. materialsUsed can only be greater then 0 when quantity = 1")
+                if each != 0:
+                    return True
+
+            return False
+
+        except ValueError as ve:
+            print(ve)
+            return False
+            
+
 
     def setQuantityToZero(self, entryKee):
         """ setQuantityToZero
         changes the entry quantity to zeroed
 
         """
+        self.productionItems[entryKee]["quantity"] = 0
 
-        pass
+        
 
     def removeQuantityZeroItems(self):
 

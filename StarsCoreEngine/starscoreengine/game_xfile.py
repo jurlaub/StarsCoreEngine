@@ -242,7 +242,7 @@ def processProductionQ(xfile, playerObj):
         if kee in playerColonies:
             colonyQ = playerColonies[kee].productionQ
             
-
+            # colonyQ.addToQueueFromXFile(obj)
             # this needs to be smarter then replacing the existing data
             if "productionOrder" in obj:
                 colonyQ.productionOrder = obj["productionOrder"]
