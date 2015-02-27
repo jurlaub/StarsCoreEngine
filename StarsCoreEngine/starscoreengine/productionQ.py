@@ -140,11 +140,13 @@ class ProductionQ(object):
             - if item is not in Q, add it. -> addToQueue method
     
         2) user modifies 1 to N item contents
-            - if a quantity 1 item has a quantity increase after production has 
+        x    - if a quantity 1 item has a quantity increase after production has 
             begun on the item, a new item is added to the productionOrder and productionItems
-            - if a quantity N item has a different quantity, then quantity is set to the new quantity number
-            - obtainNewKey() method - > that returns a new productionQ key
-            - a change in productionID (what should be built) is not allowed. The result is the existing item 'zeroed' out
+        x    - if a quantity N item has a different quantity, then quantity is set to the new quantity number
+        x    - obtainNewKey() method - > that returns a new productionQ key
+        x    - a change in productionID (what should be built) is not allowed. 
+            The productionID change is not checked. If Client allows this 
+            through, the original production value item will be built. 
 
             
     x   3) user deletes item 
@@ -176,25 +178,28 @@ class ProductionQ(object):
                 existingItem = self.productionItems[each]
 
                 # if the new orders set the order to 0, 
-                if targetItem["quantity"] == 0:
+                if targetItem["quantity"] < 1:
                     existingItem["quantity"] = 0
                     continue
 
                 if not ProductionQ.workHasBeenDone(existingItem):
                     # work has not been done
-                    # add quantity to existing item 
+                    # replace existing item's quantity 
                     existingItem["quantity"] = targetItem["quantity"]
-
-                    
+     
                 else:
                     # work has been done
-                    # if target order quantity is greater then 1, 
-                    #>> add a new entry to items, insert new Order immediately after the quantity 1 item
+                    if targetItem["quantity"] == 1:
+                        # should not be a possibilty - work should only be done on an individual item
+                        # or the above test did not work. either way should not change
+                        continue
                     
-                    pass
-
-
-                pass
+                    else:
+                        # quantity < 1 & == 1 checked earlier. Value must be greater than 1                        
+                        targetItem["quantity"] -= 1 
+                        
+                        #>> add a new entry to items, insert new Order immediately after the quantity 1 item
+                        self.addToQueue({each : {targetItem}}, eachIndex + 1)
             
             else:
                 v = { each : colonyQItems[each] }
@@ -242,8 +247,12 @@ class ProductionQ(object):
             tmpKey = self.obtainNewKey(entryKey)
 
 
-            if insertOrder:
+            if insertOrder and insertOrder < len(self.productionOrder):
+                # if insertOrder >= len(self.productionOrder):
+                #     self.productionOrder.append(tmpKey)
+                # else:
                 self.productionOrder.insert(insertOrder, tmpKey)
+
             else:
                 self.productionOrder.append(tmpKey)
 
