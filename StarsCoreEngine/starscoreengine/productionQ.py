@@ -163,25 +163,34 @@ class ProductionQ(object):
         # find items in productionQ not in the new ProductionQ orders
         tmpRemoveFromCurrentQ = set(colonyQOrders).intersection(self.productionOrder)
         
-        # update the productionItems "quantity" = 0 for entries to remove
+        # update the productionItems "quantity" = 0 for entries to remove -> because they do not exist in the new queue
         for each in tmpRemoveFromCurrentQ:
             self.setQuantityToZero(each)
 
         # New orders are added or update existing ProductionQ
-        for each in colonyQOrders:
+        for eachIndex, each in enumerate(colonyQOrders):
             
             if each in self.productionItems:
                 # update Queue
                 targetItem = colonyQItems[each]
                 existingItem = self.productionItems[each]
 
-                if hasWorkBeenDone(existingItem):
+                # if the new orders set the order to 0, 
+                if targetItem["quantity"] == 0:
+                    existingItem["quantity"] = 0
+                    continue
+
+                if not ProductionQ.workHasBeenDone(existingItem):
                     # work has not been done
-                    pass
+                    # add quantity to existing item 
+                    existingItem["quantity"] = targetItem["quantity"]
+
+                    
                 else:
                     # work has been done
-                    # if new order quantity is greater then 1, 
+                    # if target order quantity is greater then 1, 
                     #>> add a new entry to items, insert new Order immediately after the quantity 1 item
+                    
                     pass
 
 
@@ -275,7 +284,7 @@ class ProductionQ(object):
         
 
     @staticmethod
-    def hasWorkBeenDone(existingItem):
+    def workHasBeenDone(existingItem):
         """
         Input: productionItem dictionary
         Output: 
@@ -299,7 +308,7 @@ class ProductionQ(object):
                 if each != 0:
                     return True
 
-            return False
+            return False    
 
         except ValueError as ve:
             print(ve)
