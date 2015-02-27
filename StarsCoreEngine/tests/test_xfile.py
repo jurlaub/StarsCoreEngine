@@ -90,7 +90,7 @@ class TestXFileController(object):
 
 
         # --------- productionQ grab planets --------
-        self.target_colony = None
+        self.target_colony = None       # HW
         for each in self.player.colonies.values():
             print("each: %s" % each.planet.ID)
             if each.planet.HW:
@@ -100,13 +100,16 @@ class TestXFileController(object):
         self.newColony = []
         self.universePlanets = self.game.game_universe[0].planets
 
+        # find planets == newColonyCount in universe without an owner
+        newColonyCount = 2 
         for kee, obj in self.universePlanets.items():
-            if len(self.newColony) > 2:
+            if len(self.newColony) > newColonyCount:
                 break
 
             if not obj.owner:
                 self.newColony.append(kee)
 
+        # colonize planets that are identified in self.newColony list
         for each in self.newColony:
             self.player.colonizePlanet(self.universePlanets[each], 150000)
 
@@ -444,3 +447,282 @@ class TestXFileController(object):
         assert_equal(len(target2.productionItems), 3)
         assert_equal(target2.productionItems["entryID4"]["quantity"], 455)        
 
+
+
+    def test_xfileController_ProcessProductionQ_CorrectlyDeleteItemsSetToZero(self):
+        """
+        Input: xfile, playerObj
+        Output: existing items intended to be deleted are set to Zero
+        """
+
+        colony2 = self.newColony[0]
+
+        xfileSetup_PQ_v1 = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
+                                            "entryID4" : {"quantity": 455, "productionID": "mines"} 
+                                            }
+
+                    }
+
+                }
+            }
+        xfileSetup_PQ_v2 = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2" ],
+                        "productionItems" : {  
+                                            "entryID2" : {"quantity": 0, "productionID": "factories"}
+                                            }
+                    }
+
+                }
+            }
+
+        assert_true(False)
+    def test_xfileController_ProcessProductionQ_CorrectlyDeleteItemsMissingFromOrder(self):
+        """
+        Input: xfile, playerObj
+        Output: Items missing from productionOrder are set to Zero
+        """
+
+        colony2 = self.newColony[0]
+
+        xfileSetup_PQ_v1 = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
+                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
+                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
+                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                                            }
+
+                    }
+
+                }
+            }
+        xfileSetup_PQ_v2 = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2" ],
+                        "productionItems" : {  
+                                            "entryID2" : {"quantity": 0, "productionID": "factories"}
+                                            }
+                    }
+
+                }
+            }
+
+        assert_true(False)
+
+
+    def test_xfileController_ProcessProductionQ_CorrectlyReshuffleOrderItems(self):
+        """
+        Input: xfile, playerObj
+        Output: Items in productionOrder are correctly readjusted
+        """
+
+        colony2 = self.newColony[0]
+
+        xfileSetup_PQ_v1 = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
+                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
+                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
+                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                                            }
+
+                    }
+
+                }
+            }
+        xfileSetup_PQ_v2 = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2" ],
+                        "productionItems" : {  
+                                            "entryID2" : {"quantity": 0, "productionID": "factories"}
+                                            }
+                    }
+
+                }
+            }
+
+        assert_true(False)    
+
+
+    def test_xfileController_ProcessProductionQ_CorrectlyAddItemsToQ(self):
+        """
+        Input: xfile, playerObj
+        Output: Items are added correctly. 1 to end, 1 to middle
+        """
+
+        colony2 = self.newColony[0]
+
+        xfileSetup_PQ_v1 = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
+                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
+                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
+                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                                            }
+
+                    }
+
+                }
+            }
+        xfileSetup_PQ_v2 = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2" ],
+                        "productionItems" : {  
+                                            "entryID2" : {"quantity": 0, "productionID": "factories"}
+                                            }
+                    }
+
+                }
+            }
+
+        assert_true(False)
+
+    
+    def test_xfileController_ProcessProductionQ_CorrectlyHandleUnexpectedQuantityValues(self):
+        """
+        Input: xfile, playerObj
+        Output: Items with negative or odd values in XFile are correctly test_xfileController_ProcessProductionQ_CorrectlyHandleUnexpectedQuantityValues
+
+
+
+
+        """
+
+        colony2 = self.newColony[0]
+
+        xfileSetup_PQ_v1 = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
+                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
+                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
+                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                                            }
+
+                    }
+
+                }
+            }
+        xfileSetup_PQ_v2 = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2" ],
+                        "productionItems" : {  
+                                            "entryID2" : {"quantity": 0, "productionID": "factories"}
+                                            }
+                    }
+
+                }
+            }
+
+        assert_true(False)
+
+
+    def test_xfileController_ProcessProductionQ_CorrectlyIncreaseItemQuantityWOWork(self):
+        """
+        Input: xfile, playerObj
+        Output: Items quantity is correctly increased, the item has had no work done on it
+        """
+
+        colony2 = self.newColony[0]
+
+        xfileSetup_PQ_v1 = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
+                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
+                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
+                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                                            }
+
+                    }
+
+                }
+            }
+        xfileSetup_PQ_v2 = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2" ],
+                        "productionItems" : {  
+                                            "entryID2" : {"quantity": 0, "productionID": "factories"}
+                                            }
+                    }
+
+                }
+            }
+
+        assert_true(False)
+
+    def test_xfileController_ProcessProductionQ_CorrectlyHandleQuantityIncreaseWWorkDone(self):
+        """
+        Input: xfile, playerObj
+        Output: Items that have work done need to add a new entry when the quantity is increased.
+        """
+
+        colony2 = self.newColony[0]
+
+        xfileSetup_PQ_v1 = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
+                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
+                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
+                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                                            }
+
+                    }
+
+                }
+            }
+        xfileSetup_PQ_v2 = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2" ],
+                        "productionItems" : {  
+                                            "entryID2" : {"quantity": 0, "productionID": "factories"}
+                                            }
+                    }
+
+                }
+            }
+
+        assert_true(False)

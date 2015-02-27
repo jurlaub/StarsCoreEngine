@@ -418,7 +418,7 @@ def xFile_ProductionQ_StructureIsValid(xfile):
     1) ProductionQ entry exists in xfile (can be empty but must always exist)
     2) if empty, return True
     3) if 1 to N entries:
-        1) key must be a colony ID (thi is NOT tested in the method)
+        1) key must be a colony ID (this is NOT tested in the method)
         2) value containes correct xfile key:value pairs.
 
     """
