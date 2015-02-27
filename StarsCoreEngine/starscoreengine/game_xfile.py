@@ -244,11 +244,14 @@ def processProductionQ(xfile, playerObj):
             
             # colonyQ.addToQueueFromXFile(obj)
             # this needs to be smarter then replacing the existing data
-            if "productionOrder" in obj:
-                colonyQ.productionOrder = obj["productionOrder"]
+            # if "productionOrder" in obj:
+            #     colonyQ.productionOrder = obj["productionOrder"]
             
-            if "productionItems" in obj:
-                colonyQ.productionItems = obj["productionItems"]
+            # if "productionItems" in obj:
+            #     colonyQ.productionItems = obj["productionItems"]
+            
+            colonyQ.addToQueueFromXFile(obj)
+
         #print("Processed Q for %s" % kee)
         #print("%s" % obj)
 
