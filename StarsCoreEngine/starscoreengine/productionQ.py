@@ -100,6 +100,7 @@ class ProductionQ(object):
 
 
     """
+    DEBUG = False
 
     itemType = ('Ship', 'Starbase', 'Scanner', 'Defenses', 'Mines', \
                  'Factories', 'Terraform', 'Minerals','Special')
@@ -135,6 +136,8 @@ class ProductionQ(object):
         ProductionQ items must have unique id's
         ProductionQ item "productionID"'s are not changed
 
+
+
         conditions:
     x   1) user adds 1 to N items
             - if item is not in Q, add it. -> addToQueue method
@@ -156,23 +159,46 @@ class ProductionQ(object):
     x   4) user changes order of completion
             - handled by the productionOrder list   
 
+        if new orders are only adjusting the productionOrder and are making no 
+        other change to the entry, as long as the entry exists in productionItems, 
+        the productionItem value can be missing.
 
 
         """
+        DEBUG = ProductionQ.DEBUG
+
         colonyQOrders = colonyQ["productionOrder"]  # list
         colonyQItems = colonyQ["productionItems"]   # contents
+        if DEBUG: print("NewOrders:\n%s\n%s" % (colonyQOrders,colonyQItems))
+        if DEBUG: print("ExistinOrders:\n%s\n%s" % (self.productionOrder, self.productionItems))
 
         # find items in productionQ not in the new ProductionQ orders
-        tmpRemoveFromCurrentQ = set(colonyQOrders).intersection(self.productionOrder)
-        
+        tmpRemoveFromCurrentQ = set(self.productionOrder).difference(colonyQOrders)
+        if DEBUG: print("set:%s" % tmpRemoveFromCurrentQ)
+
+
         # update the productionItems "quantity" = 0 for entries to remove -> because they do not exist in the new queue
         for each in tmpRemoveFromCurrentQ:
+            if DEBUG: print("%s set to Zero" % each)
             self.setQuantityToZero(each)
 
         # New orders are added or update existing ProductionQ
         for eachIndex, each in enumerate(colonyQOrders):
-            
-            if each in self.productionItems:
+            """
+            Items-exist truth table
+            t = targetItem = colonyQItems[each]
+            e = existingItem = self.productionItems[each]  
+
+            e | t 
+            -----
+            T | T  == things have changed -> update existingItem
+            T | F  == involves a reorder of productionOrder (note: not preferred. prefer above (T|T) case)
+            F | T  == not present in existingItem, is new and should be added
+            F | F  == no action - error case. Entry should not be in either productionOrder or productionItems        
+
+            """
+            # Items-exist (T|T)
+            if each in self.productionItems and each in colonyQItems:
                 # update Queue
                 targetItem = colonyQItems[each]
                 existingItem = self.productionItems[each]
@@ -182,13 +208,15 @@ class ProductionQ(object):
                     existingItem["quantity"] = 0
                     continue
 
+                # work has not been done
                 if not ProductionQ.workHasBeenDone(existingItem):
-                    # work has not been done
+                    
                     # replace existing item's quantity 
                     existingItem["quantity"] = targetItem["quantity"]
-     
+                
+                # work has been done
                 else:
-                    # work has been done
+                    
                     if targetItem["quantity"] == 1:
                         # should not be a possibilty - work should only be done on an individual item
                         # or the above test did not work. either way should not change
@@ -201,12 +229,29 @@ class ProductionQ(object):
                         #>> add a new entry to items, insert new Order immediately after the quantity 1 item
                         self.addToQueue({each : {targetItem}}, eachIndex + 1)
             
-            else:
+            # Items-exist (T|F)
+            elif each in self.productionItems and each not in colonyQItems:
+                # no action needed -> reorder handled in the productionOrder
+                if DEBUG: print("index%d- Order:%s # Items-exist (T|F)" % (eachIndex, each))
+                if DEBUG: print("%s" % colonyQItems)
+                if DEBUG: print("%s" % self.productionItems)
+                continue
+
+            # # Items-exist (F|T)
+            elif each not in self.productionItems and each in colonyQItems:
                 v = { each : colonyQItems[each] }
                 self.addToQueue(v)
-
+            
+            # Items-exist (F|F)
+            else:
+                # take no action, should not have reached this spot
+                #raise ValueError()
+                ra = ("addToQueueFromXFile - reached area that should not be reached - Items-exist (F|F) case")
+                raise ValueError(ra)
 
         self.productionOrder = colonyQ["productionOrder"]
+
+        # remove quantity zero items?
         
 
     def addToQueue(self, entryDict, insertOrder = None):
@@ -335,6 +380,11 @@ class ProductionQ(object):
         
 
     def removeQuantityZeroItems(self):
+        """
+        productionOrder and productionItems need to align. If items exist in 
+        productionItems while its name doesn't exist in productionOrder - then 
+        the productionItems need to be removed.
+        """
 
         pass
 

@@ -452,7 +452,8 @@ class TestXFileController(object):
     def test_xfileController_ProcessProductionQ_CorrectlyDeleteItemsSetToZero(self):
         """
         Input: xfile, playerObj
-        Output: existing items intended to be deleted are set to Zero
+        Output: Items with a quantity of zero are removed from the 
+                productionOrder & productionItems
         """
 
         colony2 = self.newColony[0]
@@ -485,6 +486,74 @@ class TestXFileController(object):
             }
 
         assert_true(False)
+
+
+    def test_xfileController_ProcessProductionQ_CorrectlySetItemsToZero(self):
+        """
+        Input: xfile, playerObj
+        Output: existing items whose new quantity is Zero are set to Zero
+                (i.e. user intentionally sets items to Zero)
+        """
+
+        colony2 = self.newColony[0] # name of a non-HW colony in player.colonies
+
+        # start values
+        xfileSetup_PQ_v1 = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "DeleteME" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
+                                            "DeleteME" : {"quantity": 10, "productionID": "factories"},
+                                            "entryID4" : {"quantity": 455, "productionID": "mines"} 
+                                            }
+
+                    }
+
+                }
+            }
+        # "DeleteME" to be set to zero
+        xfileSetup_PQ_v2 = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "DeleteME" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
+                                            "DeleteME" : {"quantity": 0, "productionID": "factories"},
+                                            "entryID4" : {"quantity": 455, "productionID": "mines"} 
+                                            }
+
+                    }
+
+                }
+            }
+
+        assert_true(colony2)
+        target2 = self.player.colonies[colony2].productionQ
+
+        # 2nd colony - sanity check Pre-first call
+        assert_equal(target2.productionOrder, [])
+        assert_equal(target2.productionItems, {}) 
+
+        # first call -> to set up the values
+        processProductionQ(xfileSetup_PQ_v1, self.player)      # process the ProductionQ
+
+        # 2nd colony - sanity check Post-first call
+        assert_equal(len(target2.productionItems), 3)
+        assert_equal(target2.productionOrder[2], "DeleteME")
+        assert_equal(target2.productionItems["DeleteME"]["quantity"], 10)
+
+        # second call -> to correctly set the values to zero
+        processProductionQ(xfileSetup_PQ_v2, self.player)      # process the ProductionQ       
+        
+        # 2nd colony - test
+        assert_equal(len(target2.productionItems), 3)
+        assert_equal(len(target2.productionItems), len(target2.productionOrder))
+        assert_equal(target2.productionOrder[2], "DeleteME")
+        assert_equal(target2.productionItems["DeleteME"]["quantity"], 0)
+
+    
+
     def test_xfileController_ProcessProductionQ_CorrectlyDeleteItemsMissingFromOrder(self):
         """
         Input: xfile, playerObj
@@ -513,7 +582,7 @@ class TestXFileController(object):
                 {
                 colony2 :
                     {
-                        "productionOrder" : ["entryID4", "entryID1", "entryID2" ],
+                        "productionOrder" : ["entryID2", "entryID4", "entryID1" ],
                         "productionItems" : {  
                                             "entryID2" : {"quantity": 0, "productionID": "factories"}
                                             }
@@ -522,7 +591,49 @@ class TestXFileController(object):
                 }
             }
 
-        assert_true(False)
+        assert_true(colony2)
+        target2 = self.player.colonies[colony2].productionQ
+
+        # 2nd colony - sanity check Pre-first call
+        assert_equal(target2.productionOrder, [])
+        assert_equal(target2.productionItems, {}) 
+
+        # first call -> to set up the values
+        processProductionQ(xfileSetup_PQ_v1, self.player)      # process the ProductionQ
+
+        # 2nd colony - sanity check Post-first call
+        assert_equal(len(target2.productionItems), 5)
+        assert_equal(len(target2.productionItems), len(target2.productionOrder))
+
+        assert_equal(target2.productionOrder[3], "entryID5")
+        assert_equal(target2.productionOrder[4], "entryID6")
+        assert_equal(target2.productionOrder[2], "entryID2")
+        assert_equal(target2.productionOrder[1], "entryID1")
+        assert_equal(target2.productionOrder[0], "entryID4")
+        assert_equal(target2.productionItems["entryID4"]["quantity"], 455)
+        assert_equal(target2.productionItems["entryID5"]["quantity"], 1)
+        assert_equal(target2.productionItems["entryID6"]["quantity"], 4)
+        assert_equal(target2.productionItems["entryID1"]["quantity"], 5)
+
+        # second call -> to adjust the Q order
+        processProductionQ(xfileSetup_PQ_v2, self.player)      # process the ProductionQ       
+        
+        # 2nd colony - test
+        assert_equal(len(target2.productionOrder), 3)
+        assert_equal(len(target2.productionItems), 5)
+
+        assert_equal(target2.productionOrder[0], "entryID2")
+        assert_equal(target2.productionOrder[2], "entryID1")
+        assert_equal(target2.productionOrder[1], "entryID4")
+
+        assert_equal(target2.productionItems["entryID2"]["quantity"], 0)
+        assert_equal(target2.productionItems["entryID4"]["quantity"], 455)
+        assert_equal(target2.productionItems["entryID5"]["quantity"], 0)
+        assert_equal(target2.productionItems["entryID6"]["quantity"], 0)
+        assert_equal(target2.productionItems["entryID1"]["quantity"], 5)
+
+        #assert_true(False)
+
 
 
     def test_xfileController_ProcessProductionQ_CorrectlyReshuffleOrderItems(self):
@@ -726,3 +837,5 @@ class TestXFileController(object):
             }
 
         assert_true(False)
+
+
