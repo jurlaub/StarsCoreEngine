@@ -636,6 +636,107 @@ class TestXFileController(object):
 
 
 
+    def test_xfileController_ProcessProductionQ_CorrectlyDeleteItemsMissingFromOrder_complex(self):
+        """
+        Input: xfile, playerObj
+        Output: Items missing from productionOrder are set to Zero
+                need to test what happens if 2nd queue orders have removed items 
+                from the original productionOrder but have added more
+
+        """
+
+        colony2 = self.newColony[0]
+
+        xfileSetup_PQ_v1 = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
+                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
+                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
+                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                                            }
+
+                    }
+
+                }
+            }
+        xfileSetup_PQ_v2 = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID12", "entryID4", \
+                        "entryID13", "entryID14", "entryID15", "entryID16", \
+                        "entryID17", "entryID18" ],
+                        
+                        "productionItems" : { "entryID12" : {"quantity": 5, "productionID": "mines"}, 
+                                            "entryID13" : {"quantity": 10, "productionID": "factories"},
+                                            "entryID4" : {"quantity": 300, "productionID": "mines"},
+                                            "entryID14" : {"quantity": 2, "productionID": "factories"},
+                                            "entryID15" : {"quantity": 3, "productionID": "mines"},
+                                            "entryID16" : {"quantity": 5, "productionID": "mines"},
+                                            "entryID17" : {"quantity": 8, "productionID": "factories"},
+                                            "entryID18" : {"quantity": 13, "productionID": "mines"}                                               
+                                            }
+                    }
+
+                }
+            }
+
+        assert_true(colony2)
+        target2 = self.player.colonies[colony2].productionQ
+
+        # 2nd colony - sanity check Pre-first call
+        assert_equal(target2.productionOrder, [])
+        assert_equal(target2.productionItems, {}) 
+
+        # first call -> to set up the values
+        processProductionQ(xfileSetup_PQ_v1, self.player)      # process the ProductionQ
+
+        # 2nd colony - sanity check Post-first call
+        assert_equal(len(target2.productionItems), 5)
+        assert_equal(len(target2.productionItems), len(target2.productionOrder))
+
+
+        assert_equal(target2.productionOrder[3], "entryID5")
+        assert_equal(target2.productionOrder[4], "entryID6")
+        assert_equal(target2.productionOrder[2], "entryID2")
+        assert_equal(target2.productionOrder[1], "entryID1")
+        assert_equal(target2.productionOrder[0], "entryID4")
+        assert_equal(target2.productionItems["entryID4"]["quantity"], 455)
+        assert_equal(target2.productionItems["entryID5"]["quantity"], 1)
+        assert_equal(target2.productionItems["entryID6"]["quantity"], 4)
+        assert_equal(target2.productionItems["entryID1"]["quantity"], 5)
+
+
+
+
+        # second call -> to adjust the Q order
+        processProductionQ(xfileSetup_PQ_v2, self.player)      # process the ProductionQ       
+        
+        # 2nd colony - test
+        assert_equal(len(target2.productionOrder), 8)
+        assert_equal(len(target2.productionItems), 12)
+
+
+        assert_equal(target2.productionOrder[0], "entryID12")
+        assert_equal(target2.productionOrder[1], "entryID4")
+        assert_equal(target2.productionOrder[2], "entryID13")
+        assert_equal(target2.productionOrder[5], "entryID16")
+        assert_equal(target2.productionOrder[7], "entryID18")
+        assert_equal(target2.productionItems["entryID4"]["quantity"], 300)
+        assert_equal(target2.productionItems["entryID5"]["quantity"], 0)
+        assert_equal(target2.productionItems["entryID6"]["quantity"], 0)
+        assert_equal(target2.productionItems["entryID18"]["quantity"], 13)
+        assert_equal(target2.productionItems["entryID1"]["quantity"], 0)
+        assert_equal(target2.productionItems["entryID15"]["quantity"], 3)
+        assert_equal(target2.productionItems["entryID6"]["quantity"], 0)
+        assert_equal(target2.productionItems["entryID17"]["quantity"], 8)
+
+        #assert_true(False)
+
     def test_xfileController_ProcessProductionQ_CorrectlyReshuffleOrderItems(self):
         """
         Input: xfile, playerObj
@@ -664,16 +765,56 @@ class TestXFileController(object):
                 {
                 colony2 :
                     {
-                        "productionOrder" : ["entryID4", "entryID1", "entryID2" ],
-                        "productionItems" : {  
-                                            "entryID2" : {"quantity": 0, "productionID": "factories"}
+                        "productionOrder" : ["entryID1", "entryID2", "entryID4", "entryID6", "entryID5" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
+                                            "entryID4" : {"quantity": 23, "productionID": "mines"},
+                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
+                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
                                             }
                     }
 
                 }
             }
 
-        assert_true(False)    
+        assert_true(colony2)
+        target2 = self.player.colonies[colony2].productionQ
+
+        # 2nd colony - sanity check Pre-first call
+        assert_equal(target2.productionOrder, [])
+        assert_equal(target2.productionItems, {}) 
+
+        # first call -> to set up the values
+        processProductionQ(xfileSetup_PQ_v1, self.player)      # process the ProductionQ
+
+        # 2nd colony - sanity check Post-first call
+        assert_equal(len(target2.productionItems), 5)
+        assert_equal(len(target2.productionItems), len(target2.productionOrder))
+
+        assert_equal(target2.productionOrder[0], "entryID4")
+        assert_equal(target2.productionOrder[1], "entryID1")
+        assert_equal(target2.productionOrder[2], "entryID2")
+        assert_equal(target2.productionOrder[3], "entryID5")
+        assert_equal(target2.productionOrder[4], "entryID6")
+
+        assert_equal(target2.productionItems["entryID4"]["quantity"], 455)
+        assert_equal(target2.productionItems["entryID5"]["quantity"], 1)
+        assert_equal(target2.productionItems["entryID6"]["quantity"], 4)
+        assert_equal(target2.productionItems["entryID1"]["quantity"], 5)
+
+        # second call -> to adjust the Q order
+        processProductionQ(xfileSetup_PQ_v2, self.player)      # process the ProductionQ      
+
+        assert_equal(target2.productionOrder[0], "entryID1")
+        assert_equal(target2.productionOrder[1], "entryID2")
+        assert_equal(target2.productionOrder[2], "entryID4")
+        assert_equal(target2.productionOrder[3], "entryID6")
+        assert_equal(target2.productionOrder[4], "entryID5")
+
+        assert_equal(target2.productionItems["entryID4"]["quantity"], 23)
+        assert_equal(target2.productionItems["entryID5"]["quantity"], 1)
+        assert_equal(target2.productionItems["entryID6"]["quantity"], 4)
+        assert_equal(target2.productionItems["entryID1"]["quantity"], 5)
 
 
     def test_xfileController_ProcessProductionQ_CorrectlyAddItemsToQ(self):
@@ -688,12 +829,11 @@ class TestXFileController(object):
                 {
                 colony2 :
                     {
-                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
+                        "productionOrder" : ["entryID4", "entryID2", "entryID5"  ],
+                        "productionItems" : {  
                                             "entryID2" : {"quantity": 10, "productionID": "factories"},
                                             "entryID4" : {"quantity": 455, "productionID": "mines"},
-                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
-                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                                            "entryID5" : {"quantity": 1, "productionID": "factories"}                                             
                                             }
 
                     }
@@ -704,16 +844,57 @@ class TestXFileController(object):
                 {
                 colony2 :
                     {
-                        "productionOrder" : ["entryID4", "entryID1", "entryID2" ],
-                        "productionItems" : {  
-                                            "entryID2" : {"quantity": 0, "productionID": "factories"}
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"},
+                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
                                             }
                     }
 
                 }
             }
 
-        assert_true(False)
+        assert_true(colony2)
+        target2 = self.player.colonies[colony2].productionQ
+
+        # 2nd colony - sanity check Pre-first call
+        assert_equal(target2.productionOrder, [])
+        assert_equal(target2.productionItems, {}) 
+
+        # first call -> to set up the values
+        processProductionQ(xfileSetup_PQ_v1, self.player)      # process the ProductionQ
+
+        # 2nd colony - sanity check Post-first call
+        assert_equal(len(target2.productionItems), 3)
+        assert_equal(len(target2.productionItems), len(target2.productionOrder))
+
+        assert_equal(target2.productionOrder[0], "entryID4")
+        assert_equal(target2.productionOrder[1], "entryID2")
+        assert_equal(target2.productionOrder[2], "entryID5")
+
+
+        assert_equal(target2.productionItems["entryID4"]["quantity"], 455)
+        assert_equal(target2.productionItems["entryID2"]["quantity"], 10)
+        assert_equal(target2.productionItems["entryID5"]["quantity"], 1)
+
+
+        # second call -> to adjust the Q order
+        processProductionQ(xfileSetup_PQ_v2, self.player)      # process the ProductionQ   
+
+        assert_equal(len(target2.productionItems), 5)
+        assert_equal(len(target2.productionItems), len(target2.productionOrder))
+
+        assert_equal(target2.productionOrder[0], "entryID4")
+        assert_equal(target2.productionOrder[1], "entryID1")
+        assert_equal(target2.productionOrder[2], "entryID2")
+        assert_equal(target2.productionOrder[3], "entryID5")
+        assert_equal(target2.productionOrder[4], "entryID6")
+
+        assert_equal(target2.productionItems["entryID4"]["quantity"], 455)
+        assert_equal(target2.productionItems["entryID2"]["quantity"], 10)
+        assert_equal(target2.productionItems["entryID5"]["quantity"], 1)
+
+        assert_equal(target2.productionItems["entryID6"]["quantity"], 4)
+        assert_equal(target2.productionItems["entryID1"]["quantity"], 5)
 
     
     def test_xfileController_ProcessProductionQ_CorrectlyHandleUnexpectedQuantityValues(self):
@@ -744,20 +925,112 @@ class TestXFileController(object):
 
                 }
             }
-        xfileSetup_PQ_v2 = {"ProductionQ" : 
+        xfileSetup_PQ_negative = {"ProductionQ" : 
                 {
                 colony2 :
                     {
-                        "productionOrder" : ["entryID4", "entryID1", "entryID2" ],
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
                         "productionItems" : {  
-                                            "entryID2" : {"quantity": 0, "productionID": "factories"}
+                                            "entryID2" : {"quantity": -55, "productionID": "factories"}
+                                            }
+                    }
+
+                }
+            }
+        xfileSetup_PQ_text = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
+                        "productionItems" : {  
+                                            "entryID2" : {"quantity": "ERROR", "productionID": "factories"}
+                                            }
+                    }
+
+                }
+            }
+        xfileSetup_PQ_ItemKey= {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
+                        "productionItems" : {  
+                                            "ERRORVAL" : {"quantity": 42353, "productionID": "factories"}
+                                            }
+                    }
+
+                }
+            }
+        xfileSetup_PQ_OrderKey= {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "ERRORVAL" ],
+                        "productionItems" : {  
+                                            "entryID6" : {"quantity": 42353, "productionID": "factories"}
+                                            }
+                    }
+
+                }
+            }
+        xfileSetup_PQ_blankkeyOrder= {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "" ],
+                        "productionItems" : {  
+                                            "entryID6" : {"quantity": 42353, "productionID": "factories"}
+                                            }
+                    }
+
+                }
+            }
+        xfileSetup_PQ_blankQuantity= {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "" ],
+                        "productionItems" : {  
+                                            "entryID6" : {"quantity": "", "productionID": "factories"}
                                             }
                     }
 
                 }
             }
 
-        assert_true(False)
+        assert_true(colony2)
+        target2 = self.player.colonies[colony2].productionQ
+
+        # 2nd colony - sanity check Pre-first call
+        assert_equal(target2.productionOrder, [])
+        assert_equal(target2.productionItems, {}) 
+
+        # first call -> to set up the values
+        processProductionQ(xfileSetup_PQ_v1, self.player)      # process the ProductionQ
+
+        # 2nd colony - sanity check Post-first call
+        assert_equal(len(target2.productionItems), 5)
+        assert_equal(len(target2.productionItems), len(target2.productionOrder))
+
+        assert_equal(target2.productionOrder[0], "entryID4")
+        assert_equal(target2.productionOrder[1], "entryID1")
+        assert_equal(target2.productionOrder[2], "entryID2")
+        assert_equal(target2.productionOrder[3], "entryID5")
+        assert_equal(target2.productionOrder[4], "entryID6")
+
+        assert_equal(target2.productionItems["entryID4"]["quantity"], 455)
+        assert_equal(target2.productionItems["entryID5"]["quantity"], 1)
+        assert_equal(target2.productionItems["entryID6"]["quantity"], 4)
+        assert_equal(target2.productionItems["entryID1"]["quantity"], 5)
+
+        # second call -> to adjust the Q order
+        processProductionQ(xfileSetup_PQ_v2, self.player)      # process the ProductionQ      
+
+        assert_equal(target2.productionOrder[0], "entryID1")
+        assert_equal(target2.productionOrder[1], "entryID2")
+        assert_equal(target2.productionOrder[2], "entryID4")
+        assert_equal(target2.productionOrder[3], "entryID6")
+        assert_equal(target2.productionOrder[4], "entryID5")
 
 
     def test_xfileController_ProcessProductionQ_CorrectlyIncreaseItemQuantityWOWork(self):
