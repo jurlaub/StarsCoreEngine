@@ -165,7 +165,7 @@ class ProductionQ(object):
 
 
         """
-        
+
         DEBUG = ProductionQ.DEBUG
 
         colonyQOrders = colonyQ["productionOrder"]  # list
@@ -205,7 +205,11 @@ class ProductionQ(object):
                 existingItem = self.productionItems[each]
 
                 # if the new orders set the order to 0, 
-                if targetItem["quantity"] < 1:
+                if ProductionQ.elementHasUnexpectedValue(targetItem):
+                    #print("unexpected object - skipping")
+                    continue
+
+                elif targetItem["quantity"] < 1:
                     existingItem["quantity"] = 0
                     continue
 
@@ -236,10 +240,16 @@ class ProductionQ(object):
                 if DEBUG: print("index%d- Order:%s # Items-exist (T|F)" % (eachIndex, each))
                 if DEBUG: print("%s" % colonyQItems)
                 if DEBUG: print("%s" % self.productionItems)
+
                 continue
 
             # # Items-exist (F|T)
             elif each not in self.productionItems and each in colonyQItems:
+                
+                if ProductionQ.elementHasUnexpectedValue(colonyQItems[each]):
+                    #print("unexpected object - skipping")
+                    continue
+
                 v = { each : colonyQItems[each] }
                 self.addToQueue(v)
             
@@ -337,6 +347,28 @@ class ProductionQ(object):
 
 
         
+    @staticmethod
+    def elementHasUnexpectedValue(targetItem):
+        """ 
+        productionItem elements should have been vetted during game_xfile processing.
+        This method should be used to control the game_xfile process.
+        it would reappear within productionQ methods as internal validation. 
+
+        """
+
+        try:
+            
+            if not isinstance(targetItem["quantity"], int):
+                return True
+
+            return False
+       
+        except ValueError as ve:
+            print("%s" % ve)
+            
+
+
+
 
     @staticmethod
     def workHasBeenDone(existingItem):

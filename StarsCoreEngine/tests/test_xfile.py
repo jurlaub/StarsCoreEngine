@@ -1013,8 +1013,12 @@ class TestXFileController(object):
         processProductionQ(xfileSetup_PQ_text, self.player)      # process the ProductionQ  
 
         #assert_equal(target2.productionItems["entryID2"]["quantity"], 0)
-        assert_raises(ValueError, processProductionQ, xfileSetup_PQ_text, self.player)
+        #assert_raises(ValueError, processProductionQ, xfileSetup_PQ_text, self.player)
 
+        # an entry with an invalid reference should not change?
+        assert_equal(len(target2.productionItems), 5)
+        assert_equal(target2.productionOrder[2], "entryID2")
+        assert_equal(target2.productionItems["entryID2"]["quantity"], 10)
 
     
     def test_xfileController_ProcessProductionQ_CorrectlyHandleUnexpected_ItemKey(self):
@@ -1344,7 +1348,7 @@ class TestXFileController(object):
     def test_xfileController_ProcessProductionQ_CorrectlyIncreaseItemQuantityWOWork(self):
         """
         Input: xfile, playerObj
-        Output: Items quantity is correctly increased, the item has had no work done on it
+        Output: Items quantity is correctly increased if the item has had no work done on it
         """
 
         colony2 = self.newColony[0]
@@ -1369,16 +1373,59 @@ class TestXFileController(object):
                 {
                 colony2 :
                     {
-                        "productionOrder" : ["entryID4", "entryID1", "entryID2" ],
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6"  ],
                         "productionItems" : {  
-                                            "entryID2" : {"quantity": 0, "productionID": "factories"}
+                                            "entryID2" : {"quantity": 15, "productionID": "factories"}
+                                            }
+                    }
+
+                }
+            }
+        xfileSetup_PQ_v3 = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6"  ],
+                        "productionItems" : {  
+                                            "entryID5" : {"quantity": 30, "productionID": "factories"}
                                             }
                     }
 
                 }
             }
 
-        assert_true(False)
+        assert_true(colony2)
+        target2 = self.player.colonies[colony2].productionQ
+
+        # first call -> to set up the values
+        processProductionQ(xfileSetup_PQ_v1, self.player)      # process the ProductionQ
+
+        # 2nd colony - sanity check Post-first call
+        assert_equal(len(target2.productionItems), 5)
+        assert_equal(target2.productionOrder[2], "entryID2")
+        assert_equal(target2.productionItems["entryID2"]["quantity"], 10)
+        assert_equal(target2.productionOrder[3], "entryID5")
+        assert_equal(target2.productionItems["entryID5"]["quantity"], 1)
+
+
+        # second call -> to adjust the Q order
+        processProductionQ(xfileSetup_PQ_v2, self.player)      # process the ProductionQ  
+
+        # 2nd colony - after update _v2
+        assert_equal(len(target2.productionItems), 5)
+        assert_equal(target2.productionOrder[2], "entryID2")
+        assert_equal(target2.productionItems["entryID2"]["quantity"], 15)
+        
+
+        # Third call -> to adjust the Q order
+        processProductionQ(xfileSetup_PQ_v3, self.player)      # process the ProductionQ  
+
+        # 2nd colony - after update _v2
+        assert_equal(len(target2.productionItems), 5)
+        assert_equal(target2.productionOrder[3], "entryID5")
+        assert_equal(target2.productionItems["entryID5"]["quantity"], 30)
+
+
 
     def test_xfileController_ProcessProductionQ_CorrectlyHandleQuantityIncreaseWWorkDone(self):
         """

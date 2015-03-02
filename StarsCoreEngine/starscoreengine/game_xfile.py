@@ -418,8 +418,10 @@ def xFile_ProductionQ_StructureIsValid(xfile):
     1) ProductionQ entry exists in xfile (can be empty but must always exist)
     2) if empty, return True
     3) if 1 to N entries:
-        1) key must be a colony ID (this is NOT tested in the method)
-        2) value containes correct xfile key:value pairs.
+        1) key (colony) must be a colony ID (this is NOT tested in the method)
+        2) value (colony Q) containes correct xfile key:value pairs.
+            1) quantity value must be int
+            2) productionID must be a valid item as found in the player ProductionList (list of items to produce)
 
     """
 
@@ -448,6 +450,9 @@ def xFile_ProductionQ_StructureIsValid(xfile):
                     raise ValueError("productionItems entries should only contain Quantity and ProductionID; colony: %s" % kee)
                 quantity = each["quantity"]
                 productionID = each["productionID"]
+
+                # --TODO-- test each for valid quantity value
+
 
 
     except NameError as ne:
