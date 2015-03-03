@@ -100,7 +100,7 @@ class ProductionQ(object):
 
 
     """
-    DEBUG = False
+    DEBUG = True
 
     itemType = ('Ship', 'Starbase', 'Scanner', 'Defenses', 'Mines', \
                  'Factories', 'Terraform', 'Minerals','Special')
@@ -231,15 +231,18 @@ class ProductionQ(object):
                         # quantity < 1 & == 1 checked earlier. Value must be greater than 1                        
                         targetItem["quantity"] -= 1 
                         
+                        tmpNewEntry = {each : targetItem}
+                        tmpNewIndex = eachIndex + 1
+
                         #>> add a new entry to items, insert new Order immediately after the quantity 1 item
-                        self.addToQueue({each : {targetItem}}, eachIndex + 1)
+                        self.addToQueue(tmpNewEntry, tmpNewIndex)
             
             # Items-exist (T|F)
             elif each in self.productionItems and each not in colonyQItems:
                 # no action needed -> reorder handled in the productionOrder
                 if DEBUG: print("index%d- Order:%s # Items-exist (T|F)" % (eachIndex, each))
-                if DEBUG: print("%s" % colonyQItems)
-                if DEBUG: print("%s" % self.productionItems)
+                #if DEBUG: print("%s" % colonyQItems)
+                #if DEBUG: print("%s" % self.productionItems)
 
                 continue
 
@@ -285,6 +288,8 @@ class ProductionQ(object):
 
         """
         try:
+            DEBUG = ProductionQ.DEBUG
+
             if len(entryDict) != 1:
                 raise ValueError("addToQueue requires entryDict to a dictionary with 1 key:value entry. %d detected" % len(entryDict))
 
@@ -302,18 +307,24 @@ class ProductionQ(object):
 
             tmpKey = self.obtainNewKey(entryKey)
 
+            if DEBUG: print("addToQueue at %s- %s:%s " % (insertOrder, tmpKey, tmpItem))
 
             if insertOrder and insertOrder < len(self.productionOrder):
                 # if insertOrder >= len(self.productionOrder):
                 #     self.productionOrder.append(tmpKey)
                 # else:
+                print("at insert")
                 self.productionOrder.insert(insertOrder, tmpKey)
 
+
             else:
+                print("at append")
                 self.productionOrder.append(tmpKey)
+
 
             self.productionItems[tmpKey] = tmpItem
 
+            print("%s \n %s" % (self.productionOrder, self.productionItems))
 
 
         except NameError as ne:
@@ -336,12 +347,14 @@ class ProductionQ(object):
 
         """
         tmpKey = kee
-        count = 0
+        count = 1
 
         while True:
             if tmpKey not in self.productionOrder:
                 if tmpKey not in self.productionItems:
+                    print("obtainNewKey: %s" % tmpKey)
                     return tmpKey
+
             tmpKey = ("%s%s" %(kee, str(count)))
             count += 1
 
@@ -382,19 +395,39 @@ class ProductionQ(object):
             productionItems["quantity"] == 1; "work" should not be done when 
             quantity > 1
 
+        Work can be done on an existing item:
+        > quantity set to 0
+        > quantity @ 1
+
+        if quantity > 1 work should not have been done.
+
+
+
         """
         try:
             # quan
             correctQuantity = True
-            if existingItem["quantity"] != 0:
+
+
+            if existingItem["quantity"] > 1 or existingItem["quantity"] < 0:
                 correctQuantity = False
 
             for each in existingItem["materialsUsed"]:
-                if each != 0 and correctQuantity == False:
-                    raise ValueError("ProductionQ.hasWorkBeenDone: materialsUsed and quantity not aligned. materialsUsed can only be greater then 0 when quantity = 1")
-                if each != 0:
-                    return True
 
+                # if materials have been used (not 0) then the quantity should be 1
+                if each != 0:
+
+                    if not correctQuantity:
+                        # have a value in the materialsUsed and quantity is greater then 1 or negative
+                        raise ValueError("ProductionQ.hasWorkBeenDone: materialsUsed and quantity not aligned. materialsUsed can only be greater then 0 when quantity = 1")
+                    
+                    else:
+                        # materials have been used and the quantity of the item is 1
+                        return True  
+                
+                # continue checking for a non-zero value
+
+            # no materials have been used 
             return False    
 
         except ValueError as ve:

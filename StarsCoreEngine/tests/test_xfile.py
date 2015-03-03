@@ -1455,15 +1455,45 @@ class TestXFileController(object):
                 {
                 colony2 :
                     {
-                        "productionOrder" : ["entryID4", "entryID1", "entryID2" ],
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
                         "productionItems" : {  
-                                            "entryID2" : {"quantity": 0, "productionID": "factories"}
+                                            "entryID5" : {"quantity": 5, "productionID": "factories"}
                                             }
                     }
 
                 }
             }
 
-        assert_true(False)
+        assert_true(colony2)
+        target2 = self.player.colonies[colony2].productionQ
+
+        # first call -> to set up the values
+        processProductionQ(xfileSetup_PQ_v1, self.player)      # process the ProductionQ
+
+        # colony - sanity check Post-first call
+        assert_equal(len(target2.productionItems), 5)
+        assert_equal(target2.productionOrder[3], "entryID5")
+        assert_equal(target2.productionItems["entryID5"]["quantity"], 1)
+        print(target2.productionItems["entryID5"]["materialsUsed"])
+        assert_equal(target2.productionItems["entryID5"]["materialsUsed"], [0, 0, 0, 0])
+
+        # adjust work done on entryID5
+        target2.productionItems["entryID5"]["materialsUsed"] = [11, 23, 5, 813]
+        print(target2.productionItems["entryID5"]["materialsUsed"])
+
+        # second call -> to adjust the Q order
+        processProductionQ(xfileSetup_PQ_v2, self.player)      # process the ProductionQ  
+
+        # 2nd colony - after update 
+        assert_equal(len(target2.productionItems), 6)
+
+        # existing should remain 
+        assert_equal(target2.productionOrder[3], "entryID5")
+        assert_equal(target2.productionItems["entryID5"]["quantity"], 1)
+        assert_equal(target2.productionItems["entryID5"]["materialsUsed"], [11, 23, 5, 813])
+        print("Order: %s" % target2.productionOrder)
+        assert_equal(target2.productionOrder[4], "entryID51")
+        assert_equal(target2.productionItems["entryID51"]["quantity"], 4)
+        assert_equal(target2.productionItems["entryID51"]["materialsUsed"], [0, 0, 0, 0])
 
 
