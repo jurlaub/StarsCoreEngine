@@ -170,6 +170,9 @@ class ProductionQ(object):
 
         colonyQOrders = colonyQ["productionOrder"]  # list
         colonyQItems = colonyQ["productionItems"]   # contents
+
+        colonyQOrders_QAdditions = []
+
         if DEBUG: print("NewOrders:\n%s\n%s" % (colonyQOrders,colonyQItems))
         if DEBUG: print("ExistinOrders:\n%s\n%s" % (self.productionOrder, self.productionItems))
 
@@ -236,9 +239,34 @@ class ProductionQ(object):
 
                         #>> add a new entry to items, insert new Order immediately after the quantity 1 item
                         self.addToQueue(tmpNewEntry, tmpNewIndex)
+                        
+                        if DEBUG: print("In the addToQueue area:\n%s" % (self.productionOrder))
+
+                        #  
+                        tmpNewKey = self.productionOrder[tmpNewIndex]
+                        
+                        #----------- Add to ColonyQOrders-----------------------
+                        #            Uses Items-exist (T|F)
+                        #            Requires: Continue
+                        # it should be the next entry on the colonyQOrders
+                        #  
+                        colonyQOrders.insert(tmpNewIndex, tmpNewKey)    
+                        # ------------------------------------------------------
+                        
+
             
             # Items-exist (T|F)
             elif each in self.productionItems and each not in colonyQItems:
+                """
+                Conditions:
+                > if in self.productionItems but not in colonyQItems
+                > may be that there is no update to the element
+                > may be that the item does not exist (in either colonyQItems & colonyQOrders)
+                > may be that element was added by the "Work has been done - add a new element to the Q" process. 
+                
+                Requires: 
+                    continue
+                """
                 # no action needed -> reorder handled in the productionOrder
                 if DEBUG: print("index%d- Order:%s # Items-exist (T|F)" % (eachIndex, each))
                 #if DEBUG: print("%s" % colonyQItems)
@@ -263,9 +291,13 @@ class ProductionQ(object):
                 ra = ("addToQueueFromXFile - reached area that should not be reached - Items-exist (F|F) case")
                 raise ValueError(ra)
 
-        self.productionOrder = colonyQ["productionOrder"]
+        self.productionOrder = colonyQOrders    # orders are potentially modifed due to work already done behavior
 
         # remove quantity zero items?
+        self.removeQuantityZeroItems()
+
+
+
         
 
     def addToQueue(self, entryDict, insertOrder = None):
@@ -324,7 +356,7 @@ class ProductionQ(object):
 
             self.productionItems[tmpKey] = tmpItem
 
-            print("%s \n %s" % (self.productionOrder, self.productionItems))
+            #print("%s \n %s" % (self.productionOrder, self.productionItems))
 
 
         except NameError as ne:
@@ -447,12 +479,48 @@ class ProductionQ(object):
 
     def removeQuantityZeroItems(self):
         """
-        productionOrder and productionItems need to align. If items exist in 
-        productionItems while its name doesn't exist in productionOrder - then 
-        the productionItems need to be removed.
-        """
+        productionOrder and productionItems should have the same number of items. 
+        This should be handled in the addToQueueFromXFile() method - the quantity
+        of items is set to zero.
 
-        pass
+        during production - when items are completed, they are also set to zero.
+
+        for any item in productionItem's where the quantity is zero, any corresponding
+        productionOrder entry and productionItem entry should be removed.
+
+        """
+        DEBUG = ProductionQ.DEBUG
+
+        itemsToBeDeleted = []
+        ordersToBeDeleted = []
+
+        for eachKey, eachObj in self.productionItems.items():
+
+            if eachObj["quantity"] == 0:
+
+                if eachKey in self.productionOrder:
+
+                    # remove from production order
+                    ordersToBeDeleted.append(eachKey)
+
+
+                itemsToBeDeleted.append(eachKey)
+
+
+            else:
+                continue
+
+        for each in itemsToBeDeleted:
+
+            del self.productionItems[each]
+            if DEBUG: print( "Item: %s deleted" % each)
+
+        for each in ordersToBeDeleted:
+
+            tmpV = self.productionOrder.index(each)
+            del self.productionOrder[tmpV]
+            if DEBUG: print( "Order: %s deleted" % each)
+        
 
     def productionController(self):
         """
