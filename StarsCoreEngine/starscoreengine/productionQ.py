@@ -33,11 +33,6 @@ ProductionQ Requirements:
 
 
 
-Question:   does .x file update productionQ (at player level?) 
-            Is each colony updated with orders or do the orders stay at the 
-            player object level. 
-
-
 
 productionQ "Items to Produce" :
         
@@ -78,14 +73,11 @@ Multiple types of entries:
         2) quantity 1 items
         3) quantity n items
         #----------------------
-        {'itemType':'type', 'productionID': 'ID', 'quantity': 3,
-        "ironUsed" : 0, "borUsed" : 0, "germUsed" :0, "resourcesUsed" : 0 }
 
-        or
 
         "materialsUsed" : [0, 0, 0, 0]  == (iron, bor, germ, resources) 
 
-        ironUsed, borUsed, etc. are only used when quantity == 1. 
+        materialsUsed is only used when quantity == 1. 
         #----------------------
 
         autoBuild & everything -> 
@@ -100,7 +92,7 @@ class ProductionQ(object):
 
 
     """
-    DEBUG = True
+    DEBUG = False
 
     itemType = ('Ship', 'Starbase', 'Scanner', 'Defenses', 'Mines', \
                  'Factories', 'Terraform', 'Minerals','Special')
@@ -137,33 +129,28 @@ class ProductionQ(object):
         ProductionQ item "productionID"'s are not changed
 
 
-
         conditions:
-    x   1) user adds 1 to N items
+        1) user adds 1 to N items
             - if item is not in Q, add it. -> addToQueue method
     
         2) user modifies 1 to N item contents
-        x    - if a quantity 1 item has a quantity increase after production has 
+            - if a quantity 1 item has a quantity increase after production has 
             begun on the item, a new item is added to the productionOrder and productionItems
-        x    - if a quantity N item has a different quantity, then quantity is set to the new quantity number
-        x    - obtainNewKey() method - > that returns a new productionQ key
-        x    - a change in productionID (what should be built) is not allowed. 
+            - if a quantity N item has a different quantity, then quantity is set to the new quantity number
+            - obtainNewKey() method - > that returns a new productionQ key
+            - a change in productionID (what should be built) is not allowed. 
             The productionID change is not checked. If Client allows this 
-            through, the original production value item will be built. 
-
-            
-    x   3) user deletes item 
-    x       - if item in productionQ is not in productionList then set quantity to 0
+            through, the original production value item will be built.                  
+        3) user deletes item 
+           - if item in productionQ is not in productionList then set quantity to 0
             - --TODO-- setQuantityToZero() method
             - quantity 0 items handled by productionController at end of colony production
-    x   4) user changes order of completion
+        4) user changes order of completion
             - handled by the productionOrder list   
 
         if new orders are only adjusting the productionOrder and are making no 
         other change to the entry, as long as the entry exists in productionItems, 
         the productionItem value can be missing.
-
-
         """
 
         DEBUG = ProductionQ.DEBUG
@@ -269,8 +256,7 @@ class ProductionQ(object):
                 """
                 # no action needed -> reorder handled in the productionOrder
                 if DEBUG: print("index%d- Order:%s # Items-exist (T|F)" % (eachIndex, each))
-                #if DEBUG: print("%s" % colonyQItems)
-                #if DEBUG: print("%s" % self.productionItems)
+
 
                 continue
 
@@ -295,10 +281,6 @@ class ProductionQ(object):
 
         # remove quantity zero items?
         self.removeQuantityZeroItems()
-
-
-
-        
 
     def addToQueue(self, entryDict, insertOrder = None):
         """ addToQueue
@@ -366,9 +348,6 @@ class ProductionQ(object):
             print("%s" % ve)
 
 
-    def updateQueue(self, kee, ):
-
-        pass
 
     def obtainNewKey(self, kee):
         """
@@ -411,10 +390,6 @@ class ProductionQ(object):
         except ValueError as ve:
             print("%s" % ve)
             
-
-
-
-
     @staticmethod
     def workHasBeenDone(existingItem):
         """
@@ -562,20 +537,15 @@ class ProductionQ(object):
             the sum of available required materials
 
 
-
-
-
-        producitonQ
+        productionQ
 
         "finishedForThisTurn" for all items on the list set to "false"
 
 
         while True:
-        > Find next entry
+        > Find next entry in productionOrder
         >> 
-        >> if quantity = 0, remove from Q;        --> if quantity == 0: entry to be deleted
         >> if "finishedForThisTurn" == True, move to next entry
-        >> if empty(or at end of list) -> break, left over resources applied to research
         >> Act on autoBuild orders only once (unless its autoBuild minerals in order to complete a project)
         
         
@@ -588,6 +558,10 @@ class ProductionQ(object):
                 if AutoMinerals on, minerals are holding up single entry and resources are available, add a build mineral to the beginning of q
                 reset loop to 0, continue
 
+
+        >> if quantity = 0, it will be removed from Q at end -> set finishedForThisTurn = True;        --> if quantity == 0: entry to be deleted
+        >> if productionOrder is empty(or at end of list) -> break, left over resources applied to research
+       
         
         
 
