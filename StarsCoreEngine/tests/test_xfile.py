@@ -476,7 +476,7 @@ class TestXFileController(object):
                 {
                 colony2 :
                     {
-                        "productionOrder" : ["entryID4", "entryID1", "entryID2" ],
+                        "productionOrder" : [ "entryID1", "entryID2" ],
                         "productionItems" : {  
                                             "entryID2" : {"quantity": 0, "productionID": "factories"}
                                             }
@@ -484,9 +484,63 @@ class TestXFileController(object):
 
                 }
             }
+        xfileSetup_PQ_zero = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : [],
+                        "productionItems" : {  }
+                    }
 
-        assert_true(False)
+                }
+            }
 
+
+        assert_true(colony2)
+        target2 = self.player.colonies[colony2].productionQ
+
+        # 2nd colony - sanity check Pre-first call
+        assert_equal(target2.productionOrder, [])
+        assert_equal(target2.productionItems, {}) 
+
+        # first call -> to set up the values
+        processProductionQ(xfileSetup_PQ_v1, self.player)      # process the ProductionQ
+
+        # 2nd colony - sanity check Post-first call
+        assert_equal(len(target2.productionItems), 3)
+        assert_equal(len(target2.productionItems), len(target2.productionOrder))
+
+        processProductionQ(xfileSetup_PQ_zero, self.player)
+
+        assert_equal(len(target2.productionItems), 0)
+        assert_equal(len(target2.productionOrder), 0)    
+
+        processProductionQ(xfileSetup_PQ_v1, self.player)      # process the ProductionQ  
+
+        assert_equal(len(target2.productionItems), 3)
+        assert_equal(len(target2.productionItems), len(target2.productionOrder))  
+
+        assert_equal(target2.productionOrder[0], "entryID4")
+        assert_equal(target2.productionOrder[1], "entryID1")
+        assert_equal(target2.productionOrder[2], "entryID2")
+
+
+        assert_equal(target2.productionItems["entryID4"]["quantity"], 455)
+        assert_equal(target2.productionItems["entryID1"]["quantity"], 5)
+        assert_equal(target2.productionItems["entryID2"]["quantity"], 10)
+
+
+        # second call -> to adjust the Q order
+        processProductionQ(xfileSetup_PQ_v2, self.player)      # process the ProductionQ      
+
+        assert_equal(len(target2.productionItems), 1)
+        assert_equal(len(target2.productionItems), len(target2.productionOrder)) 
+
+
+        assert_equal(target2.productionOrder[0], "entryID1")
+        assert_equal(target2.productionItems["entryID1"]["quantity"], 5)
+
+        
 
     def test_xfileController_ProcessProductionQ_CorrectlySetItemsToZero(self):
         """
@@ -621,17 +675,25 @@ class TestXFileController(object):
         processProductionQ(xfileSetup_PQ_v2, self.player)      # process the ProductionQ       
         
         # 2nd colony - test
-        assert_equal(len(target2.productionOrder), 3)
-        assert_equal(len(target2.productionItems), 5)
+        assert_equal(len(target2.productionOrder), 2)
+        assert_equal(len(target2.productionItems), 2)
 
-        assert_equal(target2.productionOrder[0], "entryID2")
-        assert_equal(target2.productionOrder[2], "entryID1")
-        assert_equal(target2.productionOrder[1], "entryID4")
+        assert_not_in("entryID2", target2.productionOrder )
+        assert_not_in("entryID2", target2.productionItems )
 
-        assert_equal(target2.productionItems["entryID2"]["quantity"], 0)
+        assert_not_in("entryID5", target2.productionOrder )
+        assert_not_in("entryID5", target2.productionItems )
+
+        assert_not_in("entryID6", target2.productionOrder )
+        assert_not_in("entryID6", target2.productionItems )
+
+
+
+        assert_equal(target2.productionOrder[1], "entryID1")
+        assert_equal(target2.productionOrder[0], "entryID4")
+
+
         assert_equal(target2.productionItems["entryID4"]["quantity"], 455)
-        assert_equal(target2.productionItems["entryID5"]["quantity"], 0)
-        assert_equal(target2.productionItems["entryID6"]["quantity"], 0)
         assert_equal(target2.productionItems["entryID1"]["quantity"], 5)
 
         #assert_true(False)
@@ -958,7 +1020,7 @@ class TestXFileController(object):
 
         assert_equal(len(target2.productionItems), 4)
         assert_not_in("entryID2", target2.productionItems )
-        assert_not_in("entryID2", target2.productionOrders)
+        assert_not_in("entryID2", target2.productionOrder)
 
     
     def test_xfileController_ProcessProductionQ_CorrectlyHandleUnexpected_Text(self):
