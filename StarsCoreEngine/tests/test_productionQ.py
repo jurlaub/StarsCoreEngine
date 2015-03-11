@@ -1,5 +1,5 @@
 """
-    This file is part of Stars Core Engine, which provides an interface and processing of Stars data.
+    This file is part of Stars Core Engine, which provides an interface and processing of Game data.
     Copyright (C) 2014  <Joshua Urlaub + Contributors>
 
     Stars Core Engine is free software: you can redistribute it and/or modify
@@ -70,11 +70,36 @@ class TestProductionQ(object):
         self.techTree = self.game.technology
         self.player = self.game.players["player0"]
 
+
+        #--------- obtain HW -------------
         self.target_colony = None
         for each in self.player.colonies.values():
             if each.planet.HW:
                 self.target_colony = each
                 break
+        #--------- end ------------------
+
+
+        self.newColony = []
+        self.universePlanets = self.game.game_universe[0].planets
+
+        # find planets == newColonyCount in universe without an owner
+        newColonyCount = 5 
+        for kee, obj in self.universePlanets.items():
+            if len(self.newColony) > newColonyCount:
+                break
+
+            if not obj.owner:
+                self.newColony.append(kee)
+
+        # colonize planets that are identified in self.newColony list
+        for each in self.newColony:
+            self.player.colonizePlanet(self.universePlanets[each], 150000)
+
+
+
+        
+
         self.d1_name = "Seer"
         self.d2_name = "Dark Star I"
         self.d3_name = "Dark Falcon"
@@ -148,12 +173,12 @@ class TestProductionQ(object):
     def setup(self):
         print("TestProductionQ: Setup")
 
-        xx = {"ProductionQ" : 
+        self.standardQ = {"ProductionQ" : 
                 {
                 self.target_colony : 
                     {
                         "productionOrder" : ["entryID1", "entryID2" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {} }
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {"quantity": 5, "productionID": "item1"} }
                     }
 
                 }
@@ -190,16 +215,89 @@ class TestProductionQ(object):
 
 
 
-    def test_removeItemFromQ(self):
+    def test_Add_RemoveItemFromQ(self):
         pass
 
-
-    def test_updateQ_Miniturization(self):
-        pass
 
     def test_controller(self):
         pass
 
+    def test_validateTargetPlayerSetup(self):
+        """
+        Tests that target player used for all other tests has the correct inital
+        values. That all the pieces needed to test is captured and correct. 
+        Individual tests may alter the standard but this should be the standard.
+
+        """
+
+        pass
+
+
+    def test_entryController_produce_Mine_one(self):
+        """
+        entry controller should result in 1 mine value from entry controller
+        """
+
+
+        #colony2 = self.newColony[0]
+
+        xfileSetup_PQ_v1 = {"ProductionQ" : 
+                {
+                colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
+                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
+                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
+                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                                            }
+
+                    }
+
+                }
+            }
+
+        pass
+
+    def test_producePlanetUpgrades_Mine_one(self):
+        """
+        producePlanetUpgrades should be prompted to produce 1 mine on the 
+        appropriate colony. 
+        """
+        pass
+
+
+
+    def test_entryController_produce_Mine_Max(self):
+        """
+        the max planetary mines should be produced. Max = maximum mines that a 
+        player can place on a planet.
+
+        """
+        pass
+
+    def test_producePlanetUpgrades_Mine_Max(self):
+        """
+        producePlanetUpgrades the max planetary mines should be produced. Max = maximum mines that a 
+        player can place on a planet.
+        """
+        pass
+
+    def test_entryController_produce_Mine_TooMany(self):
+        """
+        The entry controller should handle the case of Too Many mines being requested.
+        More then the player Mine cap on the planet
+
+        """
+        pass
+
+    def test_producePlanetUpgrades_Mine_TooMany(self):
+        """
+        producePlanetUpgrades should produce the number of mines sent to it. The 
+        Entry Controller should handle too many mines.
+        """
+        pass
 
 
 

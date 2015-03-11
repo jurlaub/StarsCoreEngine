@@ -1,6 +1,6 @@
 
 """
-    This file is part of Stars Core Engine, which provides an interface and processing of Stars data.
+    This file is part of Stars Core Engine, which provides an interface and processing of Game data.
     Copyright (C) 2014  <Joshua Urlaub + Contributors>
 
     Stars Core Engine is free software: you can redistribute it and/or modify

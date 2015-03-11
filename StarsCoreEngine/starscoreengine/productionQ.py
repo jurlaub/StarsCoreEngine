@@ -1,5 +1,5 @@
 """
-    This file is part of Stars Core Engine, which provides an interface and processing of Stars data.
+    This file is part of Stars Core Engine, which provides an interface and processing of Game data.
     Copyright (C) 2014  <Joshua Urlaub + Contributors>
 
     Stars Core Engine is free software: you can redistribute it and/or modify
@@ -543,9 +543,16 @@ class ProductionQ(object):
 
 
         while True:
+
+        > Do I have resources left? 
+        >> if no -> break
+        > Am I at the end of the list?
+        >> if yes -> break
+
+
         > Find next entry in productionOrder
         >> 
-        >> if "finishedForThisTurn" == True, move to next entry
+        >> if "finishedForThisTurn" == True, increment counter + continue
         >> Act on autoBuild orders only once (unless its autoBuild minerals in order to complete a project)
         
         
@@ -565,10 +572,10 @@ class ProductionQ(object):
         
         
 
-    
-        > Do I have resources left? 
-        >> if yes -> continue
-        >> if no -> break
+        proportionalCompletion
+        minerals are summed 
+        sum of minerals / resources
+
 
 
 
@@ -580,20 +587,24 @@ class ProductionQ(object):
         res = 0
 
 
-
+        # obtain from colony the number of resources for production
         if self.ExcludedFromResearch:
             res  = self.colony.totalResources
         else:
-            # now I've thought about it, this won't update the yearlyResearchResources as it isn't an
-            # instance of research, only the class?
             res  = self.research.colonyResourcesAfterTax(self.colony)
 
         # handle the produceAutoMineral setting?
 
+        orderIndex = 0 
+
         while True:
 
-            if not self.productionList:     
+            # reached empty or end of order
+            if orderIndex >= len(self.productionOrder):
                 break
+
+
+
 
 
 
@@ -687,6 +698,7 @@ class ProductionQ(object):
         >> Do I have the materials to complete the entry?
         >> if yes -> complete entry
 
+        >> have I reached any maximum?
         
         >> if no -> 
         >>> How many can be completed and what quantity is left over?
