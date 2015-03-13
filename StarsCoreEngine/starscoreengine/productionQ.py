@@ -77,7 +77,7 @@ Multiple types of entries:
 
         "materialsUsed" : [0, 0, 0, 0]  == (iron, bor, germ, resources) 
 
-        materialsUsed is only used when quantity == 1. 
+         
         #----------------------
 
         autoBuild & everything -> 
@@ -143,7 +143,7 @@ class ProductionQ(object):
             through, the original production value item will be built.                  
         3) user deletes item 
            - if item in productionQ is not in productionList then set quantity to 0
-            - --TODO-- setQuantityToZero() method
+            - setQuantityToZero() method
             - quantity 0 items handled by productionController at end of colony production
         4) user changes order of completion
             - handled by the productionOrder list   
@@ -354,7 +354,7 @@ class ProductionQ(object):
         Input: kee
         Output: a unique kee that is not used in that colony productionQ
 
-        note: not thread safe within colony productionQ. 
+        note: not thread safe within a single colony's productionQ. 
 
         """
         tmpKey = kee
@@ -553,8 +553,9 @@ class ProductionQ(object):
         > Find next entry in productionOrder
         >> 
         >> if "finishedForThisTurn" == True, increment counter + continue
-        >> Act on autoBuild orders only once (unless its autoBuild minerals in order to complete a project)
         
+        >> Act on autoBuild orders only once (unless its autoBuild minerals in order to complete a project)
+        >> Autobuild - add autobuild orders to Q, set autobuild to false for turn
         
             if entry is next on list:
                 send to entryController -- send entry to self.entryController()  
@@ -581,13 +582,13 @@ class ProductionQ(object):
 
 
         """
-        iron = self.colony.planet.surfaceIron
-        bor  = self.colony.planet.surfaceBor
-        germ = self.colony.planet.surfaceGerm
+
+        autobuildMinerals = False       # for minerals if needed.
+
         res = 0
 
 
-        # obtain from colony the number of resources for production
+        # obtain from colony the number of resources for production (Note: minus research tax)
         if self.ExcludedFromResearch:
             res  = self.colony.totalResources
         else:
@@ -597,94 +598,47 @@ class ProductionQ(object):
 
         orderIndex = 0 
 
+        # All orders "finishedForThisTurn" == False
+
         while True:
 
-            # reached empty or end of order
-            if orderIndex >= len(self.productionOrder):
+            orderLength = len(self.productionOrder)
+            
+            if res < 1:  # resources left
+                break
+            
+            elif orderIndex >= orderLength:  # reached empty or end of order
                 break
 
+            
+            entryID = self.productionOrder[orderIndex]
+            entryObj = self.productionItem[entryID]
 
-
-
-
-
-
-            # check all items in list if count 
-            if res > 0: 
+            if entryObj["finishedForThisTurn"] == True:
+                orderIndex +=1
                 continue
+
+            # is entry an Autobuild type? 
+            # add check for autobuild type   entryObj["itemType"]
+            # if autobuildMinerals == True set the autobuildMinerals = True
+
+
+            tmpResult = self.entryController(entryID)
+            
+
+            if orderLength == len(self.productionOrder):
+                #no change in entry controller
+                orderIndex += 1         # entry completed then increment 
             else:
-                break
+                orderIndex == 0         # start at beginning
 
 
-        # for line in self.prodQueue:
-        #     #if line["itemType"] not autobuild something 
-        #     for item in range(line["quantity"]):
-        #         #if item isn't completed then want to create a new line at the start of the Q, can't really
-        #         #change the current line as if quantity > 1 then the following items would have less cost
 
-        #         #enough minerals, at least one res can start
-        #         if iron >= line["reqIron"] and bor >= line["reqBor"] and ger >= line["reqGerm"] and res > 0: 
-        #             #remove minerals
-        #             iron -= line["reqIron"]
-        #             bor  -= line["reqBor"]
-        #             germ -= line["reqGerm"]
-        #             #build one
-        #             if res >= line["reqResources"]:
-        #                 if line["itemType"] == 'Ship':
-        #                     self.produceShip()
-        #                 elif line["itemType"] == 'Starbase':
-        #                     self.produceStarbase()
-        #                 elif line["itemType"] == 'Scanner':
-        #                     self.producePlanetaryInstallation()
-        #                 elif line["itemType"] == 'Defenses':
-        #                     self.producePlanetaryInstallation()
-        #                 elif line["itemType"] == 'Mines':
-        #                     self.producePlanetUpgrades()
-        #                 elif line["itemType"] == 'Factories':
-        #                     self.producePlanetUpgrades()
-        #                 elif line["itemType"] == 'Terraform':
-        #                     self.producePlanetUpgrades()
-        #                 elif line["itemType"] == 'Minerals':
-        #                     self.producePlanetUpgrades()
-        #                 elif line["itemType"] == 'Special':
-        #                     self.produceSpecial()
 
-        #                 #remove from Q
-        #                 line["quantity"] -= 1
-        #                 if line["quantity"] == 0:
-        #                     self.prodQueue.pop(0)
-        #                 res -= line["reqResources"]
-
-        #             #start building but don't finish
-        #             else:
-        #                 progress = float(res) / line["reqResources"]
-        #                 partiallyBuiltItem = {}
-        #                 for k, v in line.items():
-        #                     partiallyBuiltItem[k] = v
-        #                 partiallyBuiltItem["reqIron"] = 0
-        #                 partiallyBuiltItem["reqBor"]  = 0
-        #                 partiallyBuiltItem["reqGerm"] = 0
-        #                 partiallyBuiltItem["reqResouces"] -= res
-        #                 partiallyBuiltItem["progress"] = progress
-        #                 partiallyBuiltItem["quantity"] = 1
-        #                 #replace line in Q
-        #                 if line["quantity"] == 1:
-        #                     self.prodQueue[0] = partiallyBuiltItem 
-        #                 else:
-        #                     line["quantity"] -= 1
-        #                     self.prodQueue.insert(partiallyBuiltItem, 0)
-        #         #Q either blocked as not enough mineral left, or no resources left     
-        #         else:
-        #             break
-
-        # self.colony.surfaceIron = iron
-        # self.colony.surfaceBor = bor
-        # self.colony.surfaceGerm = germ
-        # Research.yearlyResearchResources += res
         
-        
-    def entryController(self):
+    def entryController(self, entryID, targetItem, autobuildMinerals = False):
         """
+
 
 
         ------------------------------------------
@@ -692,6 +646,9 @@ class ProductionQ(object):
         Input: entry, target materials & resources, 
         Output: produced items
                 update productionList and productionQ
+
+        Postcondition: entry required to update finishedForThisTurn for existing
+                         and any new entries
 
         > Do I have the resources to complete the entry?
         
@@ -761,6 +718,10 @@ class ProductionQ(object):
 
 
         """
+
+        iron = self.colony.planet.surfaceIron
+        bor  = self.colony.planet.surfaceBor
+        germ = self.colony.planet.surfaceGerm
 
         pass
 

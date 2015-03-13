@@ -70,16 +70,7 @@ class TestProductionQ(object):
         self.techTree = self.game.technology
         self.player = self.game.players["player0"]
 
-
-        #--------- obtain HW -------------
-        self.target_colony = None
-        for each in self.player.colonies.values():
-            if each.planet.HW:
-                self.target_colony = each
-                break
-        #--------- end ------------------
-
-
+        #--------- obtain colony worlds -------------
         self.newColony = []
         self.universePlanets = self.game.game_universe[0].planets
 
@@ -96,9 +87,17 @@ class TestProductionQ(object):
         for each in self.newColony:
             self.player.colonizePlanet(self.universePlanets[each], 150000)
 
-
-
+        self.colony2 = self.newColony[0] 
         
+
+        #--------- obtain HW -------------
+        self.target_colony = None
+        for each in self.player.colonies.values():
+            if each.planet.HW:
+                self.target_colony = each
+                break
+        #--------- end ------------------
+
 
         self.d1_name = "Seer"
         self.d2_name = "Dark Star I"
@@ -220,6 +219,33 @@ class TestProductionQ(object):
 
 
     def test_controller(self):
+        """ 
+        beginning test. ProductionController goes through each item and 
+
+        """
+        xfileSetup_PQ_v1 = {"ProductionQ" : 
+                {
+                self.colony2 :
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
+                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
+                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
+                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
+                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                                            }
+
+                    }
+
+                }
+            }
+
+        processProductionQ(xfileSetup_PQ_v1, self.player)
+
+
+        
+
+
         pass
 
     def test_validateTargetPlayerSetup(self):
@@ -233,6 +259,8 @@ class TestProductionQ(object):
         pass
 
 
+
+
     def test_entryController_produce_Mine_one(self):
         """
         entry controller should result in 1 mine value from entry controller
@@ -243,7 +271,7 @@ class TestProductionQ(object):
 
         xfileSetup_PQ_v1 = {"ProductionQ" : 
                 {
-                colony2 :
+                self.colony2 :
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
                         "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
@@ -295,7 +323,7 @@ class TestProductionQ(object):
     def test_producePlanetUpgrades_Mine_TooMany(self):
         """
         producePlanetUpgrades should produce the number of mines sent to it. The 
-        Entry Controller should handle too many mines.
+        Entry Controller should handle the problem of too many mines.
         """
         pass
 
