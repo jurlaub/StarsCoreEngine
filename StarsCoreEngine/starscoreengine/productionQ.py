@@ -92,7 +92,7 @@ class ProductionQ(object):
 
 
     """
-    DEBUG = False
+    DEBUG = True
 
     itemType = ('Ship', 'Starbase', 'Scanner', 'Defenses', 'Mines', \
                  'Factories', 'Terraform', 'Minerals','Special')
@@ -112,6 +112,7 @@ class ProductionQ(object):
         self.ExcludedFromResearch = False
         self.customDefaultSettings = []
 
+        self.resources = 0
         self.productionOrder = []   # each order should point to a unique item  
         self.productionItems = {}   # 
 
@@ -585,14 +586,14 @@ class ProductionQ(object):
 
         autobuildMinerals = False       # for minerals if needed.
 
-        res = 0
+        #res = 0
 
 
         # obtain from colony the number of resources for production (Note: minus research tax)
         if self.ExcludedFromResearch:
-            res  = self.colony.totalResources
+            self.resources  = self.colony.totalResources
         else:
-            res  = self.research.colonyResourcesAfterTax(self.colony)
+            self.resources  = self.research.colonyResourcesAfterTax(self.colony)
 
         # handle the produceAutoMineral setting?
 
@@ -604,7 +605,7 @@ class ProductionQ(object):
 
             orderLength = len(self.productionOrder)
             
-            if res < 1:  # resources left
+            if self.resources < 1:  # resources left
                 break
             
             elif orderIndex >= orderLength:  # reached empty or end of order
@@ -622,8 +623,9 @@ class ProductionQ(object):
             # add check for autobuild type   entryObj["itemType"]
             # if autobuildMinerals == True set the autobuildMinerals = True
 
+            targetItemCosts = self.targetItemCosts(entryID)
 
-            tmpResult = self.entryController(entryID)
+            self.entryController(entryID, targetItemCosts)
             
 
             if orderLength == len(self.productionOrder):
@@ -633,10 +635,12 @@ class ProductionQ(object):
                 orderIndex == 0         # start at beginning
 
 
+    def targetItemCosts(self, entryID):
 
+        pass
 
         
-    def entryController(self, entryID, targetItem, autobuildMinerals = False):
+    def entryController(self, entryID, targetItemCosts, autobuildMinerals = False):
         """
 
 
@@ -650,15 +654,17 @@ class ProductionQ(object):
         Postcondition: entry required to update finishedForThisTurn for existing
                          and any new entries
 
+        >> have I reached any maximum?
+
+        -------- buildLimit ----------------------
         > Do I have the resources to complete the entry?
-        
         >> Do I have the materials to complete the entry?
         >> if yes -> complete entry
-
-        >> have I reached any maximum?
         
         >> if no -> 
         >>> How many can be completed and what quantity is left over?
+        ------------------------------------- 
+
 
         >>>> if quantity >= 2: create 1 single entry at beginning, current results in a single entry. 
         >>>> if quantity == 1:  use as many resources as possible (by percentage rules), break
@@ -724,6 +730,113 @@ class ProductionQ(object):
         germ = self.colony.planet.surfaceGerm
 
         pass
+
+    
+    def buildLimit(self, materials, quantity):
+        """ buildLimit
+        will examine the costs associated with an entry. It will answer the 
+        question, how many of this entry can be built.
+
+        input: self, materials, quantity
+        output: buildQuantity, [total material costs]
+
+        """
+
+        #tmpQuantity = quantity
+        #tmpMaterials = materials
+        availableSupplies = [self.colony.planet.surfaceIron,
+                            self.colony.planet.surfaceBor,
+                            self.colony.planet.surfaceGerm,
+                            self.resources]
+
+
+        #return [each * quantity for each in materials]
+
+
+
+    @staticmethod
+    def limit(quantity, neededMaterials, availableSupplies):
+        """ limit
+        input: quantity, neededMaterials, availableSupplies
+        output: quantityToBuild, [ MaterialsToBeUsedToBuild ] 
+
+        conditions:
+            quantities <= 0 return ZERO
+            values should be integers, 
+            values should be positive
+
+
+        """
+
+        DEBUG = ProductionQ.DEBUG
+        ZERO = 0
+
+        if DEBUG: print("----testing productionQ limit -----\n%d:%s availableSupplies:(%s)" %(quantity, str(neededMaterials), str(availableSupplies)))
+        tmpMax = quantity
+        tmpMin = 0
+        tmpBestSoFar = 0
+
+        # ---------- zero in quantity or in neededMaterials ---------
+        zeroNeededMaterials = ProductionQ.suppliesAreSufficient(neededMaterials, [each * ZERO for each in neededMaterials])
+        
+        if quantity <= 0:
+            return ZERO, [each * ZERO for each in neededMaterials]
+        elif zeroNeededMaterials:
+            return ZERO, [each * ZERO for each in neededMaterials]
+        # --------------------------------------------------------
+
+
+        while True:
+
+            tmpMid = (tmpMax + tmpMin) // 2
+            tmpMaterials = [each * tmpMid for each in neededMaterials]
+
+
+            if DEBUG: print("max:%d; min:%d; mid:%d; %s; tmpBestSoFar:%d" % (tmpMax, tmpMin, tmpMid, str(tmpMaterials), tmpBestSoFar))
+
+
+
+            if tmpMax < tmpMin:
+                return tmpBestSoFar, [each * tmpBestSoFar for each in neededMaterials]
+
+            
+            sufficient = ProductionQ.suppliesAreSufficient(tmpMaterials, availableSupplies)
+            
+            if DEBUG: print("sufficient:%s" % sufficient)
+ 
+
+
+            if sufficient and tmpMid == quantity:
+                return tmpMid, tmpMaterials
+            
+            elif sufficient:
+                tmpMin = tmpMid + 1
+                tmpBestSoFar = tmpMid
+            
+            else:
+                tmpMax = tmpMid - 1
+
+
+
+
+
+
+    @staticmethod
+    def suppliesAreSufficient(targetSupplies, availableSupplies):
+        
+        #print("targetSupplies:\t\t%s\navailableSupplies:\t\t%s" % (str(targetSupplies), str(availableSupplies)))
+
+        for i in range(0, len(availableSupplies)):
+            #print("t:(%s) :: a(%s)" % (targetSupplies[i], availableSupplies[i]))
+
+            if targetSupplies[i] <= availableSupplies[i]:
+                #print("True")
+                continue
+            else:
+                return False
+
+        return True
+
 
     def partialProduction(self, entry):
         """

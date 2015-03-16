@@ -106,7 +106,7 @@ class TestXFileController(object):
             if len(self.newColony) > newColonyCount:
                 break
 
-            if not obj.owner:
+            if not obj.owner and obj.HW == False:
                 self.newColony.append(kee)
 
         # colonize planets that are identified in self.newColony list

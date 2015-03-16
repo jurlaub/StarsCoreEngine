@@ -36,7 +36,7 @@ from ..starscoreengine.player import Player
 # from ..starscoreengine.player import RaceData as Race
 from ..starscoreengine.player_designs import PlayerDesigns
 # from ..starscoreengine.tech import ShipDesign 
-from ..starscoreengine.game_xfile import processDesign
+from ..starscoreengine.game_xfile import processDesign, processProductionQ
 
 
 
@@ -205,6 +205,113 @@ class TestProductionQ(object):
         pass
 
 
+    def test_PQ_suppliesAreSufficient(self):
+        """ class test for ProductionQ.suppliesAreSufficient
+
+        """
+
+        ts1 = [11, 23, 58, 1321]
+        ts2 = [11, 0, 58, 1321]
+        ts3 = [0, 0, 0, 0]
+        availableSupplies1 = [0, 0, 0, 0]
+        availableSupplies2 = [20, 20, 20, 20]
+        availableSupplies3 = [1000, 1000, 1000, 2000]
+
+        test1_false = ProductionQ.suppliesAreSufficient(ts1, availableSupplies1)
+        assert_false(test1_false)
+
+        test2_false = ProductionQ.suppliesAreSufficient(ts1, availableSupplies2)
+        assert_false(test2_false)
+
+        test3_false = ProductionQ.suppliesAreSufficient(ts2, availableSupplies1)
+        assert_false(test3_false)
+
+        test4_false = ProductionQ.suppliesAreSufficient(ts2, availableSupplies2)
+        assert_false(test4_false)
+
+        test5_true = ProductionQ.suppliesAreSufficient(ts1, availableSupplies3)
+        assert_true(test5_true)
+
+        test6_true = ProductionQ.suppliesAreSufficient(ts2, availableSupplies3)
+        assert_true(test6_true)
+
+        test7_true = ProductionQ.suppliesAreSufficient(ts3, availableSupplies3)
+        assert_true(test7_true)
+
+        test8_true = ProductionQ.suppliesAreSufficient(ts3, availableSupplies1)
+        assert_true(test8_true)
+
+        
+
+    def test_PQ_limit(self):
+        """ class test for ProductionQ.limit
+
+
+        """
+        quantity1 = 1
+        quantity2 = 15
+        quantity3 = 20
+        quantity4 = 0
+
+        ts1 = [11, 23, 58, 132]
+        ts2 = [11, 0, 1, 13]
+        ts3 = [0, 0, 0, 0]
+
+        as1 = [0, 0, 0, 0]
+        as2 = [20, 20, 20, 20]
+        as3 = [1000, 1000, 1000, 2000]
+        as4 = [200, 0, 20, 600]
+
+        # -------------- ts1 --------------
+        buildQuantity, buildMaterial = ProductionQ.limit(quantity1, ts1, as1)
+        assert_true(buildQuantity == 0)
+        assert_equal(buildMaterial, [0, 0, 0, 0])
+
+        buildQuantity, buildMaterial = ProductionQ.limit(quantity1, ts1, as3)
+        assert_true(buildQuantity == 1)
+        assert_equal(buildMaterial, [11, 23, 58, 132])       
+        
+
+        # -------------- ts2 --------------
+        buildQuantity, buildMaterial = ProductionQ.limit(quantity2, ts2, as2)
+        assert_true(buildQuantity == 1)
+        assert_equal(buildMaterial, [11, 0, 1, 13])  
+
+        buildQuantity, buildMaterial = ProductionQ.limit(quantity3, ts2, as3)
+        #print("%d:%s" % (buildQuantity, str(buildMaterial)))
+        assert_true(buildQuantity == 20)
+        assert_equal(buildMaterial, [220, 0, 20, 260])          
+        
+        buildQuantity, buildMaterial = ProductionQ.limit(quantity3, ts2, as4)
+        #print("%d:%s" % (buildQuantity, str(buildMaterial)))
+        assert_true(buildQuantity == 18)
+        assert_equal(buildMaterial, [198, 0, 18, 234])  
+
+        # -------------- ts3 --------------
+        buildQuantity, buildMaterial = ProductionQ.limit(quantity2, ts3, as2)
+        #print("%d:%s" % (buildQuantity, str(buildMaterial)))
+        assert_true(buildQuantity == 0)
+        assert_equal(buildMaterial, [0, 0, 0, 0]) 
+
+        buildQuantity, buildMaterial = ProductionQ.limit(quantity3, ts3, as1)
+        assert_true(buildQuantity == 0)
+        assert_equal(buildMaterial, [0, 0, 0, 0]) 
+
+        buildQuantity, buildMaterial = ProductionQ.limit(quantity3, ts3, as4)
+        assert_true(buildQuantity == 0)
+        assert_equal(buildMaterial, [0, 0, 0, 0]) 
+
+        # -------------- ts2 --------------
+        buildQuantity, buildMaterial = ProductionQ.limit(quantity4, ts2, as2)
+        #print("%d:%s" % (buildQuantity, str(buildMaterial)))
+        assert_true(buildQuantity == 0)
+        assert_equal(buildMaterial, [0, 0, 0, 0]) 
+
+        # -------------- ts3 --------------
+        buildQuantity, buildMaterial = ProductionQ.limit(quantity4, ts3, as2)
+        #print("%d:%s" % (buildQuantity, str(buildMaterial)))
+        assert_true(buildQuantity == 0)
+        assert_equal(buildMaterial, [0, 0, 0, 0]) 
 
     def test_productionObjectVariables(self):
         print(self.target_colony.planet.ID)
@@ -241,10 +348,6 @@ class TestProductionQ(object):
             }
 
         processProductionQ(xfileSetup_PQ_v1, self.player)
-
-
-        
-
 
         pass
 
