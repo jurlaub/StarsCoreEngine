@@ -86,6 +86,23 @@ class Planet(SpaceObjects):
         self.surfaceBor += minerals[1]
         self.surfaceGerm += minerals[2]
 
+    def removeSurfaceMinerals(self, minerals):
+        """
+        Removes the specified number of minerals from currSurfaceMinerals
+
+        precondition: minerals exist on the surface, the amount specified will 
+                    not cause the surface minerals to go negative.
+                    assumes minerals is a valid amount to be removed 
+
+        input: [minerals]
+        output: self.surfaceminerals is updated
+
+
+        """
+        self.surfaceIron -= minerals[0]
+        self.surfaceBor -= minerals[1]
+        self.surfaceGerm -= minerals[2]
+
 
 class Colony(object):
     """ 

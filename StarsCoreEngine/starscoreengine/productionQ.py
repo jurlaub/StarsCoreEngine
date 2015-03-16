@@ -571,12 +571,6 @@ class ProductionQ(object):
         >> if quantity = 0, it will be removed from Q at end -> set finishedForThisTurn = True;        --> if quantity == 0: entry to be deleted
         >> if productionOrder is empty(or at end of list) -> break, left over resources applied to research
        
-        
-        
-
-        proportionalCompletion
-        minerals are summed 
-        sum of minerals / resources
 
 
 
@@ -656,6 +650,8 @@ class ProductionQ(object):
 
         >> have I reached any maximum?
 
+        > has work been done?
+
         -------- buildLimit ----------------------
         > Do I have the resources to complete the entry?
         >> Do I have the materials to complete the entry?
@@ -704,15 +700,6 @@ class ProductionQ(object):
         > obtain target materials and resources (access to colony.planet, raceData, research, PlayerDesign)
         count = 0
 
-        while count < quantity: #break when count equals quantity
-            #n = 1
-            do I have the resources for count + 1 of object?
-            do I have the materials for count + 1 of object?
-            if yes, count += 1, continue
-            
-            if no, 
-                break
-
             
 
         if count greater then 0:
@@ -732,13 +719,15 @@ class ProductionQ(object):
         pass
 
     
-    def buildLimit(self, materials, quantity):
+    def buildLimit(self, quantity, materials):
         """ buildLimit
         will examine the costs associated with an entry. It will answer the 
         question, how many of this entry can be built.
 
         input: self, materials, quantity
-        output: buildQuantity, [total material costs]
+        output: buildQuantity, [total material cost used]
+
+        precondition: partially produced items cannot have quantity > 1
 
         """
 
@@ -753,6 +742,28 @@ class ProductionQ(object):
         #return [each * quantity for each in materials]
 
 
+    @staticmethod
+    def proportionalRemainder(neededMaterials, availableSupplies):
+        """
+        The entry controller is to build as much of the Q as possible in the 
+        specified order. If the entry is not totally produced - then a single 
+        entry will be added to the Q - which will contain a proportional amount 
+        of materials and resources allocated to complete the single entry. 
+
+        input:neededMaterials, availableSupplies
+        output: amount of materials applied to a single 
+
+
+        
+
+        proportionalCompletion
+        minerals are summed 
+        sum of minerals / resources
+
+
+        """
+
+        pass
 
     @staticmethod
     def limit(quantity, neededMaterials, availableSupplies):
@@ -815,10 +826,6 @@ class ProductionQ(object):
             
             else:
                 tmpMax = tmpMid - 1
-
-
-
-
 
 
     @staticmethod
