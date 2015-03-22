@@ -87,7 +87,8 @@ class TestProductionQ(object):
         for each in self.newColony:
             self.player.colonizePlanet(self.universePlanets[each], 150000)
 
-        self.colony2 = self.newColony[0] 
+        self.colony2_name= self.newColony[0] 
+        self.colony2_object = self.player.colonies[self.colony2_name]
         
 
         #--------- obtain HW -------------
@@ -184,8 +185,18 @@ class TestProductionQ(object):
             }
         
         # set a number of variables to the same value - so they can be reused
+        surfaceMinerals1 = [100, 20, 31]
+        population1 = 150000
+        popEfficiency = 1000
 
-        pass
+
+        #self.colony2_object.planet.updateSurfaceMinerals(surfaceMinerals1)
+        self.colony2_object.planet.surfaceIron = surfaceMinerals1[0]
+        self.colony2_object.planet.surfaceBor = surfaceMinerals1[1]
+        self.colony2_object.planet.surfaceGerm = surfaceMinerals1[2]
+
+        self.colony2_object.population = population1
+        self.colony2_object.calcTotalResources(popEfficiency)
 
 
 
@@ -313,6 +324,39 @@ class TestProductionQ(object):
         assert_true(buildQuantity == 0)
         assert_equal(buildMaterial, [0, 0, 0, 0]) 
 
+
+    def test_buildLimit(self):
+        """
+        buildLimit is like ProductionQ.limit() but is connected to the colony 
+        resources.
+        
+        specify the colony.planet resources 
+        test resources
+        ensure the tests work within the resource availibility.
+
+        surfaceMinerals1 = (100, 20, 31)
+        population1 = 150000
+        popEfficiency = 1000
+
+        """
+        # ------- update productionQ resources ------
+        # this process is typically done in productionController
+        colony2_resources = self.colony2_object.totalResources
+        self.colony2_object.productionQ.resources = colony2_resources
+        #--------------------------------------------
+
+        
+        quantity1 = 5
+        materials1 = [20, 5, 10, 30]
+
+        quantity_result1, materials_result1 = self.colony2_object.productionQ.buildLimit(quantity1, materials1)
+
+        assert_equal(quantity_result1, 3)       
+        assert_equal(materials_result1, [60, 15, 30, 90])
+
+        
+
+
     def test_productionObjectVariables(self):
         print(self.target_colony.planet.ID)
         print("%s:%s" % (self.target_colony.planet.owner, self.target_colony.planet.name))
@@ -332,7 +376,7 @@ class TestProductionQ(object):
         """
         xfileSetup_PQ_v1 = {"ProductionQ" : 
                 {
-                self.colony2 :
+                self.colony2_name:
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
                         "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
@@ -374,7 +418,7 @@ class TestProductionQ(object):
 
         xfileSetup_PQ_v1 = {"ProductionQ" : 
                 {
-                self.colony2 :
+                self.colony2_name:
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
                         "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 

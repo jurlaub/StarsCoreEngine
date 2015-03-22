@@ -87,16 +87,34 @@ class TestXFileController(object):
         self.game = Game(self.gameTemplate)
         self.player = self.game.players["player0"]
 
+        try:
+            uni = self.game.game_universe["UniverseNumber0"]
+            totalOwned = 0
+            owners = []
+            for kee, obj in uni.planets.items():
+                assert_equal(kee, obj.ID)
+                if obj.owner:
+                    totalOwned +=1
+                    owners.append(obj.owner)
+            print("totalOwned:%d;  owners:%s" % (totalOwned, str(owners)))
+        except:
+            pass
 
+        print("player colonies:\n%s:%s\n%s:%s"%(self.game.players["player0"].raceName, str(self.game.players["player0"].colonies.keys()), self.game.players["player1"].raceName, str(self.game.players["player1"].colonies.keys())))
 
         # --------- productionQ grab planets --------
         self.target_colony = None       # HW
-        for each in self.player.colonies.values():
-            print("each: %s" % each.planet.ID)
+        for kee, each in self.player.colonies.items():
+            print("kee:%s; each.planet.ID: %s; keys(%s)" % (kee, each.planet.ID, self.player.colonies.keys()))
+            print("owner:%s; player:%s (%s)" % (each.planet.owner, self.player, str(self.game.players)))
             if each.planet.HW:
                 self.target_colony = each.planet.ID
                 break
+            else:
+                print("Planet in colonies and not a HW. %s:%s" % (kee, each.planet.ID))
         
+        assert_in(self.target_colony, self.player.colonies)
+
         self.newColony = []
         self.universePlanets = self.game.game_universe[0].planets
 
@@ -112,6 +130,9 @@ class TestXFileController(object):
         # colonize planets that are identified in self.newColony list
         for each in self.newColony:
             self.player.colonizePlanet(self.universePlanets[each], 150000)
+
+
+
 
 
 

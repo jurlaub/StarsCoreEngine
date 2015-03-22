@@ -728,18 +728,22 @@ class ProductionQ(object):
         output: buildQuantity, [total material cost used]
 
         precondition: partially produced items cannot have quantity > 1
+                        ProductionQ.resources have been updated (in productionController)
 
         """
+        DEBUG = ProductionQ.DEBUG
 
-        #tmpQuantity = quantity
-        #tmpMaterials = materials
         availableSupplies = [self.colony.planet.surfaceIron,
                             self.colony.planet.surfaceBor,
                             self.colony.planet.surfaceGerm,
                             self.resources]
 
 
-        #return [each * quantity for each in materials]
+        limitQuantity, limitMaterials = ProductionQ.limit(quantity, materials, availableSupplies)
+
+        if DEBUG: print("buildLimit: Quantity(%d) & Materials(%s) " % (limitQuantity, str(limitMaterials)))
+
+        return limitQuantity, limitMaterials
 
 
     @staticmethod
@@ -769,14 +773,14 @@ class ProductionQ(object):
     def limit(quantity, neededMaterials, availableSupplies):
         """ limit
         input: quantity, neededMaterials, availableSupplies
-        output: quantityToBuild, [ MaterialsToBeUsedToBuild ] 
+        output: quantityToBuild, [ total MaterialsToBeUsedToBuild ] 
 
         conditions:
             quantities <= 0 return ZERO
             values should be integers, 
             values should be positive
 
-
+        note: limit is decoupled from buildLimit for testing purposes.
         """
 
         DEBUG = ProductionQ.DEBUG
@@ -789,12 +793,19 @@ class ProductionQ(object):
 
         # ---------- zero in quantity or in neededMaterials ---------
         zeroNeededMaterials = ProductionQ.suppliesAreSufficient(neededMaterials, [each * ZERO for each in neededMaterials])
-        
+ 
+        #if DEBUG: print("zeroNeededMaterials(%s):" % (zeroNeededMaterials ))
+
         if quantity <= 0:
             return ZERO, [each * ZERO for each in neededMaterials]
         elif zeroNeededMaterials:
+            
             return ZERO, [each * ZERO for each in neededMaterials]
         # --------------------------------------------------------
+
+        #-------test to determine if availableSupplies can cover entire entry ----
+        # add code here
+        #------------------------------------------------------------------------
 
 
         while True:
@@ -810,7 +821,7 @@ class ProductionQ(object):
             if tmpMax < tmpMin:
                 return tmpBestSoFar, [each * tmpBestSoFar for each in neededMaterials]
 
-            
+            if DEBUG: print("in_limit availableSupplies:%s" % availableSupplies)
             sufficient = ProductionQ.suppliesAreSufficient(tmpMaterials, availableSupplies)
             
             if DEBUG: print("sufficient:%s" % sufficient)
@@ -830,18 +841,29 @@ class ProductionQ(object):
 
     @staticmethod
     def suppliesAreSufficient(targetSupplies, availableSupplies):
+        """
+        availableSupplies are available for production. Each one needs to 
+        exceed targetSupplies. If even one targetSupplies values is higher then 
+        availableSupplies that means there are not enough resources available to
+        complete the productionQ entry. 
+
+        """
         
-        #print("targetSupplies:\t\t%s\navailableSupplies:\t\t%s" % (str(targetSupplies), str(availableSupplies)))
+        print("targetSupplies:\t\t%s\navailableSupplies:\t\t%s" % (str(targetSupplies), str(availableSupplies)))
 
         for i in range(0, len(availableSupplies)):
             #print("t:(%s) :: a(%s)" % (targetSupplies[i], availableSupplies[i]))
 
             if targetSupplies[i] <= availableSupplies[i]:
-                #print("True")
+                
                 continue
             else:
+                # targetSupplies are greater then available supplies.
+                print("suppliesAreSufficient: False")
                 return False
 
+        # all target supplies were found to be less then availableSupplies.
+        print("suppliesAreSufficient: True")
         return True
 
 

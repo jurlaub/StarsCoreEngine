@@ -140,12 +140,15 @@ class Colony(object):
         self.resourceTax = False  
         self.planetValue = 100    # 100 = 100% Value = calculated from currHab 
         self.planetMaxPopulation = 1000000  # based on PlanetValue & PRT # HE is .5; JOAT is 1.20
+        #self.raceData = raceData
 
     def calcTotalResources(self, popEfficiency):
         """Pop <= maxPop, everyone works at 100%,
            Pop between 100% and 300% of maxPop work at 50%, 
            Pop above 300% enjoy a life of leisure and don't work
         """
+        #popEfficiency = self.raceData.popEfficiency
+
         if self.population <= self.planetMaxPopulation:
             self.totalResources = self.population / popEfficiency
         elif self.population <= 3 * self.planetMaxPopulation:
