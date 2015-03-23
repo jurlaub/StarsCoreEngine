@@ -87,44 +87,32 @@ class TestXFileController(object):
         self.game = Game(self.gameTemplate)
         self.player = self.game.players["player0"]
 
-        try:
-            uni = self.game.game_universe["UniverseNumber0"]
-            totalOwned = 0
-            owners = []
-            for kee, obj in uni.planets.items():
-                assert_equal(kee, obj.ID)
-                if obj.owner:
-                    totalOwned +=1
-                    owners.append(obj.owner)
-            print("totalOwned:%d;  owners:%s" % (totalOwned, str(owners)))
 
 
-        except:
-            pass
+        # for kee, player in self.game.players.items():
+        #     print("kee:%s :: player:%s:" % (kee, player.raceName))
 
-        for kee, player in self.game.players.items():
-            print("kee:%s :: player:%s:" % (kee, player.raceName))
-
-            for name, colony in player.colonies.items():
-                print("PlanetKee:%s & PlanetID:%s & PlanetName:%s" % (name, colony.planet.ID, colony.planet.name))
-                v = self.game.game_universe[0].planets[colony.planet.ID]
-                print("universe kee: %s, planetID:%s, planetName:%s" % (colony.planet.ID, v.ID, v.name))
-                print("owner:%s" % (colony.planet.owner))
+        #     for name, colony in player.colonies.items():
+        #         print("PlanetKee:%s & PlanetID:%s & PlanetName:%s" % (name, colony.planet.ID, colony.planet.name))
+        #         v = self.game.game_universe[0].planets[colony.planet.ID]
+        #         print("universe kee: %s, planetID:%s, planetName:%s" % (colony.planet.ID, v.ID, v.name))
+        #         print("owner:%s" % (colony.planet.owner))
 
 
 
-        print("player colonies:\n%s:%s\n%s:%s"%(self.game.players["player0"].raceName, str(self.game.players["player0"].colonies.keys()), self.game.players["player1"].raceName, str(self.game.players["player1"].colonies.keys())))
+        # print("player colonies:\n%s:%s\n%s:%s"%(self.game.players["player0"].raceName, str(self.game.players["player0"].colonies.keys()), self.game.players["player1"].raceName, str(self.game.players["player1"].colonies.keys())))
 
         # --------- productionQ grab planets --------
         self.target_colony = None       # HW
         for kee, each in self.player.colonies.items():
-            print("kee:%s; each.planet.ID: %s; keys(%s)" % (kee, each.planet.ID, self.player.colonies.keys()))
-            print("owner:%s; player:%s (%s)" % (each.planet.owner, self.player, str(self.game.players)))
+            # print("kee:%s; each.planet.ID: %s; keys(%s)" % (kee, each.planet.ID, self.player.colonies.keys()))
+            # print("owner:%s; player:%s (%s)" % (each.planet.owner, self.player, str(self.game.players)))
+            
             if each.planet.HW:
                 self.target_colony = each.planet.ID
                 break
-            else:
-                print("Planet in colonies and not a HW. %s:%s" % (kee, each.planet.ID))
+            # else:
+            #     print("Planet in colonies and not a HW. %s:%s" % (kee, each.planet.ID))
         
         assert_in(self.target_colony, self.player.colonies)
 

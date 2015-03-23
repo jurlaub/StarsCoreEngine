@@ -228,6 +228,8 @@ class TestGame(object):
         additionally the random number of new HW's should be added to the universe.planet
         (note: they will all have the same owner - this part is not a reflection of the game.)
         """
+        DEBUG = True
+
         randtest = random.randrange(10, 30)  # random count for test
 
         testHW1 = {}
@@ -242,7 +244,7 @@ class TestGame(object):
         testDetails = True
 
         initialPlanetCount = len(uni.planets)
-        print("\ninitialPlanetCount:%d; randtest:%d" % (initialPlanetCount, randtest))
+        if DEBUG: print("\ninitialPlanetCount:%d; randtest:%d" % (initialPlanetCount, randtest))
 
         e = 0
         o = 0
@@ -258,21 +260,21 @@ class TestGame(object):
                 testHW0[newHW.ID] = newHW
                 e +=1
             
-            print("n:%d:: e:%d o:%d\n-->  ID:%s Name:%s\n-testHW0(%d)-testHW1(%d)  \n" % (i, e, o, newHW.ID, newHW.name, len(testHW0), len(testHW1)))
+            if DEBUG: print("n:%d:: e:%d o:%d\n-->  ID:%s Name:%s\n-testHW0(%d)-testHW1(%d)  \n" % (i, e, o, newHW.ID, newHW.name, len(testHW0), len(testHW1)))
 
         postPlanetCount = len(uni.planets)
-        print("\npostPlanetCount:%d; randtest:%d" % (postPlanetCount, randtest))
+        if DEBUG: print("\npostPlanetCount:%d; randtest:%d" % (postPlanetCount, randtest))
 
         assert_equal(len(uni.planets), initialPlanetCount + randtest)
 
-        #assert_equal(len(testHW1) + len(testHW0), randtest)
+        assert_equal(len(testHW1) + len(testHW0), randtest)
 
 
-        if testDetails:
-            for kee, obj in testHW0.items():
-                print("kee ->testHW0[%s]; obj.ID:%s;    obj.Name:%s; uni.planets.name(kee):%s; uni.planets.name(obj.ID):%s; " % (kee, obj.ID, obj.name, uni.planets[kee].name, uni.planets[obj.ID].name))
-            for kee, obj in testHW1.items():
-                print("kee ->testHW1[%s]; obj.ID:%s;    obj.Name:%s; uni.planets.name(kee):%s; uni.planets.name(obj.ID):%s; " % (kee, obj.ID, obj.name, uni.planets[kee].name, uni.planets[obj.ID].name))
+        # if testDetails:
+        #     for kee, obj in testHW0.items():
+        #         print("kee ->testHW0[%s]; obj.ID:%s;    obj.Name:%s; uni.planets.name(kee):%s; uni.planets.name(obj.ID):%s; " % (kee, obj.ID, obj.name, uni.planets[kee].name, uni.planets[obj.ID].name))
+        #     for kee, obj in testHW1.items():
+        #         print("kee ->testHW1[%s]; obj.ID:%s;    obj.Name:%s; uni.planets.name(kee):%s; uni.planets.name(obj.ID):%s; " % (kee, obj.ID, obj.name, uni.planets[kee].name, uni.planets[obj.ID].name))
 
 
 
@@ -305,7 +307,7 @@ class TestGame(object):
 
         #assert_equal(len(uni.planets), initialPlanetCount + randtest)
 
-
+        #assert_true(False)
 
     
     def test_Player_PlanetValue_Assessment(self):

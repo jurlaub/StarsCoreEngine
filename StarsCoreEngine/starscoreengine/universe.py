@@ -147,10 +147,24 @@ class UniverseObject(object):
         #Shuffling a new HW into the existing planet ID's so that HW's are not 
         #easily identified.
         #**********************
-        switchID = str(self.ID) + '_' + str(random.randrange(0, count))
+        while True:
+
+            switchID = str(self.ID) + '_' + str(random.randrange(0, count))
+
+            switchPlanet = self.planets[switchID]
+
+            if switchPlanet.HW or switchPlanet.owner is not None:
+                print("Try again: %s; has HW:%s or owner: %s" % (switchID, switchPlanet.HW, switchPlanet.owner ))
+                continue
+            else:
+                break
 
 
-        switchPlanet = self.planets[switchID]
+
+
+
+
+        
         switchPlanet.ID = ID    # Existing Planet takes in new planet ID
         self.planets[ID] = switchPlanet
         print("createHomeworldPlanet-switchPlanet: PlanetName:%s, IdNewToPlanet:%s, OldIDreplacedByLastEntry:%s, PlanetOwner:%s, IsPlanetAHW:%s" % (switchPlanet.name, switchPlanet.ID, switchID,  switchPlanet.owner, switchPlanet.HW))
