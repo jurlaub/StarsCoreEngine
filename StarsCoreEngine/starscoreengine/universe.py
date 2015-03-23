@@ -149,9 +149,11 @@ class UniverseObject(object):
         #**********************
         switchID = str(self.ID) + '_' + str(random.randrange(0, count))
 
+
         switchPlanet = self.planets[switchID]
         switchPlanet.ID = ID    # Existing Planet takes in new planet ID
         self.planets[ID] = switchPlanet
+        print("createHomeworldPlanet-switchPlanet: PlanetName:%s, IdNewToPlanet:%s, OldIDreplacedByLastEntry:%s, PlanetOwner:%s, IsPlanetAHW:%s" % (switchPlanet.name, switchPlanet.ID, switchID,  switchPlanet.owner, switchPlanet.HW))
 
         name = self.getPlanetName()
         playerHab = (raceData.habGravityCenter, raceData.habTempCenter, raceData.habRadCenter)
@@ -159,6 +161,7 @@ class UniverseObject(object):
         homeworld = self.createPlanet(switchID, name, playerHab)   # HW takes existing planet ID
         homeworld.HW = True  
         homeworld.owner = raceData.raceName    
+        print("createHomeworldPlanet-NewHW: HWName:%s, Id:%s, PlanetOwner:%s, IsPlanetAHW:%s" % (homeworld.name, homeworld.ID,  homeworld.owner, homeworld.HW))
 
         #homeworld.
 

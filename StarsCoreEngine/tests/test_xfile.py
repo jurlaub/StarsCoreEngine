@@ -97,8 +97,21 @@ class TestXFileController(object):
                     totalOwned +=1
                     owners.append(obj.owner)
             print("totalOwned:%d;  owners:%s" % (totalOwned, str(owners)))
+
+
         except:
             pass
+
+        for kee, player in self.game.players.items():
+            print("kee:%s :: player:%s:" % (kee, player.raceName))
+
+            for name, colony in player.colonies.items():
+                print("PlanetKee:%s & PlanetID:%s & PlanetName:%s" % (name, colony.planet.ID, colony.planet.name))
+                v = self.game.game_universe[0].planets[colony.planet.ID]
+                print("universe kee: %s, planetID:%s, planetName:%s" % (colony.planet.ID, v.ID, v.name))
+                print("owner:%s" % (colony.planet.owner))
+
+
 
         print("player colonies:\n%s:%s\n%s:%s"%(self.game.players["player0"].raceName, str(self.game.players["player0"].colonies.keys()), self.game.players["player1"].raceName, str(self.game.players["player1"].colonies.keys())))
 

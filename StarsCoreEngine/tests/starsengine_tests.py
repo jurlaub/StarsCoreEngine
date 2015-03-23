@@ -25,6 +25,8 @@ from nose.tools import with_setup, assert_equal, assert_not_equal, \
 #import nose
 import os
 import os.path
+import random
+
 from ..starscoreengine import *
 from ..starscoreengine.universe import UniverseObject
 from ..starscoreengine.player import Player
@@ -33,6 +35,8 @@ from ..starscoreengine.game_utility import GamePickle
 from ..starscoreengine.order_of_events import *
 from ..starscoreengine.tech import Component, Hull
 from ..starscoreengine.player_designs import PlayerDesigns
+
+
 
 #old - for reference -  use test classes
 def test_spaceobjects():
@@ -212,6 +216,96 @@ class TestGame(object):
 
     def test_Players_HW(self):
         pass
+
+
+    def test_universe_createHWPlanet(self):
+        """
+        Using the game as the universe and raceData template, create a generator
+        that will add N number of HW's (for the same race) and collect them in 
+        a key:value dictionary. Each of the collection should have a key that 
+        aligns with the value.ID & the universe key. 
+
+        additionally the random number of new HW's should be added to the universe.planet
+        (note: they will all have the same owner - this part is not a reflection of the game.)
+        """
+        randtest = random.randrange(10, 30)  # random count for test
+
+        testHW1 = {}
+        testHW0 = {}
+        player1 = self.game.players["player1"]
+        player0 = self.game.players["player0"]
+        raceData1 = player1.raceData
+        raceData0 = player0.raceData
+
+        uni = self.game.game_universe[0]
+
+        testDetails = True
+
+        initialPlanetCount = len(uni.planets)
+        print("\ninitialPlanetCount:%d; randtest:%d" % (initialPlanetCount, randtest))
+
+        e = 0
+        o = 0
+        for i in range(0, randtest):
+
+            if i%2:
+
+                newHW = uni.createHomeworldPlanet(raceData1)
+                testHW1[newHW.ID] = newHW
+                o +=1
+            else:
+                newHW = uni.createHomeworldPlanet(raceData0)
+                testHW0[newHW.ID] = newHW
+                e +=1
+            
+            print("n:%d:: e:%d o:%d\n-->  ID:%s Name:%s\n-testHW0(%d)-testHW1(%d)  \n" % (i, e, o, newHW.ID, newHW.name, len(testHW0), len(testHW1)))
+
+        postPlanetCount = len(uni.planets)
+        print("\npostPlanetCount:%d; randtest:%d" % (postPlanetCount, randtest))
+
+        assert_equal(len(uni.planets), initialPlanetCount + randtest)
+
+        #assert_equal(len(testHW1) + len(testHW0), randtest)
+
+
+        if testDetails:
+            for kee, obj in testHW0.items():
+                print("kee ->testHW0[%s]; obj.ID:%s;    obj.Name:%s; uni.planets.name(kee):%s; uni.planets.name(obj.ID):%s; " % (kee, obj.ID, obj.name, uni.planets[kee].name, uni.planets[obj.ID].name))
+            for kee, obj in testHW1.items():
+                print("kee ->testHW1[%s]; obj.ID:%s;    obj.Name:%s; uni.planets.name(kee):%s; uni.planets.name(obj.ID):%s; " % (kee, obj.ID, obj.name, uni.planets[kee].name, uni.planets[obj.ID].name))
+
+
+
+        for kee, obj in testHW0.items():
+            tplanet_obj = uni.planets[obj.ID]
+            tplanet_kee = uni.planets[kee]
+
+            assert_equal(tplanet_kee.ID, tplanet_obj.ID)
+            assert_equal(tplanet_kee.ID, obj.ID )
+
+            assert_equal(tplanet_kee.name, tplanet_obj.name)
+            assert_equal(tplanet_kee.name, obj.name )
+
+            assert_equal(kee, obj.ID)
+            assert_equal(kee, uni.planets[obj.ID].ID)
+
+
+        for kee, obj in testHW1.items():
+            tplanet_obj = uni.planets[obj.ID]
+            tplanet_kee = uni.planets[kee]
+
+            assert_equal(tplanet_kee.ID, tplanet_obj.ID)
+            assert_equal(tplanet_kee.ID, obj.ID )
+
+            assert_equal(tplanet_kee.name, tplanet_obj.name)
+            assert_equal(tplanet_kee.name, obj.name )
+
+            assert_equal(kee, obj.ID)
+            assert_equal(kee, uni.planets[obj.ID].ID)
+
+        #assert_equal(len(uni.planets), initialPlanetCount + randtest)
+
+
 
     
     def test_Player_PlanetValue_Assessment(self):
