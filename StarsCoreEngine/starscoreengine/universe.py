@@ -146,6 +146,9 @@ class UniverseObject(object):
         #**********************
         #Shuffling a new HW into the existing planet ID's so that HW's are not 
         #easily identified.
+        #
+        # while loop to find an existing planet ID that is not a HW or owned by 
+        # a player - player.colonies keys do not dynamically sync.
         #**********************
         while True:
 

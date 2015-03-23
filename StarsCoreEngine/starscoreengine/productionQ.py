@@ -621,7 +621,9 @@ class ProductionQ(object):
 
             self.entryController(entryID, targetItemCosts)
             
-
+            # if entryController adds an item to the productionOrder/Items,
+            # then start over at the beginning. Reasons include: autobuild orders, ?
+            # note: entryController should set items to "finishedForThisTurn"
             if orderLength == len(self.productionOrder):
                 #no change in entry controller
                 orderIndex += 1         # entry completed then increment 
@@ -648,19 +650,33 @@ class ProductionQ(object):
         Postcondition: entry required to update finishedForThisTurn for existing
                          and any new entries
 
-        >> have I reached any maximum?
 
-        > has work been done?
+
+    Understand entry:
+        >> have I reached any maximum? (that would stop work on this entry)
+        
+        >> has work been done? (on this entry?) 
+            >> if so & single entry -> produce the 1 with altered materials
+            (for later) if so & multiple entry -> need to 
+
 
         -------- buildLimit ----------------------
         > Do I have the resources to complete the entry?
-        >> Do I have the materials to complete the entry?
-        >> if yes -> complete entry
-        
-        >> if no -> 
+        >> Do I have the materials to complete the entry
+        >>> buildLimit answers:
         >>> How many can be completed and what quantity is left over?
         ------------------------------------- 
 
+    Produce n amount:
+        ------------ buildEntry ------------------
+
+        ------------------------------------------
+        ------------ consumeMaterials ------------
+
+        ------------------------------------------
+
+
+    Resolve left over:
 
         >>>> if quantity >= 2: create 1 single entry at beginning, current results in a single entry. 
         >>>> if quantity == 1:  use as many resources as possible (by percentage rules), break
@@ -707,19 +723,50 @@ class ProductionQ(object):
             quantity = quantity - count
             minerals & resources decremented
 
-
+        # iron = self.colony.planet.surfaceIron
+        # bor  = self.colony.planet.surfaceBor
+        # germ = self.colony.planet.surfaceGerm
 
 
         """
 
-        iron = self.colony.planet.surfaceIron
-        bor  = self.colony.planet.surfaceBor
-        germ = self.colony.planet.surfaceGerm
+        entryObj = self.productionItems[entryID]
+        entryQuantity = entryObj["quantity"]
+        entryUsedMaterials = entryObj["materialsUsed"]
+        entryType = entryObj["itemType"]
+
+        # Understand entry:
+
+        # have I reached any maximum? (that would stop work on this entry)
+        # work done? & quantity != 1?
+
+        buildQuantity, buildMaterials = self.buildLimit(entryQuantity, targetItemCosts)
+
+
+        # produce n amount
+
+
+
+        # resolve left over
+
 
         pass
 
     
-    def buildLimit(self, quantity, materials):
+    def buildEntry(self, entryType, buildQuantity):
+
+        pass
+
+    def consumeMaterials(self, consumeMaterials):
+        """
+        used to reduce elements like iron,bor,germ to what is available.
+
+        """
+        pass
+
+
+    
+    def buildLimit(self, quantity, targetMaterials):
         """ buildLimit
         will examine the costs associated with an entry. It will answer the 
         question, how many of this entry can be built.
@@ -739,7 +786,7 @@ class ProductionQ(object):
                             self.resources]
 
 
-        limitQuantity, limitMaterials = ProductionQ.limit(quantity, materials, availableSupplies)
+        limitQuantity, limitMaterials = ProductionQ.limit(quantity, targetMaterials, availableSupplies)
 
         if DEBUG: print("buildLimit: Quantity(%d) & Materials(%s) " % (limitQuantity, str(limitMaterials)))
 
@@ -849,7 +896,7 @@ class ProductionQ(object):
 
         """
         
-        print("targetSupplies:\t\t%s\navailableSupplies:\t\t%s" % (str(targetSupplies), str(availableSupplies)))
+        #print("targetSupplies:\t\t%s\navailableSupplies:\t\t%s" % (str(targetSupplies), str(availableSupplies)))
 
         for i in range(0, len(availableSupplies)):
             #print("t:(%s) :: a(%s)" % (targetSupplies[i], availableSupplies[i]))
@@ -859,11 +906,11 @@ class ProductionQ(object):
                 continue
             else:
                 # targetSupplies are greater then available supplies.
-                print("suppliesAreSufficient: False")
+                #print("suppliesAreSufficient: False")
                 return False
 
         # all target supplies were found to be less then availableSupplies.
-        print("suppliesAreSufficient: True")
+        #print("suppliesAreSufficient: True")
         return True
 
 
@@ -908,12 +955,7 @@ class ProductionQ(object):
         """
         pass
 
-    def consumeRequiredElements(self):
-        """
-        used to reduce elements like iron,bor,germ perportionally to what is available.
 
-        """
-        pass
 
     def produceShip(self):
         """
