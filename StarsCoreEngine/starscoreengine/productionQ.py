@@ -647,6 +647,7 @@ class ProductionQ(object):
         Output: produced items
                 update productionList and productionQ
 
+        Precondition: targetItemCosts values are more then entryUsedMaterials if less then buildMaterial entry set to zero
         Postcondition: entry required to update finishedForThisTurn for existing
                          and any new entries
 
@@ -735,22 +736,57 @@ class ProductionQ(object):
         entryUsedMaterials = entryObj["materialsUsed"]
         entryType = entryObj["itemType"]
 
+        completeAPartiallyWorkedOnEntry = ProductionQ.workHasBeenDone(entryObj)
+
         # Understand entry:
 
         # have I reached any maximum? (that would stop work on this entry)
-        # work done? & quantity != 1?
+        
+        if completeAPartiallyWorkedOnEntry:
+        # ------------ check whether work has been done -------
+        # Assume this is covered by input from xFile and handled later entry controller      
+        # if entryQuantity > 1 and ProductionQ.workHasBeenDone(entryObj):
+            
+        #     if buildQuantity >= 1:
+        #         # build a single item, decrement current item, quantity -= 1,  zero out materials used
+        #         # return  (p_Controller should restart at zero)
+        #         pass
+        # -----------------------------------------------------
 
-        buildQuantity, buildMaterials = self.buildLimit(entryQuantity, targetItemCosts)
+            quantityONE = 1
+            tmpTargetCosts = [(targetItemCosts[x] - entryUsedMaterials[x]) for x in range(0,len(targetItemCosts))]
+            
+            for i in range(0, len(tmpTargetCosts)):
+                if tmpTargetCosts[i] < 0: tmpTargetCosts[i] = 0
+
+            buildQuantity, buildMaterials = self.buildLimit(quantityONE, tmpTargetCosts)        
+
+        else:
+
+            buildQuantity, buildMaterials = self.buildLimit(entryQuantity, targetItemCosts)
+
+
 
 
         # produce n amount
+        if buildQuantity > 0:
+            
+            self.buildEntry(entryType, buildQuantity)
+            self.consumeMaterials(buildMaterials)
 
-
+        else:
+            # set entry["finishedForTurn"] == True
+            return
 
         # resolve left over
 
+        if completeAPartiallyWorkedOnEntry:
+            pass
+        else:
+            pass
 
-        pass
+
+        
 
     
     def buildEntry(self, entryType, buildQuantity):
