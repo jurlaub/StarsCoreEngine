@@ -311,12 +311,25 @@ class ProductionQ(object):
             entryKey, entryObj = entryDict.popitem()
 
             # --TODO-- find ItemType method
+
+
+            if "materialsUsed" in entryObj:
+                tmpMaterialsUsed = entryObj["materialsUsed"]
+            else:
+                tmpMaterialsUsed = [0, 0, 0, 0]
             
+            if "itemType" in entryObj:
+                tmpItemType = entryObj["itemType"]
+            else:
+                tmpItemType = "itemType Ship"    
+
+
+
             tmpItem = { "quantity" : entryObj["quantity"], 
                         "productionID" : entryObj["productionID"],
                         "finishedForThisTurn" : False,
-                        "itemType":"itemType Ship",
-                        "materialsUsed" : [0, 0, 0, 0]
+                        "itemType": tmpItemType,
+                        "materialsUsed" : tmpMaterialsUsed
             }           
 
 
@@ -573,119 +586,6 @@ class ProductionQ(object):
        
 
 
-
-
-
-        """
-
-        autobuildMinerals = False       # for minerals if needed.
-
-        #res = 0
-
-
-        # obtain from colony the number of resources for production (Note: minus research tax)
-        if self.ExcludedFromResearch:
-            self.resources  = self.colony.totalResources
-        else:
-            self.resources  = self.research.colonyResourcesAfterTax(self.colony)
-
-        # handle the produceAutoMineral setting?
-
-        orderIndex = 0 
-
-        # All orders "finishedForThisTurn" == False
-
-        while True:
-
-            orderLength = len(self.productionOrder)
-            
-            if self.resources < 1:  # resources left
-                break
-            
-            elif orderIndex >= orderLength:  # reached empty or end of order
-                break
-
-            
-            entryID = self.productionOrder[orderIndex]
-            entryObj = self.productionItem[entryID]
-
-            if entryObj["finishedForThisTurn"] == True:
-                orderIndex +=1
-                continue
-
-            # is entry an Autobuild type? 
-            # add check for autobuild type   entryObj["itemType"]
-            # if autobuildMinerals == True set the autobuildMinerals = True
-
-            targetItemCosts = self.targetItemCosts(entryID)
-
-            self.entryController(entryID, targetItemCosts)
-            
-            # if entryController adds an item to the productionOrder/Items,
-            # then start over at the beginning. Reasons include: autobuild orders, ?
-            # note: entryController should set items to "finishedForThisTurn"
-            if orderLength == len(self.productionOrder):
-                #no change in entry controller
-                orderIndex += 1         # entry completed then increment 
-            else:
-                orderIndex == 0         # start at beginning
-
-
-    def targetItemCosts(self, entryID):
-
-        pass
-
-        
-    def entryController(self, entryID, targetItemCosts, autobuildMinerals = False):
-        """
-
-
-
-        ------------------------------------------
-    Iterative -> solution for entry -> how many can be completed
-        Input: entry, target materials & resources, 
-        Output: produced items
-                update productionList and productionQ
-
-        Precondition: targetItemCosts values are more then entryUsedMaterials if less then buildMaterial entry set to zero
-        Postcondition: entry required to update finishedForThisTurn for existing
-                         and any new entries
-
-
-
-    Understand entry:
-        >> have I reached any maximum? (that would stop work on this entry)
-        
-        >> has work been done? (on this entry?) 
-            >> if so & single entry -> produce the 1 with altered materials
-            (for later) if so & multiple entry -> need to 
-
-
-        -------- buildLimit ----------------------
-        > Do I have the resources to complete the entry?
-        >> Do I have the materials to complete the entry
-        >>> buildLimit answers:
-        >>> How many can be completed and what quantity is left over?
-        ------------------------------------- 
-
-    Produce n amount:
-        ------------ buildEntry ------------------
-
-        ------------------------------------------
-        ------------ consumeMaterials ------------
-
-        ------------------------------------------
-
-
-    Resolve left over:
-
-        >>>> if quantity >= 2: create 1 single entry at beginning, current results in a single entry. 
-        >>>> if quantity == 1:  use as many resources as possible (by percentage rules), break
-        
-
-        >>>> if no -> (does the Q need to autobuild minerals? if yes, add to beginning, continue) 
-                    -> use as many resources and materials as are available, update ironUsed etc.
-        
     
         2b) if "quantity" : n > 1,
             call a special helper method dealing with producing multiples of an 
@@ -711,23 +611,236 @@ class ProductionQ(object):
              item should be removed from productionQ and productionList
 
 
+        """
+
+        autobuildMinerals = False       # for minerals if needed.
+
+        #res = 0
+
+
+        # obtain from colony the number of resources for production (Note: minus research tax)
+        if self.ExcludedFromResearch:
+            self.resources  = self.colony.totalResources
+        else:
+            self.resources  = self.research.colonyResourcesAfterTax(self.colony)
+
+        # handle the produceAutoMineral setting?
+
+        orderIndex = 0 
+        # --------------- reset "finishedForThisTurn"  ------------
+        # All orders "finishedForThisTurn" == False
+        # ---------------------------------------------------------
+
+        while True:
+
+            orderLength = len(self.productionOrder)
+            
+            if self.resources < 1:  # resources left
+                break
+            
+            elif orderIndex >= orderLength:  # reached empty or end of order
+                break
+
+            
+            entryID = self.productionOrder[orderIndex]
+            entryObj = self.productionItem[entryID]
+
+            if entryObj["finishedForThisTurn"]: # T/F based on Entry.
+                orderIndex += 1
+                continue
+            
+            elif entryObj["quantity"] == 0:
+                entryObj["finishedForThisTurn"] = True
+                orderIndex += 1
+                continue
+
+            # deciding if a Queue adjustment is needed or if I need to iterate to the next entry
+            # quantity > 1 with work has been done
+
+            if entryObj["quantity"] > 1 and ProductionQ.workHasBeenDone(entryObj):
+                #workHasBeenDoneOnEntry = ProductionQ.workHasBeenDone(entryObj)
+                
+                # if ProductionQ.workHasBeenDone(entryObj):
+                #     entryObj["finishedForThisTurn"] = True
+                #     orderIndex = 0
+
+                #     self.splitEntryIntoTwo(entryObj)
+
+                #     continue
+                
+                entryObj["finishedForThisTurn"] = True
+                orderIndex = 0      # restart at beginning as a quantity 1 entry will be made by splitEntryIntoTwo()
+
+                self.splitEntryIntoTwo(entryID)
+
+                continue
+
+
+
+            # is entry an Autobuild type? 
+            # add check for autobuild type   entryObj["itemType"]
+            # if autobuildMinerals == True set the autobuildMinerals = True
+
+            targetItemCosts = self.targetItemCosts(entryID)
+
+            self.entryController(entryID, targetItemCosts)
+
+
+
+            # if entryObj["finishedForThisTurn"]:
+            #     orderIndex += 1
+            #     continue
+            
+            # elif entryObj["quantity"] >= 1:
+            #     # start over
+
+            #     #orderIndex = 0
+            #     # resubmit for a partial production
+
+            #     continue
+
+
+
+            
+            # if entryController adds an item to the productionOrder/Items,
+            # then start over at the beginning. Reasons include: autobuild orders, ?
+            # note: entryController should set items to "finishedForThisTurn"
+            # if orderLength == len(self.productionOrder):
+            #     #no change in entry controller
+            #     orderIndex += 1         # entry completed then increment 
+            # else:
+            #     orderIndex == 0         # start at beginning
+
+
+    
+    def targetItemCosts(self, entryID):
+
+        pass
+
+    def splitEntryIntoTwo(self, entryID):
+        """
+        Input: entryID (value at self.productionItems[orderIndex])
+        Output: 
+            update currentEntry quantity -= 1
+            update currentEntry materialsUsed = zeroed
+
+            adds newEntry to self.productionItems[0]
+            newEntry[quantity] = 1
+            newEntry[materialsUsed] = any values that was in currentEntry[materialsUsed] before it was zeroed
+
+        precondition: 
+            expects values exist in dictionary
+            expects values to be correct type
+
+
+        Accepts a entry. It creates a new entry @ beginning. 
+        New Entry = quantity = 1
+        New Entry = any work done
+        Entry = quantity -= 1
+        Entry = work done == [0, 0, 0, 0]
+
+        {kee: {quantity, productionID}}
+
+        """
+        currentEntry = self.productionItems[entryID]
+
+        tmpEntryProductionID = currentEntry["productionID"]
+        tmpEntryMaterials = [i for i in currentEntry["materialsUsed"]]
+        tmpEntryItemType = currentEntry["itemType"]
+
+        tmpEntry = {
+            entryID : {
+                "quantity" : 1, 
+                "productionID" : tmpEntryProductionID,
+                "materialsUsed" : tmpEntryMaterials,
+                "itemType" : tmpEntryItemType
+                }}
+        
+
+        currentEntry["quantity"] -= 1
+        currentEntry["materials"] = [0, 0, 0, 0]
+
+        self.addToQueue(tmpEntry, 0)
+
+
+
+
+    def entryController(self, entryID, targetItemCosts, autobuildMinerals = False):
+        """
+
+        entryController does both 1 & 2:
+        1) build a quantity (n to availableSupplies - n(neededMaterials) )
+        2) contribute partially to a single entry (that may be added to Queue)
+
+
+        ------------------------------------------
+    Iterative -> solution for entry -> how many can be completed
+        Input: entry, target materials & resources, 
+        Output: produced items
+                update productionList and productionQ
+
+        Precondition: targetItemCosts values are more then entryUsedMaterials if less then buildMaterial entry set to zero
+        Postcondition: entry required to update finishedForThisTurn for existing
+                         and any new entries
+
+
+
+    Understand entry:
+        >> have I reached any maximum? (that would stop work on this entry)
+        
+        >> has work been done? (on this entry?) 
+            >> if so & single entry -> produce the 1 with altered materials
+            (for later) if so & multiple entry -> need to seperate out
+
+
+        -------- buildLimit ----------------------
+        > Do I have the resources to complete the entry?
+        >> Do I have the materials to complete the entry
+        >>> buildLimit answers:
+        >>> How many can be completed and what quantity is left over?
+        ------------------------------------- 
+
+    Produce n amount:
+        ------------ buildEntry ------------------
+
+        ------------------------------------------
+        ------------ consumeMaterials ------------
+
+        ------------------------------------------
+
+
+    Resolve left over:
+
+
+
+
+
+
+
+    Anything below this line may need to be deleted
+        quantity = entryQuantity - buildQuantity
+
+        >>>> if quantity >= 2: create 1 single entry at beginning, current results in a single entry. 
+        >>>> if quantity == 1:  use as many resources as possible (by percentage rules), break
+        
+
+        >>>> if no -> (does the Q need to autobuild minerals? if yes, add to beginning, continue) 
+                    -> use as many resources and materials as are available, update ironUsed etc.
+        
+
+
+
         ------------------------------------------
         obtain entry
     
         > obtain target materials and resources (access to colony.planet, raceData, research, PlayerDesign)
         count = 0
 
-            
-
+        
         if count greater then 0:
             produce that many of object
             quantity = quantity - count
             minerals & resources decremented
-
-        # iron = self.colony.planet.surfaceIron
-        # bor  = self.colony.planet.surfaceBor
-        # germ = self.colony.planet.surfaceGerm
-
 
         """
 
@@ -735,6 +848,7 @@ class ProductionQ(object):
         entryQuantity = entryObj["quantity"]
         entryUsedMaterials = entryObj["materialsUsed"]
         entryType = entryObj["itemType"]
+        entryFinished = entryObj["finishedForThisTurn"]
 
         completeAPartiallyWorkedOnEntry = ProductionQ.workHasBeenDone(entryObj)
 
@@ -766,26 +880,91 @@ class ProductionQ(object):
             buildQuantity, buildMaterials = self.buildLimit(entryQuantity, targetItemCosts)
 
 
+        #remainingQuantity = entryQuantity - buildQuanity
 
+        if buildQuanity > entryQuantity:
+            raise ValueError("EntryController: buildQuantity(%d) greater then entryQuantity(%d)" % (buildQuanity, entryQuantity))
 
-        # produce n amount
-        if buildQuantity > 0:
+        if buildQuantity > 0:   # buildQuantity cap is entryQuantity 
             
             self.buildEntry(entryType, buildQuantity)
             self.consumeMaterials(buildMaterials)
 
-        else:
-            # set entry["finishedForTurn"] == True
+
+            entryObj["quantity"] -= buildQuantity
+            entryObj["materialsUsed"] = [0, 0, 0, 0]
+
+            if entryObj["quantity"] == 0:
+                entryObj["finishedForThisTurn"] = True
+
             return
 
-        # resolve left over
+        elif buildQuantity == 0:
 
-        if completeAPartiallyWorkedOnEntry:
-            pass
-        else:
-            pass
+            # for partialProduction ==> this amount is added to the entry["materialsUsed"] 
+            for i in range(0, len(entryObj["materialsUsed"])):
+                entryObj["materialsUsed"][i] += buildMaterials[i]
+
+            # cannot do any more with this entry this turn
+            entryObj["finishedForThisTurn"] = True
+            
+            return
+        
+        else:  # if a negative value should be an error condition
+            
+            #entryObj["finishedForThisTurn"] = True
+            print("EntryController(Error): buildQuantity is negative")
+            
+            return
 
 
+
+
+        # delete below
+        # entryQuantity - buildQuanity == 0, 1, 1+
+        #remainingQuantity = entryObj["quantity"] 
+
+        # if remainingQuantity == 0:
+
+        # #     return
+
+        # if remainingQuantity == 1:
+
+        #     pass
+
+        # elif remainingQuantity > 1: 
+        #     pass
+
+        # else: 
+        #     # error state  remainingQuanty is less then 0
+        #     pass
+
+
+
+
+
+
+
+
+        # # resolve left over
+
+        # if completeAPartiallyWorkedOnEntry:
+        #     pass
+        # else:
+        #     pass
+
+        # # produce n amount
+        # if buildQuantity == 0:
+        #     # proportional buildMaterials for this case handled by self.buildLimit
+            
+        #     # if entryQuantity > 1: then partially build a single entry.
+
+        #     # to single entry
+        #     # add buildMaterials to current entry value
+        #     # consume buildMaterials
+
+
+        #     pass
         
 
     
@@ -808,7 +987,11 @@ class ProductionQ(object):
         question, how many of this entry can be built.
 
         input: self, materials, quantity
-        output: buildQuantity, [total material cost used]
+        output: 
+            if limitQuantity > 0:
+                buildQuantity, [total material cost used]
+            if limitQuantity == 0:
+                0 , [proportionalRemainder materials]
 
         precondition: partially produced items cannot have quantity > 1
                         ProductionQ.resources have been updated (in productionController)
@@ -825,6 +1008,10 @@ class ProductionQ(object):
         limitQuantity, limitMaterials = ProductionQ.limit(quantity, targetMaterials, availableSupplies)
 
         if DEBUG: print("buildLimit: Quantity(%d) & Materials(%s) " % (limitQuantity, str(limitMaterials)))
+
+        # --TODO--
+        # if limitQuanity == 0  then limitMaterials == porportial materals
+
 
         return limitQuantity, limitMaterials
 
@@ -875,18 +1062,24 @@ class ProductionQ(object):
         tmpBestSoFar = 0
 
         # ---------- zero in quantity or in neededMaterials ---------
+        # quantity requested should be greater then 0
+        # neededMaterials should have at least 1 item greater then 0.
+        #
         zeroNeededMaterials = ProductionQ.suppliesAreSufficient(neededMaterials, [each * ZERO for each in neededMaterials])
- 
-        #if DEBUG: print("zeroNeededMaterials(%s):" % (zeroNeededMaterials ))
-
-        if quantity <= 0:
+        #
+        #
+        if quantity <= 0:  #  or if quantity <= 0 and zeroNeededMaterials
             return ZERO, [each * ZERO for each in neededMaterials]
-        elif zeroNeededMaterials:
-            
+        
+        elif zeroNeededMaterials:    # means all neededMaterials were 0 
             return ZERO, [each * ZERO for each in neededMaterials]
+        #
         # --------------------------------------------------------
 
+
+
         #-------test to determine if availableSupplies can cover entire entry ----
+        # Without having to run the binary search
         # add code here
         #------------------------------------------------------------------------
 
