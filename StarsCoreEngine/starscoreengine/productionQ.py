@@ -337,7 +337,7 @@ class ProductionQ(object):
 
             if DEBUG: print("addToQueue at %s- %s:%s " % (insertOrder, tmpKey, tmpItem))
 
-            if insertOrder and insertOrder < len(self.productionOrder):
+            if insertOrder is not None and insertOrder < len(self.productionOrder):
                 # if insertOrder >= len(self.productionOrder):
                 #     self.productionOrder.append(tmpKey)
                 # else:
@@ -743,6 +743,9 @@ class ProductionQ(object):
 
         """
         currentEntry = self.productionItems[entryID]
+
+        if currentEntry["quantity"] <= 1:
+            return
 
         tmpEntryProductionID = currentEntry["productionID"]
         tmpEntryMaterials = [i for i in currentEntry["materialsUsed"]]

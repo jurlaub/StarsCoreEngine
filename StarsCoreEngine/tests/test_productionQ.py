@@ -87,15 +87,17 @@ class TestProductionQ(object):
         for each in self.newColony:
             self.player.colonizePlanet(self.universePlanets[each], 150000)
 
-        self.colony2_name= self.newColony[0] 
+        self.colony2_name = self.newColony[0] 
         self.colony2_object = self.player.colonies[self.colony2_name]
         
 
         #--------- obtain HW -------------
-        self.target_colony = None
-        for each in self.player.colonies.values():
+        self.target_colony_name = None
+        self.target_colony_obj = None
+        for kee, each in self.player.colonies.items():
             if each.planet.HW:
-                self.target_colony = each
+                self.target_colony_name = kee
+                self.target_colony_obj = each
                 break
         #--------- end ------------------
 
@@ -175,10 +177,45 @@ class TestProductionQ(object):
 
         self.standardQ = {"ProductionQ" : 
                 {
-                self.target_colony : 
+                self.target_colony_name : 
                     {
                         "productionOrder" : ["entryID1", "entryID2" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {"quantity": 5, "productionID": "item1"} }
+                        "productionItems" : { 
+                            "entryID1" : {
+                                "quantity": 5, 
+                                "productionID": "item1"
+                                }, 
+                            "entryID2" : {
+                                "quantity": 5, 
+                                "productionID": "item1"} }
+                    }
+
+                }
+            }
+
+        self.testQ = {"ProductionQ" : 
+                {
+                self.target_colony_name : 
+                    {
+                        "productionOrder" : ["entryID4", "entryID1", "entryID2" ],
+                        "productionItems" : 
+                            { 
+                            "entryID1" : 
+                                {
+                                "quantity": 5, 
+                                "productionID": "mines"
+                                }, 
+                            "entryID2" : 
+                                {
+                                "quantity": 10, 
+                                "productionID": "factories"
+                                },
+                            "entryID4" : 
+                                {
+                                "quantity": 455, 
+                                "productionID": "mines"
+                                }                 
+                            }
                     }
 
                 }
@@ -325,6 +362,49 @@ class TestProductionQ(object):
         assert_equal(buildMaterial, [0, 0, 0, 0]) 
 
 
+    def test_SplitEntryIntoTwo(self):
+        """
+        need:
+            ProductionQ
+            entry in Q with more then 1 entry
+            entry with quantity = 2+
+            entry with quantity = 2 and work done
+            entry wiht quantity 1
+        """
+        tmpMaterials = [3, 1, 5, 4]
+
+        colonyHW = self.target_colony_obj.productionQ
+        assert_true(colonyHW)
+
+        # 2nd colony - sanity check Pre-first call
+        assert_equal(colonyHW.productionOrder, [])
+        assert_equal(colonyHW.productionItems, {}) 
+
+        processProductionQ(self.testQ, self.player)
+        assert_equal(len(colonyHW.productionOrder), 3)
+        assert_equal(len(colonyHW.productionItems), 3)
+
+        currentEntry = colonyHW.productionOrder[0]
+        targetQuantity = 3
+        colonyHW.productionItems[currentEntry]["quantity"] = targetQuantity
+        colonyHW.productionItems[currentEntry]["materialsUsed"] = tmpMaterials
+
+        colonyHW.splitEntryIntoTwo(currentEntry)
+
+        assert_equal(len(colonyHW.productionOrder), 4)
+        assert_equal(len(colonyHW.productionItems), 4)
+        print(colonyHW.productionOrder)
+
+        assert_equal(currentEntry, colonyHW.productionOrder[1])
+
+        splitEntry_name = colonyHW.productionOrder[0]
+        splitEntry_obj = colonyHW.productionItems[splitEntry_name]
+        assert_equal(splitEntry_obj["quantity"], 1)
+        assert_equal(splitEntry_obj["materialsUsed"], tmpMaterials)
+        
+        assert_equal(colonyHW.productionItems[currentEntry]["quantity"], targetQuantity - 1)
+                
+
     def test_buildLimit(self):
         """
         buildLimit is like ProductionQ.limit() but is connected to the colony 
@@ -345,7 +425,7 @@ class TestProductionQ(object):
         self.colony2_object.productionQ.resources = colony2_resources
         #--------------------------------------------
 
-        
+
         quantity1 = 5
         materials1 = [20, 5, 10, 30]
 
@@ -358,8 +438,8 @@ class TestProductionQ(object):
 
 
     def test_productionObjectVariables(self):
-        print(self.target_colony.planet.ID)
-        print("%s:%s" % (self.target_colony.planet.owner, self.target_colony.planet.name))
+        print(self.target_colony_obj.planet.ID)
+        print("%s:%s" % (self.target_colony_obj.planet.owner, self.target_colony_obj.planet.name))
         print(self.player.designs.currentShips.keys())
         #assert_true(False)
 
