@@ -362,7 +362,7 @@ class TestProductionQ(object):
         assert_equal(buildMaterial, [0, 0, 0, 0]) 
 
 
-    def test_SplitEntryIntoTwo(self):
+    def test_SplitEntryIntoTwo_multi(self):
         """
         need:
             ProductionQ
@@ -372,6 +372,7 @@ class TestProductionQ(object):
             entry wiht quantity 1
         """
         tmpMaterials = [3, 1, 5, 4]
+        targetQuantity = 3
 
         colonyHW = self.target_colony_obj.productionQ
         assert_true(colonyHW)
@@ -385,7 +386,7 @@ class TestProductionQ(object):
         assert_equal(len(colonyHW.productionItems), 3)
 
         currentEntry = colonyHW.productionOrder[0]
-        targetQuantity = 3
+        
         colonyHW.productionItems[currentEntry]["quantity"] = targetQuantity
         colonyHW.productionItems[currentEntry]["materialsUsed"] = tmpMaterials
 
@@ -401,9 +402,45 @@ class TestProductionQ(object):
         splitEntry_obj = colonyHW.productionItems[splitEntry_name]
         assert_equal(splitEntry_obj["quantity"], 1)
         assert_equal(splitEntry_obj["materialsUsed"], tmpMaterials)
-        
+
         assert_equal(colonyHW.productionItems[currentEntry]["quantity"], targetQuantity - 1)
+        assert_equal(colonyHW.productionItems[currentEntry]["materialsUsed"], [0, 0, 0, 0])
                 
+    def test_SplitEntryIntoTwo_one(self):
+        """
+        need:
+            ProductionQ
+            entry in Q with more then 1 entry
+            entry with quantity = 2+
+            entry with quantity = 2 and work done
+            entry wiht quantity 1
+        """
+        tmpMaterials = [3, 1, 5, 4]
+        targetQuantity = 1
+
+        colonyHW = self.target_colony_obj.productionQ
+        assert_true(colonyHW)
+
+        # 2nd colony - sanity check Pre-first call
+        assert_equal(colonyHW.productionOrder, [])
+        assert_equal(colonyHW.productionItems, {}) 
+
+        processProductionQ(self.testQ, self.player)
+        assert_equal(len(colonyHW.productionOrder), 3)
+        assert_equal(len(colonyHW.productionItems), 3)
+
+        currentEntry = colonyHW.productionOrder[0]
+        
+        colonyHW.productionItems[currentEntry]["quantity"] = targetQuantity
+        colonyHW.productionItems[currentEntry]["materialsUsed"] = tmpMaterials
+
+        colonyHW.splitEntryIntoTwo(currentEntry)
+
+        assert_equal(len(colonyHW.productionOrder), 3)
+        assert_equal(len(colonyHW.productionItems), 3)
+        #print(colonyHW.productionOrder)
+
+     
 
     def test_buildLimit(self):
         """
