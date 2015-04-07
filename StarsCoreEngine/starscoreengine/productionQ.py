@@ -734,6 +734,7 @@ class ProductionQ(object):
 
         """
         currentEntry = self.productionItems[entryID]
+        #print("splitEntryIntoTwo:: %s: (q:%d): %s "% (entryID, self.productionItems[entryID]["quantity"], self.productionItems[entryID]["materialsUsed"] ))
 
         if currentEntry["quantity"] <= 1:
             return
@@ -751,8 +752,12 @@ class ProductionQ(object):
                 }}
         
 
-        currentEntry["quantity"] -= 1
-        currentEntry["materials"] = [0, 0, 0, 0]
+        #self.productionItems[entryID]["quantity"] = self.productionItems[entryID]["quantity"] - 1
+        self.productionItems[entryID]["quantity"] -= 1
+        self.productionItems[entryID]["materialsUsed"] = [0, 0, 0, 0]
+
+        #print("splitEntryIntoTwo:: %s: (q:%d): %s "% (entryID, self.productionItems[entryID]["quantity"], self.productionItems[entryID]["materialsUsed"] ))
+
 
         self.addToQueue(tmpEntry, 0)
 

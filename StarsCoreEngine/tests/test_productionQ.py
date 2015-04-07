@@ -237,6 +237,9 @@ class TestProductionQ(object):
 
 
 
+        # ----------  set / reset target_colony productionQ --------
+        self.target_colony_obj.productionQ.productionOrder = []
+        self.target_colony_obj.productionQ.productionItems = {}
 
 
 
@@ -382,6 +385,7 @@ class TestProductionQ(object):
         assert_equal(colonyHW.productionItems, {}) 
 
         processProductionQ(self.testQ, self.player)
+
         assert_equal(len(colonyHW.productionOrder), 3)
         assert_equal(len(colonyHW.productionItems), 3)
 
@@ -394,7 +398,7 @@ class TestProductionQ(object):
 
         assert_equal(len(colonyHW.productionOrder), 4)
         assert_equal(len(colonyHW.productionItems), 4)
-        print(colonyHW.productionOrder)
+        #print(colonyHW.productionOrder)
 
         assert_equal(currentEntry, colonyHW.productionOrder[1])
 
@@ -403,9 +407,15 @@ class TestProductionQ(object):
         assert_equal(splitEntry_obj["quantity"], 1)
         assert_equal(splitEntry_obj["materialsUsed"], tmpMaterials)
 
+        # print("currentEntry(%s)(q:%d):%s :: splitEntry_obj(%s)(q:%d): %s" % (currentEntry, colonyHW.productionItems[currentEntry]["quantity"], 
+        #                                                                 colonyHW.productionItems[currentEntry]["materialsUsed"],
+        #                                                                  splitEntry_name, colonyHW.productionItems[splitEntry_name]["quantity"],
+        #                                                                  colonyHW.productionItems[splitEntry_name]["materialsUsed"]))
+
         assert_equal(colonyHW.productionItems[currentEntry]["quantity"], targetQuantity - 1)
         assert_equal(colonyHW.productionItems[currentEntry]["materialsUsed"], [0, 0, 0, 0])
-                
+
+
     def test_SplitEntryIntoTwo_one(self):
         """
         need:
