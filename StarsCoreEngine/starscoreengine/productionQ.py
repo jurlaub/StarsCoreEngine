@@ -785,12 +785,18 @@ class ProductionQ(object):
 
 
     Understand entry:
-        >> have I reached any maximum? (that would stop work on this entry)
-        
+
+
+        --------- hasWorkBeenDone--------------- 
         >> has work been done? (on this entry?) 
             >> if so & single entry -> produce the 1 with altered materials
             (for later) if so & multiple entry -> need to seperate out
+        ------------------------------------- 
 
+        -------- maximumHasBeenReached ------------
+                    -- TODO --
+        >> have I reached any maximum? (that would stop work on this entry)
+        ------------------------------------- 
 
         -------- buildLimit ----------------------
         > Do I have the resources to complete the entry?

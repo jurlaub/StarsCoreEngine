@@ -483,6 +483,37 @@ class TestProductionQ(object):
 
         
 
+    def test_entryController_quantity1(self):
+        """
+        entryController:
+
+        Correct
+            quantity = 1,  correct resources consumed, correct BuildEntry & correct consumeMaterials
+            quantity = 1 w/ partially produced entry. complete using remaining resources & same as above
+
+            quantity = 2+, same as above --> remainder quantity
+            quantity = 2+ w/ a partially produced entry --> produce only 1 & reset materialsUsed + reduce quantity
+
+            quantity = 1 cannot complete entry but can partially production
+            quantity = 2+ cannot complete entry but can partially production
+
+            only partially produce an item (no complete item produced) (not a test of proportional method)
+
+
+        Error
+            quantity = 0 ==> nothing produced, no materials updated, entry finishedForTurn = True
+
+            
+
+        """
+        pass
+
+    def test_entryController_quantity300(self):
+
+        pass
+
+
+
 
     def test_productionObjectVariables(self):
         print(self.target_colony_obj.planet.ID)
