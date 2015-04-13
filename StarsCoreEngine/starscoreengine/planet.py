@@ -139,7 +139,7 @@ class Colony(object):
         self.factoryProduce = raceData.factoryProduce
         self.factorOperate  = raceData.factoryOperate
         self.totalResources = 0
-        self.resourceTax = False  
+        self.resourceTax = False        # DEPRECIATE - should be handled in productionQ  
         self.planetValue = 100    # 100 = 100% Value = calculated from currHab 
         self.planetMaxPopulation = 1000000  # based on PlanetValue & PRT # HE is .5; JOAT is 1.20
         #self.raceData = raceData
