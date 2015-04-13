@@ -170,7 +170,7 @@ class Player(object):
 
         '''
         newColony = Colony(self.raceData, planet, pop)
-        planet.updateSurfaceMinerals(fleetMinerals)
+        planet.addSurfaceMinerals(fleetMinerals)
 
         newColony.planetValue = self.planetValue(planet)
         #newColony.growthRate = self.raceData.growthRate

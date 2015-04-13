@@ -116,7 +116,8 @@ class ProductionQ(object):
         self.productionOrder = []   # each order should point to a unique item  
         self.productionItems = {}   # 
 
-
+        self.entrybuildtype = ""
+        self.entrybuildquantity = 0
         
 
     def addToQueueFromXFile(self, colonyQ):
@@ -362,7 +363,6 @@ class ProductionQ(object):
             print("%s" % ve)
 
 
-
     def obtainNewKey(self, kee):
         """
         Input: kee
@@ -383,8 +383,7 @@ class ProductionQ(object):
             tmpKey = ("%s%s" %(kee, str(count)))
             count += 1
 
-
-        
+  
     @staticmethod
     def elementHasUnexpectedValue(targetItem):
         """ 
@@ -455,16 +454,12 @@ class ProductionQ(object):
             print(ve)
             return False
             
-
-
     def setQuantityToZero(self, entryKee):
         """ setQuantityToZero
         changes the entry quantity to zeroed
 
         """
         self.productionItems[entryKee]["quantity"] = 0
-
-        
 
     def removeQuantityZeroItems(self):
         """
@@ -510,6 +505,17 @@ class ProductionQ(object):
             del self.productionOrder[tmpV]
             if DEBUG: print( "Order: %s deleted" % each)
         
+    def updateProductionQResources(self):
+        """
+        input: none (uses self values)
+        output: updates productionQ.resources value.
+
+        """
+        # obtain from colony the number of resources for production (Note: minus research tax)
+        if self.ExcludedFromResearch:
+            self.resources  = self.colony.totalResources
+        else:
+            self.resources  = self.research.colonyResourcesAfterTax(self.colony)
 
     def productionController(self):
         """
@@ -534,14 +540,13 @@ class ProductionQ(object):
 
 
 
- 20150117 ju - NOTE: ProductionQ instructions may specifiy to produce 'n' of a 
+        20150117 ju - NOTE: ProductionQ instructions may specifiy to produce 'n' of a 
               ShipDesign. Only 1 of a design should be produced at a time.
-            Once 
-              produced the 'n' value should be decremented. If '0' then proceed
+            Once produced the 'n' value should be decremented. If '0' then proceed
               to the next instruction.
  
 
-20150207 ju - partially complete items in the queue -> resource 'spent'/'used' 
+        20150207 ju - partially complete items in the queue -> resource 'spent'/'used' 
             must be proportional to the materials available. It would be 
             ridiculious to set aside 100% of the resources with none of the 
             materials. 
@@ -619,10 +624,12 @@ class ProductionQ(object):
 
 
         # obtain from colony the number of resources for production (Note: minus research tax)
-        if self.ExcludedFromResearch:
-            self.resources  = self.colony.totalResources
-        else:
-            self.resources  = self.research.colonyResourcesAfterTax(self.colony)
+        # if self.ExcludedFromResearch:
+        #     self.resources  = self.colony.totalResources
+        # else:
+        #     self.resources  = self.research.colonyResourcesAfterTax(self.colony)
+
+        self.updateProductionQResources()
 
         # handle the produceAutoMineral setting?
 
@@ -702,9 +709,16 @@ class ProductionQ(object):
             # else:
             #     orderIndex == 0         # start at beginning
 
-
-    
     def targetItemCosts(self, entryID):
+        """
+        Input: entryID - (uses this to obtain the current costs from the productionList)
+        Output: [material cost + resources] 
+
+        precondition: 
+            targetItemCosts must be updated based on tech levels (ie Miniaturization)- if this is 
+            not captured in the productionList then it should be captured 
+
+        """
 
         pass
 
@@ -761,9 +775,6 @@ class ProductionQ(object):
 
         self.addToQueue(tmpEntry, 0)
 
-
-
-
     def entryController(self, entryID, targetItemCosts, autobuildMinerals = False):
         """
 
@@ -773,12 +784,19 @@ class ProductionQ(object):
 
 
         ------------------------------------------
-    Iterative -> solution for entry -> how many can be completed
-        Input: entry, target materials & resources, 
-        Output: produced items
+        Iterative -> solution for entry -> how many can be completed
+            Input: entry, target materials & resources, 
+            Output: produced items
                 update productionList and productionQ
 
-        Precondition: targetItemCosts values are more then entryUsedMaterials if less then buildMaterial entry set to zero
+        Precondition: 
+                    
+                    targetItemCosts values are more then entryUsedMaterials if
+                            less then the buildMaterial entry is set to zero
+                    targetItemCosts and materialsUsed require the same number 
+                            of elements and the same order
+
+
         Postcondition: entry required to update finishedForThisTurn for existing
                          and any new entries
 
@@ -848,10 +866,15 @@ class ProductionQ(object):
         if completeAPartiallyWorkedOnEntry:
 
             quantityONE = 1
+
+            # remaining costs for a partially worked on entry.
             tmpTargetCosts = [(targetItemCosts[x] - entryUsedMaterials[x]) for x in range(0,len(targetItemCosts))]
             
             for i in range(0, len(tmpTargetCosts)):
                 if tmpTargetCosts[i] < 0: tmpTargetCosts[i] = 0
+
+            # check - if miniturization reduces the remaining costs so that nothing more is needed. 
+            #   a way to handle this border case is needed. (limit will return zero)
 
             buildQuantity, buildMaterials = self.buildLimit(quantityONE, tmpTargetCosts)        
 
@@ -864,7 +887,7 @@ class ProductionQ(object):
 
         ########## Produce Entry && Cleanup  ###########
 
-        if buildQuanity > entryQuantity:
+        if buildQuantity > entryQuantity:
             raise ValueError("EntryController: buildQuantity(%d) greater then entryQuantity(%d)" % (buildQuanity, entryQuantity))
 
         if buildQuantity > 0:   # buildQuantity cap is entryQuantity 
@@ -879,6 +902,8 @@ class ProductionQ(object):
             if entryObj["quantity"] == 0:
                 entryObj["finishedForThisTurn"] = True
 
+            elif entryObj["quantity"] < 0:
+                raise ValueError("EntryController: after buiding %d %s; entry 'quantity' is %d" % (buildQuanity,entryObj["productionID"], entryObj["quantity"] ))
             return
 
         elif buildQuantity == 0:
@@ -887,6 +912,8 @@ class ProductionQ(object):
             # for partialProduction ==> this amount is added to the entry["materialsUsed"] 
             for i in range(0, len(entryObj["materialsUsed"])):
                 entryObj["materialsUsed"][i] += buildMaterials[i]
+
+            self.consumeMaterials(buildMaterials)
 
             # cannot do any more with this entry this turn
             entryObj["finishedForThisTurn"] = True
@@ -900,23 +927,32 @@ class ProductionQ(object):
             
             return
 
-
-
-
-
-
-
-    
     def buildEntry(self, entryType, buildQuantity):
+        """
+        instructs build methods to create produced items.
 
-        pass
+        input: itemType & number to build
+        output: calls the approprate produceN method with buildQuantity. 
+
+        """
+
+        self.entrybuildtype = entryType
+        self.entrybuildquantity = buildQuantity
 
     def consumeMaterials(self, consumeMaterials):
         """
-        used to reduce elements like iron,bor,germ to what is available.
+        used to reduce elements like iron,bor,germ according to buildQuantity
+
 
         """
-        pass
+
+        tmpMinerals = consumeMaterials[:-1]
+        tmpResources = consumeMaterials[-1]
+
+        self.resources -= tmpResources
+
+        self.colony.planet.removeSurfaceMinerals(tmpMinerals)
+
 
 
     

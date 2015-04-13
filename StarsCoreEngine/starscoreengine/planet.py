@@ -81,7 +81,7 @@ class Planet(SpaceObjects):
         self.concGerm = concGerm
 
 
-    def updateSurfaceMinerals(self, minerals):
+    def addSurfaceMinerals(self, minerals):
         self.surfaceIron += minerals[0]
         self.surfaceBor += minerals[1]
         self.surfaceGerm += minerals[2]
@@ -103,6 +103,8 @@ class Planet(SpaceObjects):
         self.surfaceBor -= minerals[1]
         self.surfaceGerm -= minerals[2]
 
+    def getSurfaceMinerals(self):      
+        return [self.surfaceIron, self.surfaceBor, self.surfaceGerm]
 
 class Colony(object):
     """ 
