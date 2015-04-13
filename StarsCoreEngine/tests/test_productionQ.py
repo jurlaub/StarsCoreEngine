@@ -480,29 +480,37 @@ class TestProductionQ(object):
         assert_equal(quantity_result1, 3)       
         assert_equal(materials_result1, [60, 15, 30, 90])
 
+
+
+    """ 
+EntryController Tests:
+
+    Correct
+        +quantity = 1,  correct resources consumed, correct BuildEntry & correct consumeMaterials
+        +quantity = 1 w/ partially produced entry. complete using remaining resources & same as above
+
+        +quantity = 300, produce all
+
+        quantity = 2+, same as above --> remainder quantity
+        quantity = 2+ w/ a partially produced entry --> produce only 1 & reset materialsUsed + reduce quantity
+
+        quantity = 1 cannot complete entry but can partially production
+        quantity = 2+ cannot complete entry but can partially production
+
+        only partially produce an item (no complete item produced) (not a test of proportional method)
+
+
+    Error
+        quantity = 0 ==> nothing produced, no materials updated, entry finishedForTurn = True
+
+
+
+    """
+
     def test_entryController_quantity1(self):
         """
         entryController:
-
-        Correct
             +quantity = 1,  correct resources consumed, correct BuildEntry & correct consumeMaterials
-            quantity = 1 w/ partially produced entry. complete using remaining resources & same as above
-
-            +quantity = 300, produce all
-
-            quantity = 2+, same as above --> remainder quantity
-            quantity = 2+ w/ a partially produced entry --> produce only 1 & reset materialsUsed + reduce quantity
-
-            quantity = 1 cannot complete entry but can partially production
-            quantity = 2+ cannot complete entry but can partially production
-
-            only partially produce an item (no complete item produced) (not a test of proportional method)
-
-
-        Error
-            quantity = 0 ==> nothing produced, no materials updated, entry finishedForTurn = True
-
-
 
         """
         tmpQuantityA = 1
@@ -676,8 +684,6 @@ class TestProductionQ(object):
 
             tmpRemainingMin = colonySurfaceMinerals[i] - (tmpQuantityA * targetItemCosts[i])
             assert_equal(surfaceMineralsAfterProduction[i], tmpRemainingMin)
-
-
 
     def test_entryController_quantityPartial1(self):
         """
