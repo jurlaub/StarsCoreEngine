@@ -430,7 +430,8 @@ class ProductionQ(object):
 
 
             if existingItem["quantity"] > 1 or existingItem["quantity"] < 0:
-                correctQuantity = False
+                #correctQuantity = False
+                raise ValueError("ValueError :: workHasBeenDone: quantity(%d)" % existingItem["quantity"])
 
             for each in existingItem["materialsUsed"]:
 
@@ -863,6 +864,7 @@ class ProductionQ(object):
         #         pass
         # ----------------------------------------------------- 
         """       
+        print("\tworkHasBeenDone:%s" % completeAPartiallyWorkedOnEntry)
         if completeAPartiallyWorkedOnEntry:
 
             quantityONE = 1
@@ -876,7 +878,8 @@ class ProductionQ(object):
             # check - if miniturization reduces the remaining costs so that nothing more is needed. 
             #   a way to handle this border case is needed. (limit will return zero)
 
-            buildQuantity, buildMaterials = self.buildLimit(quantityONE, tmpTargetCosts)        
+            buildQuantity, buildMaterials = self.buildLimit(quantityONE, tmpTargetCosts)    
+
 
         else:
 

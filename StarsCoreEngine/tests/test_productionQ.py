@@ -489,9 +489,9 @@ EntryController Tests:
         +quantity = 1,  correct resources consumed, correct BuildEntry & correct consumeMaterials
         +quantity = 1 w/ partially produced entry. complete using remaining resources & same as above
 
-        +quantity = 300, produce all
+        +quantity = 150, produce all
 
-        quantity = 2+, same as above --> remainder quantity
+        +quantity = 150(147), same as above --> with remainder quantity = 3
         quantity = 2+ w/ a partially produced entry --> produce only 1 & reset materialsUsed + reduce quantity
 
         quantity = 1 cannot complete entry but can partially production
@@ -587,12 +587,12 @@ EntryController Tests:
 
             assert_equal(surfaceMineralsAfterProduction[i], tmpRemainingMin)
 
-    def test_entryController_quantity300(self):
+    def test_entryController_quantity150(self):
         """
         entryController:
 
         Correct
-            quantity = 300, produce all
+            quantity = 150, produce all
 
         """
         tmpQuantityA = 150
@@ -786,12 +786,233 @@ EntryController Tests:
             tmpRemainingMin = colonySurfaceMinerals[i] - ((tmpQuantityA * targetItemCosts[i]) -targetPartialMaterialsUsed[i])
             assert_equal(surfaceMineralsAfterProduction[i], tmpRemainingMin)
 
+    def test_entryController_quantityPartial2(self):
+        """
+        entryController:
+            complete a partially produced entry. 
+            quantity = 2 w/ partially produced entry. complete quantity 1 using remaining resources & same as above
+
+        """
+
+        tmpQuantityA = 2
+        tmpQuantityB = 5
+        tmpID = "item1"
+
+        entry1 = "entryID1"
+
+        tmpItemType = "itemType Ship" 
+
+        testQ1 = {"ProductionQ" : 
+                {
+                self.target_colony_name : 
+                    {
+                        "productionOrder" : [entry1, "entryID2" ],
+                        "productionItems" : { 
+                            entry1 : {
+                                "quantity": tmpQuantityA, 
+                                "productionID": tmpID
+                                }, 
+                            "entryID2" : {
+                                "quantity": tmpQuantityB, 
+                                "productionID": tmpID} }
+                    }
+
+                }
+            }
+
+        targetItemCosts = [72, 35, 12, 50]
+        targetPartialMaterialsUsed = [10, 15, 4, 10]
+
+        #Surface Minerals to produce 147
+        # [1617, 588, 147, 735] added to existing test target minerals [100, 20, 31]
+        additionalSurfaceMinerals = [0, 0, 0]
+        expectedBuildQuantity = 1
+
+        # colony Setup
+        colonyHW = self.target_colony_obj.productionQ
+        colonyHW.colony.planet.addSurfaceMinerals(additionalSurfaceMinerals)
+        colonyHW.colony.population = colonyHW.colony.planetMaxPopulation    # for max population
+        colonyHW.colony.calcTotalResources(self.popEfficiency)
+        colonyHW.ExcludedFromResearch = True    # max number of resources for production
+
+        assert_true(colonyHW)
+
+
+        #   sanity check 
+        assert_equal(colonyHW.productionOrder, [])
+        assert_equal(colonyHW.productionItems, {}) 
+
+        # sanity check on world surface minerals and production
+        colonySurfaceMinerals = colonyHW.colony.planet.getSurfaceMinerals()
+
+        for i in range(0, len(colonySurfaceMinerals)):
+            
+            tmpTotal = self.surfaceMinerals1[i] + additionalSurfaceMinerals[i]
+            assert_equal(colonySurfaceMinerals[i], tmpTotal)
+
+
+
+
+        # ---- adds testQ1 to colonyHW's productionQ - imitates an xfile --- 
+        processProductionQ(testQ1, self.player)
+
+        assert_equal(len(colonyHW.productionOrder), 2)
+        assert_equal(len(colonyHW.productionItems), 2)
+
+        colonyHW.productionItems[entry1]["materialsUsed"] = targetPartialMaterialsUsed
+        assert_equal(colonyHW.productionItems[entry1]["materialsUsed"], targetPartialMaterialsUsed)
+
+
+        currentEntry = entry1
+        
+        colonyHW.updateProductionQResources() # typically handled in productionController()
+        print(colonyHW.resources)
+        assert_true(colonyHW.resources >= targetItemCosts[-1] * tmpQuantityA)   #resources should be more then suffiecient to cover all   
+
+
+        colonyHW.entryController(currentEntry, targetItemCosts)
+
+
+
+        print("entryController - test: itemType is using hardcoded values and requires update")
+        print("entryController - test: buildEntry is using hardcoded values and requires update")
+
+        print("%s: %d pop; %d resources %s" % (colonyHW.colony.planet.name, colonyHW.colony.population, colonyHW.colony.totalResources, colonyHW.colony.planet.getSurfaceMinerals() ))
+
+        assert_equal(colonyHW.entrybuildtype, tmpItemType)
+        assert_equal(colonyHW.entrybuildquantity, expectedBuildQuantity)
+
+        surfaceMineralsAfterProduction = colonyHW.colony.planet.getSurfaceMinerals()
+        assert_not_equal(colonySurfaceMinerals, surfaceMineralsAfterProduction)
+
+        # check that the correct ammount of resources were removed.
+        for i in range(0, len(surfaceMineralsAfterProduction)):
+
+            tmpRemainingMin = colonySurfaceMinerals[i] - (expectedBuildQuantity * targetItemCosts[i])           
+            assert_equal(surfaceMineralsAfterProduction[i], tmpRemainingMin)
+
 
  
+        assert_equal(len(colonyHW.productionOrder), 2)
+        assert_equal(len(colonyHW.productionItems), 2) 
+
+        assert_equal(colonyHW.productionItems[entry1]["quantity"], tmpQuantityA - expectedBuildQuantity)
+        assert_equal(colonyHW.productionItems[entry1]["materialsUsed"], [0, 0, 0, 0])
+        # print("%s" % colonyHW.productionItems[entry1]["materialsUsed"])
+        # assert_true(False)
+
+
+
+
+
+    def test_entryController_remainder_quantity_147of150(self):
+        """
+        entryController:
+
+        Correct
+            quantity = 147, same as above --> with remainder ( entryController does not provide a remainder)
+
+        """
+        tmpQuantityA = 150
+        tmpQuantityB = 5
+        tmpID = "item1"
+
+        entry1 = "entryID1"
+
+        tmpItemType = "itemType Ship" 
+
+        testQ1 = {"ProductionQ" : 
+                {
+                self.target_colony_name : 
+                    {
+                        "productionOrder" : [entry1, "entryID2" ],
+                        "productionItems" : { 
+                            entry1 : {
+                                "quantity": tmpQuantityA, 
+                                "productionID": tmpID
+                                }, 
+                            "entryID2" : {
+                                "quantity": tmpQuantityB, 
+                                "productionID": tmpID} }
+                    }
+
+                }
+            }
+
+        targetItemCosts = [11, 4, 1, 5]
+
+        #Surface Minerals to produce 147
+        # [1617, 588, 147, 735] added to existing test target minerals [100, 20, 31]
+        additionalSurfaceMinerals = [1517, 568, 116]
+        expectedBuildQuantity = 147
+
+        # colony Setup
+        colonyHW = self.target_colony_obj.productionQ
+        colonyHW.colony.planet.addSurfaceMinerals(additionalSurfaceMinerals)
+        colonyHW.colony.population = colonyHW.colony.planetMaxPopulation    # for max population
+        colonyHW.colony.calcTotalResources(self.popEfficiency)
+        colonyHW.ExcludedFromResearch = True    # max number of resources for production
+
+        assert_true(colonyHW)
+
+
+        #   sanity check 
+        assert_equal(colonyHW.productionOrder, [])
+        assert_equal(colonyHW.productionItems, {}) 
+
+        # sanity check on world surface minerals and production
+        colonySurfaceMinerals = colonyHW.colony.planet.getSurfaceMinerals()
+
+        for i in range(0, len(colonySurfaceMinerals)):
+            
+            tmpTotal = self.surfaceMinerals1[i] + additionalSurfaceMinerals[i]
+            assert_equal(colonySurfaceMinerals[i], tmpTotal)
+
+
+
+        # ---- adds testQ1 to colonyHW's productionQ - imitates an xfile --- 
+        processProductionQ(testQ1, self.player)
+
+        assert_equal(len(colonyHW.productionOrder), 2)
+        assert_equal(len(colonyHW.productionItems), 2)
+
+
+        currentEntry = entry1
         
+        colonyHW.updateProductionQResources() # typically handled in productionController()
+        print(colonyHW.resources)
+        assert_true(colonyHW.resources >= targetItemCosts[-1] * tmpQuantityA)   #resources should be more then suffiecient to cover all   
+
+
+        colonyHW.entryController(currentEntry, targetItemCosts)
 
 
 
+        print("entryController - test: itemType is using hardcoded values and requires update")
+        print("entryController - test: buildEntry is using hardcoded values and requires update")
+
+        print("%s: %d pop; %d resources %s" % (colonyHW.colony.planet.name, colonyHW.colony.population, colonyHW.colony.totalResources, colonyHW.colony.planet.getSurfaceMinerals() ))
+
+        assert_equal(colonyHW.entrybuildtype, tmpItemType)
+        assert_equal(colonyHW.entrybuildquantity, expectedBuildQuantity)
+
+        surfaceMineralsAfterProduction = colonyHW.colony.planet.getSurfaceMinerals()
+        assert_not_equal(colonySurfaceMinerals, surfaceMineralsAfterProduction)
+
+
+        for i in range(0, len(surfaceMineralsAfterProduction)):
+
+
+            tmpRemainingMin = colonySurfaceMinerals[i] - (expectedBuildQuantity * targetItemCosts[i])
+            assert_equal(surfaceMineralsAfterProduction[i], tmpRemainingMin)
+
+ 
+        assert_equal(len(colonyHW.productionOrder), 2)
+        assert_equal(len(colonyHW.productionItems), 2) 
+
+        assert_equal(colonyHW.productionItems[entry1]["quantity"], tmpQuantityA - expectedBuildQuantity)
+        # print("%s" % colonyHW.productionItems[entry1]["materialsUsed"])
+        # assert_true(False)
 
     def test_productionObjectVariables(self):
         print(self.target_colony_obj.planet.ID)
