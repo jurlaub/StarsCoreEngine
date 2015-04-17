@@ -985,17 +985,18 @@ class ProductionQ(object):
 
         limitQuantity, limitMaterials = ProductionQ.limit(quantity, targetMaterials, availableSupplies)
 
-        if DEBUG: print("buildLimit: Quantity(%d) & Materials(%s) " % (limitQuantity, str(limitMaterials)))
+        
+        if limitQuantity == 0:
+            limitMaterials = ProductionQ.proportionalRemainder(targetMaterials, availableSupplies)
 
-        # --TODO--
-        # if limitQuanity == 0  then limitMaterials == porportial materals
+        if DEBUG: print("buildLimit: Quantity(%d) & Materials(%s) " % (limitQuantity, str(limitMaterials)))
 
 
         return limitQuantity, limitMaterials
 
 
     @staticmethod
-    def proportionalRemainder(neededMaterials, availableSupplies):
+    def proportionalRemainder(targetMaterials, availableSupplies):
         """
         The entry controller is to build as much of the Q as possible in the 
         specified order. If the entry is not totally produced - then a single 
@@ -1003,19 +1004,53 @@ class ProductionQ(object):
         of materials and resources allocated to complete the single entry. 
 
         input:neededMaterials, availableSupplies
-        output: amount of materials applied to a single 
+        output: amount of materials to be used proportional to the 
+
+        precondition: 
+            no entry is < 0
+
+        Postcondition: 
+            returns a list of integers 
 
 
-        
-
-        proportionalCompletion
-        minerals are summed 
-        sum of minerals / resources
+        Note: Could use a lot of work. 
 
 
         """
 
-        pass
+        # resources to sum(minerals)
+        # sum(minerals) to resources
+
+        ZERO = 0
+        tmpProportional = [ZERO for i in targetMaterials]
+
+        # gathers the lesser of needed material vs available material
+        for i in range(0, len(targetMaterials)):
+            tm = targetMaterials[i]
+            am = availableSupplies[i]
+
+            if tm >= am:
+                tmpProportional[i] = am 
+            else:
+                tmpProportional[i] = tm
+
+        print(tmpProportional)
+
+        tmpRes = targetMaterials[-1]
+        tmpMin = sum(targetMaterials[:-1])
+
+        # available resources for each available mineral
+        tmpT = tmpRes / tmpMin
+        print(tmpT)
+        x = 0
+        for i in tmpProportional[:-1]:
+            x += (i * tmpT)
+            print(x)
+
+        tmpProportional[-1] = x 
+        print(tmpProportional)
+
+        return [int(i) for i in tmpProportional]
 
     @staticmethod
     def limit(quantity, neededMaterials, availableSupplies):
