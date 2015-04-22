@@ -429,9 +429,9 @@ class ProductionQ(object):
             correctQuantity = True
 
 
-            if existingItem["quantity"] > 1 or existingItem["quantity"] < 0:
-                #correctQuantity = False
-                raise ValueError("ValueError :: workHasBeenDone: quantity(%d)" % existingItem["quantity"])
+            # if existingItem["quantity"] > 1 or existingItem["quantity"] < 0:
+            #     #correctQuantity = False
+            #     raise ValueError("ValueError :: workHasBeenDone: quantity(%d)" % existingItem["quantity"])
 
             for each in existingItem["materialsUsed"]:
 

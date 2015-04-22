@@ -820,13 +820,16 @@ EntryController Tests:
                 }
             }
 
+        expectedBuildQuantity = 1
         targetItemCosts = [72, 35, 12, 50]
         targetPartialMaterialsUsed = [10, 15, 4, 10]
+        expectedUsedMaterials = [((targetItemCosts[i] - targetPartialMaterialsUsed[i]) * expectedBuildQuantity) for i in range(0, len(targetItemCosts))]
+
 
         #Surface Minerals to produce 147
         # [1617, 588, 147, 735] added to existing test target minerals [100, 20, 31]
         additionalSurfaceMinerals = [0, 0, 0]
-        expectedBuildQuantity = 1
+        
 
         # colony Setup
         colonyHW = self.target_colony_obj.productionQ
@@ -844,6 +847,7 @@ EntryController Tests:
 
         # sanity check on world surface minerals and production
         colonySurfaceMinerals = colonyHW.colony.planet.getSurfaceMinerals()
+        print("Beginning Surface Materials: %s" % colonySurfaceMinerals)
 
         for i in range(0, len(colonySurfaceMinerals)):
             
@@ -888,7 +892,7 @@ EntryController Tests:
         # check that the correct ammount of resources were removed.
         for i in range(0, len(surfaceMineralsAfterProduction)):
 
-            tmpRemainingMin = colonySurfaceMinerals[i] - (expectedBuildQuantity * targetItemCosts[i])           
+            tmpRemainingMin = colonySurfaceMinerals[i] - expectedUsedMaterials[i]          
             assert_equal(surfaceMineralsAfterProduction[i], tmpRemainingMin)
 
 
