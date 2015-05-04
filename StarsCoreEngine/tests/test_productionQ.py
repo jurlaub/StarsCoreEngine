@@ -1027,7 +1027,7 @@ EntryController Tests:
 
 
     def test_Add_RemoveItemFromQ(self):
-        pass
+        assert_true(False)
 
 
     def test_controller(self):
@@ -1035,26 +1035,9 @@ EntryController Tests:
         beginning test. ProductionController goes through each item and 
 
         """
-        xfileSetup_PQ_v1 = {"ProductionQ" : 
-                {
-                self.colony2_name:
-                    {
-                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
-                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
-                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
-                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
-                                            }
 
-                    }
 
-                }
-            }
-
-        processProductionQ(xfileSetup_PQ_v1, self.player)
-
-        pass
+        assert_true(False)
 
     def test_validateTargetPlayerSetup(self):
         """
@@ -1064,61 +1047,85 @@ EntryController Tests:
 
         """
 
-        pass
+        assert_true(False)
 
 
 
 
     def test_entryController_produce_Mine_one(self):
         """
-        entry controller should result in 1 mine value from entry controller
+        entry controller should result in 1 mine value from entry controller due
+        to user requesting the value.
+
         """
 
+        entry1 = "entryID1"
+        entryType1 = "Mines"
+        
 
-        #colony2 = self.newColony[0]
-
-        xfileSetup_PQ_v1 = {"ProductionQ" : 
+        testQ1 = {"ProductionQ" : 
                 {
-                self.colony2_name:
+                self.target_colony_name:
                     {
-                        "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
-                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
-                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
-                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                        "productionOrder" : ["entryID4", entry1, "entryID2", "entryID5", "entryID6" ],
+                        "productionItems" : { entry1 : {"quantity": 1, "productionID": entryType1 }, 
+                                            "entryID2" : {"quantity": 10, "productionID": "Factories"},
+                                            "entryID4" : {"quantity": 455, "productionID": "Mines"},
+                                            "entryID5" : {"quantity": 1, "productionID": "Factories"},
+                                            "entryID6" : {"quantity": 4, "productionID": "Mines"}                                              
                                             }
 
                     }
 
                 }
             }
+        targetItemCosts = [0, 0, 0, int(self.player.raceData.mineCost)]
 
-        pass
+        colonyHW = self.target_colony_obj.productionQ
+
+        assert_equal(len(colonyHW.productionOrder), 0)
+        assert_equal(len(colonyHW.productionItems), 0)
+
+        processProductionQ(testQ1, self.player)
+
+        assert_equal(len(colonyHW.productionOrder), 5)
+        assert_equal(len(colonyHW.productionItems), 5)
+
+
+        currentEntry = entry1
+        
+        colonyHW.updateProductionQResources() # typically handled in productionController()
+
+        colonyHW.entryController(currentEntry, targetItemCosts)
+
+
+        assert_equal(colonyHW.entrybuildtype, entryType1)
+        assert_equal(colonyHW.entrybuildquantity, 1)
+
 
     def test_producePlanetUpgrades_Mine_one(self):
         """
         producePlanetUpgrades should be prompted to produce 1 mine on the 
         appropriate colony. 
         """
-        pass
+        assert_true(False)
 
 
 
     def test_entryController_produce_Mine_Max(self):
         """
-        the max planetary mines should be produced. Max = maximum mines that a 
+        Only the max planetary mines should be produced. Max = maximum mines that a 
         player can place on a planet.
 
         """
-        pass
+        assert_true(False)
 
     def test_producePlanetUpgrades_Mine_Max(self):
         """
         producePlanetUpgrades the max planetary mines should be produced. Max = maximum mines that a 
         player can place on a planet.
         """
-        pass
+        assert_true(False)
 
     def test_entryController_produce_Mine_TooMany(self):
         """
@@ -1126,14 +1133,14 @@ EntryController Tests:
         More then the player Mine cap on the planet
 
         """
-        pass
+        assert_true(False)
 
     def test_producePlanetUpgrades_Mine_TooMany(self):
         """
         producePlanetUpgrades should produce the number of mines sent to it. The 
         Entry Controller should handle the problem of too many mines.
         """
-        pass
+        assert_true(False)
 
 
 

@@ -322,7 +322,7 @@ class ProductionQ(object):
             if "itemType" in entryObj:
                 tmpItemType = entryObj["itemType"]
             else:
-                tmpItemType = "itemType Ship"    
+                tmpItemType = "Default ItemType"    
 
 
 
