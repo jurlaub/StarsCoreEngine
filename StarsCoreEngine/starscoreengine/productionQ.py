@@ -322,6 +322,7 @@ class ProductionQ(object):
             if "itemType" in entryObj:
                 tmpItemType = entryObj["itemType"]
             else:
+                # for testing - should not be a valid value for normal play.
                 tmpItemType = "Default ItemType"    
 
 
