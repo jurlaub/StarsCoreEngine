@@ -26,6 +26,7 @@ from .planet import Colony, Planet
 from .research import Research
 from .player_designs import PlayerDesigns
 from .productionQ import ProductionQ
+from .player_build_list import PlayerBuildList
 
 '''
     Player Data
@@ -109,7 +110,7 @@ class Player(object):
         self.historicalShipDesign = {}  #? 
         self.fleets = {}  # ? fleetID : fleetObj
         self.battleOrders = {} 
-        #self.productionList = {}
+        #self.buildListObject = PlayerBuildList(self)
 
         """ turnOrders:
         when created    - should be sequentially numbered
@@ -136,6 +137,7 @@ class Player(object):
 
         self.diplomacy = {} # diplomacy object?
         self.intel = {} 
+
 
 
     def ISFleetGrowth(self):

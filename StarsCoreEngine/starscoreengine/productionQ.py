@@ -106,7 +106,7 @@ class ProductionQ(object):
         self.colony = colony
         self.research = player.research
         self.raceData = player.raceData
-        self.designs = player.designs
+        self.designs = player.designs # point is to gather productionQ BuildList -- handled in a different 
 
         self.prodQueue = []
         self.ExcludedFromResearch = False
