@@ -25,15 +25,44 @@ class PlayerBuildList(object):
     """
     PlayerBuildList collects information from different components and generates
     a list of possible items to be produced by a players ProductionQ.
+    This list is a super-set of all producable items for all productionQ's
 
 
     player designs + research = research costs
 
+    initial list:
+    > Mines
+    > Factories
+    > Minerals
+    > Planetary Installations
+
+    > on init - check if designs exist and add these if valid
+
+
+
+    source for data
+    > raceData - player.method that produces this
+    > techTree - player.method gen the most recent one planetaryInstallations 
+    > playerDesigns Ships
+    > playerDesigns Starbases
+
+    List updated every Turn:
+    > minus raceData
+    > refresh planetaryInstallations
+    > refresh pD
+
+
+
     """
 
-    def __init__(self):
+    def __init__(self, player):
         # define where to obtain the information
+        self.raceData = player.raceData
 
         self.buildList = {"Mines" : { "itemType": "Mines", "targetItemsCost": [0,0,0,4]}}
 
     
+
+    # pull from 
+
+

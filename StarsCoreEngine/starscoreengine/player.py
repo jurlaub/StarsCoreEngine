@@ -27,6 +27,7 @@ from .research import Research
 from .player_designs import PlayerDesigns
 from .productionQ import ProductionQ
 from .player_build_list import PlayerBuildList
+from .game_utility import findMaxTechnologyComponent
 
 '''
     Player Data
@@ -359,6 +360,27 @@ class Player(object):
         return planetValuePoints
             
 
+    def buildCosts_PlanetScanner(self):
+        
+        s = "PlanetaryScanner"
+        d = "PlanetaryDefenses"
+        currTechLevels = self.research.techLevels
+
+        sName = findMaxTechnologyComponent(s, currTechLevels, self.techTree)
+        sObj = self.techTree[sName]
+        sCosts = [sObj["iron"], sObj["bor"], sObj["germ"], sObj["resources"]]
+
+
+        dName = findMaxTechnologyComponent(d, currTechLevels, self.techTree)
+        dObj = self.techTree[dName]
+        dCosts = [dObj["iron"], dObj["bor"], dObj["germ"], dObj["resources"]]
+
+        d : {"itemType": d, "targetItemsCost": dCosts}
+
+
+
+        return {sName :{"itemType": s, "targetItemsCost":sCosts }, \
+                dName : {"itemType": d, "targetItemsCost":dCosts }}
 
 
 class RaceTraits(object):
@@ -441,7 +463,26 @@ class RaceData(RaceTraits):
 
 
 
+    def buildCosts_MineFactory(self):
+        m = "Mines"
+        f = "Factories"
 
+        
+        mCosts = [0, 0, 0, self.mineCost]
+
+
+        fGerm = 4
+        if self.factoryGermCosts: 
+            fGerm = 3
+        
+        fCosts = [0, 0, fGerm, self.factoryCost]
+
+
+
+
+
+        return { m:{"itemType": m, "targetItemsCost": mCosts}, \
+                f: {"itemType": f, "targetItemsCost": fCosts} }
 
 
 

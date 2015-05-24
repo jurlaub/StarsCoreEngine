@@ -204,3 +204,58 @@ def printPlayerValues(game):
     print("\nFor game: %s, the year is %d\n" % (game.game_name, game.year))
 
 
+
+
+def findMaxTechnologyComponent(targetType, techLevels, techTree):
+    """
+
+    There must be a better way to compare tech components.
+
+    returns highest tech component for a given type
+
+    """
+    tmpName = ""
+    tmpObj = {}
+    tmpTechLevelSum = 0
+
+    
+
+    for eachName, eachObj in techTree.items():
+        
+        if eachObj["itemType"] == targetType:
+            withinTechLevel = True
+            sumEachObjLevel = 0
+            
+            for techName, techVal in techLevels.items():
+                if eachObj[techName] > techVal:
+                    #continue # will this continue the techLevel loop or the techTree loop?
+                    withinTechLevel = False
+                
+                sumEachObjLevel += eachObj[techName]
+
+
+
+            if withinTechLevel and tmpName == "":  # the first correct value
+                tmpName = eachName
+                tmpObj = eachObj
+                tmpTechLevelSum = sumEachObjLevel
+
+            elif tmpTechLevelSum < sumEachObjLevel:
+                tmpName = eachName
+                tmpObj = eachObj
+                tmpTechLevelSum = sumEachObjLevel
+            
+            else:
+
+                continue
+
+
+
+
+
+
+    return tmpName
+
+
+
+

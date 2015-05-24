@@ -196,6 +196,12 @@ def processMinefields(xfile, playerObj): # ?player object or universe?
 
 
 def processDesign(xfile, playerObj, techTree):
+    """
+    Player can add a design and give orders for the design to be built. Need to 
+    accomodate for this. Also, what if an existing design is deleted and a replacement 
+    is made with the exact same name. Need to figure this out.
+
+    """
 
     designObj = playerObj.designs
     newDesigns = xfile["NewDesign"]
