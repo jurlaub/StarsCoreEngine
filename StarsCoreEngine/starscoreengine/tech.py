@@ -161,8 +161,8 @@ class BaseTech(CoreStats):
     # each component should be one of the following object types
     objectTypes =  ("Armor", "Scanner", "Elect", "Mech", "Bomb", "Engine",  
                     "Minelayer", "Mining", "PlanetaryScanner",
-                    "Shield", "Armor", "Weapon", "Terraforming", 
-                    "PlanetaryDefenses", "Ships", "Starbases", "Orbital")
+                    "Shield", "Armor", "Torpedoes", "Terraforming", 
+                    "PlanetaryDefenses", "Ships", "Starbases", "Orbital", "BeamWeapons")
     
     def __init__(self):
         super(BaseTech,self).__init__()

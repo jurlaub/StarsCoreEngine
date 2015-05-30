@@ -24,6 +24,9 @@ from .template import getPlanetNameFromTemplate, planetNameTemplate
 from .planet import Planet, Colony
 
 
+DEBUG = False
+
+
 class UniverseObject(object):
     """
         The universe object should ultimately allow for the creation of multiple universes within a game.
@@ -157,7 +160,7 @@ class UniverseObject(object):
             switchPlanet = self.planets[switchID]
 
             if switchPlanet.HW or switchPlanet.owner is not None:
-                print("Try again: %s; has HW:%s or owner: %s" % (switchID, switchPlanet.HW, switchPlanet.owner ))
+                if DEBUG: print("Try again: %s; has HW:%s or owner: %s" % (switchID, switchPlanet.HW, switchPlanet.owner ))
                 continue
             else:
                 break
@@ -170,7 +173,7 @@ class UniverseObject(object):
         
         switchPlanet.ID = ID    # Existing Planet takes in new planet ID
         self.planets[ID] = switchPlanet
-        print("createHomeworldPlanet-switchPlanet: PlanetName:%s, IdNewToPlanet:%s, OldIDreplacedByLastEntry:%s, PlanetOwner:%s, IsPlanetAHW:%s" % (switchPlanet.name, switchPlanet.ID, switchID,  switchPlanet.owner, switchPlanet.HW))
+        if DEBUG: print("createHomeworldPlanet-switchPlanet: PlanetName:%s, IdNewToPlanet:%s, OldIDreplacedByLastEntry:%s, PlanetOwner:%s, IsPlanetAHW:%s" % (switchPlanet.name, switchPlanet.ID, switchID,  switchPlanet.owner, switchPlanet.HW))
 
         name = self.getPlanetName()
         playerHab = (raceData.habGravityCenter, raceData.habTempCenter, raceData.habRadCenter)
@@ -178,7 +181,7 @@ class UniverseObject(object):
         homeworld = self.createPlanet(switchID, name, playerHab)   # HW takes existing planet ID
         homeworld.HW = True  
         homeworld.owner = raceData.raceName    
-        print("createHomeworldPlanet-NewHW: HWName:%s, Id:%s, PlanetOwner:%s, IsPlanetAHW:%s" % (homeworld.name, homeworld.ID,  homeworld.owner, homeworld.HW))
+        if DEBUG: print("createHomeworldPlanet-NewHW: HWName:%s, Id:%s, PlanetOwner:%s, IsPlanetAHW:%s" % (homeworld.name, homeworld.ID,  homeworld.owner, homeworld.HW))
 
         #homeworld.
 

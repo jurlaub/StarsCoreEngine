@@ -20,6 +20,8 @@
 
 """
 
+from .game_utility import findMaxTechnologyComponent
+
 
 class PlayerBuildList(object):
     """
@@ -55,14 +57,63 @@ class PlayerBuildList(object):
 
     """
 
-    def __init__(self, player):
+    def __init__(self, playerN):
         # define where to obtain the information
-        self.raceData = player.raceData
+        #self.raceData = playerN.raceData
 
-        self.buildList = {"Mines" : { "itemType": "Mines", "targetItemsCost": [0,0,0,4]}}
+        self.buildList = {}#{"Mines" : { "itemType": "Mines", "targetItemsCost": [0,0,0,4]}}
 
     
 
     # pull from 
+
+    def buildCosts_StarbaseDesigns(self, playerN):
+        pass
+
+    def buildCosts_ShipDesigns(self, playerN):
+        pass
+
+    def buildCosts_MineFactory(self, playerN):
+        raceData = playerN.raceData
+
+        m = "Mines"
+        f = "Factories"
+
+        
+        mCosts = [0, 0, 0, raceData.mineCost]
+
+
+        fGerm = 4
+        if raceData.factoryGermCosts: 
+            fGerm = 3
+        
+        fCosts = [0, 0, fGerm, raceData.factoryCost]
+
+
+        return { m:{"itemType": m, "targetItemsCost": mCosts}, \
+                f: {"itemType": f, "targetItemsCost": fCosts} }
+
+    def buildCosts_PlanetScannerDefenses(self, playerN):
+
+        s = "PlanetaryScanner"
+        d = "PlanetaryDefenses"
+        currTechLevels = playerN.research.techLevels
+
+        sName = findMaxTechnologyComponent(s, currTechLevels, playerN.techTree)
+        sObj = playerN.techTree[sName]
+        sCosts = [sObj["iron"], sObj["bor"], sObj["germ"], sObj["resources"]]
+
+
+        dName = findMaxTechnologyComponent(d, currTechLevels, playerN.techTree)
+        dObj = playerN.techTree[dName]
+        dCosts = [dObj["iron"], dObj["bor"], dObj["germ"], dObj["resources"]]
+
+        # d : {"itemType": d, "targetItemsCost": dCosts}
+
+
+
+        return {sName :{"itemType": s, "targetItemsCost":sCosts }, \
+                dName : {"itemType": d, "targetItemsCost":dCosts }}
+
 
 

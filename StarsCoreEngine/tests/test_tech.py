@@ -175,7 +175,7 @@ class Test_StandardTechnologyTemplate(object):
         assert_equal(x["mass"], 1)
         assert_equal(x["initiative"], 9)
         assert_in("itemType", x)
-        assert_equal(x["itemType"], 'Weapon')
+        assert_equal(x["itemType"], 'BeamWeapons')
 
         # assert_equal(x["itemType"], "Weapon")
 
@@ -254,7 +254,7 @@ class Test_StandardTechnologyTemplate(object):
         assert_equal(x["doubleDamageUnshielded"], True)
         assert_equal(x["mass"], 35)
         assert_in("itemType", x)
-        assert_equal(x["itemType"], 'Weapon')
+        assert_equal(x["itemType"], 'Torpedoes')
 
     def test_hull_rogue(self):
         pass

@@ -1564,8 +1564,8 @@ def order_tech():
     for k1, v1 in tech.items():
         itemType = k1
         
-        if itemType in combineWeap:  
-            itemType = "Weapon"
+        # if itemType in combineWeap:  
+        #     itemType = "Weapon"
 
         for v2 in v1.values():
             v2.update({"hasPRT" : [], "hasLRT" : [], "notLRT" : [], "itemType": itemType})

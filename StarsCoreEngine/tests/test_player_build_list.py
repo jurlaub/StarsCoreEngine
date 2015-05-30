@@ -52,8 +52,6 @@ class TestPlayerBuildList(object):
 
 
 
-
-
     def teardown(self):
         print("TestPlayerBuildList: Teardown")
         try:

@@ -26,6 +26,7 @@ import pickle
 import json
 
 
+DEBUG = False
 
 
 def createMFile(game):
@@ -209,45 +210,71 @@ def printPlayerValues(game):
 def findMaxTechnologyComponent(targetType, techLevels, techTree):
     """
 
-    There must be a better way to compare tech components.
+    Input: Component Type, Player Tech Levels Dictionary, Game Tech Tree
+    Output: key of component type with highest tech level summation
 
-    returns highest tech component for a given type
+
+    There must be a better way to compare tech components.
+    In a traditional tech Tree - ship scanners will be complicated.
+
 
     """
+    DEBUG = False
+
     tmpName = ""
     tmpObj = {}
     tmpTechLevelSum = 0
 
+    if DEBUG: print("game_utility.py:findMaxTechnologyComponent")
     
 
     for eachName, eachObj in techTree.items():
+
         
-        if eachObj["itemType"] == targetType:
+        
+        if eachObj.itemType == targetType:
             withinTechLevel = True
             sumEachObjLevel = 0
+
+            
             
             for techName, techVal in techLevels.items():
-                if eachObj[techName] > techVal:
+                if eachObj.__dict__[techName] > techVal:
                     #continue # will this continue the techLevel loop or the techTree loop?
                     withinTechLevel = False
+                    continue
                 
-                sumEachObjLevel += eachObj[techName]
+                sumEachObjLevel += eachObj.__dict__[techName]
 
-
+            
 
             if withinTechLevel and tmpName == "":  # the first correct value
                 tmpName = eachName
                 tmpObj = eachObj
                 tmpTechLevelSum = sumEachObjLevel
+                
+                if DEBUG: print("%s - %s " % (eachName, withinTechLevel))
 
-            elif tmpTechLevelSum < sumEachObjLevel:
+            elif withinTechLevel and tmpTechLevelSum < sumEachObjLevel:
                 tmpName = eachName
                 tmpObj = eachObj
                 tmpTechLevelSum = sumEachObjLevel
-            
+
+                if DEBUG: print("%s - %s " % (eachName, withinTechLevel))
+        
+            elif withinTechLevel:
+                
+                if DEBUG: print("%s - %s " % (eachName, withinTechLevel))
+                if DEBUG: print("tmpName:%s ; tmpTechLevelSum:%d" % (tmpName, tmpTechLevelSum))
+                continue
+
+
             else:
 
                 continue
+            
+
+            if DEBUG: print("tmpName:%s ; tmpTechLevelSum:%d" % (tmpName, tmpTechLevelSum))
 
 
 
