@@ -68,3 +68,36 @@ class TestPlayerBuildList(object):
 
         assert_true(self.player.buildListObject)
 
+
+    def test_PlayerBuildList_BaseItems(self):
+        """
+        Base Items: Mines, Factories, Scanner, Defenses 
+
+        """
+
+        buildListObj = self.player.buildListObject
+
+        buildList = buildListObj.buildList
+
+        assert_in("Mines", buildList)
+        assert_in("Factories", buildList)
+
+        scanner = False
+        for each in buildList:
+            if each["itemType"] == "PlanetaryScanner":
+                scanner = True  
+                break
+        assert_true(scanner)
+
+
+        defenses = False
+        for each in buildList:
+            if each["itemType"] == "PlanetaryDefenses":
+                defenses = True  
+                break
+        assert_true(defenses)
+
+
+
+
+

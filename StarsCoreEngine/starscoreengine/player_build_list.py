@@ -55,17 +55,28 @@ class PlayerBuildList(object):
 
 
 
+
+    -------- ??? ---------
+    Should this be used as a place to contain/present max values? ie the working 
+    max used by the client?
+    _____________________
+
+
+
+
     """
 
     def __init__(self, playerN):
         # define where to obtain the information
         #self.raceData = playerN.raceData
+        self.playerN = playerN
 
-        self.buildList = {}#{"Mines" : { "itemType": "Mines", "targetItemsCost": [0,0,0,4]}}
+        self.buildList = {} #{"Mines" : { "itemType": "Mines", "targetItemsCost": [0,0,0,4]}}
 
+        self.buildList.update(self.buildCosts_MineFactory(self.playerN))
+        self.buildList.update(self.buildCosts_PlanetScanner(self.playerN))
+        self.buildList.update(self.buildCosts_PlanetDefenses(self.playerN))
     
-
-    # pull from 
 
     def buildCosts_StarbaseDesigns(self, playerN):
         pass
@@ -84,7 +95,7 @@ class PlayerBuildList(object):
 
 
         fGerm = 4
-        if raceData.factoryGermCosts: 
+        if raceData.factoryGermCost: 
             fGerm = 3
         
         fCosts = [0, 0, fGerm, raceData.factoryCost]
@@ -93,27 +104,48 @@ class PlayerBuildList(object):
         return { m:{"itemType": m, "targetItemsCost": mCosts}, \
                 f: {"itemType": f, "targetItemsCost": fCosts} }
 
-    def buildCosts_PlanetScannerDefenses(self, playerN):
+    def buildCosts_PlanetScanner(self, playerN):
+        """
+
+        --- PlanetaryScanner ---
+        Should this present "Planetary Scanner"? OR the actual scanner to be built?
+        The current plan is that the max scanner will be built/used -- all 
+        scanners will be upgraded when the next higher level is reached. Managing
+        this seems to added nuiance for little gameplay benefit. 
+
+        If a non-standard tech tree were involved providing multiple planetary scanner
+        options, then presenting all options and perhaps requiring upgrading would
+        make sense.
+
+
+        """
+
 
         s = "PlanetaryScanner"
-        d = "PlanetaryDefenses"
         currTechLevels = playerN.research.techLevels
 
         sName = findMaxTechnologyComponent(s, currTechLevels, playerN.techTree)
         sObj = playerN.techTree[sName]
-        sCosts = [sObj["iron"], sObj["bor"], sObj["germ"], sObj["resources"]]
+        sCosts = [sObj.iron, sObj.bor, sObj.germ, sObj.resources]
 
+
+        return {sName :{"itemType": s, "targetItemsCost":sCosts }}
+
+    def buildCosts_PlanetDefenses(self, playerN):
+        """
+
+
+        """
+
+        d = "PlanetaryDefenses"
+        currTechLevels = playerN.research.techLevels
 
         dName = findMaxTechnologyComponent(d, currTechLevels, playerN.techTree)
         dObj = playerN.techTree[dName]
-        dCosts = [dObj["iron"], dObj["bor"], dObj["germ"], dObj["resources"]]
-
-        # d : {"itemType": d, "targetItemsCost": dCosts}
+        dCosts = [dObj.iron, dObj.bor, dObj.germ, dObj.resources]
 
 
-
-        return {sName :{"itemType": s, "targetItemsCost":sCosts }, \
-                dName : {"itemType": d, "targetItemsCost":dCosts }}
+        return { dName : {"itemType": d, "targetItemsCost":dCosts }}
 
 
 

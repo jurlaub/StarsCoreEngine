@@ -111,7 +111,7 @@ class Player(object):
         self.historicalShipDesign = {}  #? 
         self.fleets = {}  # ? fleetID : fleetObj
         self.battleOrders = {} 
-        #self.buildListObject = PlayerBuildList(self)
+        self.buildListObject = PlayerBuildList(self)
 
         """ turnOrders:
         when created    - should be sequentially numbered

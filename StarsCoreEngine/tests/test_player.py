@@ -47,31 +47,6 @@ from ..starscoreengine.tech import ShipDesign
 
 
 
-class TestPlayerObject(object):
-    """ 
-    Unit Tests for player Object
-
-    """
-
-    def setup(self):
-        print("TestPlayerObject: Setup")
-        self.raceName = 'Wolfbane'
-        self.RaceData = Race(self.raceName)
-        self.player = Player(self.RaceData, 1, {})
-
-
-    def teardown(self):
-        print("TestPlayerObject: Teardown")
-
-    def test_PlayerValues(self):
-        player = self.player
-        race = self.RaceData
-
-        assert(self.raceName == player.raceName)
-
-
-
-
 
 
 
