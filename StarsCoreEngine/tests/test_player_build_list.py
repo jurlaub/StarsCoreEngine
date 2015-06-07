@@ -75,9 +75,10 @@ class TestPlayerBuildList(object):
 
         """
 
-        buildListObj = self.player.buildListObject
+        #buildListObj = self.player.buildListObject
+        #buildList = buildListObj.buildList
 
-        buildList = buildListObj.buildList
+        buildList = self.player.buildListObject.buildList
 
         assert_in("Mines", buildList)
         assert_in("Factories", buildList)

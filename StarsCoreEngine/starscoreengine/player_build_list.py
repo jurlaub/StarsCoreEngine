@@ -59,6 +59,8 @@ class PlayerBuildList(object):
     -------- ??? ---------
     Should this be used as a place to contain/present max values? ie the working 
     max used by the client?
+
+    - 20150607 JU: probably not as this is game setup / planet value based
     _____________________
 
 
@@ -73,6 +75,8 @@ class PlayerBuildList(object):
 
         self.buildList = {} #{"Mines" : { "itemType": "Mines", "targetItemsCost": [0,0,0,4]}}
 
+        # ------ BuildList ------
+        # pulls into the build list the initial values.
         self.buildList.update(self.buildCosts_MineFactory(self.playerN))
         self.buildList.update(self.buildCosts_PlanetScanner(self.playerN))
         self.buildList.update(self.buildCosts_PlanetDefenses(self.playerN))
@@ -82,6 +86,20 @@ class PlayerBuildList(object):
         pass
 
     def buildCosts_ShipDesigns(self, playerN):
+        """
+
+        Requests PlayerDesigns object to provide list of valid ship designs to 
+        be built. 
+
+        Conditions: 
+            - PlayerDesigns must validate if the player is capabile of building the
+            design (tech level, PRT/LRT, other?)
+            - PlayerDesigns must include ship mass. 
+            - PlayerDesigns must provide costs (updated for tech miniturization)
+            - > PlayerBuildList will not apply miniturization
+
+        """
+
         pass
 
     def buildCosts_MineFactory(self, playerN):
@@ -118,6 +136,12 @@ class PlayerBuildList(object):
         make sense.
 
 
+        -- TODO --
+        Check raceData for tech exclusions (like the LRT:No Advanced Scanners or
+            other rules)
+
+
+
         """
 
 
@@ -133,6 +157,9 @@ class PlayerBuildList(object):
 
     def buildCosts_PlanetDefenses(self, playerN):
         """
+
+        -- TODO --
+        need to check PRT & LRT for defense exclusions. 
 
 
         """
