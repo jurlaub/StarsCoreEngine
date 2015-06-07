@@ -534,7 +534,8 @@ class ShipDesign(Component):
 
         self.designName = vals['designName']    # user specified ship design name
         self.designID = None                     # ? -> not, better to track and auto assign.
-        self.owner = None        
+        self.owner = None 
+        self.techTree = techTree       
 
         self.isDesignLocked = False             # once a player has built a design- it cannot change
         self.designValidForProduction = True   
@@ -578,12 +579,12 @@ class ShipDesign(Component):
         self.computing_power = None
 
 
-        self.updateDesign(techTree, techLevel, LRT)
+        self.updateDesign(techLevel, LRT)
 
 
-    def updateDesign(self, techTree, techLevel, LRT = []):
+    def updateDesign(self, techLevel, LRT = []):
         """ collect and update all of the components and hull values. 
-        Input: self (hull + components), techTree, player techLevel, LRT = CuttingEdge
+        Input: self (hull + components), player techLevel, LRT = CuttingEdge, techTree,
         Output: all values of hull and components are updated in the ShipDesign.
                 (e.x. self.iron = sum(hull.iron + each_component.iron values))
 
@@ -593,7 +594,7 @@ class ShipDesign(Component):
 
         """
         
-        hullObj = techTree[self.hullID]
+        hullObj = self.techTree[self.hullID]
 
         # apply hullObj miniturization if necessary
 
@@ -602,7 +603,7 @@ class ShipDesign(Component):
         for k1, obj1 in self.component.items():
 
             componentName = obj1['itemID']
-            componentObj = techTree[componentName]
+            componentObj = self.techTree[componentName]
 
             componentQuant = obj1['itemQuantity']
 

@@ -191,5 +191,36 @@ class PlayerDesigns(object):
         pass
 
 
+    def buildList_Ship(self):
+
+        # call buildList_PlayerDesign
+      
+
+        pass
+
+    def buildList_Starbase(self):
+
+
+
+        pass
+
+
+    def buildList_PlayerDesign(self, currentDesign, listType):
+        """ 
+
+
+
+        """
+
+        #iterate through the dictionary
+        ## is it a valid design to build?
+        ### if not skip
+        ## obtain the current costs
+        ## assemble and return
+
+
+        pass
+
+
 
 
