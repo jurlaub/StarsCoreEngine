@@ -82,17 +82,25 @@ class TestPlayerBuildList(object):
         assert_in("Mines", buildList)
         assert_in("Factories", buildList)
 
+        
+        # --------- Scanner --------------
+        # because the name can change, the search validates that one of the 
+        # items in the build list is itemType: PlanetaryScanner
         scanner = False
-        for each in buildList:
-            if each["itemType"] == "PlanetaryScanner":
+        for eachName, eachObj in buildList.items():
+        
+            if eachObj["itemType"] == "PlanetaryScanner":
                 scanner = True  
                 break
+        
         assert_true(scanner)
 
-
+        # --------- Defenses --------------
+        # because the name can change, the search validates that one of the 
+        # items in the build list is itemType: PlanetaryDefenses
         defenses = False
-        for each in buildList:
-            if each["itemType"] == "PlanetaryDefenses":
+        for eachName, eachObj in buildList.items():
+            if eachObj["itemType"] == "PlanetaryDefenses":
                 defenses = True  
                 break
         assert_true(defenses)
