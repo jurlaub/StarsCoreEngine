@@ -36,6 +36,7 @@ class PlayerDesigns(object):
         self.techLevels = techLevels
         self.LRT = LRT
 
+
         self.currentShips = {}
         self.currentStarbases = {}
         
@@ -218,8 +219,27 @@ class PlayerDesigns(object):
         ## obtain the current costs
         ## assemble and return
 
+        buildList = {}
 
-        pass
+
+        for designName, designObj in currentDesign.items():
+            
+            # validate capability - are tech levels now sufficient to build? if so update designValidFor Production 
+
+            if not designObj.designValidForProduction: # cannot build, so do not add to BuildList
+                continue
+
+
+            # current costs for design
+            currentCosts = None  # from ShipDesign
+
+
+
+            # add to dictionary
+            # add list type
+
+
+        return buildList
 
 
 

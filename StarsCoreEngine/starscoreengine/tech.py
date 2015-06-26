@@ -502,6 +502,8 @@ class Hull(BaseTech):
 class ShipDesign(Component):
     ''' ShipDesign is a specific user defined design of the Hull class 
 
+    ShipDesign is used for both Starbases and Ships.
+
 
     ShipDesign is a subclass of CoreStats. As components are added or removed, 
     these values are updated. Perhaps subclassing Component would be better. 
@@ -513,7 +515,11 @@ class ShipDesign(Component):
 
     20150117 - ju - ShipDesign should validate itself
 
-
+    20150607 - ju: slight change in the use of ShipDesign. ShipDesign will instantiate
+    the original technology components and values for any given design, disregarding
+    tech level. PlayerBuildList will hold each turns design costs for a given design.
+        -- TODO --- 
+            make sure ShipDesign works with the new approach
 
 
     vals = {'designName': 'doomShip1', 
@@ -720,7 +726,7 @@ class ShipDesign(Component):
     #     pass
 
 
-
+    def buildList_
 
     
     def designMiniaturization(self, techLevel, LRT = []):
