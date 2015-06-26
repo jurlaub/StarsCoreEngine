@@ -92,7 +92,7 @@ class PlayerBuildList(object):
         be built. 
 
         Conditions: 
-            - PlayerDesigns must validate if the player is capabile of building the
+            - PlayerDesigns must check if the player is capabile of building the
             design (tech level, PRT/LRT, other?)
             - PlayerDesigns must include ship mass. 
             - PlayerDesigns must provide costs (updated for tech miniturization)

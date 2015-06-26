@@ -110,25 +110,25 @@ class PlayerDesigns(object):
         x[tmpName] = newObject  # x == self.currentShips or self.currentStarbases  
 
         
-
-    @staticmethod
-    def validDesignForProduction(newDesign, techTree, techLevel, PRT, LRT):
-        """ 
-        input: design (ShipDesign),techTree, techLevel, PRT, LRT
+    # --------------- method should be in the tech file -----------
+    # @staticmethod
+    # def validDesignForProduction(newDesign, techTree, techLevel, PRT, LRT):
+    #     """ 
+    #     input: design (ShipDesign),techTree, techLevel, PRT, LRT
         
         
-        validates: 
-            Tech used is within tech Range
-            Tech used is permitted per PRT
-            Tech used is permitted per LRT
+    #     validates: 
+    #         Tech used is within tech Range
+    #         Tech used is permitted per PRT
+    #         Tech used is permitted per LRT
 
 
-        output - returns:
-            True = Design is valid for production 
-            False = Design is not valid for production
+    #     output - returns:
+    #         True = Design is valid for production 
+    #         False = Design is not valid for production
 
-        """
-        pass
+    #     """
+    #     pass
 
 
 
@@ -208,8 +208,11 @@ class PlayerDesigns(object):
 
     def buildList_PlayerDesign(self, currentDesign, listType):
         """ 
+        staticmethod?
 
-
+        input:
+            currentDesign ==> dictionary of {shipNames: ShipDesign_objects}; 
+            listType ==> Ships or Starbases
 
         """
 

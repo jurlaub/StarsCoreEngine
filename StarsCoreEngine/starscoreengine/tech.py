@@ -726,10 +726,26 @@ class ShipDesign(Component):
     #     pass
 
 
-    def buildList_
+    def currentCosts(self):
+        """
+        currentCosts will obtain list of components assigned to ShipDesign
+            costs will begin with running Hull component through designMiniaturization
+            iterate through component list
+                for each component designMiniaturization will be called
+                    designMiniaturization will return stats (miniturized if needed)
+                    the stats will be added to the current costs
+
+                
+
+        """
+        currentCosts = []
+
+
+        return currentCosts
 
     
-    def designMiniaturization(self, techLevel, LRT = []):
+    @staticmethod
+    def designMiniaturization(techObj, techLevel, LRT = []):
         """designMiniaturizationStats() used to get the CoreStats required to 
         build the design. When a user produces the ship, the productionQ should 
         call this method to determine what values to put in the production que. 
