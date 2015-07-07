@@ -214,6 +214,11 @@ class PlayerDesigns(object):
             currentDesign ==> dictionary of {shipNames: ShipDesign_objects}; 
             listType ==> Ships or Starbases
 
+        output: 
+            buildList of ships or starbases that are valid to produce
+                key = name
+                value = {costs, mass}
+
         """
 
         #iterate through the dictionary

@@ -533,6 +533,9 @@ class ShipDesign(Component):
 
     '''
 
+    miniturazationList = ('iron', 'bor', 'germ', 'resources')
+
+
     def __init__(self, vals, techTree, techLevel, LRT):                      # vals is a dictionary described in notes above    
         super(ShipDesign,self).__init__()
         
@@ -638,7 +641,7 @@ class ShipDesign(Component):
         sumItUpList = ( 'mass','fuelCapacity',
          'cargoCapacity', 'initiative', 'armorDP', 'shieldDP', 'beamPower', 'sapper', 'minesSwept' )
 
-        miniturazationList = ('iron', 'bor', 'germ', 'resources')
+        miniturazationList = ShipDesign.miniturazationList #('iron', 'bor', 'germ', 'resources')
 
         
         noneVals = ( None, []) 
@@ -725,6 +728,16 @@ class ShipDesign(Component):
     #     """
     #     pass
 
+    def buildList_ShipDesign(self):
+
+        tmpMass = self.mass
+
+        #call current costs
+        tmpCosts = self.currentCosts()
+
+        return {'mass': tmpMass, 'costs':tmpCosts}
+
+
 
     def currentCosts(self):
         """
@@ -735,17 +748,22 @@ class ShipDesign(Component):
                     designMiniaturization will return stats (miniturized if needed)
                     the stats will be added to the current costs
 
-                
+                miniturazationList = ('iron', 'bor', 'germ', 'resources')
 
         """
         currentCosts = []
+
+        # hull
+
+        # component
+
 
 
         return currentCosts
 
     
     @staticmethod
-    def designMiniaturization(techObj, techLevel, LRT = []):
+    def designMiniaturization(techObj, techLevel = None, LRT = []):
         """designMiniaturizationStats() used to get the CoreStats required to 
         build the design. When a user produces the ship, the productionQ should 
         call this method to determine what values to put in the production que. 
@@ -760,6 +778,13 @@ class ShipDesign(Component):
         tuple = (iron, bor, germ, resources)
 
         """
+        tmpList = []
+
+        for each in ShipDesign.miniturazationList:
+            tmpVal = techObj.__dict__[each]
+
+            
+
         pass
 
     # static method?
