@@ -143,10 +143,12 @@ class ProductionQ(object):
             - a change in productionID (what should be built) is not allowed. 
             The productionID change is not checked. If Client allows this 
             through, the original production value item will be built.                  
+       
         3) user deletes item 
            - if item in productionQ is not in productionList then set quantity to 0
             - setQuantityToZero() method
             - quantity 0 items handled by productionController at end of colony production
+        
         4) user changes order of completion
             - handled by the productionOrder list   
 
@@ -321,6 +323,8 @@ class ProductionQ(object):
             
             if "itemType" in entryObj:
                 tmpItemType = entryObj["itemType"]
+            # elif "productionID" in entryObj:
+            #     tmpItemType = entryObj["productionID"]
             else:
                 # for testing - should not be a valid value for normal play.
                 tmpItemType = "Default ItemType"    

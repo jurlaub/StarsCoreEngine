@@ -77,7 +77,8 @@ class PlayerBuildList(object):
 
         # ------ BuildList ------
         # pulls into the build list the initial values.
-        self.buildList.update(self.buildCosts_MineFactory(self.playerN))
+        self.buildList.update(self.buildCosts_Mine(self.playerN))
+        self.buildList.update(self.buildCosts_Factory(self.playerN))
         self.buildList.update(self.buildCosts_PlanetScanner(self.playerN))
         self.buildList.update(self.buildCosts_PlanetDefenses(self.playerN))
     
@@ -102,15 +103,18 @@ class PlayerBuildList(object):
 
         pass
 
-    def buildCosts_MineFactory(self, playerN):
+    def buildCosts_Mine(self, playerN):
         raceData = playerN.raceData
 
         m = "Mines"
-        f = "Factories"
-
-        
         mCosts = [0, 0, 0, raceData.mineCost]
 
+        return { m: {"itemType": m, "targetItemsCost": mCosts} }
+
+    def buildCosts_Factory(self, playerN):
+        raceData = playerN.raceData
+
+        f = "Factories"
 
         fGerm = 4
         if raceData.factoryGermCost: 
@@ -119,8 +123,9 @@ class PlayerBuildList(object):
         fCosts = [0, 0, fGerm, raceData.factoryCost]
 
 
-        return { m:{"itemType": m, "targetItemsCost": mCosts}, \
-                f: {"itemType": f, "targetItemsCost": fCosts} }
+        return { f: {"itemType": f, "targetItemsCost": fCosts} }
+
+
 
     def buildCosts_PlanetScanner(self, playerN):
         """
