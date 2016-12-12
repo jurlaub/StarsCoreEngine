@@ -93,7 +93,7 @@ class ProductionQ(object):
 
     """
     DEBUG = True
-    DEBUG_2 = False
+    DEBUG_2 = True
 
     itemType = ('Ship', 'Starbase', 'Scanner', 'Defenses', 'Mines', \
                  'Factories', 'Terraform', 'Minerals', 'Special')
@@ -114,6 +114,7 @@ class ProductionQ(object):
         self.customDefaultSettings = []
 
         self.resources = 0
+        self.test_ResourcesConsumed = 0  # use for testing
 
         # productionOrder provides the order for the elements in productionItems
         # each order should point to a unique item
@@ -670,7 +671,7 @@ class ProductionQ(object):
 
             
             entryID = self.productionOrder[orderIndex]
-            entryObj = self.productionItem[entryID]
+            entryObj = self.productionItems[entryID]
 
             if entryObj["finishedForThisTurn"]: # T/F based on Entry.
                 orderIndex += 1
@@ -729,7 +730,7 @@ class ProductionQ(object):
             # else:
             #     orderIndex == 0         # start at beginning
 
-    def targetItemCosts(self, entryID):
+    def targetItemCosts(self, productionID):
         """
         Input: entryID - (uses this to obtain the current costs from the productionList)
         Output: [material cost + resources] 
@@ -740,7 +741,7 @@ class ProductionQ(object):
 
         """
 
-        pass
+        return [0, 0, 0, 4]
 
     def splitEntryIntoTwo(self, entryID):
         """
@@ -822,7 +823,7 @@ class ProductionQ(object):
 
 
 
-    Understand entry:
+        Understand entry:
 
 
         --------- hasWorkBeenDone--------------- 
@@ -845,7 +846,7 @@ class ProductionQ(object):
         >> then proportional materialsUsed based on availableSupplies
         ------------------------------------- 
 
-    Produce n amount:
+        Produce n amount:
         ------------ buildEntry ------------------
 
         ------------------------------------------
@@ -854,10 +855,12 @@ class ProductionQ(object):
         ------------------------------------------
 
 
-    Resolve left over:
+        Resolve left over:
 
 
         """
+
+        DEBUG = ProductionQ.DEBUG_2
 
         entryObj = self.productionItems[entryID]
         entryQuantity = entryObj["quantity"]
@@ -871,6 +874,7 @@ class ProductionQ(object):
 
         # --TODO-- have I reached any maximum? (that would stop work on this entry)
 
+        if DEBUG: print("entryController: targetItemCosts %s " % (targetItemCosts))
 
         """
         # ------------ check whether work has been done -------
@@ -896,12 +900,13 @@ class ProductionQ(object):
 
             # check - if miniturization reduces the remaining costs so that nothing more is needed. 
             #   a way to handle this border case is needed. (limit will return zero)
-
+            if DEBUG: print("entryController: payload sent to buildLimit: %d : %s " % (quantityONE, tmpTargetCosts))
             buildQuantity, buildMaterials = self.buildLimit(quantityONE, tmpTargetCosts)    
 
 
         else:
 
+            if DEBUG: print("entryController: payload sent to buildLimit: %d : %s " % (entryQuantity, targetItemCosts))
             buildQuantity, buildMaterials = self.buildLimit(entryQuantity, targetItemCosts)
 
 
@@ -910,7 +915,7 @@ class ProductionQ(object):
         ########## Produce Entry && Cleanup  ###########
 
         if buildQuantity > entryQuantity:
-            raise ValueError("EntryController: buildQuantity(%d) greater then entryQuantity(%d)" % (buildQuanity, entryQuantity))
+            raise ValueError("ProductionQ.entryController: buildQuantity(%d) greater then entryQuantity(%d)" % (buildQuanity, entryQuantity))
 
         if buildQuantity > 0:   # buildQuantity cap is entryQuantity 
             
@@ -925,7 +930,7 @@ class ProductionQ(object):
                 entryObj["finishedForThisTurn"] = True
 
             elif entryObj["quantity"] < 0:
-                raise ValueError("EntryController: after buiding %d %s; entry 'quantity' is %d" % (buildQuanity,entryObj["productionID"], entryObj["quantity"] ))
+                raise ValueError("ProductionQ.entryController: after buiding %d %s; entry 'quantity' is %d" % (buildQuanity,entryObj["productionID"], entryObj["quantity"] ))
             return
 
         elif buildQuantity == 0:
@@ -945,7 +950,7 @@ class ProductionQ(object):
         else:  # if a negative value should be an error condition
             
             #entryObj["finishedForThisTurn"] = True
-            print("EntryController(Error): buildQuantity is negative")
+            print("ProductionQ.entryController(Error): buildQuantity is negative")
             
             return
 
@@ -971,6 +976,7 @@ class ProductionQ(object):
         tmpMinerals = consumeMaterials[:-1]
         tmpResources = consumeMaterials[-1]
 
+        self.test_ResourcesConsumed += tmpResources
         self.resources -= tmpResources
 
         self.colony.planet.removeSurfaceMinerals(tmpMinerals)
@@ -994,13 +1000,14 @@ class ProductionQ(object):
                         ProductionQ.resources have been updated (in productionController)
 
         """
-        DEBUG = ProductionQ.DEBUG
+        DEBUG = ProductionQ.DEBUG_2
 
         availableSupplies = [self.colony.planet.surfaceIron,
                             self.colony.planet.surfaceBor,
                             self.colony.planet.surfaceGerm,
                             self.resources]
 
+        if DEBUG: print("buildLimit: targetMaterials(%s) :: availableSupplies(%s) " % (targetMaterials, availableSupplies))
 
         limitQuantity, limitMaterials = ProductionQ.limit(quantity, targetMaterials, availableSupplies)
 

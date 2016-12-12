@@ -495,25 +495,25 @@ class TestProductionQ(object):
 
 
     """ 
-EntryController Tests:
+        EntryController Tests:
 
-    Correct
-        +quantity = 1,  correct resources consumed, correct BuildEntry & correct consumeMaterials
-        +quantity = 1 w/ partially produced entry. complete using remaining resources & same as above
+        Correct
+            +quantity = 1,  correct resources consumed, correct BuildEntry & correct consumeMaterials
+            +quantity = 1 w/ partially produced entry. complete using remaining resources & same as above
 
-        +quantity = 150, produce all
+            +quantity = 150, produce all
 
-        +quantity = 150(147), same as above --> with remainder quantity = 3
-        quantity = 2+ w/ a partially produced entry --> produce only 1 & reset materialsUsed + reduce quantity
+            +quantity = 150(147), same as above --> with remainder quantity = 3
+            quantity = 2+ w/ a partially produced entry --> produce only 1 & reset materialsUsed + reduce quantity
 
-        quantity = 1 cannot complete entry but can partially production
-        quantity = 2+ cannot complete entry but can partially production
+            quantity = 1 cannot complete entry but can partially production
+            quantity = 2+ cannot complete entry but can partially production
 
-        only partially produce an item (no complete item produced) (not a test of proportional method)
+            only partially produce an item (no complete item produced) (not a test of proportional method)
 
 
-    Error
-        quantity = 0 ==> nothing produced, no materials updated, entry finishedForTurn = True
+        Error
+            quantity = 0 ==> nothing produced, no materials updated, entry finishedForTurn = True
 
 
 
@@ -1074,7 +1074,7 @@ EntryController Tests:
         """
 
         entry1 = "entryID1"
-        entryType1 = "Mines"
+        entryType1 = TestProductionQ.productionID_Mines
         
 
         testQ1 = {"ProductionQ" : 
@@ -1122,8 +1122,54 @@ EntryController Tests:
         producePlanetUpgrades should be prompted to produce 1 mine on the 
         appropriate colony. 
         """
-        #assert_true(False)
-        pass
+        entry1 = "entryID1"
+        entryType1 = TestProductionQ.productionID_Mines
+        produceOne = 1
+
+        testQ1 = {"ProductionQ" : 
+                {
+                self.target_colony_name:
+                    {
+                        "productionOrder" : [ entry1 ],
+                        "productionItems" : { entry1 : {"quantity": produceOne, "productionID": entryType1 }                                             
+                                            }
+
+                    }
+
+                }
+            }
+
+        mineResourceCost = int(self.player.raceData.mineCost)
+        targetItemCosts = [0, 0, 0, mineResourceCost]
+
+        colonyHW = self.target_colony_obj.productionQ
+        assert_equal(len(colonyHW.productionItems), 0)
+
+        # test the original state of mines
+        minesOnHW = self.target_colony_obj.planet.mines
+        print("!!!!Mines: %d" % minesOnHW)
+        assert_true(self.target_colony_obj.planet.mines == 0)  # should not be any mines on HW
+
+
+        processProductionQ(testQ1, self.player)
+
+        assert_equal(len(colonyHW.productionOrder), 1)
+        assert_equal(len(colonyHW.productionItems), 1)
+
+
+        # colony has produced items in productionQ
+        colonyHW.productionController()
+
+
+        # what was produced on the colony
+        assert_true(self.target_colony_obj.planet.mines == (minesOnHW + 1)) #only one additional mine should be built
+
+
+        # did the appropriate resources be removed?
+        assert_equal(mineResourceCost, colonyHW.test_ResourcesConsumed)
+
+
+
 
 
     def test_entryController_produce_Mine_Max(self):
@@ -1161,4 +1207,36 @@ EntryController Tests:
         pass
 
 
+    def test_targetItemCosts_Mines(self):
+        #build these tests
+        assert_true(False)
 
+
+    def test_targetItemCosts_Factories(self):
+        #build these tests
+        assert_true(False)
+
+    def test_targetItemCosts_Defenses(self):
+        #build these tests
+        assert_true(False)
+
+
+    def test_targetItemCosts_Minerals(self):
+        #build these tests
+        assert_true(False)
+
+    def test_targetItemCosts_Ship(self):
+        #build these tests
+        assert_true(False)
+
+    def test_targetItemCosts_Starbase(self):
+        #build these tests
+        assert_true(False)
+        
+    def test_targetItemCosts_Scanner(self):
+        #build these tests
+        assert_true(False)
+
+    def test_targetItemCosts_Terraform(self):
+        #build these tests
+        assert_true(False)
