@@ -161,11 +161,17 @@ class TestProductionQ(object):
 
 
         #--------- set productionID and typeID -------------
-
+        #  from ProductionQ.itemType
         self.productionID_Defenses = "Defenses"
         self.productionID_Mines = "Mines"
         self.productionID_Factories = "Factories"
         self.productionID_Minerals = "Minerals"
+        self.productionID_Terraform = "Terraform"
+        self.productionID_Scanner = "Scanner"
+        self.productionID_Minerals = "Minerals"
+        self.productionID_Ship = "Ship"
+        self.productionID_Starbase = "Starbase"
+        self.productionID_Special = "Special"
 
 
 
@@ -1211,38 +1217,94 @@ class TestProductionQ(object):
 
 
     def test_targetItemCosts_Mines(self):
-        #build these tests
-        assert_true(False)
+
+        player0 = TestProductionQ.player
+        targetItem = self.target_colony_obj.productionQ.targetItemCosts(TestProductionQ.productionID_Mines)
+        
+        expectedItemCosts = [0, 0, 0, player0.raceData.mineCost]
+        assert_equal(targetItem, expectedItemCosts)
 
 
     def test_targetItemCosts_Factories(self):
-        #build these tests
-        assert_true(False)
+
+        player0 = TestProductionQ.player
+        targetItem = self.target_colony_obj.productionQ.targetItemCosts(TestProductionQ.productionID_Factories)
+        
+        germCost = 4 if not player0.raceData.factoryGermCost else 3  # germ cost for building a factory
+        expectedItemCosts = [0, 0, germCost, player0.raceData.factoryCost] # total cost for a factory
+
+        assert_equal(targetItem, expectedItemCosts)
 
     def test_targetItemCosts_Defenses(self):
-        #build these tests
-        assert_true(False)
+        print("--TODO-- test_targetItemCosts_Defenses Resource Cost does not account for PRT/LRT")
+        
+        #account for PRT
+        techItem = TestProductionQ.techTree["SDI"]
+        # print("Defenses- iron: %d, bor: %d, germ: %d, resources:%d"%(techItem.iron, techItem.bor, techItem.germ, techItem.resources))
+        expectedDefensesCosts = [techItem.iron, techItem.bor, techItem.germ, techItem.resources]
+
+        targetItem = self.target_colony_obj.productionQ.targetItemCosts(TestProductionQ.productionID_Defenses)
+
+        assert_equal(targetItem, expectedDefensesCosts)
+
 
 
     def test_targetItemCosts_Minerals(self):
-        #build these tests
-        assert_true(False)
+        print("--TODO-- test_targetItemCosts_Minerals Mineral Resource Cost HARDCODED to 100 resources only")
+        expectedItemCosts = [0, 0, 0, 100]
+        
+        targetItem = self.target_colony_obj.productionQ.targetItemCosts(TestProductionQ.productionID_Minerals)
+
+        assert_equal(targetItem, expectedItemCosts)
+
 
     def test_targetItemCosts_Ship(self):
-        #build these tests
-        assert_true(False)
+        print("--TODO-- test_targetItemCosts_Ship Ship Resource Cost HARDCODED -[41, 12, 34, 138]- This one is dynamic and requires extra effort")
+
+        expectedItemCosts = [41, 12, 34, 138]
+        
+        targetItem = self.target_colony_obj.productionQ.targetItemCosts(TestProductionQ.productionID_Ship)
+
+        assert_equal(targetItem, expectedItemCosts)
+
+
 
     def test_targetItemCosts_Starbase(self):
-        #build these tests
-        assert_true(False)
+        print("--TODO-- test_targetItemCosts_Starbase Starbase Resource Cost HARDCODED -[71, 48, 34, 338]- This one is dynamic and requires extra effort")
+
+        expectedItemCosts = [71, 48, 34, 338]
+        
+        targetItem = self.target_colony_obj.productionQ.targetItemCosts(TestProductionQ.productionID_Ship)
+
+        assert_equal(targetItem, expectedItemCosts)
+
         
     def test_targetItemCosts_Scanner(self):
-        #build these tests
-        assert_true(False)
+        print("--TODO-- test_targetItemCosts_Scanner Resource Cost does not account for PRT/LRT")
+        
+        techItem = TestProductionQ.techTree["Viewer 50"]
+        expectedItemCosts = [techItem.iron, techItem.bor, techItem.germ, techItem.resources]
+
+        itemCosts = self.target_colony_obj.productionQ.targetItemCosts(TestProductionQ.productionID_Scanner)
+
+        assert_equal(expectedItemCosts, itemCosts)
+
 
     def test_targetItemCosts_Terraform(self):
-        #build these tests
-        assert_true(False)
+        print("--TODO-- test_targetItemCosts_Terraform Resource Cost does not account for PRT/LRT")
+
+        #account for LRT 
+        techItem = TestProductionQ.techTree["Gravity Terraform 7"]
+        itemIron = 0 if techItem.iron == None else techItem.iron
+        itemBor = 0 if techItem.bor == None else techItem.bor
+        itemGerm = 0 if techItem.germ == None else techItem.germ
+        expectedItemCosts = [itemIron, itemBor, itemGerm, techItem.resources]
+        # print("test_itemCosts_Terraform - expectedItemCosts: %s" % expectedItemCosts)
+
+        itemCosts = self.target_colony_obj.productionQ.targetItemCosts(TestProductionQ.productionID_Terraform)
+        assert_equal(expectedItemCosts, itemCosts)
+
+
 
     def test_itemCosts_Mines(self):
         player0 = TestProductionQ.player
@@ -1269,6 +1331,8 @@ class TestProductionQ(object):
 
 
     def test_itemCosts_Defenses(self):
+        print("--TODO-- test_itemCosts_Defenses Resource Cost does not account for PRT/LRT")
+
         #account for PRT
         techItem = TestProductionQ.techTree["SDI"]
         # print("Defenses- iron: %d, bor: %d, germ: %d, resources:%d"%(techItem.iron, techItem.bor, techItem.germ, techItem.resources))
@@ -1280,6 +1344,8 @@ class TestProductionQ(object):
 
 
     def test_itemCosts_Terraform(self):
+        print("--TODO-- test_itemCosts_Terraform Resource Cost does not account for PRT/LRT")
+
         #account for LRT 
         techItem = TestProductionQ.techTree["Gravity Terraform 7"]
         itemIron = 0 if techItem.iron == None else techItem.iron
@@ -1293,6 +1359,8 @@ class TestProductionQ(object):
 
 
     def test_itemCosts_Scanner(self):
+        print("--TODO-- test_itemCosts_Scanner Resource Cost does not account for PRT/LRT")
+       
         #account for PRT
         techItem = TestProductionQ.techTree["Viewer 50"]
         expectedItemCosts = [techItem.iron, techItem.bor, techItem.germ, techItem.resources]
