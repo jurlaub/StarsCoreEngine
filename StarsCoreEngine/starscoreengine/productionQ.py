@@ -93,9 +93,10 @@ class ProductionQ(object):
 
     """
     DEBUG = True
+    DEBUG_2 = False
 
     itemType = ('Ship', 'Starbase', 'Scanner', 'Defenses', 'Mines', \
-                 'Factories', 'Terraform', 'Minerals','Special')
+                 'Factories', 'Terraform', 'Minerals', 'Special')
 
     defaultSetting = ()     # default options for all Q's
 
@@ -113,8 +114,11 @@ class ProductionQ(object):
         self.customDefaultSettings = []
 
         self.resources = 0
-        self.productionOrder = []   # each order should point to a unique item  
-        self.productionItems = {}   # 
+
+        # productionOrder provides the order for the elements in productionItems
+        # each order should point to a unique item
+        self.productionOrder = []     
+        self.productionItems = {} 
 
         self.entrybuildtype = ""
         self.entrybuildquantity = 0
@@ -157,7 +161,7 @@ class ProductionQ(object):
         the productionItem value can be missing.
         """
 
-        DEBUG = ProductionQ.DEBUG
+        DEBUG = ProductionQ.DEBUG_2
 
         colonyQOrders = colonyQ["productionOrder"]  # list
         colonyQItems = colonyQ["productionItems"]   # contents
@@ -169,7 +173,7 @@ class ProductionQ(object):
 
         # find items in productionQ not in the new ProductionQ orders
         tmpRemoveFromCurrentQ = set(self.productionOrder).difference(colonyQOrders)
-        if DEBUG: print("set:%s" % tmpRemoveFromCurrentQ)
+        if DEBUG: print("items to remove from productionQ set:%s" % tmpRemoveFromCurrentQ)
 
 
         # update the productionItems "quantity" = 0 for entries to remove -> because they do not exist in the new queue
@@ -178,6 +182,9 @@ class ProductionQ(object):
             self.setQuantityToZero(each)
 
         # New orders are added or update existing ProductionQ
+        # Note: if work has been done on an item in a colony's ProductionQ, then an additional entry
+        #       is added to the colonyQOrders. The next item in colonyQOrders should be this newly added itme
+        #       which should not have any work done and is added through the normal way.
         for eachIndex, each in enumerate(colonyQOrders):
             """
             Items-exist truth table
@@ -222,7 +229,7 @@ class ProductionQ(object):
                         continue
                     
                     else:
-                        # quantity < 1 & == 1 checked earlier. Value must be greater than 1                        
+                        # quantity < 1 and quantity == 1 checked earlier. Value must be greater than 1                        
                         targetItem["quantity"] -= 1 
                         
                         tmpNewEntry = {each : targetItem}
@@ -231,11 +238,12 @@ class ProductionQ(object):
                         #>> add a new entry to items, insert new Order immediately after the quantity 1 item
                         self.addToQueue(tmpNewEntry, tmpNewIndex)
                         
-                        if DEBUG: print("In the addToQueue area:\n%s" % (self.productionOrder))
+                        if DEBUG: print("addToQueueFromXFile.In the addToQueue area:\n%s" % (self.productionOrder))
 
-                        #  
+                        #  --TODO-- test that this works as expected.
                         tmpNewKey = self.productionOrder[tmpNewIndex]
                         
+                        if DEBUG: print("addToQueueFromXFile. eachIndex:%s  tmpNewKey:%s" % (eachIndex, tmpNewKey))
                         #----------- Add to ColonyQOrders-----------------------
                         #            Uses Items-exist (T|F)
                         #            Requires: Continue
@@ -259,7 +267,7 @@ class ProductionQ(object):
                     continue
                 """
                 # no action needed -> reorder handled in the productionOrder
-                if DEBUG: print("index%d- Order:%s # Items-exist (T|F)" % (eachIndex, each))
+                if DEBUG: print("addToQueueFromXFile # Items-exist (T|F). no action and not a problem index%d- Order:%s " % (eachIndex, each))
 
 
                 continue
@@ -268,17 +276,19 @@ class ProductionQ(object):
             elif each not in self.productionItems and each in colonyQItems:
                 
                 if ProductionQ.elementHasUnexpectedValue(colonyQItems[each]):
-                    #print("unexpected object - skipping")
+                    if DEBUG: print("addToQueueFromXFile # Items-exist (F|T).unexpected object - skipping")
                     continue
 
                 v = { each : colonyQItems[each] }
+                if DEBUG: print("v%s" % (v))
+
                 self.addToQueue(v)
             
             # Items-exist (F|F)
             else:
                 # take no action, should not have reached this spot
                 #raise ValueError()
-                ra = ("addToQueueFromXFile - reached area that should not be reached - Items-exist (F|F) case")
+                ra = ("addToQueueFromXFile tmpItem# Items-exist (F|F). - reached area that should not be reached")
                 raise ValueError(ra)
 
         self.productionOrder = colonyQOrders    # orders are potentially modifed due to work already done behavior
@@ -309,13 +319,16 @@ class ProductionQ(object):
             DEBUG = ProductionQ.DEBUG
 
             if len(entryDict) != 1:
-                raise ValueError("addToQueue requires entryDict to a dictionary with 1 key:value entry. %d detected" % len(entryDict))
+                raise ValueError("addToQueue. requires entryDict to a dictionary with 1 key:value entry. %d detected" % len(entryDict))
 
             entryKey, entryObj = entryDict.popitem()
 
+
+
             # --TODO-- find ItemType method
+            if DEBUG: print("addToQueue.entry: %s - %s " % (entryKey, entryObj))
 
-
+            # "materialsUsed" ca
             if "materialsUsed" in entryObj:
                 tmpMaterialsUsed = entryObj["materialsUsed"]
             else:
@@ -323,11 +336,12 @@ class ProductionQ(object):
             
             if "itemType" in entryObj:
                 tmpItemType = entryObj["itemType"]
-            # elif "productionID" in entryObj:
-            #     tmpItemType = entryObj["productionID"]
+            elif "productionID" in entryObj:
+                tmpItemType = entryObj["productionID"]
             else:
                 # for testing - should not be a valid value for normal play.
                 tmpItemType = "Default ItemType"    
+
 
 
 
@@ -341,18 +355,18 @@ class ProductionQ(object):
 
             tmpKey = self.obtainNewKey(entryKey)
 
-            if DEBUG: print("addToQueue at %s- %s:%s " % (insertOrder, tmpKey, tmpItem))
+            if DEBUG: print("addToQueue. at %s - %s:%s " % (insertOrder, tmpKey, tmpItem))
 
             if insertOrder is not None and insertOrder < len(self.productionOrder):
                 # if insertOrder >= len(self.productionOrder):
                 #     self.productionOrder.append(tmpKey)
                 # else:
-                print("at insert")
+                print("addToQueue.at insert")
                 self.productionOrder.insert(insertOrder, tmpKey)
 
 
             else:
-                print("at append")
+                print("addToQueue.at append")
                 self.productionOrder.append(tmpKey)
 
 
@@ -365,7 +379,7 @@ class ProductionQ(object):
             print("ProductionQ.addToQueue() is missing: %s" % ne )
 
         except ValueError as ve:
-            print("%s" % ve)
+            print("ProductionQ.addToQueue() %s" % ve)
 
 
     def obtainNewKey(self, kee):
@@ -1102,7 +1116,7 @@ class ProductionQ(object):
         #------------------------------------------------------------------------
 
 
-        while True:
+        while 1:
 
             tmpMid = (tmpMax + tmpMin) // 2
             tmpMaterials = [each * tmpMid for each in neededMaterials]

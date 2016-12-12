@@ -91,6 +91,10 @@ class TestProductionQ(object):
         self.colony2_object = self.player.colonies[self.colony2_name]
         
 
+       
+
+
+
         #--------- obtain HW -------------
         self.target_colony_name = None
         self.target_colony_obj = None
@@ -155,6 +159,14 @@ class TestProductionQ(object):
 
 
 
+        #--------- set productionID and typeID -------------
+
+        self.productionID_Defenses = "Defenses"
+        self.productionID_Mines = "Mines"
+        self.productionID_Factories = "Factories"
+        self.productionID_Minerals = "Minerals"
+
+
 
 
     def teardown_class():
@@ -183,11 +195,11 @@ class TestProductionQ(object):
                         "productionItems" : { 
                             "entryID1" : {
                                 "quantity": 5, 
-                                "productionID": "item1"
+                                "productionID": TestProductionQ.productionID_Mines
                                 }, 
                             "entryID2" : {
                                 "quantity": 5, 
-                                "productionID": "item1"} }
+                                "productionID": TestProductionQ.productionID_Factories} }
                     }
 
                 }
@@ -203,17 +215,17 @@ class TestProductionQ(object):
                             "entryID1" : 
                                 {
                                 "quantity": 5, 
-                                "productionID": "mines"
+                                "productionID": TestProductionQ.productionID_Mines
                                 }, 
                             "entryID2" : 
                                 {
                                 "quantity": 10, 
-                                "productionID": "factories"
+                                "productionID": TestProductionQ.productionID_Factories
                                 },
                             "entryID4" : 
                                 {
                                 "quantity": 455, 
-                                "productionID": "mines"
+                                "productionID": TestProductionQ.productionID_Mines
                                 }                 
                             }
                     }
@@ -515,9 +527,9 @@ EntryController Tests:
         """
         tmpQuantityA = 1
         tmpQuantityB = 5
-        tmpID = "item1"
+        tmpID = "Defenses"
 
-        tmpItemType = "Default ItemType" 
+        tmpItemType = "Defenses" 
 
         testQ1 = {"ProductionQ" : 
                 {
@@ -597,9 +609,9 @@ EntryController Tests:
         """
         tmpQuantityA = 150
         tmpQuantityB = 5
-        tmpID = "item1"
+        tmpID = "Factories"
 
-        tmpItemType = "Default ItemType" 
+        
 
         testQ1 = {"ProductionQ" : 
                 {
@@ -667,12 +679,12 @@ EntryController Tests:
 
 
 
-        print("entryController - test: itemType is using hardcoded values and requires update")
-        print("entryController - test: buildEntry is using hardcoded values and requires update")
+        # print("entryController - test: itemType is using hardcoded values and requires update")
+        # print("entryController - test: buildEntry is using hardcoded values and requires update")
 
         print("%s: %d pop; %d resources %s" % (colonyHW.colony.planet.name, colonyHW.colony.population, colonyHW.colony.totalResources, colonyHW.colony.planet.getSurfaceMinerals() ))
 
-        assert_equal(colonyHW.entrybuildtype, tmpItemType)
+        assert_equal(colonyHW.entrybuildtype, TestProductionQ.productionID_Factories)
         assert_equal(colonyHW.entrybuildquantity, tmpQuantityA)
 
         surfaceMineralsAfterProduction = colonyHW.colony.planet.getSurfaceMinerals()
@@ -695,11 +707,11 @@ EntryController Tests:
 
         tmpQuantityA = 1
         tmpQuantityB = 5
-        tmpID = "item1"
+        tmpID = "Defenses"
 
         entry1 = "entryID1"
 
-        tmpItemType = "Default ItemType" 
+        #tmpItemType = "Default ItemType" 
 
         testQ1 = {"ProductionQ" : 
                 {
@@ -769,12 +781,12 @@ EntryController Tests:
 
 
 
-        print("entryController - test: itemType is using hardcoded values and requires update")
-        print("entryController - test: buildEntry is using hardcoded values and requires update")
+        # print("entryController - test: itemType is using hardcoded values and requires update")
+        # print("entryController - test: buildEntry is using hardcoded values and requires update")
 
         print("%s: %d pop; %d resources %s" % (colonyHW.colony.planet.name, colonyHW.colony.population, colonyHW.colony.totalResources, colonyHW.colony.planet.getSurfaceMinerals() ))
 
-        assert_equal(colonyHW.entrybuildtype, tmpItemType)
+        assert_equal(colonyHW.entrybuildtype, TestProductionQ.productionID_Defenses)
         assert_equal(colonyHW.entrybuildquantity, tmpQuantityA)
 
         surfaceMineralsAfterProduction = colonyHW.colony.planet.getSurfaceMinerals()
@@ -796,11 +808,11 @@ EntryController Tests:
 
         tmpQuantityA = 2
         tmpQuantityB = 5
-        tmpID = "item1"
+        tmpID = "Factories"
 
         entry1 = "entryID1"
 
-        tmpItemType = "Default ItemType"
+        #tmpItemType = "Default ItemType"
 
         testQ1 = {"ProductionQ" : 
                 {
@@ -878,12 +890,12 @@ EntryController Tests:
 
 
 
-        print("entryController - test: itemType is using hardcoded values and requires update")
-        print("entryController - test: buildEntry is using hardcoded values and requires update")
+        # print("entryController - test: itemType is using hardcoded values and requires update")
+        # print("entryController - test: buildEntry is using hardcoded values and requires update")
 
         print("%s: %d pop; %d resources %s" % (colonyHW.colony.planet.name, colonyHW.colony.population, colonyHW.colony.totalResources, colonyHW.colony.planet.getSurfaceMinerals() ))
 
-        assert_equal(colonyHW.entrybuildtype, tmpItemType)
+        assert_equal(colonyHW.entrybuildtype, TestProductionQ.productionID_Factories)
         assert_equal(colonyHW.entrybuildquantity, expectedBuildQuantity)
 
         surfaceMineralsAfterProduction = colonyHW.colony.planet.getSurfaceMinerals()
@@ -919,11 +931,11 @@ EntryController Tests:
         """
         tmpQuantityA = 150
         tmpQuantityB = 5
-        tmpID = "item1"
+        tmpID = "Defenses"
 
         entry1 = "entryID1"
 
-        tmpItemType = "Default ItemType" 
+        # tmpItemType = "Default ItemType" 
 
         testQ1 = {"ProductionQ" : 
                 {
@@ -992,12 +1004,12 @@ EntryController Tests:
 
 
 
-        print("entryController - test: itemType is using hardcoded values and requires update")
-        print("entryController - test: buildEntry is using hardcoded values and requires update")
+        # print("entryController - test: itemType is using hardcoded values and requires update")
+        # print("entryController - test: buildEntry is using hardcoded values and requires update")
 
         print("%s: %d pop; %d resources %s" % (colonyHW.colony.planet.name, colonyHW.colony.population, colonyHW.colony.totalResources, colonyHW.colony.planet.getSurfaceMinerals() ))
 
-        assert_equal(colonyHW.entrybuildtype, tmpItemType)
+        assert_equal(colonyHW.entrybuildtype, TestProductionQ.productionID_Defenses)
         assert_equal(colonyHW.entrybuildquantity, expectedBuildQuantity)
 
         surfaceMineralsAfterProduction = colonyHW.colony.planet.getSurfaceMinerals()
