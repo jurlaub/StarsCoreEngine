@@ -699,8 +699,9 @@ class ProductionQ(object):
             # is entry an Autobuild type? 
             # add check for autobuild type   entryObj["itemType"]
             # if autobuildMinerals == True set the autobuildMinerals = True
+            targetItemType = self.productionItems[entryID]["itemType"]
 
-            targetItemCosts = self.targetItemCosts(entryID)
+            targetItemCosts = self.targetItemCosts(targetItemType)
 
             self.entryController(entryID, targetItemCosts)
 
@@ -730,7 +731,7 @@ class ProductionQ(object):
             # else:
             #     orderIndex == 0         # start at beginning
 
-    def targetItemCosts(self, productionID):
+    def targetItemCosts(self, itemType):
         """
         Input: entryID - (uses this to obtain the current costs from the productionList)
         Output: [material cost + resources] 
@@ -742,6 +743,23 @@ class ProductionQ(object):
         """
 
         return [0, 0, 0, 4]
+
+    def itemCostsDefenses(self):
+        pass
+
+    def itemCostsTerraform(self):
+        pass
+
+    def itemCostsScanner(self):
+        pass
+
+    def itemCostsFactories(self):
+        pass
+
+
+    def itemCostsMines(self):
+        return [0, 0, 0, 4]
+
 
     def splitEntryIntoTwo(self, entryID):
         """

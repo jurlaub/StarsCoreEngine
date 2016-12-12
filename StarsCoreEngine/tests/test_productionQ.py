@@ -30,6 +30,7 @@ from nose.tools import with_setup, assert_equal, assert_not_equal, \
 
 from ..starscoreengine.productionQ import *
 
+
 from ..starscoreengine.game import Game
 from ..starscoreengine.template import *
 from ..starscoreengine.player import Player
@@ -1147,7 +1148,8 @@ class TestProductionQ(object):
 
         # test the original state of mines
         minesOnHW = self.target_colony_obj.planet.mines
-        print("!!!!Mines: %d" % minesOnHW)
+        
+        print("TestProductionQ.test_producePlanetUpgrades_Mine_one() HARDCODED expects HW has 0 mines. Will need to change to be dynamic, current number of mines: %d" % minesOnHW)
         assert_true(self.target_colony_obj.planet.mines == 0)  # should not be any mines on HW
 
 
@@ -1166,6 +1168,7 @@ class TestProductionQ(object):
 
 
         # did the appropriate resources be removed?
+        print("TestProductionQ.test_producePlanetUpgrades_Mine_one() HARDCODED testItemCosts ")
         assert_equal(mineResourceCost, colonyHW.test_ResourcesConsumed)
 
 
@@ -1240,3 +1243,64 @@ class TestProductionQ(object):
     def test_targetItemCosts_Terraform(self):
         #build these tests
         assert_true(False)
+
+    def test_itemCosts_Mines(self):
+        player0 = TestProductionQ.player
+        expectedMineCosts = [0, 0, 0, player0.raceData.mineCost] # total cost for a mine
+
+        # assert_equal(player0.raceData.mineCost, 10)
+
+        # function in productionQ.py that calculates mine costs
+        mineCosts = self.target_colony_obj.productionQ.itemCostsMines()
+        assert_equal(mineCosts, expectedMineCosts)
+
+        
+    def test_itemCosts_Factory(self):
+        player0 = TestProductionQ.player
+
+        
+        germCost = 4 if not player0.raceData.factoryGermCost else 3  # germ cost for building a factory
+        expectedFactoryCosts = [0, 0, germCost, player0.raceData.factoryCost] # total cost for a factory
+
+        #fuction in productionQ.py that calculates factory costs
+        factoryCosts = self.target_colony_obj.productionQ.itemCostsFactories()
+
+        assert_equal(factoryCosts, expectedFactoryCosts)
+
+
+    def test_itemCosts_Defenses(self):
+        #account for PRT
+        techItem = TestProductionQ.techTree["SDI"]
+        # print("Defenses- iron: %d, bor: %d, germ: %d, resources:%d"%(techItem.iron, techItem.bor, techItem.germ, techItem.resources))
+        expectedDefensesCosts = [techItem.iron, techItem.bor, techItem.germ, techItem.resources]
+
+        itemCosts = self.target_colony_obj.productionQ.itemCostsDefenses()
+
+        assert_equal(expectedDefensesCosts, itemCosts)
+
+
+    def test_itemCosts_Terraform(self):
+        #account for LRT 
+        techItem = TestProductionQ.techTree["Gravity Terraform 7"]
+        itemIron = 0 if techItem.iron == None else techItem.iron
+        itemBor = 0 if techItem.bor == None else techItem.bor
+        itemGerm = 0 if techItem.germ == None else techItem.germ
+        expectedItemCosts = [itemIron, itemBor, itemGerm, techItem.resources]
+        # print("test_itemCosts_Terraform - expectedItemCosts: %s" % expectedItemCosts)
+
+        itemCosts = self.target_colony_obj.productionQ.itemCostsTerraform()
+        assert_equal(expectedItemCosts, itemCosts)
+
+
+    def test_itemCosts_Scanner(self):
+        #account for PRT
+        techItem = TestProductionQ.techTree["Viewer 50"]
+        expectedItemCosts = [techItem.iron, techItem.bor, techItem.germ, techItem.resources]
+
+        itemCosts = self.target_colony_obj.productionQ.itemCostsScanner()
+
+        assert_equal(expectedItemCosts, itemCosts)
+
+
+
+
