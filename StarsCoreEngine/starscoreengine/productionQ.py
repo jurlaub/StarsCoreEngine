@@ -700,8 +700,9 @@ class ProductionQ(object):
             # add check for autobuild type   entryObj["itemType"]
             # if autobuildMinerals == True set the autobuildMinerals = True
             targetItemType = self.productionItems[entryID]["itemType"]
+            targetProductionID = self.productionItems[entryID]["productionID"]
 
-            targetItemCosts = self.targetItemCosts(targetItemType)
+            targetItemCosts = self.targetItemCosts(targetItemType, targetProductionID)
 
             self.entryController(entryID, targetItemCosts)
 
@@ -731,35 +732,94 @@ class ProductionQ(object):
             # else:
             #     orderIndex == 0         # start at beginning
 
-    def targetItemCosts(self, itemType):
+    def targetItemCosts(self, itemType, productionID = None):
         """
-        Input: entryID - (uses this to obtain the current costs from the productionList)
+        Input:  itemType - everything that can be made has type
+                productionID - id unique to a design (uses this to obtain the current costs from the productionList)
         Output: [material cost + resources] 
 
         precondition: 
             targetItemCosts must be updated based on tech levels (ie Miniaturization)- if this is 
             not captured in the productionList then it should be captured 
 
-        """
+            itemType does not change from the HARDCODED value found in ProductionQ
+                ProductionQ.itemType = ('Ship', 'Starbase', 'Scanner', 'Defenses', 'Mines', \
+                 'Factories', 'Terraform', 'Minerals', 'Special')
 
-        return [0, 0, 0, 4]
+
+        --TODO--
+        Need to clarify the difference between itemType, productionID and ProductionQ entry
+        Ships & Starbases must have a respective itemType but a userdefined productionID.
+        (perhaps this is why the original had a max 16 ship designs, where productionID and ship design
+            entry were synomonous)
+
+
+        """
+        itemValue = None
+
+        if itemType == "Ship":
+            itemValue = self.itemCostsShip()
+            return itemValue
+        
+        elif itemType == "Starbase":
+            itemValue =  self.itemCostsStarbase()
+            return itemValue
+        
+        elif itemType == "Scanner":
+            itemValue =  self.itemCostsScanner()
+            return itemValue
+        
+        elif itemType == "Defenses":
+            itemValue =  self.itemCostsScanner()
+            return itemValue
+        
+        elif itemType == "Minerals":
+            itemValue =  self.itemCostsMinerals()
+            return itemValue
+        
+        elif itemType == "Factories":
+            itemValue =  self.itemCostsFactories()
+            return itemValue
+        
+        elif itemType == "Terraform":
+            itemValue =  self.itemCostsTerraform()
+            return itemValue
+        
+        elif itemType == "Mines":
+            itemValue =  self.itemCostsMines()
+            return itemValue
+        
+        else:
+            print("ProductionQ.targetItemCosts() returning None :: not an expected itemType: %s  " % (itemType))
+            return itemValue
+
+
 
     def itemCostsDefenses(self):
-        pass
+        return [0, 0, 5, 15]
 
     def itemCostsTerraform(self):
-        pass
+        return [0, 0, 4, 1400]
 
     def itemCostsScanner(self):
-        pass
+        return [0, 0, 30, 400]
 
     def itemCostsFactories(self):
-        pass
+        germCost = 4 if not self.raceData.factoryGermCost else 3 
+        return [0, 0, germCost, self.raceData.factoryCost]
 
 
     def itemCostsMines(self):
-        return [0, 0, 0, 4]
+        return [0, 0, 0, self.raceData.mineCost]
 
+    def itemCostsShip(self, itemID):
+        return [99,99,99,999]
+
+    def itemCostsStarbase(self):
+        return [999,999,999,9999]
+
+    def itemCostsMinerals(self):
+        return [20,20,20,20]
 
     def splitEntryIntoTwo(self, entryID):
         """

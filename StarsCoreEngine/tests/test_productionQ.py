@@ -1274,7 +1274,7 @@ class TestProductionQ(object):
 
         expectedItemCosts = [71, 48, 34, 338]
         
-        targetItem = self.target_colony_obj.productionQ.targetItemCosts(TestProductionQ.productionID_Ship)
+        targetItem = self.target_colony_obj.productionQ.targetItemCosts(TestProductionQ.productionID_Starbase)
 
         assert_equal(targetItem, expectedItemCosts)
 
