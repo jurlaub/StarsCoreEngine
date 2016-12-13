@@ -283,6 +283,64 @@ class TestPlayerDesign(object):
 
 
 
+    def test_raceData_TerraformCosts(self):
+
+        # player.raceData test terraformCosts
+        techItem = self.techTree["Gravity Terraform 7"]
+        itemIron = 0 if techItem.iron == None else techItem.iron
+        itemBor = 0 if techItem.bor == None else techItem.bor
+        itemGerm = 0 if techItem.germ == None else techItem.germ
+        expectedItemCosts = [itemIron, itemBor, itemGerm, techItem.resources]
+
+
+
+        assert_equal(expectedItemCosts, self.player1.raceData.terraformCosts)
+
+
+    def test_raceData_DefensesCosts(self):
+
+        # player.raceData test terraformCosts
+        techItem = self.techTree["SDI"]
+        itemIron = 0 if techItem.iron == None else techItem.iron
+        itemBor = 0 if techItem.bor == None else techItem.bor
+        itemGerm = 0 if techItem.germ == None else techItem.germ
+        expectedItemCosts = [itemIron, itemBor, itemGerm, techItem.resources]
+
+
+
+        assert_equal(expectedItemCosts, self.player1.raceData.defensesCosts)
+
+
+    def test_raceData_ScannerCosts(self):
+
+        # player.raceData test terraformCosts
+        techItem = self.techTree["Viewer 50"]
+        itemIron = 0 if techItem.iron == None else techItem.iron
+        itemBor = 0 if techItem.bor == None else techItem.bor
+        itemGerm = 0 if techItem.germ == None else techItem.germ
+        expectedItemCosts = [itemIron, itemBor, itemGerm, techItem.resources]
+
+
+
+        assert_equal(expectedItemCosts, self.player1.raceData.scannerCosts)
+
+    def test_raceData_MineralCosts(self):
+
+        # player.raceData test terraformCosts
+        # techItem = self.techTree["Viewer 50"]
+        # itemIron = 0 if techItem.iron == None else techItem.iron
+        # itemBor = 0 if techItem.bor == None else techItem.bor
+        # itemGerm = 0 if techItem.germ == None else techItem.germ
+        # expectedItemCosts = [itemIron, itemBor, itemGerm, techItem.resources]
+        print("TestPlayerDesign.test_raceData_MineralCosts HARDCODED MineralCosts")
+        expectedItemCosts = [0, 0, 0, 100]
+
+
+        assert_equal(expectedItemCosts, self.player1.raceData.mineralCosts)
+
+
+
+
 class Test_ShipDesign(object):
     """
     May need to be moved to test_tech.py
@@ -581,11 +639,6 @@ class Test_ShipDesign(object):
         assert_equal(ship.fuelGeneration, None)
         assert_equal(ship.cloaking, [0])
         assert_equal(ship.cargoCapacity, 0)
-
-
-
-
-
 
 
 

@@ -109,6 +109,9 @@ class ProductionQ(object):
         self.raceData = player.raceData
         self.designs = player.designs # point is to gather productionQ BuildList -- handled in a different 
 
+        # self.player = player  # player to provide costs for a number of itemTypes
+
+
         self.prodQueue = []
         self.ExcludedFromResearch = False
         self.customDefaultSettings = []
@@ -758,7 +761,7 @@ class ProductionQ(object):
         itemValue = None
 
         if itemType == "Ship":
-            itemValue = self.itemCostsShip()
+            itemValue = self.itemCostsShip(productionID)
             return itemValue
         
         elif itemType == "Starbase":
@@ -770,7 +773,7 @@ class ProductionQ(object):
             return itemValue
         
         elif itemType == "Defenses":
-            itemValue =  self.itemCostsScanner()
+            itemValue =  self.itemCostsDefenses()
             return itemValue
         
         elif itemType == "Minerals":
@@ -794,15 +797,15 @@ class ProductionQ(object):
             return itemValue
 
 
-
+    # uses Tech Tree values without race specific items.
     def itemCostsDefenses(self):
-        return [0, 0, 5, 15]
+        return self.raceData.defensesCosts
 
     def itemCostsTerraform(self):
-        return [0, 0, 4, 1400]
+        return self.raceData.terraformCosts
 
     def itemCostsScanner(self):
-        return [0, 0, 30, 400]
+        return self.raceData.scannerCosts
 
     def itemCostsFactories(self):
         germCost = 4 if not self.raceData.factoryGermCost else 3 
@@ -819,7 +822,7 @@ class ProductionQ(object):
         return [999,999,999,9999]
 
     def itemCostsMinerals(self):
-        return [20,20,20,20]
+        return self.raceData.mineralCosts
 
     def splitEntryIntoTwo(self, entryID):
         """
@@ -1039,6 +1042,8 @@ class ProductionQ(object):
         input: itemType & number to build
         output: calls the approprate produceN method with buildQuantity. 
 
+        --TODO-- use try block
+
         """
 
         self.entrybuildtype = entryType
@@ -1097,6 +1102,8 @@ class ProductionQ(object):
 
 
         return limitQuantity, limitMaterials
+
+
 
 
     @staticmethod
@@ -1258,6 +1265,11 @@ class ProductionQ(object):
         # all target supplies were found to be less then availableSupplies.
         #print("suppliesAreSufficient: True")
         return True
+
+
+    @staticmethod
+    def getCostsFromTechTree(techTree, techItem):
+        pass
 
 
     def partialProduction(self, entry):

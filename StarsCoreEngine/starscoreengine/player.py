@@ -113,6 +113,9 @@ class Player(object):
         self.battleOrders = {} 
         self.buildListObject = PlayerBuildList(self)
 
+        # self.playerSpecificBuildCosts = {}  # include: terriforming, factory, defenses etc
+        # self.raceData.
+
         """ turnOrders:
         when created    - should be sequentially numbered
                         - should be classifiable (where possible - should be possible in all cases)
@@ -441,6 +444,7 @@ class RaceData(RaceTraits):
         self.habRadCenter = 50
         self.habRadRadius = 13.0        # change to upper/lower bounds
 
+        self.terraformCosts = [0, 0, 0, 100]    # --TODO-- change to dynamic
 
         self.factoryProduce = 10    # 10 factories produce n resources a year
         self.factoryCost = 10       # a factory cost n resources to build
@@ -451,6 +455,11 @@ class RaceData(RaceTraits):
         self.mineCost = 10          # a mine costs n resources to build
         self.mineOperate = 10       #  10,000 colonist operate n mines
         
+        self.defensesCosts = [5, 5, 5, 15]  # --TODO-- change to dynamic
+        self.scannerCosts = [10, 10, 70, 100] # --TODO-- change to dynamic
+        self.mineralCosts = [0, 0, 0, 100] # --TODO-- change to dynamic
+
+
         # Research costs = (75% extra, standard amount, 50% less)
         self.techCostEner = 1 
         self.techCostWeap = 1 
@@ -460,6 +469,16 @@ class RaceData(RaceTraits):
         self.techCostBio = 1 
         
         self.techJumpStart = False # True = All 'Costs 75% extra' fields start at Tech 4
+
+
+    
+    # def setPlayerCosts(self, techTree):
+    #     """
+    #         Setting the player costs in RaceData class after player has been created.
+    #     """
+    #     pass
+
+
 
 
 
