@@ -166,6 +166,7 @@ class ProductionQ(object):
         """
 
         DEBUG = ProductionQ.DEBUG_2
+        self.test_ResourcesConsumed = 0  # set to 0 at the beginnin of the turn
 
         colonyQOrders = colonyQ["productionOrder"]  # list
         colonyQItems = colonyQ["productionItems"]   # contents
@@ -1048,6 +1049,16 @@ class ProductionQ(object):
 
         self.entrybuildtype = entryType
         self.entrybuildquantity = buildQuantity
+        print("ProductionQ.buildEntry: itemType:%s  quantity: %d" %(entryType, buildQuantity))
+
+        if entryType == "Mines":
+            self.produceMines(buildQuantity)
+        else:
+            print("ProductionQ.buildEntry: nothing to build")
+
+
+
+
 
     def consumeMaterials(self, consumeMaterials):
         """
@@ -1059,6 +1070,8 @@ class ProductionQ(object):
         tmpMinerals = consumeMaterials[:-1]
         tmpResources = consumeMaterials[-1]
 
+        print("ProductionQ.consumeMaterials: consumeMaterials: %s \ntmpMinerals: %s  tmpResources: %d" % (consumeMaterials, tmpMinerals, tmpResources))
+        
         self.test_ResourcesConsumed += tmpResources
         self.resources -= tmpResources
 
@@ -1349,6 +1362,14 @@ class ProductionQ(object):
 
         """
         pass
+
+    def produceMines(self, quantity):
+        """
+        produce Mines on a planet
+        """
+
+        self.colony.planet.mines += quantity
+
 
 
 

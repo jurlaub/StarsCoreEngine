@@ -255,6 +255,7 @@ def processProductionQ(xfile, playerObj):
             
             # if "productionItems" in obj:
             #     colonyQ.productionItems = obj["productionItems"]
+
             
             colonyQ.addToQueueFromXFile(obj)
 

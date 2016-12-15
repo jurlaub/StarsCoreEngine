@@ -255,6 +255,7 @@ class TestProductionQ(object):
         self.colony2_object.calcTotalResources(self.popEfficiency)
 
 
+
         # ---- set HW items
         self.target_colony_obj.planet.surfaceIron = self.surfaceMinerals1[0]
         self.target_colony_obj.planet.surfaceBor = self.surfaceMinerals1[1]
@@ -263,10 +264,16 @@ class TestProductionQ(object):
         self.target_colony_obj.population = self.population1
         self.target_colony_obj.calcTotalResources(self.popEfficiency)
 
+        
+
 
         # ----------  set / reset target_colony productionQ --------
         self.target_colony_obj.productionQ.productionOrder = []
         self.target_colony_obj.productionQ.productionItems = {}
+        #self.target_colony_obj.productionQ.test_ResourcesConsumed = 0
+
+
+
 
     def teardown(self):
         # print("TestProductionQ: Teardown")
@@ -278,7 +285,7 @@ class TestProductionQ(object):
         #         os.remove(tmpFileName)
         # except IOError as e:
         #     print("Unable to remove file: %s" % (tmpFileName))
-        pass
+        self.target_colony_obj.planet.mines = 0
 
     def test_PQ_suppliesAreSufficient(self):
         """ class test for ProductionQ.suppliesAreSufficient
@@ -1146,11 +1153,13 @@ class TestProductionQ(object):
                 }
             }
 
+
         mineResourceCost = int(self.player.raceData.mineCost)
         targetItemCosts = [0, 0, 0, mineResourceCost]
 
         colonyHW = self.target_colony_obj.productionQ
         assert_equal(len(colonyHW.productionItems), 0)
+        print("ProductionQ.test_ResourcesConsumed: %d" %  colonyHW.test_ResourcesConsumed)
 
         # test the original state of mines
         minesOnHW = self.target_colony_obj.planet.mines
@@ -1174,7 +1183,7 @@ class TestProductionQ(object):
 
 
         # did the appropriate resources be removed?
-        print("TestProductionQ.test_producePlanetUpgrades_Mine_one() HARDCODED testItemCosts ")
+
         assert_equal(mineResourceCost, colonyHW.test_ResourcesConsumed)
 
 

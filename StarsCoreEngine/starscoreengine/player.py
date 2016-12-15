@@ -452,7 +452,7 @@ class RaceData(RaceTraits):
         self.factoryGermCost = False # True = cost 1kt less of Germanium to build
 
         self.mineProduce = 10       # 10 mines produce n kt of each mineral a year
-        self.mineCost = 10          # a mine costs n resources to build
+        self.mineCost = 10         # a mine costs n resources to build
         self.mineOperate = 10       #  10,000 colonist operate n mines
         
         self.defensesCosts = [5, 5, 5, 15]  # --TODO-- change to dynamic
