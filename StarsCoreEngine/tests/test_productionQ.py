@@ -1380,4 +1380,20 @@ class TestProductionQ(object):
 
 
 
+    def test_raceData_MaxMines_100GreenWorld(self):
+        # Mine cap on a planet is a ratio of mines per 10,000 pop 
+        expectedColonyValue = 100
+        colonyValue = self.target_colony_obj.planetValue
+        assert_equal(expectedColonyValue, colonyValue)
+
+
+        maxMines = self.target_colony_obj.maxMinesOnColony()
+        #colonyPopulation = self.target_colony_obj.population
+        maxPopulation = 1000000
+        print("test_raceData_MaxMines_100GreenWorld: HARDCODED maxPopulation: %d" % maxPopulation)
+        minesOperatePer10000 = TestProductionQ.player.raceData.mineOperate
+        
+        calculatedMines = int((maxPopulation/10000) * minesOperatePer10000)
+        assert_equal(maxMines, calculatedMines)
+        
 

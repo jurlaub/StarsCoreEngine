@@ -238,4 +238,65 @@ class Colony(object):
         pass
 
 
+    def maxMinesOnColony(self):
+        """
+        Maximum possible mines that race can build on a Colony.
+        based on the maximum number of population that can fit at a given PlanetValue 
+
+
+        --TODO-- handle JOAT (120%) HE(50%) PRTs There should be a minimum and max threshold
+        """
+        ONE_HUNDRED = 100   # base value for planetValue ratio
+        TEN_THOUSAND = 10000
+        maxPopulation = 1000000     # --TODO-- change based on PRT
+
+
+
+        # update planetValue
+
+        if self.planetValue < 0:
+            return 50
+        
+        else:
+            maxSupportedPopulation = (self.planetValue / ONE_HUNDRED) * maxPopulation
+            maxMines = int((maxSupportedPopulation / TEN_THOUSAND) * self.mineOperate)
+            print("Colony.maxMinesOnColony: maxMines:%d " % maxMines)
+            
+            return maxMines
+
+
+
+
+
+    def maxUsableMinesOnColony(self):
+        """
+        of the mines on the planet, how many can be used?
+        This is a function of the planetValue and population
+        """
+        # what is the max population of the planet
+        ## 
+        maxMines = int((self.population / TEN_THOUSAND) * self.mineOperate)
+        planetMines = self.planet.mines
+        mineCeiling = self.maxMinesOnColony()
+
+        # compare max mines that the current population can support VS 
+        # number of mines built
+        compareList = [maxMines, planetMines] 
+        lowValue = min(compareList) # the lowest value is the one that is usable
+
+
+        if self.planetValue < 0:
+            print("Colony.maxUsableMinesOnColony: HARDCODED Needs updated, assumes 50 mines base")
+            
+            if lowValue > 50:
+                return 50    
+            else:
+                return lowValue 
+        
+        else:
+            
+            print("Colony.maxUsableMinesOnColony: lowest value between what the population could operate and what was built: " % lowValue)
+            
+            return lowValue
+
 
