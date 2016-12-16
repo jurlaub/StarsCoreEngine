@@ -1245,7 +1245,8 @@ class TestProductionQ(object):
         """
         entry1 = "entryID1"
         entryType1 = TestProductionQ.productionID_Mines
-        produceOne = 1
+        produceOne = 700
+        minesProducedInTest = 16 #expected number of mines produced due to resources available: 160 and mineCost: 10
 
         testQ1 = {"ProductionQ" : 
                 {
@@ -1285,13 +1286,14 @@ class TestProductionQ(object):
         colonyHW.productionController()
 
 
+
         # what was produced on the colony
-        assert_true(self.target_colony_obj.planet.mines == (minesOnHW + 1)) #only one additional mine should be built
+        assert_true(self.target_colony_obj.planet.mines == (minesOnHW + minesProducedInTest)) #only one additional mine should be built
 
 
         # did the appropriate resources be removed?
 
-        assert_equal(mineResourceCost, colonyHW.test_ResourcesConsumed)
+        assert_equal(mineResourceCost * minesProducedInTest, colonyHW.test_ResourcesConsumed)
 
     def test_producePlanetUpgrades_Mine_Max(self):
         """

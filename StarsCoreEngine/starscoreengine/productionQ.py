@@ -537,7 +537,12 @@ class ProductionQ(object):
     def updateProductionQResources(self):
         """
         input: none (uses self values)
-        output: updates productionQ.resources value.
+        output: calls colony.calcTotalResources() method to update the colony resources
+                updates productionQ.resources value
+
+        precondition: colony.calcTotalResources must be available to revise resources for colony
+
+        called from ProductionQ.productionController
 
         """
         # colony updates resource calculations
@@ -557,6 +562,7 @@ class ProductionQ(object):
         1) It identifies the amount of resources that can be used for production 
         (Calling the self equivalent of Research.colonyResearchTax(colony) method to obtain the # 
         of resources available )
+        >> 20161216 ju - Calls updateProductionQResources()
         
         2)  
 

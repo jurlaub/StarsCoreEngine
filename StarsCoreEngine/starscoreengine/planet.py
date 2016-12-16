@@ -175,18 +175,18 @@ class Colony(object):
 
 
             #obtain resources from partially employed
-            self.totalResources += partiallyEmployed / (popEfficiency / 2.)
+            self.totalResources += int(partiallyEmployed / (popEfficiency / 2.))
             if DEBUG_2: print("Colony.calcTotalResources - employedMax:%d  partiallyEmployed: %d included in totalResources:%d" %(employedMax, partiallyEmployed, self.totalResources))
         
 
         # ------------------- normal population calculations -------------- 
-        self.totalResources += self.population / popEfficiency
+        self.totalResources += int(self.population / popEfficiency)
         if DEBUG_2: print("Colony.calcTotalResources - population: %d efficiency: %d  with calculated totalResources:%d" %(self.population, popEfficiency, self.totalResources))
 
 
         # ------------------- factory calculations -------------- 
         TEN = 10 # factoryProduce is based on TEN factories producing factoryProduce resources.
-        self.totalResources += (self.operatingFactories() / TEN) * self.factoryProduce
+        self.totalResources += int((self.operatingFactories() / TEN) * self.factoryProduce)
 
 
         if DEBUG_2: print("Colony.calcTotalResources - factories: %d efficiency: %d  with (pop + factory) totalResources:%d" %(self.planet.factories, self.factoryProduce, self.totalResources))
