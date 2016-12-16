@@ -25,6 +25,9 @@ from .space_objects import SpaceObjects
 import random
 
 
+DEBUG_1 = True
+DEBUG_2 = False
+
 class Planet(SpaceObjects):
     """ 
         Planet is the template that provides all the data available for a planet. 
@@ -136,9 +139,9 @@ class Colony(object):
         self.mineProduce = raceData.mineProduce
         self.mineOperate = raceData.mineOperate
          
-        self.factoryProduce = raceData.factoryProduce
+        self.factoryProduce = raceData.factoryProduce   # 10 factories produce n resources a year
         self.factorOperate  = raceData.factoryOperate
-        self.totalResources = 0
+        self.totalResources = 0     # used indirectly
         self.resourceTax = False        # DEPRECIATE - should be handled in productionQ  
         self.planetValue = 100    # 100 = 100% Value = calculated from currHab 
         self.planetMaxPopulation = 1000000  # based on PlanetValue & PRT # HE is .5; JOAT is 1.20
@@ -150,16 +153,46 @@ class Colony(object):
            Pop above 300% enjoy a life of leisure and don't work
         """
         #popEfficiency = self.raceData.popEfficiency
+        
+        self.totalResources = 0  # set to zero for recalculation
+        partiallyEmployed = 0
 
-        if self.population <= self.planetMaxPopulation:
-            self.totalResources = self.population / popEfficiency
-        elif self.population <= 3 * self.planetMaxPopulation:
-            self.totalResources = self.planetMaxPopulation / popEfficiency
-            self.totalResources += (self.population - self.planetMaxPopulation) / (popEfficiency / 2.)
-        else:
-            self.totalResources = self.planetMaxPopulation * 2 / popEfficiency
 
-        self.totalResources += self.operatingFactories() * self.factoryProduce
+
+        # ------------------- overpopulation calculations -------------- 
+        if self.population > self.planetMaxPopulation:
+
+            # find the 300% of population cap
+            employedMax = 3 * self.planetMaxPopulation  
+            
+            # cap employment at 300% of planetMaxPopulation
+            if self.population > employedMax:
+                partiallyEmployed = employedMax - self.planetMaxPopulation  # the 100% - 300%
+            
+            # if under 300% 
+            else:
+                partiallyEmployed = self.population - self.planetMaxPopulation
+
+
+            #obtain resources from partially employed
+            self.totalResources += partiallyEmployed / (popEfficiency / 2.)
+            if DEBUG_2: print("Colony.calcTotalResources - employedMax:%d  partiallyEmployed: %d included in totalResources:%d" %(employedMax, partiallyEmployed, self.totalResources))
+        
+
+        # ------------------- normal population calculations -------------- 
+        self.totalResources += self.population / popEfficiency
+        if DEBUG_2: print("Colony.calcTotalResources - population: %d efficiency: %d  with calculated totalResources:%d" %(self.population, popEfficiency, self.totalResources))
+
+
+        # ------------------- factory calculations -------------- 
+        TEN = 10 # factoryProduce is based on TEN factories producing factoryProduce resources.
+        self.totalResources += (self.operatingFactories() / TEN) * self.factoryProduce
+
+
+        if DEBUG_2: print("Colony.calcTotalResources - factories: %d efficiency: %d  with (pop + factory) totalResources:%d" %(self.planet.factories, self.factoryProduce, self.totalResources))
+
+
+
 
     def operatingFactories(self):
         '''

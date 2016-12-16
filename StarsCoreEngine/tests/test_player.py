@@ -341,6 +341,8 @@ class TestPlayerDesign(object):
 
 
 
+
+
 class Test_ShipDesign(object):
     """
     May need to be moved to test_tech.py

@@ -286,6 +286,8 @@ class TestProductionQ(object):
         # except IOError as e:
         #     print("Unable to remove file: %s" % (tmpFileName))
         self.target_colony_obj.planet.mines = 0
+        self.target_colony_obj.planet.factories = 10
+
 
     def test_PQ_suppliesAreSufficient(self):
         """ class test for ProductionQ.suppliesAreSufficient
@@ -1188,16 +1190,108 @@ class TestProductionQ(object):
 
 
 
-
-
-    def test_entryController_produce_Mine_Max(self):
+    def test_producePlanetUpgrades_Factory_one(self):
         """
-        Only the max planetary mines should be produced. Max = maximum mines that a 
-        player can place on a planet.
+        test_producePlanetUpgrades_Factory_one should be prompted to produce 1 factory on the 
+        appropriate colony. 
+        """
+        entry1 = "entryID1"
+        entryType1 = TestProductionQ.productionID_Factories
+        produceOne = 1
+
+        testQ1 = {"ProductionQ" : 
+                {
+                self.target_colony_name:
+                    {
+                        "productionOrder" : [ entry1 ],
+                        "productionItems" : { entry1 : {"quantity": produceOne, "productionID": entryType1 }                                             
+                                            }
+
+                    }
+
+                }
+            }
+
+        itemResourceCosts = int(self.player.raceData.factoryCost)
+        germCosts = 4 if not self.player.raceData.factoryGermCost else 3 
+        targetItemCosts = [0, 0, germCosts, itemResourceCosts]
+
+        colonyHW = self.target_colony_obj.productionQ
+        assert_equal(len(colonyHW.productionItems), 0)
+
+        print("ProductionQ.test_ResourcesConsumed: %d" %  colonyHW.test_ResourcesConsumed)
+
+        itemsOnHW = self.target_colony_obj.planet.factories
+        print("factories on planet: %d" % (itemsOnHW))
+        assert_true(self.target_colony_obj.planet.factories == 10) 
+
+        processProductionQ(testQ1, self.player)
+
+        assert_equal(len(colonyHW.productionOrder), 1)
+        assert_equal(len(colonyHW.productionItems), 1)
+
+        colonyHW.productionController()
+
+        assert_true(self.target_colony_obj.planet.factories == (itemsOnHW + 1))
+
+        assert_equal(itemResourceCosts, colonyHW.test_ResourcesConsumed)
+
+
+    def test_produce_Mine_Max_Per_Turn(self):
+        """
+        the most mines that can be produced should be limited by resources. 
+        (another function should test for planetary max)
 
         """
-        #assert_true(False)
-        pass
+        entry1 = "entryID1"
+        entryType1 = TestProductionQ.productionID_Mines
+        produceOne = 1
+
+        testQ1 = {"ProductionQ" : 
+                {
+                self.target_colony_name:
+                    {
+                        "productionOrder" : [ entry1 ],
+                        "productionItems" : { entry1 : {"quantity": produceOne, "productionID": entryType1 }                                             
+                                            }
+
+                    }
+
+                }
+            }
+
+
+        mineResourceCost = int(self.player.raceData.mineCost)
+        targetItemCosts = [0, 0, 0, mineResourceCost]
+
+        colonyHW = self.target_colony_obj.productionQ
+        assert_equal(len(colonyHW.productionItems), 0)
+        print("ProductionQ.test_ResourcesConsumed: %d" %  colonyHW.test_ResourcesConsumed)
+
+        # test the original state of mines
+        minesOnHW = self.target_colony_obj.planet.mines
+        
+        print("TestProductionQ.test_producePlanetUpgrades_Mine_one() HARDCODED expects HW has 0 mines. Will need to change to be dynamic, current number of mines: %d" % minesOnHW)
+        assert_true(self.target_colony_obj.planet.mines == 0)  # should not be any mines on HW
+
+
+        processProductionQ(testQ1, self.player)
+
+        assert_equal(len(colonyHW.productionOrder), 1)
+        assert_equal(len(colonyHW.productionItems), 1)
+
+
+        # colony has produced items in productionQ
+        colonyHW.productionController()
+
+
+        # what was produced on the colony
+        assert_true(self.target_colony_obj.planet.mines == (minesOnHW + 1)) #only one additional mine should be built
+
+
+        # did the appropriate resources be removed?
+
+        assert_equal(mineResourceCost, colonyHW.test_ResourcesConsumed)
 
     def test_producePlanetUpgrades_Mine_Max(self):
         """

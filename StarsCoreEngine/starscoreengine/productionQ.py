@@ -204,6 +204,10 @@ class ProductionQ(object):
             F | F  == no action - error case. Entry should not be in either productionOrder or productionItems        
 
             """
+
+            # --TODO-- call check quantity method here --> has the ceiling been reached
+
+
             # Items-exist (T|T)
             if each in self.productionItems and each in colonyQItems:
                 # update Queue
@@ -536,6 +540,10 @@ class ProductionQ(object):
         output: updates productionQ.resources value.
 
         """
+        # colony updates resource calculations
+        self.colony.calcTotalResources(self.raceData.popEfficiency)
+
+
         # obtain from colony the number of resources for production (Note: minus research tax)
         if self.ExcludedFromResearch:
             self.resources  = self.colony.totalResources
@@ -1053,6 +1061,9 @@ class ProductionQ(object):
 
         if entryType == "Mines":
             self.produceMines(buildQuantity)
+        elif entryType == "Factories":
+            self.produceFactories(buildQuantity)
+
         else:
             print("ProductionQ.buildEntry: nothing to build")
 
@@ -1070,10 +1081,11 @@ class ProductionQ(object):
         tmpMinerals = consumeMaterials[:-1]
         tmpResources = consumeMaterials[-1]
 
-        print("ProductionQ.consumeMaterials: consumeMaterials: %s \ntmpMinerals: %s  tmpResources: %d" % (consumeMaterials, tmpMinerals, tmpResources))
+        print("ProductionQ.consumeMaterials: consumeMaterials: %s \ntmpMinerals: %s  tmpResources: %d  test_ResourcesConsumed: %d" % (consumeMaterials, tmpMinerals, tmpResources, self.test_ResourcesConsumed))
         
         self.test_ResourcesConsumed += tmpResources
         self.resources -= tmpResources
+        print("test_ResourcesConsumed: %d" % (self.test_ResourcesConsumed))
 
         self.colony.planet.removeSurfaceMinerals(tmpMinerals)
 
@@ -1372,6 +1384,12 @@ class ProductionQ(object):
 
 
 
+    def produceFactories(self, quantity):
+        """
+
+        """
+
+        self.colony.planet.factories += quantity
 
 
 
