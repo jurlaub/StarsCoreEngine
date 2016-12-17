@@ -85,6 +85,8 @@ Multiple types of entries:
 
 """
 
+DEBUG = True
+DEBUG_2 = True
 
 class ProductionQ(object):
     """ ProductionQ
@@ -92,8 +94,7 @@ class ProductionQ(object):
 
 
     """
-    DEBUG = True
-    DEBUG_2 = True
+
 
     itemType = ('Ship', 'Starbase', 'Scanner', 'Defenses', 'Mines', \
                  'Factories', 'Terraform', 'Minerals', 'Special')
@@ -165,7 +166,7 @@ class ProductionQ(object):
         the productionItem value can be missing.
         """
 
-        DEBUG = ProductionQ.DEBUG_2
+        
         self.test_ResourcesConsumed = 0  # set to 0 at the beginnin of the turn
 
         colonyQOrders = colonyQ["productionOrder"]  # list
@@ -173,17 +174,17 @@ class ProductionQ(object):
 
         colonyQOrders_QAdditions = []
 
-        if DEBUG: print("NewOrders:\n%s\n%s" % (colonyQOrders,colonyQItems))
-        if DEBUG: print("ExistinOrders:\n%s\n%s" % (self.productionOrder, self.productionItems))
+        if DEBUG_2: print("NewOrders:\n%s\n%s" % (colonyQOrders,colonyQItems))
+        if DEBUG_2: print("ExistinOrders:\n%s\n%s" % (self.productionOrder, self.productionItems))
 
         # find items in productionQ not in the new ProductionQ orders
         tmpRemoveFromCurrentQ = set(self.productionOrder).difference(colonyQOrders)
-        if DEBUG: print("items to remove from productionQ set:%s" % tmpRemoveFromCurrentQ)
+        if DEBUG_2: print("items to remove from productionQ set:%s" % tmpRemoveFromCurrentQ)
 
 
         # update the productionItems "quantity" = 0 for entries to remove -> because they do not exist in the new queue
         for each in tmpRemoveFromCurrentQ:
-            if DEBUG: print("%s set to Zero" % each)
+            if DEBUG_2: print("%s set to Zero" % each)
             self.setQuantityToZero(each)
 
         # New orders are added or update existing ProductionQ
@@ -247,12 +248,12 @@ class ProductionQ(object):
                         #>> add a new entry to items, insert new Order immediately after the quantity 1 item
                         self.addToQueue(tmpNewEntry, tmpNewIndex)
                         
-                        if DEBUG: print("addToQueueFromXFile.In the addToQueue area:\n%s" % (self.productionOrder))
+                        if DEBUG_2: print("addToQueueFromXFile.In the addToQueue area:\n%s" % (self.productionOrder))
 
                         #  --TODO-- test that this works as expected.
                         tmpNewKey = self.productionOrder[tmpNewIndex]
                         
-                        if DEBUG: print("addToQueueFromXFile. eachIndex:%s  tmpNewKey:%s" % (eachIndex, tmpNewKey))
+                        if DEBUG_2: print("addToQueueFromXFile. eachIndex:%s  tmpNewKey:%s" % (eachIndex, tmpNewKey))
                         #----------- Add to ColonyQOrders-----------------------
                         #            Uses Items-exist (T|F)
                         #            Requires: Continue
@@ -276,7 +277,7 @@ class ProductionQ(object):
                     continue
                 """
                 # no action needed -> reorder handled in the productionOrder
-                if DEBUG: print("addToQueueFromXFile # Items-exist (T|F). no action and not a problem index%d- Order:%s " % (eachIndex, each))
+                if DEBUG_2: print("addToQueueFromXFile # Items-exist (T|F). no action and not a problem index%d- Order:%s " % (eachIndex, each))
 
 
                 continue
@@ -285,11 +286,11 @@ class ProductionQ(object):
             elif each not in self.productionItems and each in colonyQItems:
                 
                 if ProductionQ.elementHasUnexpectedValue(colonyQItems[each]):
-                    if DEBUG: print("addToQueueFromXFile # Items-exist (F|T).unexpected object - skipping")
+                    if DEBUG_2: print("addToQueueFromXFile # Items-exist (F|T).unexpected object - skipping")
                     continue
 
                 v = { each : colonyQItems[each] }
-                if DEBUG: print("v%s" % (v))
+                if DEBUG_2: print("v%s" % (v))
 
                 self.addToQueue(v)
             
@@ -325,7 +326,7 @@ class ProductionQ(object):
 
         """
         try:
-            DEBUG = ProductionQ.DEBUG
+            
 
             if len(entryDict) != 1:
                 raise ValueError("addToQueue. requires entryDict to a dictionary with 1 key:value entry. %d detected" % len(entryDict))
@@ -502,7 +503,7 @@ class ProductionQ(object):
         productionOrder entry and productionItem entry should be removed.
 
         """
-        DEBUG = ProductionQ.DEBUG
+        
 
         itemsToBeDeleted = []
         ordersToBeDeleted = []
@@ -657,6 +658,8 @@ class ProductionQ(object):
 
         """
 
+        DEBUG_3 = True
+
         autobuildMinerals = False       # for minerals if needed.
 
         #res = 0
@@ -677,14 +680,21 @@ class ProductionQ(object):
         # All orders "finishedForThisTurn" == False
         # ---------------------------------------------------------
 
+
+
         while True:
 
+
             orderLength = len(self.productionOrder)
+            if DEBUG_3: print("ProductionQ.productionController - start of loop. orderIndex:%d  / orderLength: %d)" % (orderIndex, orderLength))
             
             if self.resources < 1:  # resources left
+                if DEBUG_3: print("ProductionQ.productionController - resources: %d" % self.resources)
                 break
             
             elif orderIndex >= orderLength:  # reached empty or end of order
+                if DEBUG_3: print("ProductionQ.productionController - orderIndex: %d" % orderIndex)
+
                 break
 
             
@@ -692,10 +702,12 @@ class ProductionQ(object):
             entryObj = self.productionItems[entryID]
 
             if entryObj["finishedForThisTurn"]: # T/F based on Entry.
+                if DEBUG_3: print("ProductionQ.productionController - finishedForThisTurn orderIndex: %d" % orderIndex)
                 orderIndex += 1
                 continue
             
             elif entryObj["quantity"] == 0:
+                if DEBUG_3: print("ProductionQ.productionController - finishedForThisTurn orderIndex: %d" % orderIndex)
                 entryObj["finishedForThisTurn"] = True
                 orderIndex += 1
                 continue
@@ -705,9 +717,12 @@ class ProductionQ(object):
 
             if entryObj["quantity"] > 1 and ProductionQ.workHasBeenDone(entryObj):
                 
+                if DEBUG_3: print("productionController quantity > 1 and work has been done. orderIndex:%d" % orderIndex)
+
                 entryObj["finishedForThisTurn"] = True
                 orderIndex = 0      # restart at beginning as a quantity 1 entry will be made by splitEntryIntoTwo()
 
+                
                 self.splitEntryIntoTwo(entryID)
 
                 continue
@@ -864,10 +879,13 @@ class ProductionQ(object):
         {kee: {quantity, productionID}}
 
         """
+        DEBUG_3 = DEBUG_2
+
         currentEntry = self.productionItems[entryID]
         #print("splitEntryIntoTwo:: %s: (q:%d): %s "% (entryID, self.productionItems[entryID]["quantity"], self.productionItems[entryID]["materialsUsed"] ))
 
         if currentEntry["quantity"] <= 1:
+            if DEBUG_3: print("ProductionQ.splitEntryIntoTwo - currentEntry[quantity] <= 1")
             return
 
         tmpEntryProductionID = currentEntry["productionID"]
@@ -889,8 +907,13 @@ class ProductionQ(object):
 
         #print("splitEntryIntoTwo:: %s: (q:%d): %s "% (entryID, self.productionItems[entryID]["quantity"], self.productionItems[entryID]["materialsUsed"] ))
 
+        if DEBUG_3: print("ProductionQ.splitEntryIntoTwo - tmpEntry: %s" % tmpEntry)
 
         self.addToQueue(tmpEntry, 0)
+
+        if DEBUG_3: print("ProductionQ.splitEntryIntoTwo - addedToQueue productionItems: %d  productionOrder: %d" % (len(self.productionItems), len(self.productionOrder)))
+
+
 
     def entryController(self, entryID, targetItemCosts, autobuildMinerals = False):
         """
@@ -904,7 +927,9 @@ class ProductionQ(object):
         Iterative -> solution for entry -> how many can be completed
             Input: entry, target materials & resources, 
             Output: produced items
-                update productionList and productionQ
+                    update productionList and productionQ
+                    returns True if built something
+                    returns False if a partial build
 
         Precondition: 
                     
@@ -956,7 +981,8 @@ class ProductionQ(object):
 
         """
 
-        DEBUG = ProductionQ.DEBUG_2
+        DEBUG_3 = True
+    
 
         entryObj = self.productionItems[entryID]
         entryQuantity = entryObj["quantity"]
@@ -970,7 +996,7 @@ class ProductionQ(object):
 
         # --TODO-- have I reached any maximum? (that would stop work on this entry)
 
-        if DEBUG: print("entryController: targetItemCosts %s " % (targetItemCosts))
+        if DEBUG_3: print("entryController: entryID: %s targetItemCosts %s " % (entryID, targetItemCosts))
 
         """
         # ------------ check whether work has been done -------
@@ -996,13 +1022,13 @@ class ProductionQ(object):
 
             # check - if miniturization reduces the remaining costs so that nothing more is needed. 
             #   a way to handle this border case is needed. (limit will return zero)
-            if DEBUG: print("entryController: payload sent to buildLimit: %d : %s " % (quantityONE, tmpTargetCosts))
+            if DEBUG_3: print("entryController: completing a partially worked on item - payload sent to buildLimit: %d : %s " % (quantityONE, tmpTargetCosts))
             buildQuantity, buildMaterials = self.buildLimit(quantityONE, tmpTargetCosts)    
 
 
         else:
 
-            if DEBUG: print("entryController: payload sent to buildLimit: %d : %s " % (entryQuantity, targetItemCosts))
+            if DEBUG_3: print("entryController: payload sent to buildLimit: %d : %s " % (entryQuantity, targetItemCosts))
             buildQuantity, buildMaterials = self.buildLimit(entryQuantity, targetItemCosts)
 
 
@@ -1027,7 +1053,9 @@ class ProductionQ(object):
 
             elif entryObj["quantity"] < 0:
                 raise ValueError("ProductionQ.entryController: after buiding %d %s; entry 'quantity' is %d" % (buildQuanity,entryObj["productionID"], entryObj["quantity"] ))
-            return
+            
+
+            return  
 
         elif buildQuantity == 0:
             # self.buildLimit() will return a proportional amount of materialsUsed.
@@ -1041,14 +1069,16 @@ class ProductionQ(object):
             # cannot do any more with this entry this turn
             entryObj["finishedForThisTurn"] = True
             
-            return
+            return 
         
         else:  # if a negative value should be an error condition
             
             #entryObj["finishedForThisTurn"] = True
             print("ProductionQ.entryController(Error): buildQuantity is negative")
             
-            return
+            return 
+
+
 
     def buildEntry(self, entryType, buildQuantity):
         """
@@ -1114,14 +1144,14 @@ class ProductionQ(object):
                         ProductionQ.resources have been updated (in productionController)
 
         """
-        DEBUG = ProductionQ.DEBUG_2
+        
 
         availableSupplies = [self.colony.planet.surfaceIron,
                             self.colony.planet.surfaceBor,
                             self.colony.planet.surfaceGerm,
                             self.resources]
 
-        if DEBUG: print("buildLimit: targetMaterials(%s) :: availableSupplies(%s) " % (targetMaterials, availableSupplies))
+        if DEBUG_2: print("buildLimit: targetMaterials(%s) :: availableSupplies(%s) " % (targetMaterials, availableSupplies))
 
         limitQuantity, limitMaterials = ProductionQ.limit(quantity, targetMaterials, availableSupplies)
 
@@ -1129,7 +1159,7 @@ class ProductionQ(object):
         if limitQuantity == 0:
             limitMaterials = ProductionQ.proportionalRemainder(targetMaterials, availableSupplies)
 
-        if DEBUG: print("buildLimit: Quantity(%d) & Materials(%s) " % (limitQuantity, str(limitMaterials)))
+        if DEBUG_2: print("buildLimit: Quantity(%d) & Materials(%s) " % (limitQuantity, str(limitMaterials)))
 
 
         return limitQuantity, limitMaterials
@@ -1208,7 +1238,7 @@ class ProductionQ(object):
         note: limit is decoupled from buildLimit for testing purposes.
         """
 
-        DEBUG = ProductionQ.DEBUG
+        
         ZERO = 0
 
         if DEBUG: print("----testing productionQ limit -----\n%d:%s availableSupplies:(%s)" %(quantity, str(neededMaterials), str(availableSupplies)))

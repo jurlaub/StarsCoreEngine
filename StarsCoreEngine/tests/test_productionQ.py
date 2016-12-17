@@ -1295,6 +1295,195 @@ class TestProductionQ(object):
 
         assert_equal(mineResourceCost * minesProducedInTest, colonyHW.test_ResourcesConsumed)
 
+
+    def test_produce_Factory_MaxResourcesBasedOnPopulation(self):
+        """
+        the most factories that can be produced should be limited by resources.
+        test max factories that can be produced with current population 
+        (another function should test for planetary max)
+
+        """
+        entry1 = "entryID1"
+        entryType1 = TestProductionQ.productionID_Factories
+        produceOne = 700
+        itemsProducedInTest = 16 #expected number of mines produced due to resources available: 160 and mineCost: 10
+
+        testQ1 = {"ProductionQ" : 
+                {
+                self.target_colony_name:
+                    {
+                        "productionOrder" : [ entry1 ],
+                        "productionItems" : { entry1 : {"quantity": produceOne, "productionID": entryType1 }                                             
+                                            }
+
+                    }
+
+                }
+            }
+
+
+        itemResourceCosts = int(self.player.raceData.factoryCost)
+        germCosts = 4 if not self.player.raceData.factoryGermCost else 3 
+        targetItemCosts = [0, 0, germCosts, itemResourceCosts]
+
+        colonyHW = self.target_colony_obj.productionQ
+
+        itemsOnHW = self.target_colony_obj.planet.factories
+        print("factories on planet: %d" % (itemsOnHW))
+        assert_true(self.target_colony_obj.planet.factories == 10) 
+
+        
+        self.target_colony_obj.planet.surfaceGerm += (germCosts * itemsProducedInTest)
+        germOnHW = self.target_colony_obj.planet.surfaceGerm
+
+
+        processProductionQ(testQ1, self.player)
+
+        # assert_equal(len(colonyHW.productionOrder), 1)
+        # assert_equal(len(colonyHW.productionItems), 1)
+
+        colonyHW.productionController()
+
+        assert_true(self.target_colony_obj.planet.factories == (itemsOnHW + itemsProducedInTest))
+
+        assert_equal(itemResourceCosts * itemsProducedInTest, colonyHW.test_ResourcesConsumed)
+
+        germUsed = germCosts * itemsProducedInTest
+
+        assert_equal(germUsed, germOnHW - self.target_colony_obj.planet.surfaceGerm)
+
+    def test_produce_Factory_PartialCompletionWithParialWork(self):
+        """
+        produce limited factories and then have a partial completed item in queue
+
+        """
+        entry1 = "entryID1"
+        entryType1 = TestProductionQ.productionID_Factories
+        produceOne = 700
+        itemsProducedInTest = 7 #expected number of mines produced due to resources available: 160 and mineCost: 10
+
+        testQ1 = {"ProductionQ" : 
+                {
+                self.target_colony_name:
+                    {
+                        "productionOrder" : [ entry1 ],
+                        "productionItems" : { entry1 : {"quantity": produceOne, "productionID": entryType1 }                                             
+                                            }
+
+                    }
+
+                }
+            }
+
+
+        itemResourceCosts = int(self.player.raceData.factoryCost)
+        germCosts = 4 if not self.player.raceData.factoryGermCost else 3 
+        targetItemCosts = [0, 0, germCosts, itemResourceCosts]
+
+        colonyHW = self.target_colony_obj.productionQ
+
+        itemsOnHW = self.target_colony_obj.planet.factories
+        print("factories on planet: %d" % (itemsOnHW))
+        assert_true(self.target_colony_obj.planet.factories == 10) 
+
+        
+        germOnHW = self.target_colony_obj.planet.surfaceGerm
+
+
+        processProductionQ(testQ1, self.player)
+
+        assert_equal(len(colonyHW.productionOrder), 1)
+        assert_equal(len(colonyHW.productionItems), 1)
+
+        colonyHW.productionController()
+
+        assert_equal(len(colonyHW.productionOrder), 1)
+        assert_equal(len(colonyHW.productionItems), 1)
+
+        materialsUsed = colonyHW.productionItems[entry1]["materialsUsed"] 
+        resourcesPartiallyUsed = materialsUsed[3]
+        germPartiallyUsed = materialsUsed[2]
+
+        assert_true(self.target_colony_obj.planet.factories == (itemsOnHW + itemsProducedInTest))
+
+        assert_equal((itemResourceCosts * itemsProducedInTest) + resourcesPartiallyUsed, colonyHW.test_ResourcesConsumed)
+
+        germUsed = germCosts * itemsProducedInTest
+
+        assert_equal(germUsed + germPartiallyUsed, germOnHW - self.target_colony_obj.planet.surfaceGerm)
+
+
+    def test_produce_Factory_PartialWorkDoneCompletedTheSecondTime(self):
+        """
+        produce limited factories and then have a partial completed item in queue
+
+        """
+        entry1 = "entryID1"
+        entryType1 = TestProductionQ.productionID_Factories
+        produceOne = 700
+        itemsProducedInTest = 7 #expected number of mines produced due to resources available: 160 and mineCost: 10
+
+        testQ1 = {"ProductionQ" : 
+                {
+                self.target_colony_name:
+                    {
+                        "productionOrder" : [ entry1 ],
+                        "productionItems" : { entry1 : {"quantity": produceOne, "productionID": entryType1 }                                             
+                                            }
+
+                    }
+
+                }
+            }
+
+
+        itemResourceCosts = int(self.player.raceData.factoryCost)
+        germCosts = 4 if not self.player.raceData.factoryGermCost else 3 
+        targetItemCosts = [0, 0, germCosts, itemResourceCosts]
+
+        colonyHW = self.target_colony_obj.productionQ
+
+        itemsOnHW = self.target_colony_obj.planet.factories
+        print("factories on planet: %d" % (itemsOnHW))
+        assert_true(itemsOnHW == 10) 
+
+    
+        germOnHW = self.target_colony_obj.planet.surfaceGerm
+
+        # add testQ1 to ProductionQ
+        processProductionQ(testQ1, self.player)
+
+        #only one item added
+        assert_equal(len(colonyHW.productionOrder), 1)
+        assert_equal(len(colonyHW.productionItems), 1)
+
+        # run the queue - like a turn generation
+        colonyHW.productionController()
+
+        # modifications to prepare for 2nd turn emulation
+        colonyHW.productionItems[entry1]["finishedForThisTurn"] = False # reset so that the item will be analysed again
+        self.target_colony_obj.planet.surfaceGerm += 1 #add enough germ for the item to be completed.
+
+        # run the queue again - like a second turn 
+        colonyHW.productionController()
+
+        # item with work done is automatically split apart into a new entry(when quantity > 1)
+        assert_equal(len(colonyHW.productionOrder), 2)
+        assert_equal(len(colonyHW.productionItems), 2)
+
+
+        # print("entry1:%s\nentry11:%s"%(colonyHW.productionItems[entry1],colonyHW.productionItems["entryID11"]))
+
+        quantityRemaining = colonyHW.productionItems[entry1]["quantity"]
+        newItemsOnHW = self.target_colony_obj.planet.factories
+        builtItemsAfterTwoTurns = newItemsOnHW - itemsOnHW
+
+        assert_equal(produceOne, quantityRemaining + builtItemsAfterTwoTurns)
+        assert_equal(8, builtItemsAfterTwoTurns)
+        assert_equal(colonyHW.productionItems["entryID11"]["quantity"], 0)
+
+
+
     def test_producePlanetUpgrades_Mine_Max(self):
         """
         producePlanetUpgrades the max planetary mines should be produced. Max = maximum mines that a 
