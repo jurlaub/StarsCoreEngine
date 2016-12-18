@@ -107,56 +107,56 @@ class TestProductionQ(object):
         #--------- end ------------------
 
 
-        self.d1_name = "Seer"
-        self.d2_name = "Dark Star I"
-        self.d3_name = "Dark Falcon"
+        # self.d1_name = "Seer"
+        # self.d2_name = "Dark Star I"
+        # self.d3_name = "Dark Falcon"
 
 
-        # not a complete x file, contains: Ship Design, Prod_Q, Prod_List
-        self.player1_xFile = {
-            "NewDesign" : { 
-                "Design1" : 
-                    {   "designName": self.d1_name, 
-                        "designID": 1,
-                        "hullID": "Scout",
-                        "component":  {"B": {"itemID": "Quick Jump 5", "itemQuantity": 1 },
-                                        "A": {"itemID": "Fuel Tank", "itemQuantity": 1},
-                                        "C": {"itemID": "Bat Scanner", "itemQuantity": 1}
-                                        }
-                    },
-                "Design2" : 
-                    {   "designName": self.d2_name, 
-                        "designID": 2,
-                        "hullID": "Destroyer",
-                        "component": {"G": {"itemID": "Daddy Long Legs 7", "itemQuantity": 1 },
-                                        "E": {"itemID": "Energy Capacitor", "itemQuantity": 1},
-                                        "D": {"itemID": "Bear Neutrino Barrier", "itemQuantity": 1},
-                                        "F": {"itemID": "Crobmnium", "itemQuantity": 1},
-                                        "C": {"itemID": "X-Ray Laser", "itemQuantity": 1},
-                                        "B": {"itemID": "X-Ray Laser", "itemQuantity": 1},
-                                        "A": {"itemID": "Manoeuvring Jet", "itemQuantity": 1}
-                                        }
+        # # not a complete x file, contains: Ship Design, Prod_Q, Prod_List
+        # self.player1_xFile = {
+        #     "NewDesign" : { 
+        #         "Design1" : 
+        #             {   "designName": self.d1_name, 
+        #                 "designID": 1,
+        #                 "hullID": "Scout",
+        #                 "component":  {"B": {"itemID": "Quick Jump 5", "itemQuantity": 1 },
+        #                                 "A": {"itemID": "Fuel Tank", "itemQuantity": 1},
+        #                                 "C": {"itemID": "Bat Scanner", "itemQuantity": 1}
+        #                                 }
+        #             },
+        #         "Design2" : 
+        #             {   "designName": self.d2_name, 
+        #                 "designID": 2,
+        #                 "hullID": "Destroyer",
+        #                 "component": {"G": {"itemID": "Daddy Long Legs 7", "itemQuantity": 1 },
+        #                                 "E": {"itemID": "Energy Capacitor", "itemQuantity": 1},
+        #                                 "D": {"itemID": "Bear Neutrino Barrier", "itemQuantity": 1},
+        #                                 "F": {"itemID": "Crobmnium", "itemQuantity": 1},
+        #                                 "C": {"itemID": "X-Ray Laser", "itemQuantity": 1},
+        #                                 "B": {"itemID": "X-Ray Laser", "itemQuantity": 1},
+        #                                 "A": {"itemID": "Manoeuvring Jet", "itemQuantity": 1}
+        #                                 }
 
-                    },
-                "Design3" : 
-                    {   "designName": self.d3_name, 
-                        "designID": 3,
-                        "hullID": "Privateer",
-                        "component": {"A": {"itemID": "Bear Neutrino Barrier", "itemQuantity": 2 },
-                                        "B": {"itemID": "Fuel Tank", "itemQuantity": 1},
-                                        "C": {"itemID": "Fuel Tank", "itemQuantity": 1},
-                                        "D": {"itemID": "Fuel Tank", "itemQuantity": 1},
-                                        "E": {"itemID": "Daddy Long Legs 7", "itemQuantity": 1},
-                                        }
+        #             },
+        #         "Design3" : 
+        #             {   "designName": self.d3_name, 
+        #                 "designID": 3,
+        #                 "hullID": "Privateer",
+        #                 "component": {"A": {"itemID": "Bear Neutrino Barrier", "itemQuantity": 2 },
+        #                                 "B": {"itemID": "Fuel Tank", "itemQuantity": 1},
+        #                                 "C": {"itemID": "Fuel Tank", "itemQuantity": 1},
+        #                                 "D": {"itemID": "Fuel Tank", "itemQuantity": 1},
+        #                                 "E": {"itemID": "Daddy Long Legs 7", "itemQuantity": 1},
+        #                                 }
 
-                    }
+        #             }
             
-            },
-            "RemoveDesign" : []
+        #     },
+        #     "RemoveDesign" : []
 
-        }
+        # }
 
-        processDesign(self.player1_xFile, self.player, self.game.technology)
+        # processDesign(self.player1_xFile, self.player, self.game.technology)
 
 
 
@@ -1552,27 +1552,6 @@ class TestProductionQ(object):
         assert_equal(targetItem, expectedItemCosts)
 
 
-    def test_targetItemCosts_Ship(self):
-        print("--TODO-- test_targetItemCosts_Ship Ship Resource Cost HARDCODED -[41, 12, 34, 138]- This one is dynamic and requires extra effort")
-
-        expectedItemCosts = [41, 12, 34, 138]
-        
-        targetItem = self.target_colony_obj.productionQ.targetItemCosts(TestProductionQ.productionID_Ship)
-
-        assert_equal(targetItem, expectedItemCosts)
-
-
-
-    def test_targetItemCosts_Starbase(self):
-        print("--TODO-- test_targetItemCosts_Starbase Starbase Resource Cost HARDCODED -[71, 48, 34, 338]- This one is dynamic and requires extra effort")
-
-        expectedItemCosts = [71, 48, 34, 338]
-        
-        targetItem = self.target_colony_obj.productionQ.targetItemCosts(TestProductionQ.productionID_Starbase)
-
-        assert_equal(targetItem, expectedItemCosts)
-
-        
     def test_targetItemCosts_Scanner(self):
         print("--TODO-- test_targetItemCosts_Scanner Resource Cost does not account for PRT/LRT")
         

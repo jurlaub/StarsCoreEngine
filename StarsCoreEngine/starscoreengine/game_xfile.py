@@ -218,6 +218,7 @@ def processDesign(xfile, playerObj, techTree):
         #--TODO-- validDesignForProduction here
         
 
+        #--TODO-- remove design first
         designObj.addDesign(eachDesign, techTree)
 
 

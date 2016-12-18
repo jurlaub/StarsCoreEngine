@@ -120,6 +120,8 @@ class ProductionQ(object):
         self.resources = 0
         self.test_ResourcesConsumed = 0  # use for testing
 
+        self.test_ship = 0
+
         # productionOrder provides the order for the elements in productionItems
         # each order should point to a unique item
         self.productionOrder = []     
@@ -333,6 +335,7 @@ class ProductionQ(object):
 
             entryKey, entryObj = entryDict.popitem()
 
+            print("addToQueue: entryKey:%s entryObj:%s" % (entryKey, entryObj))
 
 
             # --TODO-- find ItemType method
@@ -352,7 +355,10 @@ class ProductionQ(object):
                 # for testing - should not be a valid value for normal play.
                 tmpItemType = "Default ItemType"    
 
-
+            # if "productionID" in entryObj:
+            #     tmpProductionID = entryObj["productionID"]
+            # else:
+            #     tmpProductionID = entryKey
 
 
             tmpItem = { "quantity" : entryObj["quantity"], 
@@ -712,9 +718,14 @@ class ProductionQ(object):
                 orderIndex += 1
                 continue
 
-            # deciding if a Queue adjustment is needed or if I need to iterate to the next entry
-            # quantity > 1 with work has been done
 
+            """
+            This checks if a given entry has had work done. If so, it will split apart the
+            entry and complete the remaining work on a quantity 1 item. Then it 
+            will cycle around again to build more.
+
+
+            """
             if entryObj["quantity"] > 1 and ProductionQ.workHasBeenDone(entryObj):
                 
                 if DEBUG_3: print("productionController quantity > 1 and work has been done. orderIndex:%d" % orderIndex)
@@ -734,6 +745,8 @@ class ProductionQ(object):
             # if autobuildMinerals == True set the autobuildMinerals = True
             targetItemType = self.productionItems[entryID]["itemType"]
             targetProductionID = self.productionItems[entryID]["productionID"]
+
+            print("productionItems: %s" % self.productionItems[entryID] )
 
             targetItemCosts = self.targetItemCosts(targetItemType, targetProductionID)
 
@@ -795,7 +808,7 @@ class ProductionQ(object):
             return itemValue
         
         elif itemType == "Starbase":
-            itemValue =  self.itemCostsStarbase()
+            itemValue =  self.itemCostsStarbase(productionID)
             return itemValue
         
         elif itemType == "Scanner":
@@ -846,10 +859,14 @@ class ProductionQ(object):
         return [0, 0, 0, self.raceData.mineCost]
 
     def itemCostsShip(self, itemID):
-        return [99,99,99,999]
+        costs = self.designs.currentShips[itemID].currentCosts()
+        return costs
 
-    def itemCostsStarbase(self):
-        return [999,999,999,9999]
+
+    def itemCostsStarbase(self, itemID):
+        costs =  self.designs.currentStarbases[itemID].currentCosts()
+        return costs
+
 
     def itemCostsMinerals(self):
         return self.raceData.mineralCosts
@@ -1417,8 +1434,6 @@ class ProductionQ(object):
         """
 
         self.colony.planet.mines += quantity
-
-
 
     def produceFactories(self, quantity):
         """

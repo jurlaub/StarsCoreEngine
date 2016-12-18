@@ -516,7 +516,7 @@ class ShipDesign(Component):
     20150117 - ju - ShipDesign should validate itself
 
     20150607 - ju: slight change in the use of ShipDesign. ShipDesign will instantiate
-    the original technology components and values for any given design, disregarding
+    the original technology components and original values for any given design, disregarding
     tech level. PlayerBuildList will hold each turns design costs for a given design.
         -- TODO --- 
             make sure ShipDesign works with the new approach
@@ -598,7 +598,7 @@ class ShipDesign(Component):
                 (e.x. self.iron = sum(hull.iron + each_component.iron values))
 
         
-        Design can be updated after instantiation, however, must a tech tree 
+        Design can be updated after instantiation, however, a tech tree 
         must be provided.
 
         """
@@ -751,12 +751,7 @@ class ShipDesign(Component):
                 miniturazationList = ('iron', 'bor', 'germ', 'resources')
 
         """
-        currentCosts = []
-
-        # hull
-
-        # component
-
+        currentCosts = [self.iron, self.bor, self.germ, self.resources]
 
 
         return currentCosts
