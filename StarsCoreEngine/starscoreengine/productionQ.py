@@ -360,12 +360,18 @@ class ProductionQ(object):
             # else:
             #     tmpProductionID = entryKey
 
+            if "designID" in entryObj:
+                tmpDesignID = entryObj["designID"]
+            else:
+                tmpDesignID = None
+
 
             tmpItem = { "quantity" : entryObj["quantity"], 
-                        "productionID" : entryObj["productionID"],
+                        "productionID" : tmpItemType,
                         "finishedForThisTurn" : False,
                         "itemType": tmpItemType,
-                        "materialsUsed" : tmpMaterialsUsed
+                        "materialsUsed" : tmpMaterialsUsed,
+                        "designID" : tmpDesignID
             }           
 
 
@@ -385,7 +391,7 @@ class ProductionQ(object):
                 print("addToQueue.at append")
                 self.productionOrder.append(tmpKey)
 
-
+            print("addToQueue: item:%s" %tmpItem)
             self.productionItems[tmpKey] = tmpItem
 
             #print("%s \n %s" % (self.productionOrder, self.productionItems))
@@ -744,11 +750,10 @@ class ProductionQ(object):
             # add check for autobuild type   entryObj["itemType"]
             # if autobuildMinerals == True set the autobuildMinerals = True
             targetItemType = self.productionItems[entryID]["itemType"]
-            targetProductionID = self.productionItems[entryID]["productionID"]
-
-            print("productionItems: %s" % self.productionItems[entryID] )
-
-            targetItemCosts = self.targetItemCosts(targetItemType, targetProductionID)
+            targetDesignID = self.productionItems[entryID]["designID"]
+            # if targetItemType in ['Ship', 'Starbase']:
+                
+            targetItemCosts = self.targetItemCosts(targetItemType, targetDesignID)
 
             self.entryController(entryID, targetItemCosts)
 
@@ -1006,6 +1011,9 @@ class ProductionQ(object):
         entryUsedMaterials = entryObj["materialsUsed"]
         entryType = entryObj["itemType"]
         entryFinished = entryObj["finishedForThisTurn"]
+        entryDesignID = entryObj["designID"]
+
+
 
         completeAPartiallyWorkedOnEntry = ProductionQ.workHasBeenDone(entryObj) # returns T/F
 
@@ -1058,7 +1066,7 @@ class ProductionQ(object):
 
         if buildQuantity > 0:   # buildQuantity cap is entryQuantity 
             
-            self.buildEntry(entryType, buildQuantity)
+            self.buildEntry(entryType, buildQuantity, entryDesignID)
             self.consumeMaterials(buildMaterials)
 
 
@@ -1097,7 +1105,7 @@ class ProductionQ(object):
 
 
 
-    def buildEntry(self, entryType, buildQuantity):
+    def buildEntry(self, entryType, buildQuantity, entryDesignID = None):
         """
         instructs build methods to create produced items.
 
@@ -1116,7 +1124,8 @@ class ProductionQ(object):
             self.produceMines(buildQuantity)
         elif entryType == "Factories":
             self.produceFactories(buildQuantity)
-
+        elif entryType == "Ship":
+            self.produceShip(buildQuantity, entryDesignID)
         else:
             print("ProductionQ.buildEntry: nothing to build")
 
@@ -1393,14 +1402,14 @@ class ProductionQ(object):
 
 
 
-    def produceShip(self):
+    def produceShip(self, quantity, designID):
         """
         produces ShipDesign, instantiates Token, looks for available fleet that 
         Token can be added to. If no available fleet, generate fleet. 
 
         """
 
-        pass
+        self.test_ship = quantity
 
     def produceStarbase(self):
         """produces starbase, instantiates Token, assigns to Colony. """
