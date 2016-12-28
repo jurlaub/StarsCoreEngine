@@ -55,6 +55,13 @@ def xfile_TEMPLATE():
             }
 
 
+    productionQ
+        > keys are derived from itemType or designID. 
+        > non_ship_or_starbase - only need quantity, itemType
+        > ship_or_starbase - quantity, itemType, designID
+
+
+
     """
     x = {
         "game_name" : "game_name",
@@ -98,12 +105,12 @@ def xfile_TEMPLATE():
                 "player.colonies.ID1" : 
                     { 
                         "productionOrder" : ["key1"],
-                        "productionItems" : {"key1" : {"quantity": 5, "productionID": "item1"} }  
+                        "productionItems" : {"key1" : {"quantity": 5, "itemType": "item1"} }  
                     },
                 "player.colonies.ID2" : 
                     {
-                        "productionOrder" : ["entryID1", "entryID2" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {"quantity": 5, "productionID": "item1"} }
+                        "productionOrder" : ["non_ship_or_starbase", "ship_or_starbase" ],
+                        "productionItems" : { "non_ship_or_starbase" : {"quantity": 5, "itemType": "non_ship_or_starbase"}, "ship_or_starbase" : {"quantity": 5, "designID": "ship_design_name", "itemType": "Ship" } }
                     },
                 "player.colonies.ID3" : 
                     {
