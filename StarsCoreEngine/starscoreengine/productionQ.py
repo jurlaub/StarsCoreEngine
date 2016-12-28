@@ -1409,9 +1409,9 @@ class ProductionQ(object):
 
         """
 
-        self.test_ship = quantity
+        self.test_ship += quantity
 
-    def produceStarbase(self):
+    def produceStarbase(self, quantity, designID):
         """produces starbase, instantiates Token, assigns to Colony. """
         pass
 
