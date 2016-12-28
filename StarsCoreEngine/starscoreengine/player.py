@@ -27,7 +27,7 @@ from .research import Research
 from .player_designs import PlayerDesigns
 from .productionQ import ProductionQ
 from .player_build_list import PlayerBuildList
-from .naval_logistics import NavalLogistics
+from .fleet_command import FleetCommand
 # from .game_utility import findMaxTechnologyComponent
 
 '''
@@ -110,8 +110,9 @@ class Player(object):
         self.techTree = techTree
         self.designs = PlayerDesigns(self.raceName, self.research.techLevels, self.LRT) # ship design objects
         self.historicalShipDesign = {}  #? 
-        self.fleets = {}  # ? fleetID : fleetObj
-        self.navalLogistics = NavalLogistics()
+        
+        self.fleetCommand = FleetCommand(self)
+        
         self.battleOrders = {} 
         self.buildListObject = PlayerBuildList(self)
 
@@ -388,9 +389,7 @@ class Player(object):
     #             dName : {"itemType": d, "targetItemsCost":dCosts }}
 
 
-    def generateFleetID(self):
-        fleetID = str(self.playerNumber) + "_" + "99"
-        return fleetID
+
 
 class RaceTraits(object):
     '''  RaceTraits are the values derived from PRT & LRT's. 

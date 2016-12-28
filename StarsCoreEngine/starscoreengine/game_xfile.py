@@ -446,6 +446,9 @@ def xFile_ProductionQ_StructureIsValid(xfile):
             PO = orders["productionOrder"]
             PL = orders["productionItems"]
             print("%s: PO:%d PL:%d" % (colonyName, len(PO), len(PL)))
+            # print("productionOrder:%s" % (PO))
+            # print("productionItems:%s" % (PL))
+
 
             if len(set(PO)) != len(PL):         # PO must be unique entries
                 raise ValueError("Production Order and Production Items counts do not match or orders are not unique")
@@ -457,14 +460,35 @@ def xFile_ProductionQ_StructureIsValid(xfile):
 
             for kee, each in PL.items():
 
+                error = False
+                elementCount = len(each)
+                errorMessage = "The following are not present in the productionQ order:"
+
+                
+                if 'itemType' not in each:
+                    errorMessage += "\n'itemType' "
+                    error = True
+
+                if 'quantity' not in each:
+                    errorMessage += "\n'quantity' "
+                    error = True
+
+                if each["itemType"] in ["Ship", "Starbase"]:
+                    if "designID" not in each:
+                        errorMessage += "\n'designID' "
+                        error = True
+
                 # if len(each) == 0:
                 #     # #empty Q's are valid
                 #     # continue
 
-                if len(each) != 2:
-                    raise ValueError("productionItems entries should only contain Quantity and ProductionID; colony: %s" % kee)
-                quantity = each["quantity"]
-                productionID = each["productionID"]
+
+
+                if error:
+                    raise ValueError("%s Colony Order:%s Message:\n%s " % (colonyName,  kee, errorMessage))
+               
+                # quantity = each["quantity"]
+                # itemType = each["itemType"]
 
                 # --TODO-- test each for valid quantity value
 
@@ -476,6 +500,10 @@ def xFile_ProductionQ_StructureIsValid(xfile):
     
     except ValueError as ve:
         print("xfile ProductionQ values is incorrectly recorded: %s" % ve)
+        return False
+
+    except KeyError as ke:
+        print("xfile ProductionQ values have missing key: %s" % ke)
         return False
 
     return True

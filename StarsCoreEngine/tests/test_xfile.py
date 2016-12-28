@@ -255,20 +255,20 @@ class TestXFileController(object):
         tmp_xfile_ProductionQ = {
         "ProductionQ" : 
             {
-                "player.colonies.ID1" : 
+                "test player.colonies.empty" : 
                     { 
                         "productionOrder" : [ ],
                         "productionItems" : { }  
                     },
-                "player.colonies.ID2" : 
+                "test player.colonies.twoEntries" : 
                     {
                         "productionOrder" : ["entryID1", "entryID2" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {"quantity": 5, "productionID": "item1"} }
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "item1"}, "entryID2" : {"quantity": 5, "itemType": "item1"} }
                     },
-                "player.colonies.ID3" : 
+                "test player.colonies.oneEntry" : 
                     {
                         "productionOrder" : [ "entryID2" ],
-                        "productionItems" : { "entryID2" : {"quantity": 5, "productionID": "item1"}}
+                        "productionItems" : { "entryID2" : {"quantity": 5, "itemType": "item1"}}
                     }
 
             }
@@ -281,10 +281,10 @@ class TestXFileController(object):
         "ProductionQ" : 
             {
 
-                "correct colony Q" : 
+                "test correct colony Q" : 
                     {
                         "productionOrder" : ["entryID1", "entryID2" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {"quantity": 34, "productionID": "item2"} }
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "item1"}, "entryID2" : {"quantity": 34, "itemType": "item2"} }
                     }
 
             }
@@ -293,10 +293,10 @@ class TestXFileController(object):
         "ProductionQ" : 
             {
 
-                "error colony Q2" : 
+                "test error colony Q2" : 
                     {
                         "productionOrder" : ["entryID1", "entryID2" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {} }
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "item1"}, "entryID2" : {} }
                     }
 
             }
@@ -305,10 +305,10 @@ class TestXFileController(object):
         "ProductionQ" : 
             {
 
-                "error colony Q3" : 
+                "test error colony Q3" : 
                     {
                         "productionOrder" : ["entryID1", "entryID2" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {"quantity": 2} }
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "item1"}, "entryID2" : {"quantity": 2} }
                     }
 
             }
@@ -317,10 +317,10 @@ class TestXFileController(object):
         "ProductionQ" : 
             {
 
-                "error colony Q4" : 
+                "test error colony Q4" : 
                     {
                         "productionOrder" : ["entryID1", "entryID2" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {"productionID": "item1"} }
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "item1"}, "entryID2" : {"itemType": "item1"} }
                     }
 
             }
@@ -329,10 +329,10 @@ class TestXFileController(object):
         "ProductionQ" : 
             {
 
-                "error colony Q5" : 
+                "test error colony Q5" : 
                     {
                         "productionOrder" : ["entryID1", "entryID2" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1", "CrazySauce" : "hello"}, "entryID2" : {"productionID": "item1"} }
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "item1", "CrazySauce" : "hello"}, "entryID2" : {"itemType": "item1"} }
                     }
 
             }
@@ -358,10 +358,10 @@ class TestXFileController(object):
         "ProductionQ" : 
             {
 
-                "correct colony Q" : 
+                "test 'correct' tmp_xfile_ProductionQ1" : 
                     {
                         "productionOrder" : ["entryID1", "entryID2" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {"quantity": 34, "productionID": "item2"} }
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "item1"}, "entryID2" : {"quantity": 34, "itemType": "item2"} }
                     }
 
             }
@@ -371,10 +371,10 @@ class TestXFileController(object):
         "ProductionQ" : 
             {
 
-                "error colony Q2" : 
+                "test 'error' tmp_xfile_ProductionQ2" : 
                     {
                         "productionOrder" : ["ERROREntry", "entryID2" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {"quantity": 34, "productionID": "item2"} }
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "item1"}, "entryID2" : {"quantity": 34, "itemType": "item2"} }
                     }
 
             }
@@ -383,10 +383,10 @@ class TestXFileController(object):
         "ProductionQ" : 
             {
 
-                "error colony Q3" : 
+                "test 'error' tmp_xfile_ProductionQ3" : 
                     {
                         "productionOrder" : ["entryID1", "entryID1" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "item1"}, "entryID2" : {"quantity": 34, "productionID": "item2"} }
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "item1"}, "entryID2" : {"quantity": 34, "itemType": "item2"} }
                     }
 
             }
@@ -421,14 +421,14 @@ class TestXFileController(object):
                 self.target_colony : 
                     {
                         "productionOrder" : ["entryID1", "entryID2" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, "entryID2" : {"quantity": 10, "productionID": "factories"} }
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "mines"}, "entryID2" : {"quantity": 10, "itemType": "factories"} }
                     },
                 colony2 :
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
-                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 455, "productionID": "mines"} 
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "itemType": "factories"},
+                                            "entryID4" : {"quantity": 455, "itemType": "mines"} 
                                             }
                     }
 
@@ -459,7 +459,7 @@ class TestXFileController(object):
         assert_equal(target.productionOrder[1], "entryID2")
 
         assert_equal(len(target.productionItems), 2)
-        assert_equal(target.productionItems["entryID1"]["productionID"], "mines")
+        assert_equal(target.productionItems["entryID1"]["itemType"], "mines")
 
 
         # 2nd colony
@@ -485,9 +485,9 @@ class TestXFileController(object):
                 colony2 :
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
-                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 455, "productionID": "mines"} 
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "itemType": "factories"},
+                                            "entryID4" : {"quantity": 455, "itemType": "mines"} 
                                             }
 
                     }
@@ -500,7 +500,7 @@ class TestXFileController(object):
                     {
                         "productionOrder" : [ "entryID1", "entryID2" ],
                         "productionItems" : {  
-                                            "entryID2" : {"quantity": 0, "productionID": "factories"}
+                                            "entryID2" : {"quantity": 0, "itemType": "factories"}
                                             }
                     }
 
@@ -579,9 +579,9 @@ class TestXFileController(object):
                 colony2 :
                     {
                         "productionOrder" : ["entryID4", "entryID1", "DeleteME" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
-                                            "DeleteME" : {"quantity": 10, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 455, "productionID": "mines"} 
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "mines"}, 
+                                            "DeleteME" : {"quantity": 10, "itemType": "factories"},
+                                            "entryID4" : {"quantity": 455, "itemType": "mines"} 
                                             }
 
                     }
@@ -594,9 +594,9 @@ class TestXFileController(object):
                 colony2 :
                     {
                         "productionOrder" : ["entryID4", "entryID1", "DeleteME" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
-                                            "DeleteME" : {"quantity": 0, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 455, "productionID": "mines"} 
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "mines"}, 
+                                            "DeleteME" : {"quantity": 0, "itemType": "factories"},
+                                            "entryID4" : {"quantity": 455, "itemType": "mines"} 
                                             }
 
                     }
@@ -645,11 +645,11 @@ class TestXFileController(object):
                 colony2 :
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
-                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
-                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
-                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "itemType": "factories"},
+                                            "entryID4" : {"quantity": 455, "itemType": "mines"},
+                                            "entryID5" : {"quantity": 1, "itemType": "factories"},
+                                            "entryID6" : {"quantity": 4, "itemType": "mines"}                                              
                                             }
 
                     }
@@ -662,7 +662,7 @@ class TestXFileController(object):
                     {
                         "productionOrder" : ["entryID2", "entryID4", "entryID1" ],
                         "productionItems" : {  
-                                            "entryID2" : {"quantity": 0, "productionID": "factories"}
+                                            "entryID2" : {"quantity": 0, "itemType": "factories"}
                                             }
                     }
 
@@ -738,11 +738,11 @@ class TestXFileController(object):
                 colony2 :
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
-                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
-                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
-                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "itemType": "factories"},
+                                            "entryID4" : {"quantity": 455, "itemType": "mines"},
+                                            "entryID5" : {"quantity": 1, "itemType": "factories"},
+                                            "entryID6" : {"quantity": 4, "itemType": "mines"}                                              
                                             }
 
                     }
@@ -757,14 +757,14 @@ class TestXFileController(object):
                         "entryID13", "entryID14", "entryID15", "entryID16", \
                         "entryID17", "entryID18" ],
                         
-                        "productionItems" : { "entryID12" : {"quantity": 5, "productionID": "mines"}, 
-                                            "entryID13" : {"quantity": 10, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 300, "productionID": "mines"},
-                                            "entryID14" : {"quantity": 2, "productionID": "factories"},
-                                            "entryID15" : {"quantity": 3, "productionID": "mines"},
-                                            "entryID16" : {"quantity": 5, "productionID": "mines"},
-                                            "entryID17" : {"quantity": 8, "productionID": "factories"},
-                                            "entryID18" : {"quantity": 13, "productionID": "mines"}                                               
+                        "productionItems" : { "entryID12" : {"quantity": 5, "itemType": "mines"}, 
+                                            "entryID13" : {"quantity": 10, "itemType": "factories"},
+                                            "entryID4" : {"quantity": 300, "itemType": "mines"},
+                                            "entryID14" : {"quantity": 2, "itemType": "factories"},
+                                            "entryID15" : {"quantity": 3, "itemType": "mines"},
+                                            "entryID16" : {"quantity": 5, "itemType": "mines"},
+                                            "entryID17" : {"quantity": 8, "itemType": "factories"},
+                                            "entryID18" : {"quantity": 13, "itemType": "mines"}                                               
                                             }
                     }
 
@@ -837,11 +837,11 @@ class TestXFileController(object):
                 colony2 :
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
-                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
-                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
-                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "itemType": "factories"},
+                                            "entryID4" : {"quantity": 455, "itemType": "mines"},
+                                            "entryID5" : {"quantity": 1, "itemType": "factories"},
+                                            "entryID6" : {"quantity": 4, "itemType": "mines"}                                              
                                             }
 
                     }
@@ -853,11 +853,11 @@ class TestXFileController(object):
                 colony2 :
                     {
                         "productionOrder" : ["entryID1", "entryID2", "entryID4", "entryID6", "entryID5" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
-                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 23, "productionID": "mines"},
-                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
-                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "itemType": "factories"},
+                                            "entryID4" : {"quantity": 23, "itemType": "mines"},
+                                            "entryID5" : {"quantity": 1, "itemType": "factories"},
+                                            "entryID6" : {"quantity": 4, "itemType": "mines"}                                              
                                             }
                     }
 
@@ -918,9 +918,9 @@ class TestXFileController(object):
                     {
                         "productionOrder" : ["entryID4", "entryID2", "entryID5"  ],
                         "productionItems" : {  
-                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
-                                            "entryID5" : {"quantity": 1, "productionID": "factories"}                                             
+                                            "entryID2" : {"quantity": 10, "itemType": "factories"},
+                                            "entryID4" : {"quantity": 455, "itemType": "mines"},
+                                            "entryID5" : {"quantity": 1, "itemType": "factories"}                                             
                                             }
 
                     }
@@ -932,8 +932,8 @@ class TestXFileController(object):
                 colony2 :
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"},
-                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "mines"},
+                                            "entryID6" : {"quantity": 4, "itemType": "mines"}                                              
                                             }
                     }
 
@@ -1000,11 +1000,11 @@ class TestXFileController(object):
                 colony2 :
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
-                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
-                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
-                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "itemType": "factories"},
+                                            "entryID4" : {"quantity": 455, "itemType": "mines"},
+                                            "entryID5" : {"quantity": 1, "itemType": "factories"},
+                                            "entryID6" : {"quantity": 4, "itemType": "mines"}                                              
                                             }
 
                     }
@@ -1017,7 +1017,7 @@ class TestXFileController(object):
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
                         "productionItems" : {  
-                                            "entryID2" : {"quantity": -55, "productionID": "factories"}
+                                            "entryID2" : {"quantity": -55, "itemType": "factories"}
                                             }
                     }
 
@@ -1061,11 +1061,11 @@ class TestXFileController(object):
                 colony2 :
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
-                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
-                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
-                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "itemType": "factories"},
+                                            "entryID4" : {"quantity": 455, "itemType": "mines"},
+                                            "entryID5" : {"quantity": 1, "itemType": "factories"},
+                                            "entryID6" : {"quantity": 4, "itemType": "mines"}                                              
                                             }
 
                     }
@@ -1079,7 +1079,7 @@ class TestXFileController(object):
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
                         "productionItems" : {  
-                                            "entryID2" : {"quantity": "ERROR", "productionID": "factories"}
+                                            "entryID2" : {"quantity": "ERROR", "itemType": "factories"}
                                             }
                     }
 
@@ -1125,11 +1125,11 @@ class TestXFileController(object):
                 colony2 :
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
-                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
-                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
-                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "itemType": "factories"},
+                                            "entryID4" : {"quantity": 455, "itemType": "mines"},
+                                            "entryID5" : {"quantity": 1, "itemType": "factories"},
+                                            "entryID6" : {"quantity": 4, "itemType": "mines"}                                              
                                             }
 
                     }
@@ -1143,7 +1143,7 @@ class TestXFileController(object):
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
                         "productionItems" : {  
-                                            "ERRORVAL" : {"quantity": 42353, "productionID": "factories"}
+                                            "ERRORVAL" : {"quantity": 42353, "itemType": "factories"}
                                             }
                     }
 
@@ -1206,11 +1206,11 @@ class TestXFileController(object):
                 colony2 :
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
-                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
-                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
-                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "itemType": "factories"},
+                                            "entryID4" : {"quantity": 455, "itemType": "mines"},
+                                            "entryID5" : {"quantity": 1, "itemType": "factories"},
+                                            "entryID6" : {"quantity": 4, "itemType": "mines"}                                              
                                             }
 
                     }
@@ -1225,7 +1225,7 @@ class TestXFileController(object):
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "ERRORVAL" ],
                         "productionItems" : {  
-                                            "entryID6" : {"quantity": 42353, "productionID": "factories"}
+                                            "entryID6" : {"quantity": 42353, "itemType": "factories"}
                                             }
                     }
 
@@ -1267,11 +1267,11 @@ class TestXFileController(object):
                 colony2 :
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
-                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
-                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
-                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "itemType": "factories"},
+                                            "entryID4" : {"quantity": 455, "itemType": "mines"},
+                                            "entryID5" : {"quantity": 1, "itemType": "factories"},
+                                            "entryID6" : {"quantity": 4, "itemType": "mines"}                                              
                                             }
 
                     }
@@ -1286,7 +1286,7 @@ class TestXFileController(object):
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "" ],
                         "productionItems" : {  
-                                            "entryID6" : {"quantity": 42353, "productionID": "factories"}
+                                            "entryID6" : {"quantity": 42353, "itemType": "factories"}
                                             }
                     }
 
@@ -1327,11 +1327,11 @@ class TestXFileController(object):
                 colony2 :
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
-                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
-                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
-                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "itemType": "factories"},
+                                            "entryID4" : {"quantity": 455, "itemType": "mines"},
+                                            "entryID5" : {"quantity": 1, "itemType": "factories"},
+                                            "entryID6" : {"quantity": 4, "itemType": "mines"}                                              
                                             }
 
                     }
@@ -1346,7 +1346,7 @@ class TestXFileController(object):
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "" ],
                         "productionItems" : {  
-                                            "entryID6" : {"quantity": "", "productionID": "factories"}
+                                            "entryID6" : {"quantity": "", "itemType": "factories"}
                                             }
                     }
 
@@ -1388,11 +1388,11 @@ class TestXFileController(object):
                 colony2 :
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
-                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
-                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
-                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "itemType": "factories"},
+                                            "entryID4" : {"quantity": 455, "itemType": "mines"},
+                                            "entryID5" : {"quantity": 1, "itemType": "factories"},
+                                            "entryID6" : {"quantity": 4, "itemType": "mines"}                                              
                                             }
 
                     }
@@ -1405,7 +1405,7 @@ class TestXFileController(object):
                     {
                         "productionOrder" : ["entryID77", "entryID1", "entryID2", "entryID5", "entryID6" ],
                         "productionItems" : {  
-                                            "entryID77" : {"quantity": 5, "productionID": ""}
+                                            "entryID77" : {"quantity": 5, "itemType": ""}
                                             }
                     }
 
@@ -1447,11 +1447,11 @@ class TestXFileController(object):
                 colony2 :
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
-                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
-                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
-                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "itemType": "factories"},
+                                            "entryID4" : {"quantity": 455, "itemType": "mines"},
+                                            "entryID5" : {"quantity": 1, "itemType": "factories"},
+                                            "entryID6" : {"quantity": 4, "itemType": "mines"}                                              
                                             }
 
                     }
@@ -1464,7 +1464,7 @@ class TestXFileController(object):
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6"  ],
                         "productionItems" : {  
-                                            "entryID2" : {"quantity": 15, "productionID": "factories"}
+                                            "entryID2" : {"quantity": 15, "itemType": "factories"}
                                             }
                     }
 
@@ -1476,7 +1476,7 @@ class TestXFileController(object):
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6"  ],
                         "productionItems" : {  
-                                            "entryID5" : {"quantity": 30, "productionID": "factories"}
+                                            "entryID5" : {"quantity": 30, "itemType": "factories"}
                                             }
                     }
 
@@ -1529,11 +1529,11 @@ class TestXFileController(object):
                 colony2 :
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
-                        "productionItems" : { "entryID1" : {"quantity": 5, "productionID": "mines"}, 
-                                            "entryID2" : {"quantity": 10, "productionID": "factories"},
-                                            "entryID4" : {"quantity": 455, "productionID": "mines"},
-                                            "entryID5" : {"quantity": 1, "productionID": "factories"},
-                                            "entryID6" : {"quantity": 4, "productionID": "mines"}                                              
+                        "productionItems" : { "entryID1" : {"quantity": 5, "itemType": "mines"}, 
+                                            "entryID2" : {"quantity": 10, "itemType": "factories"},
+                                            "entryID4" : {"quantity": 455, "itemType": "mines"},
+                                            "entryID5" : {"quantity": 1, "itemType": "factories"},
+                                            "entryID6" : {"quantity": 4, "itemType": "mines"}                                              
                                             }
 
                     }
@@ -1546,7 +1546,7 @@ class TestXFileController(object):
                     {
                         "productionOrder" : ["entryID4", "entryID1", "entryID2", "entryID5", "entryID6" ],
                         "productionItems" : {  
-                                            "entryID5" : {"quantity": 5, "productionID": "factories"}
+                                            "entryID5" : {"quantity": 5, "itemType": "factories"}
                                             }
                     }
 

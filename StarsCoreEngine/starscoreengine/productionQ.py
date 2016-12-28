@@ -1425,7 +1425,7 @@ class ProductionQ(object):
 
     def producePlanetUpgrades(self):
         """
-        'Mines', 'Factories', 'Terraform', 'Minerals'
+        'Terraform', 'Minerals'
 
         """
         pass
