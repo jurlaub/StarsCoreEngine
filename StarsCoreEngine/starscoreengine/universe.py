@@ -65,7 +65,7 @@ class UniverseObject(object):
         
         self.usedNames = []
 
-        self.genericfleets = {} # fleet objects like Mystery Traders
+        self.fleetObjects = {} # fleet objects like Mystery Traders and player fleets
         # other space objects
         # this is where a universe would initialize special rules and tech tree
 
@@ -104,7 +104,7 @@ class UniverseObject(object):
             name = self.getPlanetName()
             ID = str(uNumber) + '_' + str(i)
 
-            #generate Random Hab range?
+            #--TODO--  generate Random Hab range?
             planetHab = (1.5, 123, 70)
 
             newPlanet = self.createPlanet(ID, name, planetHab)

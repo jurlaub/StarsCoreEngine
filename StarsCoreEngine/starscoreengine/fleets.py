@@ -46,7 +46,7 @@ class Token:
     """Ships of the same design in a fleet form a single token, contains everything needed
     for the battles, needs to persist after battles to keep damage"""
 
-    def __init__(self, shipDesign, numbers, damage):
+    def __init__(self, shipDesign, numbers, damage = 0):
         self.design = shipDesign
         self.number = numbers
         #list of [[number, damage (%)], ..., so [100, 0.5], [100, 0] is a token of 200 ships, 100 of which have 50% damage
@@ -63,19 +63,26 @@ class Fleets(SpaceObjects): #  additionally subclass Component
     """
         Fleets - can exist as a single ship. 
 
+        postcondition:  ID sent to space_objects super must prepend "playernumber_" to currentFleetID
+                        objectID must change if player FleetKey changes
 
 
     """
 
-    def __init__(self,args, raceFuelEfficiency):
-        super(Fleets, self).__init__()
+    def __init__(self, player,  spaceObjectID, xy, universeID):
+        super(Fleets, self).__init__(xy, spaceObjectID)
+        self.player = player  #owning player
+        self.currentUniverseID = universeID   # current universe,  obtained from ProductionQ location
+        # self.objectID = spaceObjectID  #this is "playernumber_" + currentFleetID (i.e. FleetKey for player ) !! must change if FleetKey changes
+
+
         self.tokens = []
         self.fuel_capacity = 0
         self.fuel_availiable = 0
         self.cargo_mass = 0
         self.cargo_capacity = 0
         self.cloaking = 0
-        self.raceFuelEfficiency = raceFuelEfficiency
+        self.raceFuelEfficiency = self.player.raceData.fuelEfficiency
 
     def setCapacities(self):
         self.fuel_capacity = 0
@@ -127,6 +134,20 @@ class Fleets(SpaceObjects): #  additionally subclass Component
                     fuelUsed += (self.cargoMass + t.mass) * t.design.fuelEfficiency[self.speed] * self.raceFuelEfficiency * mg_coeff
                     self.cargoMass = 0
 
-                    
+    @staticmethod
+    def generateFleetSpaceObjectID(playerNumber, fleetID):
+        """
+        FleetSpaceObjectID does not include a universe ID. The FleetID should be unique across the multiverse
+        """
+        objectID = str(playerNumber) + "_" + str(fleetID)
+        return objectID                    
+
+
+
+    # def updateTokens(self, quantity, designID):
+
+    #     for each in self.token:
+
+
                     
                     

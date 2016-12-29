@@ -62,6 +62,14 @@ class SpaceObjects(object):
     def printCurrentCoord(self):
         print ("(x = %, y = %)" % (self.xy))
 
+    def getPrefex(self):
+        prefex = None
+        prefexLoc = self.ID.find('_')
+
+        if prefexLoc != -1:
+            prefex = self.ID[:prefexLoc]
+
+        return prefex
 
 
 

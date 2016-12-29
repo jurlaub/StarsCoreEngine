@@ -89,7 +89,8 @@ class Player(object):
 
     """
 
-    def __init__(self, raceData, playerNumber, techTree = {}):
+    def __init__(self, raceData, playerNumber, multiverse, techTree = {}):
+        self.multiverse = multiverse
         self.raceName = raceData.raceName
         self.raceNamePlural = raceData.raceName
         self.playerNumber = playerNumber     # for accessing and saving x file
@@ -111,8 +112,8 @@ class Player(object):
         self.designs = PlayerDesigns(self.raceName, self.research.techLevels, self.LRT) # ship design objects
         self.historicalShipDesign = {}  #? 
         
-        self.fleetCommand = FleetCommand(self)
-        
+        self.fleetCommand = FleetCommand(self, self.multiverse)
+
         self.battleOrders = {} 
         self.buildListObject = PlayerBuildList(self)
 
@@ -476,6 +477,7 @@ class RaceData(RaceTraits):
         self.techJumpStart = False # True = All 'Costs 75% extra' fields start at Tech 4
 
 
+        self.fuelEfficiency = 1  # --TODO-- review
     
     # def setPlayerCosts(self, techTree):
     #     """

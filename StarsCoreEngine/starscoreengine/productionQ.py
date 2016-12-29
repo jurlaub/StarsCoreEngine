@@ -110,7 +110,7 @@ class ProductionQ(object):
         self.raceData = player.raceData
         self.designs = player.designs # point is to gather productionQ BuildList -- handled in a different 
 
-        # self.player = player  # player to provide costs for a number of itemTypes
+        self.player = player  # player to provide costs for a number of itemTypes
 
 
         self.prodQueue = []
@@ -1410,6 +1410,7 @@ class ProductionQ(object):
         """
 
         self.test_ship += quantity
+        self.player.fleetCommand.createFleetbyProduction(quantity, designID, self.colony)
 
     def produceStarbase(self, quantity, designID):
         """produces starbase, instantiates Token, assigns to Colony. """
