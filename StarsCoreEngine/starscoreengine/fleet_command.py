@@ -149,6 +149,9 @@ class FleetCommand(object):
         if DEBUG2: print("FleetCommand.createFleetbyProduction(): key:%s xy(%s) universeID:%s spaceObjectID:%s \n %s " % (newFleetID, xy, universeID, spaceObjectID, newFleet.__dict__))
         self.fleets[newFleetID] = newFleet
 
+    
+
+
 
     def createFleet(self):
         pass

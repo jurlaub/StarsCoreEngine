@@ -783,7 +783,7 @@ class ProductionQ(object):
             # else:
             #     orderIndex == 0         # start at beginning
 
-    def targetItemCosts(self, itemType, productionID = None):
+    def targetItemCosts(self, itemType, designID = None):
         """
         Input:  itemType - everything that can be made has type
                 productionID - id unique to a design (uses this to obtain the current costs from the productionList)
@@ -809,11 +809,11 @@ class ProductionQ(object):
         itemValue = None
 
         if itemType == "Ship":
-            itemValue = self.itemCostsShip(productionID)
+            itemValue = self.itemCostsShip(designID)
             return itemValue
         
         elif itemType == "Starbase":
-            itemValue =  self.itemCostsStarbase(productionID)
+            itemValue =  self.itemCostsStarbase(designID)
             return itemValue
         
         elif itemType == "Scanner":
@@ -1126,6 +1126,8 @@ class ProductionQ(object):
             self.produceFactories(buildQuantity)
         elif entryType == "Ship":
             self.produceShip(buildQuantity, entryDesignID)
+        elif entryType == "Starbase":
+            self.produceStarbase(buildQuantity, entryDesignID)
         else:
             print("ProductionQ.buildEntry: nothing to build")
 
@@ -1409,12 +1411,14 @@ class ProductionQ(object):
 
         """
 
-        self.test_ship += quantity
+        # self.test_ship += quantity
         self.player.fleetCommand.createFleetbyProduction(quantity, designID, self.colony)
 
     def produceStarbase(self, quantity, designID):
         """produces starbase, instantiates Token, assigns to Colony. """
-        pass
+        
+        self.test_ship += 1
+        self.colony.createStarbasebyProduction(quantity, designID, self.player)
 
 
     def producePlanetaryInstallation(self):

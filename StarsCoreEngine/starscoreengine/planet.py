@@ -22,6 +22,7 @@
 """
 
 from .space_objects import SpaceObjects
+from .fleets import Starbase
 import random
 
 
@@ -68,9 +69,14 @@ class Planet(SpaceObjects):
         self.HW = False
         self.owner = None       
 
+        #--TODO-- planetary population needs to be here.
+        self.orbitalStarbase = None     # Starbase object
+
         self.factories = 0
         self.mines = 0
         self.defenseValue = 0
+
+
 
 
 
@@ -129,7 +135,7 @@ class Colony(object):
         self.orbital = False
         self.productionQ = False   # this would be good to have as a seperate object for AR races and (future) none-planet starbase production
 
-        self.population = population
+        self.population = population # population needs to be part of planet
         self.defenses = 0
 
         #calculated values
@@ -333,3 +339,11 @@ class Colony(object):
             return lowValue
 
 
+    def createStarbasebyProduction(self, quantity, designID, player):
+        newStarbaseID = self.planet.ID + "_" + str(player.playerNumber)
+        xy = self.planet.xy
+        universeID = self.planet.getPrefex()
+
+        newStarbase = Starbase(player, newStarbaseID, xy, universeID, self.planet.ID)
+        
+        self.planet.orbitalStarbase = newStarbase

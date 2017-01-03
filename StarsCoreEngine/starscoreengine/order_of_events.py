@@ -87,7 +87,7 @@ def OrderOfEvents(game):
     # !    wormholesMove():                  # wormholes  (new file -> necessary to expand upon multi-universe)
     # !!   minefieldDetonate():              # space_objects.py = Minefield
     # !    mineralMining():                  # planet.py
-    # ^^!!  production():                     # ProductionQ
+    # ^^^!  production():                     # ProductionQ
     # ^!   universeResearchCapture():        # Research
 
     population(game)

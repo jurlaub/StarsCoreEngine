@@ -292,6 +292,18 @@ class TestShipDesign(object):
                 }
             }
 
+        self.test_starbase1_template = {"ProductionQ" : 
+            {
+                self.target_colony_name:
+                    {
+                        "productionOrder" : [ self.testStarbase_OF ],
+                        "productionItems" : { self.testStarbase_OF : {"quantity": self.produceNumberDefault, "designID": self.testStarbase_OF, "itemType" : self.productionID_Starbase }                                             
+                                            }
+
+                    }
+
+                }
+            }
 
 
 
@@ -610,10 +622,20 @@ class TestShipDesign(object):
 
         assert_equal(targetItem, expectedItemCosts)
 
-    def test_produce_ShipDefault(self):
-        
 
-        processProductionQ(self.test_1_item_template, self.player)
+
+
+
+    def test_produce_Starbase(self):
+        
+        starbaseQ = self.test_starbase1_template
+
+
+        print("starbaseQ: %s " % starbaseQ)
+
+        assert_true(self.target_colony_obj.planet.orbitalStarbase == None) #--TODO-- HW should start with starbase, need to change this
+
+        processProductionQ(starbaseQ, self.player)
 
         assert_equal(len(self.colonyPQ.productionOrder), 1)
         assert_equal(len(self.colonyPQ.productionItems), 1)
@@ -622,7 +644,11 @@ class TestShipDesign(object):
 
         self.colonyPQ.productionController()
         
-        assert_equal(self.colonyPQ.test_ship, 1)
+        assert_equal(self.colonyPQ.test_ship, 1)  # placeholder to test Starbases
+        print("test_produce_Starbase. orbitalStarbase:%s " %self.target_colony_obj.planet.orbitalStarbase)
+        assert_equal(self.target_colony_obj.planet.orbitalStarbase.planetID, self.target_colony_obj.planet.ID)
+        starbaseID = self.target_colony_obj.planet.ID + "_" + str(self.player.playerNumber)
+        assert_equal(self.target_colony_obj.planet.orbitalStarbase.ID, starbaseID)
 
 
     def test_produce_fleetID(self):
@@ -648,16 +674,17 @@ class TestShipDesign(object):
         assert_equal(len(self.colonyPQ.productionOrder), 1)
         assert_equal(len(self.colonyPQ.productionItems), 1)
 
-        assert_equal(self.colonyPQ.test_ship, 0)
+        assert_equal(len(fleetCommand.fleets), 0)
 
         self.colonyPQ.productionController()    # a new fleet will be built
         
-        assert_equal(self.colonyPQ.test_ship, 1)
-        print("test_fleet: %s\n%s" % (fleetCommand.fleets.keys(), fleetCommand.fleets[0].ID))
+        assert_equal(len(fleetCommand.fleets), 1)
+        # print("test_fleet: %s\n%s" % (fleetCommand.fleets.keys(), fleetCommand.fleets[0].ID))
 
         fleet3 = fleetCommand.generateFleetID()
 
         assert_not_equal(fleet1, fleet3)    # a fleet has been created, so new fleet ID should be used.
+        assert_equal(fleet3, fleet1 + 1)
 
         assert_in(fleet1, fleetCommand.fleets)
 
@@ -689,3 +716,6 @@ class TestShipDesign(object):
         assert_equal(len(fleetCommand.fleets), ONE)   # one fleets should exist
         fleet = fleetCommand.generateFleetID()
         assert_equal(fleet, ONE) # fleetID should be 1
+
+        
+
