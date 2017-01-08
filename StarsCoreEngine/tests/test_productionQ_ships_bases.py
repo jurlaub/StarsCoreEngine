@@ -717,5 +717,7 @@ class TestShipDesign(object):
         fleet = fleetCommand.generateFleetID()
         assert_equal(fleet, ONE) # fleetID should be 1
 
-        
+        newFleet = fleetCommand.fleets[0]
+
+        assert_equal(len(newFleet.tokens), 1)        
 

@@ -59,23 +59,6 @@ class Token:
         self.mass = None
 
 
-class Starbase(SpaceObjects):
-    """
-    postcondition:  ID sent to space_objects super must prepend "playernumber_" to currentFleetID
-                    Starbases must register with UniverseObject.objectsAtXY
-                    Starbases must be connected to Planet (not Colony) object
-
-    """
-
-    def __init__(self, player, spaceObjectID, xy, universeID, planetID):
-        super(Starbase, self).__init__(xy, spaceObjectID)
-        self.player = player  #owning player
-        self.currentUniverseID = universeID   # current universe,  obtained from ProductionQ location
-        # self.objectID = spaceObjectID  #this is "playernumber_" + currentFleetID (i.e. FleetKey for player ) !! must change if FleetKey changes
-        self.planetID = planetID
-        self.starbase = False
-
-        self.tokens = []     
 
 
 
@@ -171,6 +154,25 @@ class Fleets(SpaceObjects): #  additionally subclass Component
 
     #     for each in self.token:
 
+class Starbase(Fleets):
+    """
+    postcondition:  ID sent to space_objects super must prepend "playernumber_" to currentFleetID
+                    Starbases must register with UniverseObject.objectsAtXY
+                    Starbases must be connected to Planet (not Colony) object
+
+    """
+
+    def __init__(self, player, spaceObjectID, xy, universeID, planetID):
+        super(Starbase, self).__init__(player, spaceObjectID, xy, universeID)
+        # self.player = player  #owning player
+        # self.currentUniverseID = universeID   # current universe,  obtained from ProductionQ location
+        # self.objectID = spaceObjectID  #this is "playernumber_" + currentFleetID (i.e. FleetKey for player ) !! must change if FleetKey changes
+        
+        self.planetID = planetID
+        self.starbase = False
+        self.constructionCapacity = None # None or Mass Rating 
+
+        self.tokens = []     
 
                     
                     
