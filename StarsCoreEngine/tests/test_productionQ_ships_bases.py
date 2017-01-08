@@ -650,6 +650,8 @@ class TestShipDesign(object):
         starbaseID = self.target_colony_obj.planet.ID + "_" + str(self.player.playerNumber)
         assert_equal(self.target_colony_obj.planet.orbitalStarbase.ID, starbaseID)
 
+        assert_equal(len(self.target_colony_obj.planet.orbitalStarbase.tokens), 1) 
+
 
     def test_produce_fleetID(self):
         """

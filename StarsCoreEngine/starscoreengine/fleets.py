@@ -82,7 +82,7 @@ class Fleets(SpaceObjects): #  additionally subclass Component
         # self.objectID = spaceObjectID  #this is "playernumber_" + currentFleetID (i.e. FleetKey for player ) !! must change if FleetKey changes
 
 
-        self.tokens = []
+        self.tokens = {}
         self.fuel_capacity = 0
         self.fuel_availiable = 0
         self.cargo_mass = 0
@@ -163,8 +163,7 @@ class Starbase(Fleets):
         self.planetID = planetID
         self.starbase = False
         self.constructionCapacity = None # None or Mass Rating 
-
-        self.tokens = []     
+    
 
                     
                     
