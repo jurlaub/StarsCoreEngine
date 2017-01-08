@@ -85,6 +85,9 @@ Multiple types of entries:
 
 """
 
+from .fleets import Fleets, Starbase
+
+
 DEBUG = True
 DEBUG_2 = True
 
@@ -1409,16 +1412,42 @@ class ProductionQ(object):
         produces ShipDesign, instantiates Token, looks for available fleet that 
         Token can be added to. If no available fleet, generate fleet. 
 
+    #     precondition:   quantity - number of design to add to token
+    #                     design - token design to add to fleet
+    #                     colony/planet (planet provides (xy) and universeID)
+
+    #     postcondition:  a fleet object created with colony location & added to fleets
+
         """
 
+        newFleetID = self.player.fleetCommand.generateFleetID()
+        xy = self.colony.planet.xy
+        universeID = self.colony.planet.getPrefex() # universeID where the ship is built
+
+        spaceObjectID = str(self.player.playerNumber) + "_" + str(newFleetID)
+        newFleet = Fleets(self.player, spaceObjectID, xy, universeID)
+
         # self.test_ship += quantity
-        self.player.fleetCommand.createFleetbyProduction(quantity, designID, self.colony)
+        # self.player.fleetCommand.createFleetbyProduction(quantity, designID, self.colony)
+
+        if DEBUG_2: print("ProductionQ.produceShip(): key:%s xy(%s) universeID:%s spaceObjectID:%s \n %s " % (newFleetID, xy, universeID, spaceObjectID, newFleet.__dict__))
+        self.player.fleetCommand.addFleet(newFleetID, newFleet)
+
 
     def produceStarbase(self, quantity, designID):
         """produces starbase, instantiates Token, assigns to Colony. """
         
+
+        newStarbaseID = str(self.colony.planet.ID) + "_" + str(self.player.playerNumber)
+        xy = self.colony.planet.xy
+        universeID = self.colony.planet.getPrefex()
+
+        newStarbase = Starbase(self.player, newStarbaseID, xy, universeID, self.colony.planet.ID)
+
         self.test_ship += 1
-        self.colony.createStarbasebyProduction(quantity, designID, self.player)
+
+        self.colony.planet.orbitalStarbase = newStarbase
+        
 
 
     def producePlanetaryInstallation(self):

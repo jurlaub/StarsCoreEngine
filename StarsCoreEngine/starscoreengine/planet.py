@@ -339,11 +339,4 @@ class Colony(object):
             return lowValue
 
 
-    def createStarbasebyProduction(self, quantity, designID, player):
-        newStarbaseID = self.planet.ID + "_" + str(player.playerNumber)
-        xy = self.planet.xy
-        universeID = self.planet.getPrefex()
 
-        newStarbase = Starbase(player, newStarbaseID, xy, universeID, self.planet.ID)
-        
-        self.planet.orbitalStarbase = newStarbase

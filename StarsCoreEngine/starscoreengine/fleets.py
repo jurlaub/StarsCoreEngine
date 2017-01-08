@@ -140,14 +140,6 @@ class Fleets(SpaceObjects): #  additionally subclass Component
                     fuelUsed += (self.cargoMass + t.mass) * t.design.fuelEfficiency[self.speed] * self.raceFuelEfficiency * mg_coeff
                     self.cargoMass = 0
 
-    @staticmethod
-    def generateFleetSpaceObjectID(playerNumber, fleetID):
-        """
-        FleetSpaceObjectID does not include a universe ID. The FleetID should be unique across the multiverse
-        """
-        objectID = str(playerNumber) + "_" + str(fleetID)
-        return objectID                    
-
 
 
     # def updateTokens(self, quantity, designID):

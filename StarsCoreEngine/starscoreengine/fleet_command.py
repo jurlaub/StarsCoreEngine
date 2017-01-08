@@ -127,29 +127,13 @@ class FleetCommand(object):
 
             del self.fleets[fleetID]
 
-    def createFleetbyProduction(self, quantity, designID, colony):
+
+    def addFleet(self, newFleetID, newFleet):
         """
-        precondition:   quantity - number of design to add to token
-                        design - token design to add to fleet
-                        colony/planet (planet provides (xy) and universeID)
-
-        postcondition:  a fleet object created with colony location & added to fleets
-
-
 
         """
-        newFleetID = self.generateFleetID()
-        xy = colony.planet.xy
-        universeID = colony.planet.getPrefex()
 
-        spaceObjectID = Fleets.generateFleetSpaceObjectID(self.player.playerNumber, newFleetID)
-        newFleet = Fleets(self.player, spaceObjectID, xy, universeID)
-        # newFleet.updateTokens(quantity, designID)
-
-        if DEBUG2: print("FleetCommand.createFleetbyProduction(): key:%s xy(%s) universeID:%s spaceObjectID:%s \n %s " % (newFleetID, xy, universeID, spaceObjectID, newFleet.__dict__))
-        self.fleets[newFleetID] = newFleet
-
-    
+        self.fleets[newFleetID] = newFleet   
 
 
 
