@@ -70,13 +70,23 @@ class UniverseObject(object):
         # this is where a universe would initialize special rules and tech tree
 
           
-        """
+        """ 
+        UniverseObject.objectsAtXY
             use a dictionary of (x,y,z) coords along with space object id's to collect locations and other data
 
             d = {}
             l = d.setdefault((25,45), [])   # it returns the list associated with the first value or a new list
             l.append(355)
             l.append(655)
+
+        option1
+            for each location:
+                'fleets' : []  # list of fleets at location
+                'planet' : planetObject
+                'minefield' : []
+        option2 
+            all objects listed in list 
+
         """
         self.objectsAtXY = {} 
 

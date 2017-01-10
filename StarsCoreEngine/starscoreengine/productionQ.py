@@ -1412,13 +1412,15 @@ class ProductionQ(object):
         produces ShipDesign, instantiates Token, looks for available fleet that 
         Token can be added to. If no available fleet, generate fleet. 
 
-    #     precondition:   quantity - number of design to add to token
-    #                     design - token design to add to fleet
-    #                     colony/planet (planet provides (xy) and universeID)
+        #     precondition:   quantity - number of design to add to token
+        #                     design - token design to add to fleet
+        #                     colony/planet (planet provides (xy) and universeID)
 
-    #     postcondition:  a fleet object created with colony location & added to fleets
+        #     postcondition:  a fleet object created with colony location & added to fleets
 
         """
+
+        #--TODO-- spacedock capacity needs to be checked in buildEntry - or earlier - to determine if ship can be built
 
         newFleetID = self.player.fleetCommand.generateFleetID()
         xy = self.colony.planet.xy
@@ -1446,11 +1448,13 @@ class ProductionQ(object):
 
         newStarbase = Starbase(self.player, newStarbaseID, xy, universeID, self.colony.planet.ID)
 
-        self.test_ship += 1
+        # self.test_ship += 1
 
         # add Token to Fleet
         newToken = Token(designID, quantity)
         newStarbase.tokens[designID] = newToken
+
+        #--TODO-- update Starbase values like SpaceDock capacity, etc.
 
         self.colony.planet.orbitalStarbase = newStarbase
         

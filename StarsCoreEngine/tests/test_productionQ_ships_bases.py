@@ -640,11 +640,11 @@ class TestShipDesign(object):
         assert_equal(len(self.colonyPQ.productionOrder), 1)
         assert_equal(len(self.colonyPQ.productionItems), 1)
 
-        assert_equal(self.colonyPQ.test_ship, 0)
+        # assert_equal(self.colonyPQ.test_ship, 0)
 
         self.colonyPQ.productionController()
         
-        assert_equal(self.colonyPQ.test_ship, 1)  # placeholder to test Starbases
+        # assert_equal(self.colonyPQ.test_ship, 1)  # placeholder to test Starbases
         print("test_produce_Starbase. orbitalStarbase:%s " %self.target_colony_obj.planet.orbitalStarbase)
         assert_equal(self.target_colony_obj.planet.orbitalStarbase.planetID, self.target_colony_obj.planet.ID)
         starbaseID = self.target_colony_obj.planet.ID + "_" + str(self.player.playerNumber)
@@ -722,4 +722,11 @@ class TestShipDesign(object):
         newFleet = fleetCommand.fleets[0]
 
         assert_equal(len(newFleet.tokens), 1)        
+
+
+    def test_produced_fleet_added_to_universe_objectsAtXY(self):
+        """
+        a produced fleet must be added to universe.objectsAtXY 
+        """
+        pass
 

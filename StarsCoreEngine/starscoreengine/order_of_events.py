@@ -82,7 +82,7 @@ def OrderOfEvents(game):
     ######   end of movement (may move between universes); Fuel usage, minefield
     ######   impacts, Fuel gathering
 
-    # !    ISFleetgrowth():                  # Fleet
+    # !    ISFleetgrowth():                  # FleetController
     # !    mineralDecay():                   # space_objects (new File? packets_minerals? )
     # !    wormholesMove():                  # wormholes  (new file -> necessary to expand upon multi-universe)
     # !!   minefieldDetonate():              # space_objects.py = Minefield
@@ -93,7 +93,7 @@ def OrderOfEvents(game):
     population(game)
 
     # !    newPacketCollisions():            # space_objects (new File? packets_minerals? )
-    # !    fleetsRefuel():                   # Fleet
+    # !    fleetsRefuel():                   # colony.starbase & universe.objectsAtXY
     # !!   randomEvents():
 
     # !!!!  fleetBattles():                   # Fleet  + ? Global Controller => Battle Controller -> references each fleet at a location
@@ -108,7 +108,7 @@ def OrderOfEvents(game):
     # !!   waypointOneFleetMerge():          # Fleet Controller
     # !    instaforming():                   # Colony + Player (player is checked for 'CA'; if true calls the Colony Method on each colony)
     # !!    mineSweeping():                   # Fleet  (!! due to multiple overlapping fields?)
-    # !    repair():                        # Fleet
+    # !    repair():                        # FleetCommand
     # !    remoteTerraforming():             # Fleet ? 
     
 

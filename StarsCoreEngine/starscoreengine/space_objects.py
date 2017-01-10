@@ -36,6 +36,13 @@ class SpaceObjects(object):
     (destinationX, destinationY) = next targeted location
     newSpeed = new speed coming from orders (this speed will become 'speed'). 
 
+    Fleets & SpaceObjects
+    SpaceObjects exist in the Universe and answer the question of "What is"
+    Fleets exist as a means for the player to control the SpaceObjects that they own - answers "intends to"
+
+    SpaceObjects are connected to a given UniverseObject
+    
+
     """
 
     def __init__(self, xy, ID):
@@ -48,7 +55,8 @@ class SpaceObjects(object):
         self.newSpeed = self.speed
 
         #need to be able to store waypoints (with speed), and then to know what the waypoints are (need to figure out howto do intercepts)
-        self.waypoints = None #[((x,y), speed), (other_space_object, speed)...
+        
+        self.waypoints = None #[((x,y), speed), (other_space_object, speed)... 
         
         #perhaps sort fleets by waypoint type, if type of next waypoint (of fleet A) is static (x, y) then fleet A can move easily,
         #then a following intercept fleet (B) can move to the new location of fleet A. 
@@ -58,6 +66,16 @@ class SpaceObjects(object):
         #   all three will have moved as far as they can towards one another,
         #   two will meet, and the third will have a fixed target
         #   three will meet 
+
+
+        # 
+        self.playerNumber = None
+        self.tokens = {}
+
+
+
+
+
 
     def printCurrentCoord(self):
         print ("(x = %, y = %)" % (self.xy))
