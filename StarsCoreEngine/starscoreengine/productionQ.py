@@ -86,6 +86,7 @@ Multiple types of entries:
 """
 
 from .fleets import Fleets, Starbase, Token
+from .fleet_orders import FleetOrders
 
 
 DEBUG = True
@@ -1433,9 +1434,15 @@ class ProductionQ(object):
         newToken = Token(designID, quantity)
         newFleet.tokens[designID] = newToken
 
+        #add orders reference
+        newFleetOrders = FleetOrders(newFleet)
+        self.player.fleetCommand.addFleetOrders(newFleetID, newFleetOrders)
+
+        #create new fleet object in universe
+        self.colony.planet.universe.addPlayerFleets(spaceObjectID, newFleet, self.player.playerNumber)
 
         if DEBUG_2: print("ProductionQ.produceShip(): key:%s xy(%s) universeID:%s spaceObjectID:%s \n %s " % (newFleetID, xy, universeID, spaceObjectID, newFleet.__dict__))
-        self.player.fleetCommand.addFleet(newFleetID, newFleet)
+        
 
 
     def produceStarbase(self, quantity, designID):

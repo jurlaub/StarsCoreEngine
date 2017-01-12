@@ -21,6 +21,7 @@
 """
 
 from .fleets import Fleets
+from .fleet_orders import FleetOrders
 
 
 DEBUG = True
@@ -128,12 +129,12 @@ class FleetCommand(object):
             del self.fleets[fleetID]
 
 
-    def addFleet(self, newFleetID, newFleet):
+    def addFleetOrders(self, newFleetID, newFleetOrders):
         """
 
         """
 
-        self.fleets[newFleetID] = newFleet   
+        self.fleets[newFleetID] = newFleetOrders   
 
 
 

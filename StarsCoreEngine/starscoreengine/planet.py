@@ -35,7 +35,7 @@ class Planet(SpaceObjects):
 
 
     """
-    def __init__(self, xy, ID, name, origHab = (1.1, 90, 45), origConc = None):
+    def __init__(self, xy, ID, name, universe,  origHab = (1.1, 90, 45), origConc = None):
         super(Planet, self).__init__(xy, ID)
         self.name = name    
         self.origHab = origHab              #depreciate
@@ -47,6 +47,8 @@ class Planet(SpaceObjects):
         self.currentTemp = self.origTemp
         self.currentGrav = self.origGrav
         self.currentRad = self.origRad
+
+        self.universe = universe
 
         #detail current Concentration, random by default
         if not origConc: 

@@ -84,6 +84,7 @@ class TestShipDesign(object):
         #--------- obtain colony worlds -------------
         self.newColony = []
         self.universePlanets = self.game.game_universe[0].planets
+        self.universe = self.game.game_universe[0]
 
         # find planets == newColonyCount in universe without an owner
         newColonyCount = 5 
@@ -338,6 +339,7 @@ class TestShipDesign(object):
 
         self.player.fleetCommand.fleets = {}
         self.player.fleetCommand.currentFleetID = 0
+        self.universe.fleetObjects = {}
 
 
     def teardown(self):
@@ -699,10 +701,15 @@ class TestShipDesign(object):
         ONE = 1
 
         fleetCommand = self.player.fleetCommand
+        
 
         # --------  test fleets -------
         assert_equal(len(fleetCommand.fleets), ZERO)   # no fleets should exist
+        #assert_equal(len(playerFleets), ZERO)   #no fleets for player
         assert_equal(fleetCommand.currentFleetID, ZERO) # fleetID should be 0
+
+
+        assert_equal(len(self.universe.fleetObjects), ZERO)
 
 
         # ---------- produce ship & new fleet should be created ----
@@ -716,12 +723,22 @@ class TestShipDesign(object):
 
         # ------- test fleets ------
         assert_equal(len(fleetCommand.fleets), ONE)   # one fleets should exist
+        print("test_produce_fleet_with_one_ship: fleetObject: %s" % self.universe.fleetObjects)
+        assert_equal(len(self.universe.fleetObjects), ONE) 
         fleet = fleetCommand.generateFleetID()
         assert_equal(fleet, ONE) # fleetID should be 1
 
         newFleet = fleetCommand.fleets[0]
 
-        assert_equal(len(newFleet.tokens), 1)        
+        # playerFleet ID should now exist
+        playerFleets = self.universe.fleetObjects[self.player.playerNumber]
+        assert_equal(len(playerFleets), 1)      
+         
+
+        newFleet = playerFleets['1_0']
+        print("test_produce_fleet_with_one_ship: fleetInfo: %s " % newFleet.__dict__) 
+        assert_equal(len(newFleet.tokens), ONE)
+        #assert_false(True)
 
 
     def test_produced_fleet_added_to_universe_objectsAtXY(self):

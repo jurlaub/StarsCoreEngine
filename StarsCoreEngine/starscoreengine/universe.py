@@ -93,6 +93,30 @@ class UniverseObject(object):
 
     #  need isAPlanet(XYLocation)
 
+    def addPlayerFleets(self, fleetID, fleetObject, playerID):
+        """
+        precondition:   fleetID - unique to player fleetID; unique to universe
+                        fleetObject - instantiated fleetObject
+                        playerID - owning player
+
+        postcondition:  new fleet is added to self.fleetObjects = {"playerID" : {"fleetID" : fleetObject}} 
+                        new fleet id is added to self.objectsAtXY
+                        existing player fleetID's are overwritten by the new fleet object
+        
+
+        """
+
+        #playerRegistered = self.fleetObjects[playerID]
+
+        # add the playerID to the universe.fleetObjects 
+        if not playerID in self.fleetObjects:
+            self.fleetObjects[playerID] = {}
+        
+        playerRegistered = self.fleetObjects[playerID]
+        
+        playerRegistered[fleetID] = fleetObject
+        
+
 
     def createPlanetObjects(self):
         """
@@ -123,15 +147,11 @@ class UniverseObject(object):
 
         return planets
 
-
-
     def getPlanetName(self):
 
         name = getPlanetNameFromTemplate()
 
         return name
-
-
 
     def createPlanet(self, ID, name, playerHab):
         ''' createPlanet generates the initial planet values. 
@@ -143,12 +163,9 @@ class UniverseObject(object):
 
         uSize = self.UniverseSizeXY
         xy = (random.randrange(0, uSize[0]), random.randrange(0, uSize[1]))
-        tmpVal = Planet(xy, ID, name, playerHab)  # --TODO -- Add random values to Planet object
+        tmpVal = Planet(xy, ID, name, self, playerHab)  # --TODO -- Add random values to Planet object
         
         return tmpVal
-
-
-
 
     def createHomeworldPlanet(self, raceData):
         # -- TODO --- a positional location of HWs based on some number

@@ -49,7 +49,7 @@ def test_spaceobjects():
 
 #old - for reference -  use test classes
 def test_planet():
-    po1 = planet.Planet((43, 2001), 333, "Saratoga", (100,50,32), (55, 30, 10))
+    po1 = planet.Planet((43, 2001), 333, "Saratoga", None, (100,50,32), (55, 30, 10))
     xy = (43, 2001)
 
     assert_equal("Saratoga", po1.name)
@@ -348,7 +348,7 @@ class TestGame(object):
 
             playerHab = (rd.habGravityCenter, rd.habTempCenter, rd.habRadCenter)
 
-            testPlanet = Planet((10,25), "0_1", "testPlanet", playerHab)
+            testPlanet = Planet((10,25), "0_1", "testPlanet", None, playerHab)
             testPlanetVal = player1.planetValue(testPlanet)
 
             assert_equal(testPlanetVal, 100)
@@ -460,7 +460,8 @@ class TestGamePlanets(object):
 
     def setup(self):
         print("TestGamePlanets: Setup")
-        self.planet1 = planet.Planet((104,300), '024', 'Abbadon')
+
+        self.planet1 = planet.Planet((104,300), '024', 'Abbadon', None )
 
     def teardown(self):
         print("TestGamePlanets: Teardown")
