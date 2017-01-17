@@ -1661,3 +1661,13 @@ class TestProductionQ(object):
         assert_equal(maxMines, calculatedMines)
         
 
+    def test_proportionaRemainder_low_resources(self):
+
+
+        targetMaterials = [20, 2, 6, 34]  
+        availableSupplies = [63, 153, 119, 12]
+
+        result = ProductionQ.proportionalRemainder(targetMaterials, availableSupplies)
+
+        for e in range(0, len(result)):
+            assert_true(result[e] <= availableSupplies[e])

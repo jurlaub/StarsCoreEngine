@@ -89,8 +89,9 @@ from .fleets import FleetObject, Starbase, Token
 from .fleet_orders import FleetOrders
 
 
-DEBUG = True
+DEBUG = False    # addToQueue
 DEBUG_2 = True
+DEBUG_3 = True  # ProductionController and EntryController
 
 class ProductionQ(object):
     """ ProductionQ
@@ -331,6 +332,7 @@ class ProductionQ(object):
         "materialsUsed" : [0, 0, 0, 0]  == (iron, bor, germ, resources)
 
         """
+        
         try:
             
 
@@ -381,21 +383,21 @@ class ProductionQ(object):
 
             tmpKey = self.obtainNewKey(entryKey)
 
-            if DEBUG: print("addToQueue. at %s - %s:%s " % (insertOrder, tmpKey, tmpItem))
+            if DEBUG: print("addToQueue. at orderPosition %s - %s:%s " % (insertOrder, tmpKey, tmpItem))
 
             if insertOrder is not None and insertOrder < len(self.productionOrder):
                 # if insertOrder >= len(self.productionOrder):
                 #     self.productionOrder.append(tmpKey)
                 # else:
-                print("addToQueue.at insert")
+                if DEBUG: print("addToQueue.at insert")
                 self.productionOrder.insert(insertOrder, tmpKey)
 
 
             else:
-                print("addToQueue.at append")
+                if DEBUG: print("addToQueue.at append")
                 self.productionOrder.append(tmpKey)
 
-            print("addToQueue: item:%s" %tmpItem)
+            if DEBUG: print("addToQueue: item:%s" %tmpItem)
             self.productionItems[tmpKey] = tmpItem
 
             #print("%s \n %s" % (self.productionOrder, self.productionItems))
@@ -572,6 +574,8 @@ class ProductionQ(object):
         else:
             self.resources  = self.research.colonyResourcesAfterTax(self.colony)
 
+        if DEBUG_3: print("updateProductionQResources: resources:%s" % self.resources)
+
     def productionController(self):
         """
         The productionController is used to 'parse' through the production list == self.prodQueue 
@@ -674,7 +678,7 @@ class ProductionQ(object):
 
         """
 
-        DEBUG_3 = True
+        #DEBUG_3 = DEBUG_3
 
         autobuildMinerals = False       # for minerals if needed.
 
@@ -703,7 +707,8 @@ class ProductionQ(object):
 
             orderLength = len(self.productionOrder)
             if DEBUG_3: print("ProductionQ.productionController - start of loop. orderIndex:%d  / orderLength: %d)" % (orderIndex, orderLength))
-            
+            if DEBUG_3: print("ProductionQ.productionOrder: %s" %  self.productionOrder)
+
             if self.resources < 1:  # resources left
                 if DEBUG_3: print("ProductionQ.productionController - resources: %d" % self.resources)
                 break
@@ -975,8 +980,12 @@ class ProductionQ(object):
 
         --------- hasWorkBeenDone--------------- 
         >> has work been done? (on this entry?) 
+            >>  has a partial work on a ship or item been done --> so that the remaining 
+                material and resources left to complete 1 is less then the complete design costs
+
             >> if so & single entry -> produce the 1 with altered materials
             (for later) if so & multiple entry -> need to seperate out
+
         ------------------------------------- 
 
         -------- maximumHasBeenReached ------------
@@ -1007,7 +1016,7 @@ class ProductionQ(object):
 
         """
 
-        DEBUG_3 = True
+        #DEBUG_3 = DEBUG_3
     
 
         entryObj = self.productionItems[entryID]
@@ -1038,7 +1047,7 @@ class ProductionQ(object):
         #         pass
         # ----------------------------------------------------- 
         """       
-        print("\tworkHasBeenDone:%s" % completeAPartiallyWorkedOnEntry)
+        if DEBUG_3:print("\tworkHasBeenDone:%s" % completeAPartiallyWorkedOnEntry)
         if completeAPartiallyWorkedOnEntry:
 
             quantityONE = 1
@@ -1057,7 +1066,7 @@ class ProductionQ(object):
 
         else:
 
-            if DEBUG_3: print("entryController: payload sent to buildLimit: %d : %s " % (entryQuantity, targetItemCosts))
+            if DEBUG_3: print("entryController: payload sent to buildLimit - quantity: %d : costs: %s " % (entryQuantity, targetItemCosts))
             buildQuantity, buildMaterials = self.buildLimit(entryQuantity, targetItemCosts)
 
 
@@ -1070,6 +1079,8 @@ class ProductionQ(object):
 
         if buildQuantity > 0:   # buildQuantity cap is entryQuantity 
             
+            if DEBUG_3: print("entryController: buildQuantity:%d  designID:%s with costs: %s " % (buildQuantity, entryDesignID, buildMaterials))
+
             self.buildEntry(entryType, buildQuantity, entryDesignID)
             self.consumeMaterials(buildMaterials)
 
@@ -1088,6 +1099,8 @@ class ProductionQ(object):
 
         elif buildQuantity == 0:
             # self.buildLimit() will return a proportional amount of materialsUsed.
+            if DEBUG_3: print("entryController: buildQuantity:%d  designID:%s with costs: %s " % (buildQuantity, entryDesignID, buildMaterials))
+
 
             # for partialProduction ==> this amount is added to the entry["materialsUsed"] 
             for i in range(0, len(entryObj["materialsUsed"])):
@@ -1225,6 +1238,8 @@ class ProductionQ(object):
         # resources to sum(minerals)
         # sum(minerals) to resources
 
+        if DEBUG_3: print("proportionalRemainder: targetMaterials: %s  availableSupplies: %s" % (targetMaterials,availableSupplies))
+
         ZERO = 0
         tmpProportional = [ZERO for i in targetMaterials]
 
@@ -1238,23 +1253,9 @@ class ProductionQ(object):
             else:
                 tmpProportional[i] = tm
 
-        print(tmpProportional)
+        if DEBUG_3: print("proportionalRemainder: %s" % tmpProportional)
 
-        tmpRes = targetMaterials[-1]
-        tmpMin = sum(targetMaterials[:-1])
-
-        # available resources for each available mineral
-        tmpT = tmpRes / tmpMin
-        print(tmpT)
-        x = 0
-        for i in tmpProportional[:-1]:
-            x += (i * tmpT)
-            print(x)
-
-        tmpProportional[-1] = x 
-        print(tmpProportional)
-
-        return [int(i) for i in tmpProportional]
+        return tmpProportional
 
     @staticmethod
     def limit(quantity, neededMaterials, availableSupplies):

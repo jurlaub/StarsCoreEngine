@@ -78,6 +78,7 @@ class TestShipDesign(object):
         self.game = Game(self.gameTemplate)
         self.techTree = self.game.technology
         self.player = self.game.players['player1']
+
         self.techLevels = self.player.research.techLevels
         self.LRT = self.player.LRT
 
@@ -277,8 +278,14 @@ class TestShipDesign(object):
         print("TestShipDesign: Setup")
 
         self.produceNumberDefault = 1
+        self.productNumberThree = 3
+        self.productNumberSeven = 7
+
         self.produceShipDefault = self.testShip1_name
+        self.produceScoutShip = self.d1_name
+        self.produceDestroyerShip = self.testShip3_name
         self.produceTypeDefault = self.productionID_Ship
+
 
         self.test_1_item_template = {"ProductionQ" : 
             {
@@ -308,10 +315,71 @@ class TestShipDesign(object):
 
 
 
+        self.test_2_item_template = {"ProductionQ" : 
+            {
+                self.target_colony_name:
+                    {
+                        "productionOrder" : [ self.produceScoutShip ],
+                        "productionItems" : { self.produceScoutShip : {"quantity": self.produceNumberDefault, "designID": self.produceScoutShip, "itemType" : self.produceTypeDefault }                                             
+                                            }
+
+                    }
+
+                }
+            }
+
+        self.test_destroyer = {"ProductionQ" : 
+            {
+                self.target_colony_name:
+                    {
+                        "productionOrder" : [ "destroyer_ship_alpha" ],
+                        "productionItems" : { "destroyer_ship_alpha" : {"quantity": self.productNumberThree, "designID": self.produceDestroyerShip, "itemType" : self.produceTypeDefault }                                             
+                                            }
+
+                    }
+
+                }
+            }
+
+        self.test_build_many_ships = {"ProductionQ" : 
+            {
+                self.target_colony_name:
+                    {
+                        "productionOrder" : [   "destroyer_ship_alpha", self.produceScoutShip, self.produceShipDefault ],
+                        "productionItems" : {   "destroyer_ship_alpha" : {"quantity": self.productNumberThree, "designID": self.produceDestroyerShip, "itemType" : self.produceTypeDefault },
+                                                self.produceScoutShip : {"quantity": self.produceNumberDefault, "designID": self.produceScoutShip, "itemType" : self.produceTypeDefault},
+                                                self.produceShipDefault : {"quantity": self.produceNumberDefault, "designID": self.produceShipDefault, "itemType" : self.produceTypeDefault }
+                                            
+                                            }
+
+                    }
+
+                }
+            }     
+
+        self.test_build_10_ships = {"ProductionQ" : 
+            {
+                self.target_colony_name:
+                    {
+                        "productionOrder" : [   "destroyer_ship_alpha", self.produceScoutShip, self.produceShipDefault ],
+                        "productionItems" : {   "destroyer_ship_alpha" : {"quantity": self.productNumberSeven, "designID": self.produceDestroyerShip, "itemType" : self.produceTypeDefault },
+                                                self.produceScoutShip : {"quantity": self.produceNumberDefault, "designID": self.produceScoutShip, "itemType" : self.produceTypeDefault},
+                                                self.produceShipDefault : {"quantity": self.produceNumberDefault, "designID": self.produceShipDefault, "itemType" : self.produceTypeDefault }
+                                            
+                                            }
+
+                    }
+
+                }
+            }  
+
+
+        self.target_colony_obj.planet.factories = 10
         self.target_colony_obj.planet.surfaceIron = 200
         self.target_colony_obj.planet.surfaceBor = 200
         self.target_colony_obj.planet.surfaceGerm = 200
         self.target_colony_obj.population = 450000
+
 
 
 
@@ -320,7 +388,7 @@ class TestShipDesign(object):
         self.germOnHW = self.target_colony_obj.planet.surfaceGerm
         self.populationOnHW = self.target_colony_obj.population
 
-        print("setup: On HW pop:%d iron: %d bor: %d germ: %s" % (self.populationOnHW, self.ironOnHW, self.borOnHW, self.germOnHW))
+        # print("setup: On HW pop:%d iron: %d bor: %d germ: %s" % (self.populationOnHW, self.ironOnHW, self.borOnHW, self.germOnHW))
 
         # ----- ship design -----
         self.playerDesigns = self.player.designs
@@ -339,7 +407,10 @@ class TestShipDesign(object):
 
         self.player.fleetCommand.fleets = {}
         self.player.fleetCommand.currentFleetID = 0
-        self.universe.fleetObjects = {}
+        self.universe.fleetObjects = {} 
+        self.universe.objectsAtXY[self.target_colony_obj.planet.xy] = []    # target_colony_obj exists here
+
+        self.player.research.researchTax = .01    # set to 0 for production tests
 
 
     def teardown(self):
@@ -700,6 +771,8 @@ class TestShipDesign(object):
         ZERO = 0
         ONE = 1
 
+        newFleetID = '1_0'
+
         fleetCommand = self.player.fleetCommand
         
 
@@ -736,7 +809,7 @@ class TestShipDesign(object):
         # playerFleets = self.universe.fleetObjects[self.player.playerNumber]
 
         # assert_equal(len(playerFleets), 1)      
-        newFleet = self.universe.fleetObjects['1_0']
+        newFleet = self.universe.fleetObjects[newFleetID]
 
         # newFleet = playerFleets['1_0']
 
@@ -767,6 +840,8 @@ class TestShipDesign(object):
         ZERO = 0
         ONE = 1
 
+        newFleetID = '1_0'
+
         fleetCommand = self.player.fleetCommand
         location = self.colonyPQ.colony.planet.xy
 
@@ -786,9 +861,9 @@ class TestShipDesign(object):
         print("test_produce_fleet_with_one_ship: fleetObject: %s" % self.universe.fleetObjects)
         assert_equal(len(self.universe.fleetObjects), ONE) 
 
-        assert_true('1_0' in self.universe.fleetObjects)
+        assert_true(newFleetID in self.universe.fleetObjects)
 
-        assert_true('1_0' in objectsAtLocation)
+        assert_true(newFleetID in objectsAtLocation)
         print("objectsAtXY: keys:%s values:%s" % (self.universe.objectsAtXY.keys(), self.universe.objectsAtXY.values()))
         #assert_true(False)
 
@@ -798,9 +873,114 @@ class TestShipDesign(object):
         # playerFleets = self.universe.fleetObjects[self.player.playerNumber]
 
         # assert_equal(len(playerFleets), 1)      
-        newFleet = self.universe.fleetObjects['1_0']
+        newFleet = self.universe.fleetObjects[newFleetID]
 
         setOfObjects = set(self.universe.objectsAtXY[location])
         #print("objectsAtXY: set:%s \nobjects:%s" % ( setOfObjects, self.universe.objectsAtXY[location]))
-        assert_true('1_0' in setOfObjects ) 
+        assert_true(newFleetID in setOfObjects ) 
         
+
+    def test_produce_fleet_with_multiple_ships(self):
+        """
+        build multiple ships
+
+        self.test_build_many_ships builds three different type of ships
+
+        """
+        THREE = 3
+
+        #add population and minerals to planet
+        self.target_colony_obj.planet.surfaceIron = 500
+        self.target_colony_obj.planet.surfaceBor = 500
+        self.target_colony_obj.planet.surfaceGerm = 500
+        self.target_colony_obj.population = 950000
+        self.target_colony_obj.planet.factories = 600
+
+        print("setup: On HW pop:%d iron: %d bor: %d germ: %s" % (self.target_colony_obj.population, 
+                                                                self.target_colony_obj.planet.surfaceIron, 
+                                                                self.target_colony_obj.planet.surfaceBor, 
+                                                                self.target_colony_obj.planet.surfaceGerm ))
+
+
+
+        # ---------- test universe --------------------------------
+        location = self.colonyPQ.colony.planet.xy
+        objectsAtLocation = len(self.universe.objectsAtXY[location])
+        print("objectsAtXY(before production): %s" % self.universe.objectsAtXY[location])
+
+        # ---------- produce ship & new fleet should be created ----
+        processProductionQ(self.test_build_many_ships, self.player)
+        assert_equal(len(self.colonyPQ.productionOrder), THREE)
+        assert_equal(len(self.colonyPQ.productionItems), THREE)
+
+        self.colonyPQ.productionController()    # a new fleet will be built
+
+        # ---------- after production
+        assert_equal(len(self.player.fleetCommand.fleets), THREE)
+        newObjectsAtLocation = len(self.universe.objectsAtXY[location])
+
+        print("objectsAtXY (after production): %s" % self.universe.objectsAtXY[location])
+        assert_equal(objectsAtLocation + THREE, newObjectsAtLocation)
+
+    def test_produce_multiple_ships_with_remainder(self):
+        """
+        build multiple ships
+
+        self.test_build_many_ships builds three different type of ships
+
+        """
+        THREE = 3
+        TWOHUNDRED = 200
+
+        #add population and minerals to planet
+        # self.target_colony_obj.planet.factories = 200
+        #self.player.research.researchTax = .7
+        self.colonyPQ.ExcludedFromResearch = True
+        colonyResources = self.target_colony_obj.calcTotalResources(self.player.raceData.popEfficiency)
+
+        print("setup: On HW pop:%d iron: %d bor: %d germ: %s" % (self.target_colony_obj.population, 
+                                                                self.target_colony_obj.planet.surfaceIron, 
+                                                                self.target_colony_obj.planet.surfaceBor, 
+                                                                self.target_colony_obj.planet.surfaceGerm ))
+
+        assert_equal(self.target_colony_obj.planet.surfaceIron, TWOHUNDRED)
+        assert_equal(self.target_colony_obj.planet.surfaceBor, TWOHUNDRED)
+        assert_equal(self.target_colony_obj.planet.surfaceGerm, TWOHUNDRED)
+
+        # ---------- test universe --------------------------------
+        location = self.colonyPQ.colony.planet.xy
+        objectsAtLocation = len(self.universe.objectsAtXY[location])
+        print("objectsAtXY(before production): %s" % self.universe.objectsAtXY[location])
+
+        # ---------- produce ship & new fleet should be created ----
+        processProductionQ(self.test_build_10_ships, self.player)
+        assert_equal(len(self.colonyPQ.productionOrder), THREE)
+        assert_equal(len(self.colonyPQ.productionItems), THREE)
+
+        self.colonyPQ.productionController()    # a new fleet will be built
+
+        #availableSupplies([200, 200, 200, 456]) 
+        #entryController: buildQuantity:4  designID:doomShip3 with costs: [164, 60, 100, 380] 
+        # ---------- after production
+        assert_true( self.target_colony_obj.planet.surfaceIron <= (TWOHUNDRED - 164) ) # iron cost for 4x doomship
+        assert_true( self.target_colony_obj.planet.surfaceBor <= (TWOHUNDRED - 60) ) # iron cost for 4x doomship
+        assert_true( self.target_colony_obj.planet.surfaceGerm <= (TWOHUNDRED - 100) ) # iron cost for 4x doomship
+
+
+        # ----------- compare produced ships to productionQ -----------
+        wip = self.colonyPQ.productionItems['destroyer_ship_alpha']
+        wipRemainingQuantity = wip['quantity']
+        shipsBuilt = self.productNumberSeven - wipRemainingQuantity
+        producedFleetObject = self.universe.fleetObjects['1_0']
+
+        assert_equal(producedFleetObject.tokens[self.produceDestroyerShip].number, shipsBuilt )
+        
+
+
+        # newObjectsAtLocation = len(self.universe.objectsAtXY[location])
+
+        # print("objectsAtXY (after production): %s" % self.universe.objectsAtXY[location])
+        #assert_equal(objectsAtLocation + THREE, newObjectsAtLocation)
+
+    
+

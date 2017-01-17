@@ -69,6 +69,7 @@ research:
 
 """
 
+DEBUG = True
 
 class Research(object):
     """ Research
@@ -128,7 +129,7 @@ class Research(object):
         self.nextResourcesSpent = 0
         self.yearlyResearchResources = 0     # Collected by player changes each year
         self.totalResources = 0     # Collected by player changes each year
-        self.researchTax = .5  # a percentage of total resources
+        self.researchTax = .1  # a percentage of total resources
 
 
         # technology costs from Player raceData
@@ -187,9 +188,14 @@ class Research(object):
 
 
         """
-        researchTax = self.researchTax * colony.totalResources
+        researchTax = int(self.researchTax * colony.totalResources)
         self.yearlyResearchResources += researchTax
-        return colony.totalResources - researchTax 
+        remainingResources = colony.totalResources - researchTax 
+
+        if DEBUG: print("colonyResourcesAfterTax: colonyResources: %s  researchTax:%s  usableResources:%s " % (colony.totalResources, researchTax, remainingResources))
+
+
+        return remainingResources
 
 
     def yearsResearch_add(self):

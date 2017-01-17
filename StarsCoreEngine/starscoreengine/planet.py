@@ -27,7 +27,7 @@ import random
 
 
 DEBUG_1 = True
-DEBUG_2 = False
+DEBUG_2 = True
 
 class Planet(SpaceObjects):
     """ 
@@ -194,7 +194,7 @@ class Colony(object):
 
         # ------------------- factory calculations -------------- 
         TEN = 10 # factoryProduce is based on TEN factories producing factoryProduce resources.
-        self.totalResources += int((self.operatingFactories() / TEN) * self.factoryProduce)
+        self.totalResources += int( (self.operatingFactories() / TEN) * self.factoryProduce)
 
 
         if DEBUG_2: print("Colony.calcTotalResources - factories: %d efficiency: %d  with (pop + factory) totalResources:%d" %(self.planet.factories, self.factoryProduce, self.totalResources))

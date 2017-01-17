@@ -48,7 +48,7 @@ class TestColonyPlanets(object):
         self.gameTemplate = StandardGameTemplate(self.testGameName, self.playerFileList, {"UniverseNumber0": { "Players": "2"}})
         self.game = Game(self.gameTemplate)
         self.player = self.game.players["player0"]
-
+        self.universe = self.game.game_universe[0]
 
 
         self.RaceData = self.player.raceData

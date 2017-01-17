@@ -130,6 +130,7 @@ class UniverseObject(object):
                                     if None = remove from .objectsAtXY
                             oldXY - objectID must be removed from oldXY location
                                     if objectID is transferring from different universe, oldXY remove not handled here
+                                    newly created objects do not have an oldXY location
 
         postcondition:      objectID added to newXY list 
                             objectID must be unique to .objectsAtXY
@@ -138,8 +139,9 @@ class UniverseObject(object):
         """
         #location = newXY
         if oldXY:
-            oldLocation = self.objectsAtXY.get(oldXY)
+            # oldLocation = self.objectsAtXY.get(oldXY)
             #remove ObjectID
+            self.objectsAtXY.get(oldXY).remove(fleetID)
 
 
         newLocation = self.objectsAtXY.setdefault(newXY, [])
