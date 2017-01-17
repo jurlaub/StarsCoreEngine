@@ -71,32 +71,32 @@ def OrderOfEvents(game):
 
     # !!!! Fleet merge and split    (by player action during turn)  # Fleet Controller
     
-    # !   scrappingFleets(game):           # Fleet Controller  -> maybe not.
-    # waypointZeroLoadTasks(game):         # Fleet
-    # waypointZeroTasks():                  # Fleet
+    # !   scrappingFleets(game):           # SpaceObject waypoint Orders are scrap. for each object in UniverseObject. 
+    # waypointZeroLoadTasks(game):         # FleetCommand
+    # waypointZeroTasks():                  # FleetCommand
     # !    MTMoves()
-    # !    inSpacePackets()                  # space_objects (new File? packets_minerals? )
+    # !    inSpacePackets()                  # for each object in UniverseObjects.mineralObjects. 
     
-    # !!!  fleetsMove():                     # Fleet, Wormhole updates a 
+    # !!!  fleetsMove():                     # UniverseObject moves according to waypoint, Wormhole updates a 
     ######   Universe Class dictionary with fleet object and destination. At the
     ######   end of movement (may move between universes); Fuel usage, minefield
     ######   impacts, Fuel gathering
 
-    # !    ISFleetgrowth():                  # FleetController
-    # !    mineralDecay():                   # space_objects (new File? packets_minerals? )
-    # !    wormholesMove():                  # wormholes  (new file -> necessary to expand upon multi-universe)
-    # !!   minefieldDetonate():              # space_objects.py = Minefield
-    # !    mineralMining():                  # planet.py
+    # !    ISFleetgrowth():                  # FleetController - for each player.PRT == IS & has colonists
+    # !    mineralDecay():                   # for each object in UniverseObject::space_objects (new File? packets_minerals? )
+    # !    wormholesMove():                  # for each object in UniverseObject:: wormholes  (new file -> necessary to expand upon multi-universe)
+    # !!   minefieldDetonate():              # for each object in UniverseObject:: space_objects.py = Minefield
+    # !    mineralMining():                  # for each player.colony update planet object
     # ^^^!  production():                     # ProductionQ
     # ^!   universeResearchCapture():        # Research
 
     population(game)
 
-    # !    newPacketCollisions():            # space_objects (new File? packets_minerals? )
-    # !    fleetsRefuel():                   # colony.starbase & universe.objectsAtXY
+    # !    newPacketCollisions():            # UniverseObject:: space_objects (new File? packets_minerals? )
+    # !    fleetsRefuel():                   # for each playerfleet, FleetController?  :: colony.starbase & universe.objectsAtXY
     # !!   randomEvents():
 
-    # !!!!  fleetBattles():                   # Fleet  + ? Global Controller => Battle Controller -> references each fleet at a location
+    # !!!!  fleetBattles():                  # for each UniverseObject.objectAtXY :: fleets whose owners are enemies. Fleet  + ? Global Controller => Battle Controller -> references each fleet at a location
     # !!   bombing():                        # Fleet + Fleet Controller  (Fleets and planets)
     # !    meetMT():                         # Fleet Controller (all MT locations for fleets with merge orders)
     # !!   remoteMining():                   # Fleet + Fleet Controller

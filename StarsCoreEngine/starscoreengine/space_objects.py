@@ -55,7 +55,7 @@ class SpaceObjects(object):
         self.newSpeed = self.speed
 
         #need to be able to store waypoints (with speed), and then to know what the waypoints are (need to figure out howto do intercepts)
-        
+        # waypoint plus actions
         self.waypoints = None #[((x,y), speed), (other_space_object, speed)... 
         
         #perhaps sort fleets by waypoint type, if type of next waypoint (of fleet A) is static (x, y) then fleet A can move easily,
@@ -89,7 +89,8 @@ class SpaceObjects(object):
 
         return prefex
 
-
+    def objectHasMovedUpdate(self):
+        pass
 
 
 

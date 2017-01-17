@@ -728,22 +728,79 @@ class TestShipDesign(object):
         fleet = fleetCommand.generateFleetID()
         assert_equal(fleet, ONE) # fleetID should be 1
 
+
+
         newFleet = fleetCommand.fleets[0]
 
         # playerFleet ID should now exist
-        playerFleets = self.universe.fleetObjects[self.player.playerNumber]
-        assert_equal(len(playerFleets), 1)      
-         
+        # playerFleets = self.universe.fleetObjects[self.player.playerNumber]
 
-        newFleet = playerFleets['1_0']
+        # assert_equal(len(playerFleets), 1)      
+        newFleet = self.universe.fleetObjects['1_0']
+
+        # newFleet = playerFleets['1_0']
+
+        # ----------------- same object test ---------
+        # newFleet = self.universe.fleetObjects['1_0']
+        # fleetCommandFleet = fleetCommand.fleets[0]
+
+        # print("%s == %s" % (newFleet, fleetCommandFleet))
+        # assert_true(newFleet is fleetCommandFleet)
+        
+        # fleetCommandFleet.xy = (3, 55555)
+        # assert_true(newFleet.xy == fleetCommandFleet.xy)
+
+        # fleetCommandFleet.speed = 7
+
         print("test_produce_fleet_with_one_ship: fleetInfo: %s " % newFleet.__dict__) 
         assert_equal(len(newFleet.tokens), ONE)
         #assert_false(True)
+
+
+        
 
 
     def test_produced_fleet_added_to_universe_objectsAtXY(self):
         """
         a produced fleet must be added to universe.objectsAtXY 
         """
-        pass
+        ZERO = 0
+        ONE = 1
 
+        fleetCommand = self.player.fleetCommand
+        location = self.colonyPQ.colony.planet.xy
+
+        objectsAtLocation = self.universe.objectsAtXY[location]
+        countOfObjects = len(objectsAtLocation)
+        print("objectsAtXY: %s count:%s" % (objectsAtLocation, countOfObjects))
+
+        
+        # ---------- produce ship & new fleet should be created ----
+        processProductionQ(self.test_1_item_template, self.player)
+        self.colonyPQ.productionController()    # a new fleet will be built
+
+
+
+        # ------- test fleets ------
+        assert_equal(len(fleetCommand.fleets), ONE)   # one fleets should exist
+        print("test_produce_fleet_with_one_ship: fleetObject: %s" % self.universe.fleetObjects)
+        assert_equal(len(self.universe.fleetObjects), ONE) 
+
+        assert_true('1_0' in self.universe.fleetObjects)
+
+        assert_true('1_0' in objectsAtLocation)
+        print("objectsAtXY: keys:%s values:%s" % (self.universe.objectsAtXY.keys(), self.universe.objectsAtXY.values()))
+        #assert_true(False)
+
+        
+
+        # playerFleet ID should now exist
+        # playerFleets = self.universe.fleetObjects[self.player.playerNumber]
+
+        # assert_equal(len(playerFleets), 1)      
+        newFleet = self.universe.fleetObjects['1_0']
+
+        setOfObjects = set(self.universe.objectsAtXY[location])
+        #print("objectsAtXY: set:%s \nobjects:%s" % ( setOfObjects, self.universe.objectsAtXY[location]))
+        assert_true('1_0' in setOfObjects ) 
+        

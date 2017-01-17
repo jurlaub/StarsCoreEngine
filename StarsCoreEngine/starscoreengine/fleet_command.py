@@ -20,7 +20,7 @@
 
 """
 
-from .fleets import Fleets
+from .fleets import FleetObject
 from .fleet_orders import FleetOrders
 
 

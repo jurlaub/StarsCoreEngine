@@ -64,7 +64,7 @@ class Token:
 
 
 
-class Fleets(SpaceObjects): #  additionally subclass Component 
+class FleetObject(SpaceObjects): #  additionally subclass Component? 
     """
         Fleets -    can exist as a single ship. 
                 
@@ -73,16 +73,21 @@ class Fleets(SpaceObjects): #  additionally subclass Component
                         objectID must change if player FleetKey changes
 
 
+        FleetObjects extend SpaceObjects. They exist in an UniverseObject. A player owns a FleetObject 
+        and a Players FleetCommand controls via FleetOrders. (The FleetOrders step may be unnecessary)
+
+
     """
 
     def __init__(self, player,  spaceObjectID, xy, universeID):
-        super(Fleets, self).__init__(xy, spaceObjectID)
+        super(FleetObject, self).__init__(xy, spaceObjectID)
         self.player = player  #owning player
         self.currentUniverseID = universeID   # current universe,  obtained from ProductionQ location
         # self.objectID = spaceObjectID  #this is "playernumber_" + currentFleetID (i.e. FleetKey for player ) !! must change if FleetKey changes
 
+        self.fleetOrderNumber = None
 
-        self.tokens = {}
+        #self.tokens = {}
         self.fuel_capacity = 0
         self.fuel_availiable = 0
         self.cargo_mass = 0
@@ -146,7 +151,8 @@ class Fleets(SpaceObjects): #  additionally subclass Component
 
     #     for each in self.token:
 
-class Starbase(Fleets):
+
+class Starbase(FleetObject):
     """
     postcondition:  ID sent to space_objects super must prepend "playernumber_" to currentFleetID
                     Starbases must register with UniverseObject.objectsAtXY

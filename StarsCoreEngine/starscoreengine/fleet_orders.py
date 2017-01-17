@@ -24,4 +24,9 @@ class FleetOrders(object):
 
     def __init__(self, fleet):
         self.fleet = fleet
+        self.fleetOrder = None
         self.orders = {}
+
+
+
+        

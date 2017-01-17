@@ -68,7 +68,8 @@ class UniverseObject(object):
         self.fleetObjects = {} # fleet objects like Mystery Traders and player fleets
         # other space objects
         # this is where a universe would initialize special rules and tech tree
-
+        self.mineFieldObjects = {}
+        self.mineralObjects = {}
           
         """ 
         UniverseObject.objectsAtXY
@@ -93,15 +94,15 @@ class UniverseObject(object):
 
     #  need isAPlanet(XYLocation)
 
-    def addPlayerFleets(self, fleetID, fleetObject, playerID):
+    def addPlayerFleets(self, fleetID, fleetObject):
         """
-        precondition:   fleetID - unique to player fleetID; unique to universe
+        precondition:   fleetID == format: 'playerNumber' + '_' + 'unique fleetID' - unique to player fleetID; unique to universe
                         fleetObject - instantiated fleetObject
-                        playerID - owning player
+                        
 
-        postcondition:  new fleet is added to self.fleetObjects = {"playerID" : {"fleetID" : fleetObject}} 
+        postcondition:  new fleet is added to self.fleetObjects = {"fleetID" : fleetObject}
                         new fleet id is added to self.objectsAtXY
-                        existing player fleetID's are overwritten by the new fleet object
+                        existing fleetID's are overwritten by the new fleet object
         
 
         """
@@ -109,13 +110,42 @@ class UniverseObject(object):
         #playerRegistered = self.fleetObjects[playerID]
 
         # add the playerID to the universe.fleetObjects 
-        if not playerID in self.fleetObjects:
-            self.fleetObjects[playerID] = {}
         
-        playerRegistered = self.fleetObjects[playerID]
+        # if not playerID in self.fleetObjects:
+        #     self.fleetObjects[playerID] = {}
         
-        playerRegistered[fleetID] = fleetObject
+        # playerRegistered = self.fleetObjects[playerID]
         
+        #playerRegistered[fleetID] = fleetObject
+        self._updateObjectsAtXY(fleetID, fleetObject.xy)
+
+        self.fleetObjects[fleetID] = fleetObject
+
+
+    def _updateObjectsAtXY(self, objectID, newXY, oldXY = None):
+        """
+        precondition:       objectID -  the value to add to a given xy coord
+                                        must be unique 
+                            newXY - a tuple that identifies the location where objectID is located
+                                    if None = remove from .objectsAtXY
+                            oldXY - objectID must be removed from oldXY location
+                                    if objectID is transferring from different universe, oldXY remove not handled here
+
+        postcondition:      objectID added to newXY list 
+                            objectID must be unique to .objectsAtXY
+                            objectID removed from oldXY list
+
+        """
+        #location = newXY
+        if oldXY:
+            oldLocation = self.objectsAtXY.get(oldXY)
+            #remove ObjectID
+
+
+        newLocation = self.objectsAtXY.setdefault(newXY, [])
+        if objectID not in newLocation:
+            newLocation.append(objectID)  
+
 
 
     def createPlanetObjects(self):
@@ -217,6 +247,12 @@ class UniverseObject(object):
 
         return homeworld
 
+
+    def _interceptSpaceObject(self):
+        pass
+
+    def moveSpaceObject(self):
+        pass
 
 
 
