@@ -1671,3 +1671,15 @@ class TestProductionQ(object):
 
         for e in range(0, len(result)):
             assert_true(result[e] <= availableSupplies[e])
+
+
+    def test_productionQ_where_remainder_edge_case(self):
+        """
+        test where remainder of partially completed item is more then is necessary
+        for completion.  (i.e. when a miniturization of ship components results
+         in less costs then have already been used) 
+
+        """
+
+        pass
+

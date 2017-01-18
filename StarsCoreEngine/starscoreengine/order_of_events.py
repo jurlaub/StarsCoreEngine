@@ -219,9 +219,13 @@ def production():
 
     """
 
+    #--TODO--
+    # players research totalResources set to 0
+    # players research yearlyResearchResources set to 0
+
 
     # productionQ
-    # for each player in game
+    # for each player in game 
     # iterate through (productionQ or colonies.productionQ)
     # call productionController( player.research.techLevels) # note: techLevels is for miniaturization
 

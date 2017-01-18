@@ -347,8 +347,8 @@ class TestShipDesign(object):
                     {
                         "productionOrder" : [   "destroyer_ship_alpha", self.produceScoutShip, self.produceShipDefault ],
                         "productionItems" : {   "destroyer_ship_alpha" : {"quantity": self.productNumberThree, "designID": self.produceDestroyerShip, "itemType" : self.produceTypeDefault },
-                                                self.produceScoutShip : {"quantity": self.produceNumberDefault, "designID": self.produceScoutShip, "itemType" : self.produceTypeDefault},
-                                                self.produceShipDefault : {"quantity": self.produceNumberDefault, "designID": self.produceShipDefault, "itemType" : self.produceTypeDefault }
+                                                self.produceScoutShip : {"quantity": self.productNumberSeven, "designID": self.produceScoutShip, "itemType" : self.produceTypeDefault},
+                                                self.produceShipDefault : {"quantity": self.productNumberThree, "designID": self.produceShipDefault, "itemType" : self.produceTypeDefault }
                                             
                                             }
 
@@ -924,11 +924,12 @@ class TestShipDesign(object):
 
     def test_produce_multiple_ships_with_remainder(self):
         """
-        build multiple ships
+        build multiple ships in a single fleet. One fleet with a token containing a number of ships.
 
-        self.test_build_many_ships builds three different type of ships
+        uses self.test_build_10_ships
 
         """
+        
         THREE = 3
         TWOHUNDRED = 200
 
@@ -977,10 +978,185 @@ class TestShipDesign(object):
         
 
 
-        # newObjectsAtLocation = len(self.universe.objectsAtXY[location])
+
+
+    def test_produce_ships_with_prior_ships_with_low_remainder_in_queue(self):
+        """
+        tests completion of productionQ where work has been done on a ship and 
+        new orders are added to the productionQ.
+
+        ship with existing work 'destroyer_ship_alpha' has existing orders to produce 2 ships. 
+        The new orders specify 3 ships. The total quantity should be accounted for accurately.
+
+        """
+
+        # ----------------- setup -----------------
+        TWO = 2
+        THREE = 3
+        FOUR = 4
+        TWOHUNDRED = 200
+
+
+        usedMaterials = [36, 15, 25, 80] # materials partially used in production for test
+
+        existingOrder = ['destroyer_ship_alpha', 'Seer', 'doomShip1']
+        existingItems = {'destroyer_ship_alpha': {'materialsUsed': usedMaterials, 'designID': 'doomShip3', 'itemType': 'Ship', 'quantity': TWO, 'productionID': 'Ship', 'finishedForThisTurn': False}, 'doomShip1': {'materialsUsed': [0, 0, 0, 0], 'designID': 'doomShip1', 'itemType': 'Ship', 'quantity': 1, 'productionID': 'Ship', 'finishedForThisTurn': False}, 'Seer': {'materialsUsed': [0, 0, 0, 0], 'designID': 'Seer', 'itemType': 'Ship', 'quantity': 1, 'productionID': 'Ship', 'finishedForThisTurn': False}}
+
+        #[5, 0, 0, 15]
+        #[82, 30, 50, 190] 
+        #[98, 14, 42, 126]
+        #[15, 2, 6, 34]
+        sumUsedMaterials = [200, 46, 98, 365]   # sum of items produced in test queue
+        #buildQuantity:2  designID:doomShip3
+        #buildQuantity:7  designID:Seer 
+
+
+
+        self.colonyPQ.ExcludedFromResearch = True
+        self.colonyPQ.productionOrder = existingOrder
+        self.colonyPQ.productionItems = existingItems
+
+        colonyResources = self.target_colony_obj.calcTotalResources(self.player.raceData.popEfficiency)
+
+        print("setup: On HW pop:%d iron: %d bor: %d germ: %s" % (self.target_colony_obj.population, 
+                                                                self.target_colony_obj.planet.surfaceIron, 
+                                                                self.target_colony_obj.planet.surfaceBor, 
+                                                                self.target_colony_obj.planet.surfaceGerm ))
+
+        assert_equal(self.target_colony_obj.planet.surfaceIron, TWOHUNDRED)
+        assert_equal(self.target_colony_obj.planet.surfaceBor, TWOHUNDRED)
+        assert_equal(self.target_colony_obj.planet.surfaceGerm, TWOHUNDRED)
+
+
+
+
+        # ---------- test productionQ --------------------------------
+        location = self.colonyPQ.colony.planet.xy
+        objectsAtLocation = len(self.universe.objectsAtXY[location])
+        print("objectsAtXY(before production): %s" % self.universe.objectsAtXY[location])
+
+        # ---------- produce ship & new fleet should be created ----
+        processProductionQ(self.test_build_many_ships, self.player)
+        assert_equal(len(self.colonyPQ.productionOrder), FOUR)
+        assert_equal(len(self.colonyPQ.productionItems), FOUR)
+
+        self.colonyPQ.productionController()    # a new fleet will be built
+
+        #availableSupplies([200, 200, 200, 456]) 
+        #entryController: buildQuantity:4  designID:doomShip3 with costs: [164, 60, 100, 380] 
+        # ---------- after production
+        assert_true( self.target_colony_obj.planet.surfaceIron == (TWOHUNDRED - sumUsedMaterials[0]) ) # iron cost for 4x doomship
+        assert_true( self.target_colony_obj.planet.surfaceBor <= (TWOHUNDRED - sumUsedMaterials[1]) ) # iron cost for 4x doomship
+        assert_true( self.target_colony_obj.planet.surfaceGerm <= (TWOHUNDRED - sumUsedMaterials[2]) ) # iron cost for 4x doomship
+
+
+        # ----------- compare produced ships to productionQ -----------
+        wip = self.colonyPQ.productionItems['destroyer_ship_alpha1']
+        wipRemainingQuantity = wip['quantity']
+        #shipsBuilt = self.productNumberSeven - wipRemainingQuantity
+        #producedFleetObject = self.universe.fleetObjects['1_0']
+
+        #assert_equal(producedFleetObject.tokens[self.produceDestroyerShip].number, shipsBuilt )
+        
+
+
+        newObjectsAtLocation = len(self.universe.objectsAtXY[location])
+
+        # ---- three new fleets at location -----
+        assert_equal(objectsAtLocation + THREE, newObjectsAtLocation)
+
+        # print("Fleets: %s" % self.player.fleetCommand.fleets)
+        # print("objectsAtXY: %s" % self.universe.objectsAtXY[location])
+        # assert_true(False)
+
+    def test_produce_ships_with_prior_ships_with_high_remainder_in_queue(self):
+        """
+        tests completion of productionQ where work has been done on a ship and 
+        new orders are added to an already existing productionQ. The new ships 
+        should be built successfully with the correct number of resources consumed.
+
+        ship with existing work 'destroyer_ship_alpha' has existing orders to produce 4 ships. 
+        The new orders specify 3 ships reduced. The total quantity should be reduced accurately.
+
+        """
+
+        # ----------------- setup -----------------
+        TWO = 2
+        THREE = 3
+        FOUR = 4
+        FIVE = 5
+        TWOHUNDRED = 200
+
+        usedMaterials = [36, 15, 25, 80]
+        usedMaterials2 = [5, 2, 3, 5]  # seer1 has partial work done
+
+        existingOrder = ['destroyer_ship_alpha', 'Seer', 'doomShip1']
+        existingItems = {'destroyer_ship_alpha': {'materialsUsed': usedMaterials, 'designID': 'doomShip3', 'itemType': 'Ship', 'quantity': FOUR, 'productionID': 'Ship', 'finishedForThisTurn': False}, 'doomShip1': {'materialsUsed': [0, 0, 0, 0], 'designID': 'doomShip1', 'itemType': 'Ship', 'quantity': 1, 'productionID': 'Ship', 'finishedForThisTurn': False}, 'Seer': {'materialsUsed': usedMaterials2, 'designID': 'Seer', 'itemType': 'Ship', 'quantity': 1, 'productionID': 'Ship', 'finishedForThisTurn': False}}
+
+        # [5, 0, 0, 15]
+        # [82, 30, 50, 190]
+        # [9, 0, 3, 13]
+        # [84, 12, 36, 108]
+        # [20, 2, 6, 34]
+        # [0, 2, 6, 34]
+        sumUsedMaterials = [200, 46, 101, 394]
+
+
+        self.colonyPQ.ExcludedFromResearch = True
+        self.colonyPQ.productionOrder = existingOrder
+        self.colonyPQ.productionItems = existingItems
+
+        colonyResources = self.target_colony_obj.calcTotalResources(self.player.raceData.popEfficiency)
+
+        print("setup: On HW pop:%d iron: %d bor: %d germ: %s" % (self.target_colony_obj.population, 
+                                                                self.target_colony_obj.planet.surfaceIron, 
+                                                                self.target_colony_obj.planet.surfaceBor, 
+                                                                self.target_colony_obj.planet.surfaceGerm ))
+
+        assert_equal(self.target_colony_obj.planet.surfaceIron, TWOHUNDRED)
+        assert_equal(self.target_colony_obj.planet.surfaceBor, TWOHUNDRED)
+        assert_equal(self.target_colony_obj.planet.surfaceGerm, TWOHUNDRED)
+
+
+
+
+        # ---------- test productionQ --------------------------------
+        location = self.colonyPQ.colony.planet.xy
+        objectsAtLocation = len(self.universe.objectsAtXY[location])
+        print("objectsAtXY(before production): %s" % self.universe.objectsAtXY[location])
+
+        # ---------- produce ship & new fleet should be created ----
+        processProductionQ(self.test_build_many_ships, self.player)
+        assert_equal(len(self.colonyPQ.productionOrder), FIVE)
+        assert_equal(len(self.colonyPQ.productionItems), FIVE)
+
+        self.colonyPQ.productionController()    # a new fleet will be built
+
+        #availableSupplies([200, 200, 200, 456]) 
+        #entryController: buildQuantity:4  designID:doomShip3 with costs: [164, 60, 100, 380] 
+        # ---------- after production
+        assert_true( self.target_colony_obj.planet.surfaceIron <= (TWOHUNDRED - sumUsedMaterials[0]) ) # iron cost for 4x doomship
+        assert_true( self.target_colony_obj.planet.surfaceBor <= (TWOHUNDRED - sumUsedMaterials[1]) ) # iron cost for 4x doomship
+        assert_true( self.target_colony_obj.planet.surfaceGerm <= (TWOHUNDRED - sumUsedMaterials[2]) ) # iron cost for 4x doomship
+
+
+        # ----------- compare produced ships to productionQ -----------
+        wip = self.colonyPQ.productionItems['destroyer_ship_alpha1']
+        wipRemainingQuantity = wip['quantity']
+        #shipsBuilt = self.productNumberSeven - wipRemainingQuantity
+        #producedFleetObject = self.universe.fleetObjects['1_0']
+
+        #assert_equal(producedFleetObject.tokens[self.produceDestroyerShip].number, shipsBuilt )
+        
+
+
+        newObjectsAtLocation = len(self.universe.objectsAtXY[location])
 
         # print("objectsAtXY (after production): %s" % self.universe.objectsAtXY[location])
-        #assert_equal(objectsAtLocation + THREE, newObjectsAtLocation)
+        assert_equal(objectsAtLocation + FIVE, newObjectsAtLocation)
 
-    
+        # print("Fleets: %s" % self.player.fleetCommand.fleets)
+        # print("objectsAtXY: %s" % self.universe.objectsAtXY[location])
+        # assert_true(False)
+
 

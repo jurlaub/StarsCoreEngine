@@ -89,7 +89,7 @@ from .fleets import FleetObject, Starbase, Token
 from .fleet_orders import FleetOrders
 
 
-DEBUG = False    # addToQueue
+DEBUG = True    # addToQueue
 DEBUG_2 = True
 DEBUG_3 = True  # ProductionController and EntryController
 
@@ -222,31 +222,56 @@ class ProductionQ(object):
                 targetItem = colonyQItems[each]
                 existingItem = self.productionItems[each]
 
-                # if the new orders set the order to 0, 
+                # -------------- partially validate input ---------------- 
+                #quantity must be an int - skip if incoming order is not int
                 if ProductionQ.elementHasUnexpectedValue(targetItem):
                     #print("unexpected object - skipping")
                     continue
 
+                # target item quantity must be a positive int
                 elif targetItem["quantity"] < 1:
-                    existingItem["quantity"] = 0
+                    self.productionItems[each]["quantity"] = 0
                     continue
+                
+                # else:
+                #     # 1 :: 1 -> same  
+                #     # a < b  -> user increased quantity from last time 
+                #     # a > b  -> user decreased quantity 
+                #     # a :: 0 -> user removed quantity
+                #     existingItem["quantity"] = targetItem["quantity"]
+
 
                 # work has not been done
                 if not ProductionQ.workHasBeenDone(existingItem):
                     
                     # replace existing item's quantity 
-                    existingItem["quantity"] = targetItem["quantity"]
+                    self.productionItems[each]["quantity"] = targetItem["quantity"]
+                    if DEBUG_2: print("addToQueueFromXFile - Items-exist (T|T) index:%d - work not done and quantity set to %s" % (eachIndex, self.productionItems[each]["quantity"]))
+
                 
                 # work has been done
                 else:
                     
+                    # an existingItem with work done is reduced to only produce a single ship.
                     if targetItem["quantity"] == 1:
-                        # should not be a possibilty - work should only be done on an individual item
-                        # or the above test did not work. either way should not change
+                        
+                        self.productionItems[each]["quantity"] = targetItem["quantity"]
+                        if DEBUG_2: print("addToQueueFromXFile - Items-exist (T|T) index:%d - work done and quantity set to 1 == %s" % (eachIndex, self.productionItems[each]["quantity"]))
+
                         continue
                     
+                    # An existingItem has work done but with 'quantity' > 1
+                    # extract 1 with work done
+                    # sum of single extractedItem + existingItem == targetItem['quantity']
                     else:
-                        # quantity < 1 and quantity == 1 checked earlier. Value must be greater than 1                        
+                                
+                        # ---- mod existing entry --------
+                        # set quantity of existingItem with work done to 1
+                        self.productionItems[each]["quantity"] = 1
+
+
+                        # ---- create new item to account for the remaining orders ----
+                        # reduce quantity of targetItem by 1
                         targetItem["quantity"] -= 1 
                         
                         tmpNewEntry = {each : targetItem}
@@ -255,12 +280,14 @@ class ProductionQ(object):
                         #>> add a new entry to items, insert new Order immediately after the quantity 1 item
                         self.addToQueue(tmpNewEntry, tmpNewIndex)
                         
-                        if DEBUG_2: print("addToQueueFromXFile.In the addToQueue area:\n%s" % (self.productionOrder))
+                        if DEBUG_2: print("addToQueueFromXFile - Items-exist (T|T) index:%d - new entry added:\n%s" % (eachIndex, self.productionOrder))
 
                         #  --TODO-- test that this works as expected.
+                        # obtain newly added item key to add to colonyQOrders
                         tmpNewKey = self.productionOrder[tmpNewIndex]
                         
-                        if DEBUG_2: print("addToQueueFromXFile. eachIndex:%s  tmpNewKey:%s" % (eachIndex, tmpNewKey))
+                        if DEBUG_2: print("addToQueueFromXFile - Items-exist (T|T) index:%d - key for newly added entry:%s" % (eachIndex, tmpNewKey))
+                        if DEBUG_2: print("existingItem - \tkey(%s) : %s \nnewItem - \tkey(%s) : %s" %(each, self.productionItems[each], tmpNewKey, self.productionItems[tmpNewKey]  ))
                         #----------- Add to ColonyQOrders-----------------------
                         #            Uses Items-exist (T|F)
                         #            Requires: Continue
@@ -284,7 +311,7 @@ class ProductionQ(object):
                     continue
                 """
                 # no action needed -> reorder handled in the productionOrder
-                if DEBUG_2: print("addToQueueFromXFile # Items-exist (T|F). no action and not a problem index%d- Order:%s " % (eachIndex, each))
+                if DEBUG_2: print("addToQueueFromXFile - Items-exist (T|F) index:%d - No action and not a problem  - Order:%s " % (eachIndex, each))
 
 
                 continue
@@ -293,7 +320,7 @@ class ProductionQ(object):
             elif each not in self.productionItems and each in colonyQItems:
                 
                 if ProductionQ.elementHasUnexpectedValue(colonyQItems[each]):
-                    if DEBUG_2: print("addToQueueFromXFile # Items-exist (F|T).unexpected object - skipping")
+                    if DEBUG_2: print("addToQueueFromXFile - Items-exist (F|T).unexpected object - skipping")
                     continue
 
                 v = { each : colonyQItems[each] }
@@ -341,11 +368,11 @@ class ProductionQ(object):
 
             entryKey, entryObj = entryDict.popitem()
 
-            print("addToQueue: entryKey:%s entryObj:%s" % (entryKey, entryObj))
+            if DEBUG: print("addToQueue: entryKey:%s entryObj:%s" % (entryKey, entryObj))
 
 
-            # --TODO-- find ItemType method
-            if DEBUG: print("addToQueue.entry: %s - %s " % (entryKey, entryObj))
+            
+            # if DEBUG: print("addToQueue.entry: %s - %s " % (entryKey, entryObj))
 
             # "materialsUsed" ca
             if "materialsUsed" in entryObj:
@@ -353,6 +380,7 @@ class ProductionQ(object):
             else:
                 tmpMaterialsUsed = [0, 0, 0, 0]
             
+            # merging itemType and productionID to be the same. designID is added to handle ship/starbases
             if "itemType" in entryObj:
                 tmpItemType = entryObj["itemType"]
             elif "productionID" in entryObj:
@@ -361,10 +389,6 @@ class ProductionQ(object):
                 # for testing - should not be a valid value for normal play.
                 tmpItemType = "Default ItemType"    
 
-            # if "productionID" in entryObj:
-            #     tmpProductionID = entryObj["productionID"]
-            # else:
-            #     tmpProductionID = entryKey
 
             if "designID" in entryObj:
                 tmpDesignID = entryObj["designID"]
@@ -459,39 +483,39 @@ class ProductionQ(object):
             False - work not done == all elements in "materialsUsed" == 0
 
         Conditions:
-            productionItems["quantity"] == 1; "work" should not be done when 
-            quantity > 1
+            
 
         Work can be done on an existing item:
         > quantity set to 0
         > quantity @ 1
 
-        if quantity > 1 work should not have been done.
+        
 
 
 
         """
         try:
             # quan
-            correctQuantity = True
+            # correctQuantity = True
 
 
-            # if existingItem["quantity"] > 1 or existingItem["quantity"] < 0:
-            #     #correctQuantity = False
-            #     raise ValueError("ValueError :: workHasBeenDone: quantity(%d)" % existingItem["quantity"])
+            # # if existingItem["quantity"] > 1 or existingItem["quantity"] < 0:
+            # #     #correctQuantity = False
+            # #     raise ValueError("ValueError :: workHasBeenDone: quantity(%d)" % existingItem["quantity"])
 
             for each in existingItem["materialsUsed"]:
 
                 # if materials have been used (not 0) then the quantity should be 1
                 if each != 0:
+                    return True
 
-                    if not correctQuantity:
-                        # have a value in the materialsUsed and quantity is greater then 1 or negative
-                        raise ValueError("ProductionQ.hasWorkBeenDone: materialsUsed and quantity not aligned. materialsUsed can only be greater then 0 when quantity = 1")
+                    # if not correctQuantity:
+                    #     # have a value in the materialsUsed and quantity is greater then 1 or negative
+                    #     raise ValueError("ProductionQ.hasWorkBeenDone: materialsUsed and quantity not aligned. materialsUsed can only be greater then 0 when quantity = 1")
                     
-                    else:
-                        # materials have been used and the quantity of the item is 1
-                        return True  
+                    # else:
+                    #     # materials have been used and the quantity of the item is 1
+                        # return True  
                 
                 # continue checking for a non-zero value
 
@@ -566,6 +590,7 @@ class ProductionQ(object):
         """
         # colony updates resource calculations
         self.colony.calcTotalResources(self.raceData.popEfficiency)
+        self.research.totalResources += self.colony.totalResources
 
 
         # obtain from colony the number of resources for production (Note: minus research tax)
@@ -700,6 +725,8 @@ class ProductionQ(object):
         # All orders "finishedForThisTurn" == False
         # ---------------------------------------------------------
 
+        if DEBUG_3: print("ProductionQ.productionOrder: %s\nProductionQ.productionItems: %s" %  (self.productionOrder, self.productionItems))
+            
 
 
         while True:
@@ -707,7 +734,7 @@ class ProductionQ(object):
 
             orderLength = len(self.productionOrder)
             if DEBUG_3: print("ProductionQ.productionController - start of loop. orderIndex:%d  / orderLength: %d)" % (orderIndex, orderLength))
-            if DEBUG_3: print("ProductionQ.productionOrder: %s" %  self.productionOrder)
+
 
             if self.resources < 1:  # resources left
                 if DEBUG_3: print("ProductionQ.productionController - resources: %d" % self.resources)
@@ -723,12 +750,12 @@ class ProductionQ(object):
             entryObj = self.productionItems[entryID]
 
             if entryObj["finishedForThisTurn"]: # T/F based on Entry.
-                if DEBUG_3: print("ProductionQ.productionController - finishedForThisTurn orderIndex: %d" % orderIndex)
+                if DEBUG_3: print("ProductionQ.productionController - (%s) finishedForThisTurn orderIndex: %d" % (entryID, orderIndex))
                 orderIndex += 1
                 continue
             
             elif entryObj["quantity"] == 0:
-                if DEBUG_3: print("ProductionQ.productionController - finishedForThisTurn orderIndex: %d" % orderIndex)
+                if DEBUG_3: print("ProductionQ.productionController - (%s) finishedForThisTurn orderIndex: %d" % (entryID, orderIndex))
                 entryObj["finishedForThisTurn"] = True
                 orderIndex += 1
                 continue
@@ -743,13 +770,16 @@ class ProductionQ(object):
             """
             if entryObj["quantity"] > 1 and ProductionQ.workHasBeenDone(entryObj):
                 
-                if DEBUG_3: print("productionController quantity > 1 and work has been done. orderIndex:%d" % orderIndex)
+                if DEBUG_3: print("productionController quantity > 1 and work has been done. Splitting (%s) into two. orderIndex:%d" % (entryID, orderIndex))
 
                 entryObj["finishedForThisTurn"] = True
                 orderIndex = 0      # restart at beginning as a quantity 1 entry will be made by splitEntryIntoTwo()
 
                 
                 self.splitEntryIntoTwo(entryID)
+
+                if DEBUG_3: print("ProductionQ.productionOrder: %s\nProductionQ.productionItems: %s" %  (self.productionOrder, self.productionItems))
+
 
                 continue
 
@@ -767,6 +797,15 @@ class ProductionQ(object):
             self.entryController(entryID, targetItemCosts)
 
 
+
+        # ------- remaining resources spent on research ----
+        if self.resources > 0:
+            self.research.yearlyResearchResources += self.resources
+            self.resources = 0
+
+
+
+    
 
             # if entryObj["finishedForThisTurn"]:
             #     orderIndex += 1
@@ -873,6 +912,7 @@ class ProductionQ(object):
         return [0, 0, 0, self.raceData.mineCost]
 
     def itemCostsShip(self, itemID):
+        print("itemCosts - item:%s" % itemID)
         costs = self.designs.currentShips[itemID].currentCosts()
         return costs
 
@@ -910,7 +950,6 @@ class ProductionQ(object):
         {kee: {quantity, productionID}}
 
         """
-        DEBUG_3 = DEBUG_2
 
         currentEntry = self.productionItems[entryID]
         #print("splitEntryIntoTwo:: %s: (q:%d): %s "% (entryID, self.productionItems[entryID]["quantity"], self.productionItems[entryID]["materialsUsed"] ))
@@ -919,22 +958,31 @@ class ProductionQ(object):
             if DEBUG_3: print("ProductionQ.splitEntryIntoTwo - currentEntry[quantity] <= 1")
             return
 
+        # -----------  extract values from currentEntry --------------
         tmpEntryProductionID = currentEntry["productionID"]
         tmpEntryMaterials = [i for i in currentEntry["materialsUsed"]]
         tmpEntryItemType = currentEntry["itemType"]
+        
+        
+        if tmpEntryProductionID in ['Ship', 'Starbase']: 
+            tmpEntryDesignID = currentEntry['designID']
+        else:
+            tmpEntryDesignID = None
+
 
         tmpEntry = {
             entryID : {
                 "quantity" : 1, 
                 "productionID" : tmpEntryProductionID,
                 "materialsUsed" : tmpEntryMaterials,
-                "itemType" : tmpEntryItemType
+                "itemType" : tmpEntryItemType,
+                "designID" : tmpEntryDesignID
                 }}
         
 
         #self.productionItems[entryID]["quantity"] = self.productionItems[entryID]["quantity"] - 1
         self.productionItems[entryID]["quantity"] -= 1
-        self.productionItems[entryID]["materialsUsed"] = [0, 0, 0, 0]
+        self.productionItems[entryID]["materialsUsed"] = [0 for i in tmpEntryMaterials]  # set currentEntry to 0
 
         #print("splitEntryIntoTwo:: %s: (q:%d): %s "% (entryID, self.productionItems[entryID]["quantity"], self.productionItems[entryID]["materialsUsed"] ))
 
@@ -1235,6 +1283,8 @@ class ProductionQ(object):
 
         """
 
+        #--TODO-- Fix proportionalRemainder. Resources to material use must be proportional
+
         # resources to sum(minerals)
         # sum(minerals) to resources
 
@@ -1253,7 +1303,7 @@ class ProductionQ(object):
             else:
                 tmpProportional[i] = tm
 
-        if DEBUG_3: print("proportionalRemainder: %s" % tmpProportional)
+        if DEBUG_3: print("FIX_ME\tproportionalRemainder: %s" % tmpProportional)
 
         return tmpProportional
 
