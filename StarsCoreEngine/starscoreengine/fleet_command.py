@@ -94,20 +94,20 @@ class FleetCommand(object):
         valueInRange = True
 
         for i in range(startingID, len(self.fleets)):
-            print("_nextFleetID: %s  fleet len(%s)" % (i, len(self.fleets)))
+            #print("_nextFleetID: %s  fleet len(%s)" % (i, len(self.fleets)))
             
 
             if i not in self.fleets:
-                print("_nextFleetID: False %s is not in self.fleets" % i)
+                #print("_nextFleetID: False %s is not in self.fleets" % i)
                 fleetKeys = i
                 valueInRange = False
                 break
 
         if valueInRange:
             fleetKeys = len(self.fleets)
-            print("_nextFleetID: valueInRange is True %s is not in self.fleets" % (fleetKeys))
+            #print("_nextFleetID: valueInRange is True %s is not in self.fleets" % (fleetKeys))
 
-        print("_nextFleetID: fleetKeys:%s" % fleetKeys) 
+        print("[p%s]_nextFleetID: fleetKeys:%s" % (self.player.playerNumber, fleetKeys) ) 
         return fleetKeys
 
 

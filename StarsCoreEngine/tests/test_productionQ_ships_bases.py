@@ -43,6 +43,7 @@ from ..starscoreengine.player_designs import PlayerDesigns
 from ..starscoreengine.tech import ShipDesign 
 from ..starscoreengine.productionQ import *
 from ..starscoreengine.game_xfile import processDesign, processProductionQ
+from ..starscoreengine.template_race import startingShipDesignsCount, startingDesignsCount
 
 
 
@@ -195,6 +196,8 @@ class TestShipDesign(object):
 
 
 
+        self.player1_shipDesignCount = 7
+        self.player1_starbaseDesignCount = 2
         # not a complete x file, contains: Ship Design, Prod_Q, Prod_List
         self.player1_xFile = {
             "NewDesign" : { 
@@ -431,9 +434,13 @@ class TestShipDesign(object):
 
     def test_setupClass(self):
 
+
+
+
         #starting Designs with 4 + additional ships
-        assert_equal(len(self.player.designs.currentShips), 11)
-        assert_equal(len(self.player.designs.currentStarbases), 2)
+        assert_equal(len(self.player.designs.currentShips), self.player1_shipDesignCount + startingShipDesignsCount())
+        
+        assert_equal(len(self.player.designs.currentStarbases), self.player1_starbaseDesignCount + (startingDesignsCount() - startingShipDesignsCount()))
         # ship = self.player.designs.currentShips
         # print("ship:%s  costs:%s" % (ship[self.d1_name].designName, ship[self.d1_name].currentCosts() ))
 

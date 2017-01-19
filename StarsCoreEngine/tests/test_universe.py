@@ -36,7 +36,7 @@ from ..starscoreengine.game_xfile import processDesign, processProductionQ
 from ..starscoreengine.planet import Colony, Planet
 from ..starscoreengine.fleets import FleetObject, Token
 from ..starscoreengine.universe import UniverseObject
-from ..starscoreengine.template_race import startingDesigns #colonyShip, scoutShip, destroyerShip, smallFrieghterShip
+from ..starscoreengine.template_race import startingDesigns, startingShipDesignsCount, startingDesignsCount #colonyShip, scoutShip, destroyerShip, smallFrieghterShip
 
 
 
@@ -65,6 +65,7 @@ class TestUniverse(object):
 
         self.gameTemplate = StandardGameTemplate(self.testGameName, self.playerFileList, {"UniverseNumber0": { "Players": "3"}})
         self.game = Game(self.gameTemplate)
+
         self.techTree = self.game.technology
         self.player0 = self.game.players['player0']
         self.player1 = self.game.players['player1']
@@ -162,7 +163,7 @@ class TestUniverse(object):
         }
 
         # use existing method to import gamefile data
-        processDesign(self.player1_xFile, self.player1, self.game.technology)
+        #processDesign(self.player1_xFile, self.player1, self.game.technology)
 
         # used by ProductionQ for itemType
         self.productionID_Ship = "Ship"
@@ -220,7 +221,8 @@ class TestUniverse(object):
     def setup(self):
         print("TestUniverse: Setup")
 
-
+        # ------- Generate Players Starting Ships ----------
+        #self.game.generatePlayersStartingShips()
 
         self.p1_colonyHW_obj.planet.factories = 10
         self.p1_colonyHW_obj.planet.surfaceIron = 200
@@ -248,16 +250,38 @@ class TestUniverse(object):
         self.p1_colonyPQ.test_ResourcesConsumed = 0
 
 
-        self.player1.fleetCommand.fleets = {}
-        self.player1.fleetCommand.currentFleetID = 0
-        self.universe.fleetObjects = {} 
-        self.universe.objectsAtXY[self.p1_colonyHW_obj.planet.xy] = []    # target_colony_obj exists here
+        # self.player1.fleetCommand.fleets = {}
+        # self.player1.fleetCommand.currentFleetID = 0
+        # self.universe.fleetObjects = {} 
+        # self.universe.objectsAtXY[self.p1_colonyHW_obj.planet.xy] = []    # target_colony_obj exists here
 
         self.player1.research.researchTax = .01    # set to 0 for production tests
 
 
+
+
+        self.baseFleets = self.player1.fleetCommand.fleets #= {}
+        self.baseFleetID = self.player1.fleetCommand.currentFleetID # = 0
+        self.baseFleetObjects = self.universe.fleetObjects # = {} 
+        self.baseObjectsAtXY = self.universe.objectsAtXY #[self.target_colony_obj.planet.xy] = []    # target_colony_obj exists here
+
+
+
+
     def teardown(self):
         print("TestShipDesign: Teardown")
+
+        self.player1.fleetCommand.fleets = self.baseFleets
+        self.player1.fleetCommand.currentFleetID = self.baseFleetID
+        self.universe.fleetObjects = self.baseFleetObjects
+        self.universe.objectsAtXY = self.baseObjectsAtXY
+
+    @staticmethod
+    def _getHW_XY(player):
+
+        for colony in player.colonies.values():
+            if colony.planet.HW:
+                return colony.planet.xy
 
 
 
@@ -269,4 +293,10 @@ class TestUniverse(object):
         assert_true(isinstance(self.p1_colonyHW_obj, Colony))
         assert_true(isinstance(self.universe, UniverseObject))
         
+        for player in self.game.players.values():
+            colonyXY = TestUniverse._getHW_XY(player)
+            assert_true(len(player.fleetCommand.fleets) == startingShipDesignsCount())   # fleets should be starting fleet values
+            assert_true(len(self.universe.objectsAtXY[colonyXY]) == startingShipDesignsCount())
+
+
 

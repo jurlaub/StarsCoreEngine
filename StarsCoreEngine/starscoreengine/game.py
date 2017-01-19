@@ -87,7 +87,7 @@ class Game(object):
         # -- a dictionary of Player Objects
         self.players = self.generatePlayers(template)  #--TODO-- resolve name conflict with UniverseObject.Players
 
-
+        self.generatePlayersStartingShips()
     
 
 
@@ -222,12 +222,12 @@ class Game(object):
     def generatePlayersStartingShips(self):
 
 
-        for player in self.players:
+        for player in self.players.values():
 
             designList = player.designs.currentShips.values()
 
             colonyHW = None
-            for colony in self.player.colonies:
+            for colony in player.colonies.values():
                 if colony.planet.HW:
                     colonyHW = colony
                     break

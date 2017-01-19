@@ -68,6 +68,29 @@ def chooseBestShipComponents(techTree, techLevels, shipHull, ShipDesign):
 
 
 
+def startingStarbase():
+    shipName = "Atlantis"
+    shipDesign =    {       'designName': shipName, 
+                            'designID': shipName,
+                            'hullID': 'Space Station',
+                            'component':{   
+                                            "A": {"itemID": "Tritanium", "itemQuantity": 16},
+                                            "B": {"itemID": "Tritanium", "itemQuantity": 16},
+                                            "C": {"itemID": "Mole-skin Shield", "itemQuantity": 16},
+                                            "D": {"itemID": "Mole-skin Shield", "itemQuantity": 16},
+                                            "E": {"itemID": "Battle Computer", "itemQuantity": 1},
+                                            "F": {"itemID": "X-Ray Laser", "itemQuantity": 16 },
+                                            "G": {"itemID": "X-Ray Laser", "itemQuantity": 16 },
+                                            "H": {"itemID": "Alpha Torpedo", "itemQuantity": 16 },
+                                            "I": {"itemID": "Alpha Torpedo", "itemQuantity": 16 },
+                                            "J": {"itemID": "Battle Computer", "itemQuantity": 3 },
+                                            "K": {"itemID": "Battle Computer", "itemQuantity": 3 },
+                                            "L": {"itemID": "Battle Computer", "itemQuantity": 1}
+                                        } 
+                    }
+    return shipName, shipDesign
+
+
 def colonyShip():
     shipName = "Santa Maria"
     shipDesign =    {       'designName': shipName, 
@@ -126,15 +149,42 @@ def startingDesigns():
     scoutName, scoutDesign = scoutShip()
     destroyerName, destroyerDesign = destroyerShip()
     frieghtName, frieghtDesign = smallFrieghterShip()
+    starbaseName, starbaseDesign = startingStarbase()
 
     designs = {
         "NewDesign" : {
             colonyName : colonyDesign,
             scoutName : scoutDesign,
             destroyerName :destroyerDesign,
-            frieghtName : frieghtDesign
+            frieghtName : frieghtDesign,
+            starbaseName : starbaseDesign
         },
             "RemoveDesign" : []
     }
 
     return designs
+
+def startingDesignsCount():
+    """
+    returns the count of new designs returned by the startingDesigns()
+
+
+    """
+
+    return len(startingDesigns()["NewDesign"])
+
+def startingShipDesignsCount():
+    """
+    returns the count of ship designs returned by startingDesigns()
+    """
+    from .template_tech import items_hulls
+
+    designs = startingDesigns()["NewDesign"]
+    hulls = items_hulls().keys()
+    count = 0
+    
+    for each in designs.values():
+        if each['hullID'] in hulls:
+            count += 1
+
+    return count
