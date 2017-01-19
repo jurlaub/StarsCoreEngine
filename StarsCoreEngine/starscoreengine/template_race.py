@@ -71,7 +71,7 @@ def chooseBestShipComponents(techTree, techLevels, shipHull, ShipDesign):
 def colonyShip():
     shipName = "Santa Maria"
     shipDesign =    {       'designName': shipName, 
-                            'designID': 0,
+                            'designID': shipName,
                             'hullID': 'Colony Ship',
                             'component':{   "B": {"itemID": "Daddy Long Legs 7", "itemQuantity": 1 },
                                             "A": {"itemID": "Colonization Module", "itemQuantity": 1}
@@ -82,7 +82,7 @@ def colonyShip():
 def scoutShip():
     shipName = "Long Eye"
     shipDesign =    {       'designName': shipName, 
-                            'designID': 0,
+                            'designID': shipName,
                             'hullID': 'Scout',
                             'component':{   "C": {"itemID": "Long Hump 6", "itemQuantity": 1 },
                                             "B": {"itemID": "Fuel Tank", "itemQuantity": 1 },
@@ -94,12 +94,12 @@ def scoutShip():
 def destroyerShip():
     shipName = "Defender"
     shipDesign =    {       'designName': shipName, 
-                            'designID': 0,
+                            'designID': shipName,
                             'hullID': 'Destroyer',
                             'component':{   
                                             "G": {"itemID": "X-Ray Laser", "itemQuantity": 1 },
                                             "F": {"itemID": "X-Ray Laser", "itemQuantity": 1 },
-                                            "E": {"itemID": "Manoeuvring Jet", "itemQuantity": 1 },
+                                            "E": {"itemID": "Mole Scanner", "itemQuantity": 1 },
                                             "D": {"itemID": "Fuel Tank", "itemQuantity": 1 },
                                             "C": {"itemID": "Long Hump 6", "itemQuantity": 1 },
                                             "B": {"itemID": "Battle Computer", "itemQuantity": 1 },
@@ -111,7 +111,7 @@ def destroyerShip():
 def smallFrieghterShip():
     shipName = "Grazing Cow"
     shipDesign =    {       'designName': shipName, 
-                            'designID': 0,
+                            'designID': shipName,
                             'hullID': 'Small Freighter',
                             'component':{   "C": {"itemID": "Long Hump 6", "itemQuantity": 1 },
                                             "B": {"itemID": "Fuel Tank", "itemQuantity": 1 },

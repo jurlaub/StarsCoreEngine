@@ -89,9 +89,9 @@ from .fleets import FleetObject, Starbase, Token
 from .fleet_orders import FleetOrders
 
 
-DEBUG = True    # addToQueue
-DEBUG_2 = True
-DEBUG_3 = True  # ProductionController and EntryController
+DEBUG = False    # addToQueue
+DEBUG_2 = False
+DEBUG_3 = False  # ProductionController and EntryController
 
 class ProductionQ(object):
     """ ProductionQ

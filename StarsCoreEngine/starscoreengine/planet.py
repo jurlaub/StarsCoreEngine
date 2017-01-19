@@ -23,6 +23,7 @@
 
 from .space_objects import SpaceObjects
 from .fleets import Starbase
+from .productionQ import ProductionQ
 import random
 
 
@@ -128,27 +129,27 @@ class Colony(object):
 
     """
 
-    def __init__(self, raceData, planet, population):
+    def __init__(self, player, planet, population):
         # self.player = player    #link to owner
         self.planet = planet    # *** connects a colony to a planet object ****
         
 
         self.scanner = False
         self.orbital = False
-        self.productionQ = False   # this would be good to have as a seperate object for AR races and (future) none-planet starbase production
+        self.productionQ = ProductionQ(self, player)   # this would be good to have as a seperate object for AR races and (future) none-planet starbase production
 
         self.population = population # population needs to be part of planet
         self.defenses = 0
 
         #calculated values
         #! this is race figure and then the true growth rate is calculate in populationGrowth function, taking into account hab\capacity?
-        self.growthRate = raceData.growthRate  # set when colony is instantiated 
+        self.growthRate = player.raceData.growthRate  # set when colony is instantiated 
 
-        self.mineProduce = raceData.mineProduce
-        self.mineOperate = raceData.mineOperate
+        self.mineProduce = player.raceData.mineProduce
+        self.mineOperate = player.raceData.mineOperate
          
-        self.factoryProduce = raceData.factoryProduce   # 10 factories produce n resources a year
-        self.factorOperate  = raceData.factoryOperate
+        self.factoryProduce = player.raceData.factoryProduce   # 10 factories produce n resources a year
+        self.factorOperate  = player.raceData.factoryOperate
         self.totalResources = 0     # used indirectly
         self.resourceTax = False        # DEPRECIATE - should be handled in productionQ  
         self.planetValue = 100    # 100 = 100% Value = calculated from currHab 

@@ -204,18 +204,46 @@ class Game(object):
                     # Need to add the HW colony manually. Cannot use 
                     # colonizePlanet as it does not have the flexibility 
                     # necessary to setup a HW
-                    homeworld = Colony(player.raceData, planetHW, template.starting_population)
+                    homeworld = Colony(player, planetHW, template.starting_population)
                     homeworld.scanner = True
 
-                    productionQ = ProductionQ(homeworld, player)
-                    homeworld.productionQ = productionQ
+                    # productionQ = ProductionQ(homeworld, player)
+                    # homeworld.productionQ = productionQ
 
                     player.colonies[planetHW.ID] = homeworld
+
 
                 playNumb += 1
 
 
         return tmpPlayers
+
+
+    def generatePlayersStartingShips(self):
+
+
+        for player in self.players:
+
+            designList = player.designs.currentShips.values()
+
+            colonyHW = None
+            for colony in self.player.colonies:
+                if colony.planet.HW:
+                    colonyHW = colony
+                    break
+
+
+            for each in designList:
+                print("generatePlayersStartingShips: ship%s" % each.designName)
+
+                colonyHW.productionQ.produceShip(1, each.designName)
+
+
+                #     for each in player.designs.currentShips:
+                # print(each)
+                # print(player.designs.currentShips[each].designName)
+
+                # productionQ.produceShip(1, each)
 
         
     def generateGameVariables(self, template):

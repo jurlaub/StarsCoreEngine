@@ -179,7 +179,7 @@ class Player(object):
         precondition: all minerals in colony fleet cargo has been offloaded to the planet
 
         '''
-        newColony = Colony(self.raceData, planet, pop)
+        newColony = Colony(self, planet, pop)
         planet.addSurfaceMinerals(fleetMinerals)
 
         newColony.planetValue = self.planetValue(planet)
@@ -187,8 +187,8 @@ class Player(object):
 
         planet.owner = self.raceName
 
-        productionQ = ProductionQ(newColony, self)
-        newColony.productionQ = productionQ
+        # productionQ = ProductionQ(newColony, self)
+        # newColony.productionQ = productionQ
 
         self.colonies[planet.ID] = newColony
         

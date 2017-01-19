@@ -249,6 +249,7 @@ class TestShipDesign(object):
         # use existing method to import gamefile data
         processDesign(self.player1_xFile, self.player, self.game.technology)
 
+
         # used by ProductionQ for itemType
         self.productionID_Ship = "Ship"
         self.productionID_Starbase = "Starbase"
@@ -405,16 +406,27 @@ class TestShipDesign(object):
         self.colonyPQ.test_ResourcesConsumed = 0
 
 
+
         self.player.fleetCommand.fleets = {}
         self.player.fleetCommand.currentFleetID = 0
-        self.universe.fleetObjects = {} 
-        self.universe.objectsAtXY[self.target_colony_obj.planet.xy] = []    # target_colony_obj exists here
+        self.universe.fleetObjects = {}
+        self.universe.objectsAtXY[self.target_colony_obj.planet.xy] = []
+
+        # self.baseFleets = self.player.fleetCommand.fleets #= {}
+        # self.baseFleetID = self.player.fleetCommand.currentFleetID # = 0
+        # self.baseFleetObjects = self.universe.fleetObjects # = {} 
+        # self.baseObjectsAtXY = self.universe.objectsAtXY #[self.target_colony_obj.planet.xy] = []    # target_colony_obj exists here
 
         self.player.research.researchTax = .01    # set to 0 for production tests
 
 
     def teardown(self):
         print("TestShipDesign: Teardown")
+
+        # self.player.fleetCommand.fleets = self.baseFleets
+        # self.player.fleetCommand.currentFleetID = self.baseFleetID
+        # self.universe.fleetObjects = self.baseFleetObjects
+        # self.universe.objectsAtXY = self.baseObjectsAtXY
 
 
     def test_setupClass(self):
@@ -776,7 +788,9 @@ class TestShipDesign(object):
         newFleetID = '1_0'
 
         fleetCommand = self.player.fleetCommand
-        
+        # print(self.player.fleetCommand.fleets)
+        # fleetOrders1 = self.player.fleetCommand.fleets[0]
+        # print("fleets at xy:%s" % fleetOrders1.fleet.tokens.items())
 
         # --------  test fleets -------
         assert_equal(len(fleetCommand.fleets), ZERO)   # no fleets should exist
@@ -953,7 +967,11 @@ class TestShipDesign(object):
         # ---------- test universe --------------------------------
         location = self.colonyPQ.colony.planet.xy
         objectsAtLocation = len(self.universe.objectsAtXY[location])
-        print("objectsAtXY(before production): %s" % self.universe.objectsAtXY[location])
+        # print("objectsAtXY(before production): %s" % self.universe.objectsAtXY[location])
+        # print("fleet:%s" % self.universe.fleetObjects['1_0'].__dict__)
+        # print("fleets:%s" % self.universe.fleetObjects)
+
+        # print("designs:%s" % self.player.designs.currentShips)
 
         # ---------- produce ship & new fleet should be created ----
         processProductionQ(self.test_build_10_ships, self.player)
@@ -975,6 +993,7 @@ class TestShipDesign(object):
         wipRemainingQuantity = wip['quantity']
         shipsBuilt = self.productNumberSeven - wipRemainingQuantity
         producedFleetObject = self.universe.fleetObjects['1_0']
+
 
         assert_equal(producedFleetObject.tokens[self.produceDestroyerShip].number, shipsBuilt )
         
@@ -1069,6 +1088,7 @@ class TestShipDesign(object):
 
         # print("Fleets: %s" % self.player.fleetCommand.fleets)
         # print("objectsAtXY: %s" % self.universe.objectsAtXY[location])
+        # print("objects\n\n%s" % self.universe.objectsAtXY)
         # assert_true(False)
 
     def test_produce_ships_with_prior_ships_with_high_remainder_in_queue(self):
