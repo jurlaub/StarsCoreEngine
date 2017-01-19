@@ -1323,6 +1323,7 @@ class ProductionQ(object):
 
         
         ZERO = 0
+        ONE = 1
 
         if DEBUG: print("----testing productionQ limit -----\n%d:%s availableSupplies:(%s)" %(quantity, str(neededMaterials), str(availableSupplies)))
         tmpMax = quantity
@@ -1339,7 +1340,10 @@ class ProductionQ(object):
         if quantity <= 0:  #  or if quantity <= 0 and zeroNeededMaterials
             return ZERO, [each * ZERO for each in neededMaterials]
         
-        elif zeroNeededMaterials:    # means all neededMaterials were 0 
+        elif quantity == ONE & zeroNeededMaterials: # used materials are more then is necessary to complete item.
+            return ONE, [each * ZERO for each in neededMaterials]
+        
+        elif zeroNeededMaterials:    # means all neededMaterials were 0 and quantity is greater then 1
             return ZERO, [each * ZERO for each in neededMaterials]
         #
         # --------------------------------------------------------

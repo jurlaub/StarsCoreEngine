@@ -1159,4 +1159,74 @@ class TestShipDesign(object):
         # print("objectsAtXY: %s" % self.universe.objectsAtXY[location])
         # assert_true(False)
 
+    def test_productionQ_where_remainder_edge_case(self):
+        """
+        test where remainder of partially completed item is more then is necessary
+        for completion.  (i.e. when a miniturization of ship components results
+         in less costs then have already been used) 
 
+        """
+
+        
+        # ----------------- setup -----------------
+        ONE = 1
+        TWO = 2
+        THREE = 3
+        FOUR = 4
+        FIVE = 5
+        TWOHUNDRED = 200
+
+        usedMaterials = [100, 100, 100, 100]
+
+        existingOrder = ['destroyer_ship_alpha', 'Seer', 'doomShip1']
+        existingItems = {'destroyer_ship_alpha': {'materialsUsed': usedMaterials, 'designID': 'doomShip3', 'itemType': 'Ship', 'quantity': FOUR, 'productionID': 'Ship', 'finishedForThisTurn': False}, 'doomShip1': {'materialsUsed': [0, 0, 0, 0], 'designID': 'doomShip1', 'itemType': 'Ship', 'quantity': 1, 'productionID': 'Ship', 'finishedForThisTurn': False}, 'Seer': {'materialsUsed': usedMaterials, 'designID': 'Seer', 'itemType': 'Ship', 'quantity': 1, 'productionID': 'Ship', 'finishedForThisTurn': False}}
+
+
+
+        self.colonyPQ.ExcludedFromResearch = True
+        self.colonyPQ.productionOrder = existingOrder
+        self.colonyPQ.productionItems = existingItems
+
+        colonyResources = self.target_colony_obj.calcTotalResources(self.player.raceData.popEfficiency)
+
+        print("setup: On HW pop:%d iron: %d bor: %d germ: %s" % (self.target_colony_obj.population, 
+                                                                self.target_colony_obj.planet.surfaceIron, 
+                                                                self.target_colony_obj.planet.surfaceBor, 
+                                                                self.target_colony_obj.planet.surfaceGerm ))
+
+        assert_equal(self.target_colony_obj.planet.surfaceIron, TWOHUNDRED)
+        assert_equal(self.target_colony_obj.planet.surfaceBor, TWOHUNDRED)
+        assert_equal(self.target_colony_obj.planet.surfaceGerm, TWOHUNDRED)
+
+        eOrders = len(self.colonyPQ.productionOrder)
+        eItems = len(self.colonyPQ.productionItems)
+        assert_true(eOrders == eItems == THREE)
+
+
+
+        # ---------- test productionQ --------------------------------
+        location = self.colonyPQ.colony.planet.xy
+        objectsAtLocation = len(self.universe.objectsAtXY[location])
+        print("objectsAtXY(before production): %s" % self.universe.objectsAtXY[location])
+
+        # ---------- produce ship & new fleet should be created ----
+        processProductionQ(self.test_2_item_template, self.player)
+        assert_equal(len(self.colonyPQ.productionOrder), ONE)
+        assert_equal(len(self.colonyPQ.productionItems), ONE)
+
+        self.colonyPQ.productionController()    # a new fleet will be built
+
+        
+        # ---------- after production -> no resources should have been used
+        assert_true( self.target_colony_obj.planet.surfaceIron == (TWOHUNDRED ) ) # iron cost for 4x doomship
+        assert_true( self.target_colony_obj.planet.surfaceBor == (TWOHUNDRED) ) # iron cost for 4x doomship
+        assert_true( self.target_colony_obj.planet.surfaceGerm == (TWOHUNDRED ) ) # iron cost for 4x doomship
+
+
+        newObjectsAtLocation = len(self.universe.objectsAtXY[location])
+
+        assert_equal(objectsAtLocation + ONE, newObjectsAtLocation)
+
+        # print("Fleets: %s" % self.player.fleetCommand.fleets)
+        # print("objectsAtXY: %s" % self.universe.objectsAtXY[location])
+        # assert_true(False)
