@@ -416,6 +416,7 @@ class TestShipDesign(object):
     def teardown(self):
         print("TestShipDesign: Teardown")
 
+
     def test_setupClass(self):
 
         assert_equal(len(self.player.designs.currentShips), 7)
@@ -1227,6 +1228,4 @@ class TestShipDesign(object):
 
         assert_equal(objectsAtLocation + ONE, newObjectsAtLocation)
 
-        # print("Fleets: %s" % self.player.fleetCommand.fleets)
-        # print("objectsAtXY: %s" % self.universe.objectsAtXY[location])
-        # assert_true(False)
+
