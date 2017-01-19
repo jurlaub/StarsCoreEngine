@@ -419,7 +419,8 @@ class TestShipDesign(object):
 
     def test_setupClass(self):
 
-        assert_equal(len(self.player.designs.currentShips), 7)
+        #starting Designs with 4 + additional ships
+        assert_equal(len(self.player.designs.currentShips), 11)
         assert_equal(len(self.player.designs.currentStarbases), 2)
         # ship = self.player.designs.currentShips
         # print("ship:%s  costs:%s" % (ship[self.d1_name].designName, ship[self.d1_name].currentCosts() ))

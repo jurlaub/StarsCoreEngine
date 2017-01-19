@@ -68,6 +68,73 @@ def chooseBestShipComponents(techTree, techLevels, shipHull, ShipDesign):
 
 
 
+def colonyShip():
+    shipName = "Santa Maria"
+    shipDesign =    {       'designName': shipName, 
+                            'designID': 0,
+                            'hullID': 'Colony Ship',
+                            'component':{   "B": {"itemID": "Daddy Long Legs 7", "itemQuantity": 1 },
+                                            "A": {"itemID": "Colonization Module", "itemQuantity": 1}
+                                        } 
+                    }
+    return shipName, shipDesign
+
+def scoutShip():
+    shipName = "Long Eye"
+    shipDesign =    {       'designName': shipName, 
+                            'designID': 0,
+                            'hullID': 'Scout',
+                            'component':{   "C": {"itemID": "Long Hump 6", "itemQuantity": 1 },
+                                            "B": {"itemID": "Fuel Tank", "itemQuantity": 1 },
+                                            "A": {"itemID": "Mole Scanner", "itemQuantity": 1}
+                                        } 
+                    }
+    return shipName, shipDesign
+
+def destroyerShip():
+    shipName = "Defender"
+    shipDesign =    {       'designName': shipName, 
+                            'designID': 0,
+                            'hullID': 'Destroyer',
+                            'component':{   
+                                            "G": {"itemID": "X-Ray Laser", "itemQuantity": 1 },
+                                            "F": {"itemID": "X-Ray Laser", "itemQuantity": 1 },
+                                            "E": {"itemID": "Manoeuvring Jet", "itemQuantity": 1 },
+                                            "D": {"itemID": "Fuel Tank", "itemQuantity": 1 },
+                                            "C": {"itemID": "Long Hump 6", "itemQuantity": 1 },
+                                            "B": {"itemID": "Battle Computer", "itemQuantity": 1 },
+                                            "A": {"itemID": "Tritanium", "itemQuantity": 2}
+                                        } 
+                    }
+    return shipName, shipDesign
+
+def smallFrieghterShip():
+    shipName = "Grazing Cow"
+    shipDesign =    {       'designName': shipName, 
+                            'designID': 0,
+                            'hullID': 'Small Freighter',
+                            'component':{   "C": {"itemID": "Long Hump 6", "itemQuantity": 1 },
+                                            "B": {"itemID": "Fuel Tank", "itemQuantity": 1 },
+                                            "A": {"itemID": "Mole-skin Shield", "itemQuantity": 1}
+                                        } 
+                    }
+    return shipName, shipDesign
 
 
+def startingDesigns():
+    colonyName, colonyDesign = colonyShip()
+    scoutName, scoutDesign = scoutShip()
+    destroyerName, destroyerDesign = destroyerShip()
+    frieghtName, frieghtDesign = smallFrieghterShip()
 
+    designs = {
+        "NewDesign" : {
+            colonyName : colonyDesign,
+            scoutName : scoutDesign,
+            destroyerName :destroyerDesign,
+            frieghtName : frieghtDesign
+        },
+            "RemoveDesign" : []
+    }
+
+    return designs

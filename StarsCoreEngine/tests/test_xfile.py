@@ -44,6 +44,7 @@ from nose.tools import with_setup, assert_equal, assert_not_equal, \
 from ..starscoreengine.game_xfile import *
 from ..starscoreengine.game import Game
 from ..starscoreengine.template import *
+from ..starscoreengine.template_race import startingDesigns
 
 
 
@@ -179,15 +180,17 @@ class TestXFileController(object):
         # values prior to xFileController being called  = Baseline
         assert_true(p0.raceName, self.playerFileList[0])
         #print("count designs:%s" % len(p0.designs.currentShips))
-        assert_equal(len(p0.designs.currentShips), 0)
+        beginningDesigns = startingDesigns()
+        beginningDesignsCount = len(beginningDesigns["NewDesign"])
+        assert_equal(len(p0.designs.currentShips), beginningDesignsCount)
 
 
-
+        # uses values found in xfile_TEMPLATE
         xFileController(self.game)
 
 
-        # values after to xFileController being called
-        assert_equal(len(p0.designs.currentShips), 2)
+        # values after to xFileController being called, 2 extra ship designs added
+        assert_equal(len(p0.designs.currentShips), beginningDesignsCount + 2)
 
 
 

@@ -45,9 +45,10 @@ from .template import StandardGameTemplate
 from .game_utility import printGameValues
 from .game_utility import GamePickle, createXYFile, createMFile
 from .game_utility import loadFileFromJSON, saveFileToJSON
+from .game_xfile import processDesign
 from .order_of_events import OrderOfEvents
 from .tech import Component, Hull, ShipDesign
-
+from .template_race import startingDesigns
 
 
 
@@ -168,6 +169,12 @@ class Game(object):
 
                 designCapacity = self.game_variables['DesignCapacity']
                 player.design.DesignCapacity = designCapacity
+
+
+            # -------- add starting ship designs --------
+            startingShipDesigns = startingDesigns()
+            processDesign(startingShipDesigns, player, self.technology)
+
 
 
             tmpPlayers[tmpKey] = player
