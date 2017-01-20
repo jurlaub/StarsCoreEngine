@@ -435,7 +435,7 @@ class TestPickling(object):
     def test_Pickle(self):
         tmpUniverse = self.tmpGame.game_universe[0]
 
-        tmpUniverse.planets['0_1'].name = "Starbuck_Straw"
+        tmpUniverse.planets['0_p1'].name = "Starbuck_Straw"
 
         pickleTest = (self.tmpGame)
         
@@ -447,8 +447,8 @@ class TestPickling(object):
         print("test_Pickle: has HARDCODED SpaceObjects(planets) keys: '0_1', '0_2'")
         savedUniverse = savedGame.game_universe[0]    
 
-        assert_true(savedUniverse.planets['0_1'].name == "Starbuck_Straw")
-        assert_true(savedUniverse.planets['0_2'].name == tmpUniverse.planets['0_2'].name)
+        assert_true(savedUniverse.planets['0_p1'].name == "Starbuck_Straw")
+        assert_true(savedUniverse.planets['0_p2'].name == tmpUniverse.planets['0_p2'].name)
         assert_true(len(savedUniverse.planets) == len(tmpUniverse.planets))
 
         

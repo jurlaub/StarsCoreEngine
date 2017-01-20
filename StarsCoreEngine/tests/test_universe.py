@@ -271,10 +271,15 @@ class TestUniverse(object):
     def teardown(self):
         print("TestShipDesign: Teardown")
 
+        if False: print("p1_fleets:%s\np1_currentFleetID:%s \nuniverseFleets:%s \nobjectsAtXY:%s" %(self.player1.fleetCommand.fleets, self.player1.fleetCommand.currentFleetID, self.universe.fleetObjects, self.universe.objectsAtXY))
+
         self.player1.fleetCommand.fleets = self.baseFleets
         self.player1.fleetCommand.currentFleetID = self.baseFleetID
         self.universe.fleetObjects = self.baseFleetObjects
         self.universe.objectsAtXY = self.baseObjectsAtXY
+
+        if False: print("p1_fleets:%s \np1_currentFleetID:%s \nuniverseFleets:%s \nobjectsAtXY:%s" %(self.player1.fleetCommand.fleets, self.player1.fleetCommand.currentFleetID, self.universe.fleetObjects, self.universe.objectsAtXY))
+
 
     @staticmethod
     def _getHW_XY(player):
@@ -300,3 +305,4 @@ class TestUniverse(object):
 
 
 
+        
