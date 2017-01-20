@@ -293,6 +293,8 @@ class TestUniverse(object):
 
     def test_setupClass(self):
 
+        ONEPLANET = 1
+
         assert_true(isinstance(self.player0, Player))
         assert_true(isinstance(self.player1, Player))
         assert_true(isinstance(self.p1_colonyHW_obj, Colony))
@@ -301,8 +303,9 @@ class TestUniverse(object):
         for player in self.game.players.values():
             colonyXY = TestUniverse._getHW_XY(player)
             assert_true(len(player.fleetCommand.fleets) == startingShipDesignsCount())   # fleets should be starting fleet values
-            assert_true(len(self.universe.objectsAtXY[colonyXY]) == startingShipDesignsCount())
+            assert_true(len(self.universe.objectsAtXY[colonyXY]) == startingShipDesignsCount() + ONEPLANET) 
 
 
-
+        # print("objectsAtXY\n%s" % self.universe.objectsAtXY)
+        # assert_true(False)
         

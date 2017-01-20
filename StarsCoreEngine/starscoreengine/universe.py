@@ -60,7 +60,7 @@ class UniverseObject(object):
         self.UniversePlanets = universe_data['UniversePlanets']
         self.Players = universe_data['Players']
         self.PlayerList = None  # which player races are located in this uni
-        
+        self.objectsAtXY = {} 
         self.planets = self.createPlanetObjects()
         
         self.usedNames = []
@@ -89,7 +89,7 @@ class UniverseObject(object):
             all objects listed in list 
 
         """
-        self.objectsAtXY = {} 
+        
 
 
     #  need isAPlanet(XYLocation)
@@ -197,6 +197,8 @@ class UniverseObject(object):
         xy = (random.randrange(0, uSize[0]), random.randrange(0, uSize[1]))
         tmpVal = Planet(xy, ID, name, self, playerHab)  # --TODO -- Add random values to Planet object
         
+        self._updateObjectsAtXY(ID, xy)
+
         return tmpVal
 
     def createHomeworldPlanet(self, raceData):
@@ -227,11 +229,13 @@ class UniverseObject(object):
 
 
 
-
+        # remove planet ID from .objectsAtXy
+        self.objectsAtXY.get(switchPlanet.xy).remove(switchID)
 
         
         switchPlanet.ID = ID    # Existing Planet takes in new planet ID
         self.planets[ID] = switchPlanet
+        self._updateObjectsAtXY(ID, switchPlanet.xy)
         if DEBUG: print("createHomeworldPlanet-switchPlanet: PlanetName:%s, IdNewToPlanet:%s, OldIDreplacedByLastEntry:%s, PlanetOwner:%s, IsPlanetAHW:%s" % (switchPlanet.name, switchPlanet.ID, switchID,  switchPlanet.owner, switchPlanet.HW))
 
         name = self.getPlanetName()
