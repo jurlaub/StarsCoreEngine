@@ -103,7 +103,7 @@ class PlayerDesigns(object):
             return None
 
 
-
+        
         newObject = ShipDesign(newDesign, techTree, self.techLevels, self.LRT) 
         newObject.owner = self.raceName      
         

@@ -41,6 +41,9 @@ from ..starscoreengine.player import Player
 from ..starscoreengine.player import RaceData as Race
 from ..starscoreengine.player_designs import PlayerDesigns
 from ..starscoreengine.tech import ShipDesign 
+from ..starscoreengine.template_race import startingStarbase
+from ..starscoreengine.game_xfile import processDesign
+from ..starscoreengine.fleets import Starbase
 
 
 
@@ -101,7 +104,16 @@ class TestPlayerDesign(object):
 
         # need ship with 'restricted tech' so that producing it will be off
 
-        
+        self.starbaseName = 'StarBase_Awesome'
+
+        self.starbaseObject = {  'designName': self.starbaseName, 
+                                'designID': 2,
+                                'hullID': "Space Station",
+                                'component': {  "A": {"itemID": "Wolverine Diffuse Shield", "itemQuantity": 2 },
+                                                "B": {"itemID": "Colloidal Phaser", "itemQuantity": 5},
+                                                "F": {"itemID": "Crobmnium", "itemQuantity": 1},
+                                                "D": {"itemID": "Jihad Missile", "itemQuantity": 1}
+                                                                    } }
 
 
 
@@ -116,6 +128,10 @@ class TestPlayerDesign(object):
 
         self.techTree = self.game.technology
 
+        self.player1_xFile = {
+            "NewDesign" : {self.starbaseName: self.starbaseObject },
+            "RemoveDesign" : [] }
+
 
     def teardown(self):
         print("TestPlayerDesign: Teardown")
@@ -127,6 +143,28 @@ class TestPlayerDesign(object):
                 os.remove(tmpFileName)
         except IOError as e:
             print("Unable to remove file: %s" % (tmpFileName))
+
+
+    def test_starbase_design_has_spaceDockSize(self):
+        """
+        tests whether a space station includes spaceDockSize
+        """
+        processDesign(self.player1_xFile, self.player1, self.techTree)
+        assert_true(len(self.player1.designs.currentStarbases) >= 1)
+
+        for each, obj in self.player1.designs.currentStarbases.items():
+            print("%s" % obj.spaceDockSize)
+            assert_in('spaceDockSize', obj.__dict__)
+            #assert_true(obj.__dict__['spaceDockSize'] is not None)
+            assert_in(obj.spaceDockSize, ['0', '200', 'infinite'])
+
+
+        starbaseAwesome = self.player1.designs.currentStarbases[self.starbaseName]
+
+        print("%s" % starbaseAwesome)
+        #assert_true(isinstance(starbaseAwesome, Starbase))
+
+        #assert_true(False)
 
 
     def test_AddDesign(self):
@@ -176,9 +214,6 @@ class TestPlayerDesign(object):
 
             assert_equal(t1.owner, player.raceName)         # different then the player key. 
 
-        
-
-
     def test_AddDesign_OverCapacity(self):
         """PlayerDesigns.AddDesign unit tests
 
@@ -207,10 +242,6 @@ class TestPlayerDesign(object):
 
         assert_equal(designs.DesignCapacity, len(designs.currentShips))
 
-
-
-        
-        
 
     def test_AddDesign_DuplicateEntries(self):
         """PlayerDesigns.AddDesign unit tests
@@ -243,10 +274,6 @@ class TestPlayerDesign(object):
         assert_equal(len(designs.currentStarbases), starbaseCount)
 
 
-        
-        
-
-
     def test_RemoveDesign(self):
         """RemoveDesign 
         Given any design - remove it from the list. (other remove parts are called elsewhere)
@@ -271,9 +298,6 @@ class TestPlayerDesign(object):
         
         assert_equal(shipCount,len(designs.currentShips) )
         assert_not_in(shipCount, designs.currentShips)
-
-
-
 
     def test_TransferDesign(self):
         pass

@@ -115,7 +115,7 @@ Custom Tech Options
 
 """
 
-
+DEBUG = False
 
 class CoreStats(object):
     """CoreStats captures the parts of a Component and ShipDesign that are shared.
@@ -484,7 +484,7 @@ class Hull(BaseTech):
         # self.shipsHeal = False
 
         # self.ARPopulation = None
-        # self.spaceDockSize = None
+        self.spaceDockSize = None
 
 
         # slot defines the hull component composition
@@ -544,7 +544,7 @@ class ShipDesign(Component):
         self.designName = vals['designName']    # user specified ship design name
         self.designID = None                     # ? -> not, better to track and auto assign.
         self.owner = None 
-        self.techTree = techTree       
+        self.techTree = techTree       #--TODO-- perhaps save reference to tech
 
         self.isDesignLocked = False             # once a player has built a design- it cannot change
         self.designValidForProduction = True   
@@ -605,9 +605,14 @@ class ShipDesign(Component):
         
         hullObj = self.techTree[self.hullID]
 
+        if DEBUG: print("hullObj:%s" % hullObj.spaceDockSize)
         # apply hullObj miniturization if necessary
 
         self.tally(1, hullObj, techLevel, LRT)              # there can be only one... (1) Hull :)
+
+        
+
+        if DEBUG: print("updateDesign(hullObj):spaceDockSize:%s \n%s" % (self.spaceDockSize, self.designName))
 
         for k1, obj1 in self.component.items():
 
@@ -629,7 +634,7 @@ class ShipDesign(Component):
         # if attribute is []:
         #       add
         skipKey = ('slot', 'component')
-        highestLevel = ('energy', 'weapons', 'propulsion', 'construction', 'electronics', 'biotechnology')          
+        highestLevel = ('energy', 'weapons', 'propulsion', 'construction', 'electronics', 'biotechnology', 'spaceDockSize')          
         oneList = ('fuelEfficiencies', 'itemType', 'range' )
         #extendList = ()
 
@@ -652,18 +657,42 @@ class ShipDesign(Component):
             """ obj either contain noneVals or are trumped by a value (True, a number, not None, a non empty object) """     
             # if obj is 0:
             #     obj = '0'
+            if kee == 'spaceDockSize':
+                if DEBUG: print("tall: spaceDockSize:%s" % obj)
 
             if obj in noneVals:         
                 continue
             
             if kee in skipKey:        # these should not be changed
+                if DEBUG: print("shipKey: %s:%s" % (kee, obj))
                 continue
             
             elif kee in highestLevel:
-                if int(self.__dict__[kee]) > int(obj):   #  only want the highest tech level
+                if kee == 'spaceDockSize':
+                    sizeRank = ['0', '200', 'infinite']
+                    
+                    # if obj is not in sizeRank it is None or some other value
+                    if obj in sizeRank:
+                        
+                        sds = self.__dict__[kee]
+                        if sds in sizeRank:
+                            #compare index
+                            obj_index = sizeRank.index(obj)
+                            sds_index = sizeRank.index(sds)
+                            if sds_index > obj_index:
+                                if DEBUG: print("tally: spaceDockSize - current value (%s) is greater then component value(%s)" % (sds, obj))
+                                continue
+                        
+                        
+                        tmpVal = obj
+
+
+
+                elif int(self.__dict__[kee]) > int(obj):   #  only want the highest tech level
                     continue
                 
-                tmpVal = int(obj)
+                else:
+                    tmpVal = int(obj)
 
             elif kee in oneList:
                 if self.__dict__[kee] in ('Ships', 'Starbases'):
@@ -705,8 +734,8 @@ class ShipDesign(Component):
                 tmpVal = obj
             
             else:
-                #print(kee)
-                #print(obj)
+                if DEBUG: print("tally: %s : %s" % (kee, obj )) 
+                
                 continue
             self.__dict__[kee] = tmpVal
 

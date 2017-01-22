@@ -59,7 +59,7 @@ class Token:
         self.mass = None
 
 
-    
+
 
 
 
@@ -152,6 +152,12 @@ class FleetObject(SpaceObjects): #  additionally subclass Component?
 
     #     for each in self.token:
 
+    def fleetMass(self):
+        """
+        calculates fleetMass
+        """
+        pass
+
 
 class Starbase(FleetObject):
     """
@@ -172,5 +178,14 @@ class Starbase(FleetObject):
         self.constructionCapacity = None # None or Mass Rating 
     
 
-                    
+                   
+    def starbaseMassRating(self):
+        """
+
+        returns maximum mass rating for a starbase
+
+        """
+
+        starbaseTokenIDs = [x for x.design in self.tokens.values()]
+
                     

@@ -1257,3 +1257,29 @@ class TestShipDesign(object):
         assert_equal(objectsAtLocation + ONE, newObjectsAtLocation)
 
 
+    def test_player_starbase_design(self):
+        """
+        base player should include a starbase design - more because this test class setup adds two more
+
+        """
+        starbaseCount = len(self.player.designs.currentStarbases)
+        assert_true(starbaseCount == 3)
+
+        #print("currentStarbases:%s" % self.player.designs.currentStarbases)
+
+        for key, value in self.player.designs.currentStarbases.items():
+            
+            print("\nstarbaseName:%s" % key)
+            for eachKey, eachObj in value.__dict__.items():
+                if eachKey == 'techTree':
+                    # print("\t'spaceDockSize':%s" % (eachObj.spaceDockSize))
+                    # continue
+                    # for i, v in eachObj.__dict__.items():
+                    #     print("\t%s:%s"%(i, v))
+                    print("\t%s"%eachObj['Space Dock'].__dict__)
+                    continue
+                print("%s: %s" % (eachKey, eachObj))
+            #print("starbaseObject:%s\n" % value.__dict__)
+
+        #assert_true(False)
+
