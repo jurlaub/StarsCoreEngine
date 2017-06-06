@@ -47,7 +47,8 @@ from .game_utility import GamePickle, createXYFile, createMFile
 from .game_utility import loadFileFromJSON, saveFileToJSON
 from .game_xfile import processDesign
 from .order_of_events import OrderOfEvents
-from .tech import Component, Hull, ShipDesign
+from .tech import Component, Hull 
+from .ship_design import ShipDesign
 from .template_race import startingDesigns
 
 
@@ -133,7 +134,7 @@ class Game(object):
             # newTech.__dict__.update(eachObj.__dict__)   # ?
             for i in eachObj:
                 newTech.__dict__[i] = eachObj[i]
-
+            newTech.name = eachKey
 
             tmpTechnology[eachKey] = newTech
 

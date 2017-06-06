@@ -27,8 +27,8 @@ from .productionQ import ProductionQ
 import random
 
 
-DEBUG_1 = True
-DEBUG_2 = True
+DEBUG_1 = False
+DEBUG_2 = False
 
 class Planet(SpaceObjects):
     """ 

@@ -69,7 +69,7 @@ research:
 
 """
 
-DEBUG = True
+DEBUG = False
 
 class Research(object):
     """ Research

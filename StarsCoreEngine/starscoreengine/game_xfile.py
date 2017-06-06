@@ -40,7 +40,7 @@ line.
 
 from .game_utility import loadFileFromJSON
 
-
+DEBUG = False
 
 def xfile_TEMPLATE():
     """ xfile_TEMPLATE is the standard for xfiles. 
@@ -445,7 +445,7 @@ def xFile_ProductionQ_StructureIsValid(xfile):
         for colonyName, orders in colonyProduction.items():
             PO = orders["productionOrder"]
             PL = orders["productionItems"]
-            print("%s: PO:%d PL:%d" % (colonyName, len(PO), len(PL)))
+            if DEBUG: print("%s: PO:%d PL:%d" % (colonyName, len(PO), len(PL)))
             # print("productionOrder:%s" % (PO))
             # print("productionItems:%s" % (PL))
 

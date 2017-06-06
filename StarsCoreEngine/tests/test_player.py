@@ -40,10 +40,12 @@ from ..starscoreengine.template import *
 from ..starscoreengine.player import Player
 from ..starscoreengine.player import RaceData as Race
 from ..starscoreengine.player_designs import PlayerDesigns
-from ..starscoreengine.tech import ShipDesign 
+from ..starscoreengine.tech import Hull
+from ..starscoreengine.ship_design import ShipDesign 
 from ..starscoreengine.template_race import startingStarbase
 from ..starscoreengine.game_xfile import processDesign
 from ..starscoreengine.fleets import Starbase
+from ..starscoreengine.productionQ import ProductionQ
 
 
 
@@ -103,11 +105,12 @@ class TestPlayerDesign(object):
                                                                     } }
 
         # need ship with 'restricted tech' so that producing it will be off
+        self.starbaseHWName, self.starbaseHWObject = startingStarbase()
 
         self.starbaseName = 'StarBase_Awesome'
 
         self.starbaseObject = {  'designName': self.starbaseName, 
-                                'designID': 2,
+                                'designID': self.starbaseName,
                                 'hullID': "Space Station",
                                 'component': {  "A": {"itemID": "Wolverine Diffuse Shield", "itemQuantity": 2 },
                                                 "B": {"itemID": "Colloidal Phaser", "itemQuantity": 5},
@@ -115,6 +118,17 @@ class TestPlayerDesign(object):
                                                 "D": {"itemID": "Jihad Missile", "itemQuantity": 1}
                                                                     } }
 
+
+        self.dockName = 'StarDock_Berry'
+
+        self.dockObject = { 'designName': self.dockName, 
+                                'designID': self.dockName,
+                                'hullID': "Space Dock",
+                                'component': {  "A": {"itemID": "Wolverine Diffuse Shield", "itemQuantity": 2 },
+                                                "B": {"itemID": "Colloidal Phaser", "itemQuantity": 5},
+                                                "F": {"itemID": "Crobmnium", "itemQuantity": 1},
+                                                "D": {"itemID": "Jihad Missile", "itemQuantity": 1}
+                                                                    } }                                        
 
 
 
@@ -129,12 +143,31 @@ class TestPlayerDesign(object):
         self.techTree = self.game.technology
 
         self.player1_xFile = {
-            "NewDesign" : {self.starbaseName: self.starbaseObject },
+            "NewDesign" : { self.starbaseName : self.starbaseObject,
+                            self.dockName : self.dockObject
+                             },
             "RemoveDesign" : [] }
+
+        processDesign(self.player1_xFile, self.player1, self.techTree)
+
+        #--------- obtain HW -------------
+        self.colonyHWName = None
+        self.colonyHWObject = None
+        for kee, each in self.player1.colonies.items():
+            if each.planet.HW:
+                self.colonyHWName = kee
+                self.colonyHWObject = each
+                break
+        #--------- end ------------------
 
 
     def teardown(self):
         print("TestPlayerDesign: Teardown")
+
+        self.colonyHWObject.planet.orbitalStarbase = None
+
+
+
         try:
             tmpFileName = self.testGameName + '_TechTreeDataError'
             cwd = os.getcwd()
@@ -145,23 +178,52 @@ class TestPlayerDesign(object):
             print("Unable to remove file: %s" % (tmpFileName))
 
 
+    def test_stardock_reports_smaller_dock_size(self):
+
+        assert_true(self.colonyHWObject.planet.orbitalStarbase == None)
+
+        self.colonyHWObject.productionQ.produceStarbase(1, self.dockName)
+
+        dock = self.colonyHWObject.planet.orbitalStarbase
+        assert_true(len(dock.tokens) == 1)
+        massRating = dock.starbaseMassRating()
+        assert_true(massRating == '200')
+
+    def test_starbase_reports_spaceDockSize(self):
+
+        print("colony.planet.orbitalStarbase: %s" % self.colonyHWObject.planet.orbitalStarbase )
+        assert_true(self.colonyHWObject.planet.orbitalStarbase == None)
+
+        dockSizes = (0, 200, Hull.INFINITY)
+        self.colonyHWObject.productionQ.produceStarbase(1, self.starbaseName)
+
+        starbase = self.colonyHWObject.planet.orbitalStarbase
+        massRating = int(starbase.starbaseMassRating())
+        assert_true(len(starbase.tokens) == 1)
+
+        assert_true(massRating in dockSizes)
+        assert_true(massRating == Hull.INFINITY)
+
     def test_starbase_design_has_spaceDockSize(self):
         """
         tests whether a space station includes spaceDockSize
         """
+        assert_true(self.colonyHWObject.planet.orbitalStarbase == None)
+
         processDesign(self.player1_xFile, self.player1, self.techTree)
         assert_true(len(self.player1.designs.currentStarbases) >= 1)
 
         for each, obj in self.player1.designs.currentStarbases.items():
-            print("%s" % obj.spaceDockSize)
+            print("test: %s:%s" % (each, obj))
+            print("spaceDockSize:%s" % obj.spaceDockSize)
             assert_in('spaceDockSize', obj.__dict__)
             #assert_true(obj.__dict__['spaceDockSize'] is not None)
-            assert_in(obj.spaceDockSize, ['0', '200', 'infinite'])
+            assert_in(obj.spaceDockSize, [0, 200, Hull.INFINITY]) #['0', '200', 'infinite'])
 
 
-        starbaseAwesome = self.player1.designs.currentStarbases[self.starbaseName]
+        #starbaseAwesome = self.player1.designs.currentStarbases[self.starbaseName]
 
-        print("%s" % starbaseAwesome)
+        #print("%s" % starbaseAwesome)
         #assert_true(isinstance(starbaseAwesome, Starbase))
 
         #assert_true(False)

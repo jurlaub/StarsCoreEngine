@@ -1300,13 +1300,13 @@ def items_starbases():
                             "iron" : 40, "bor" : 10, "germ" : 50, "spaceDockSize" : 200, "armorDP" : 250, "initiative" : 12}, 
             "Space Station" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 0, 
                                "electronics" : 0, "biotechnology" : 0, "resources" : 1200, 
-                               "iron" : 240, "bor" : 160, "germ" : 500, "spaceDockSize" : "infinite", "armorDP" : 500, "initiative" : 14},
+                               "iron" : 240, "bor" : 160, "germ" : 500, "spaceDockSize" : -1, "armorDP" : 500, "initiative" : 14},
             "Ultra Station" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 12, 
                                "electronics" : 0, "biotechnology" : 0, "resources" : 1200, 
-                               "iron" : 240, "bor" : 160, "germ" : 600, "spaceDockSize" : "infinite", "armorDP" : 1000, "initiative" : 16}, 
+                               "iron" : 240, "bor" : 160, "germ" : 600, "spaceDockSize" : -1, "armorDP" : 1000, "initiative" : 16}, 
             "Death Star" : {"energy" : 0, "weapons" : 0, "propulsion" : 0, "construction" : 17, 
                             "electronics" : 0, "biotechnology" : 0, "resources" : 1500, 
-                            "iron" : 240, "bor" : 160, "germ" : 700, "spaceDockSize" : "infinite", "armorDP" : 1500, "initiative" : 18}}
+                            "iron" : 240, "bor" : 160, "germ" : 700, "spaceDockSize" : -1, "armorDP" : 1500, "initiative" : 18}}
 
 def items_stargates():
     return {"Stargate 100_250" : {"energy" : 0, "weapons" : 0, "propulsion" : 5, "construction" : 5, 

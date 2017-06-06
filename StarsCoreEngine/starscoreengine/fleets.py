@@ -46,8 +46,8 @@ class Token:
     """Ships of the same design in a fleet form a single token, contains everything needed
     for the battles, needs to persist after battles to keep damage"""
 
-    def __init__(self, shipDesign, numbers, damage = 0):
-        self.design = shipDesign
+    def __init__(self, designID, numbers, damage = 0):
+        self.designID = designID 
         self.number = numbers
         #list of [[number, damage (%)], ..., so [100, 0.5], [100, 0] is a token of 200 ships, 100 of which have 50% damage
         self.damage = damage  
@@ -181,11 +181,26 @@ class Starbase(FleetObject):
                    
     def starbaseMassRating(self):
         """
-
-        returns maximum mass rating for a starbase
+        searchs through all the tokens 
+        returns maximum mass ship build rating that a starbase can build. 
 
         """
 
-        starbaseTokenIDs = [x for x.design in self.tokens.values()]
+        #starbaseTokenIDs = [x for x.design in self.tokens.values()]
+        massRating = '0'
+        dockSizes = ['0', '200', 'infinite']
 
+        for each in self.tokens:
+
+            starbase = self.player.designs.currentStarbases[each]
+            
+            if starbase.spaceDockSize != None:
+                massRating = str(starbase.spaceDockSize)
+            # if starbase.spaceDockSize in dockSizes:
+                # if dockSizes.index(massRating) < dockSizes.index(starbase.spaceDockSize):
+                #     massRating = starbase.spaceDockSize
+            print("fleets.starbaseMassRating - %s: spaceDockSize:%s" % (each, starbase.spaceDockSize))
+            print("%s" % starbase)
+            
+        return massRating
                     

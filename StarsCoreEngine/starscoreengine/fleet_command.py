@@ -24,7 +24,7 @@ from .fleets import FleetObject
 from .fleet_orders import FleetOrders
 
 
-DEBUG = True
+DEBUG = False
 DEBUG2 = False
 
 
@@ -64,7 +64,7 @@ class FleetCommand(object):
         if self.currentFleetID in self.fleets:
             fleetID = self._nextFleetID()
 
-            print("generateFleetID - %s in self.fleets  nextFleetID: %s" % (self.currentFleetID, fleetID))
+            if DEBUG: print("generateFleetID - %s in self.fleets  nextFleetID: %s" % (self.currentFleetID, fleetID))
             #--TODO-- test that fleetID does not exceed fleet cap
 
 
@@ -74,7 +74,7 @@ class FleetCommand(object):
 
             #find the next fleetID
             self.currentFleetID = self._nextFleetID(self.currentFleetID)
-            print("generateFleetID - %s " % self.currentFleetID)
+            if DEBUG: print("generateFleetID - %s " % self.currentFleetID)
 
 
         # fleetID = str(self.player.playerNumber) + "_" + self.currentFleetID
@@ -107,7 +107,7 @@ class FleetCommand(object):
             fleetKeys = len(self.fleets)
             #print("_nextFleetID: valueInRange is True %s is not in self.fleets" % (fleetKeys))
 
-        print("[p%s]_nextFleetID: fleetKeys:%s" % (self.player.playerNumber, fleetKeys) ) 
+        if DEBUG: print("[p%s]_nextFleetID: fleetKeys:%s" % (self.player.playerNumber, fleetKeys) ) 
         return fleetKeys
 
 

@@ -20,8 +20,10 @@
 
 """
 
-from .tech import ShipDesign, Hull, Component
+from .tech import Hull, Component
+from .ship_design import ShipDesign
 
+DEBUG = False
 
 class PlayerDesigns(object):
     """
@@ -67,7 +69,7 @@ class PlayerDesigns(object):
 
         tmpHull = newDesign['hullID']
         tmpType = techTree[tmpHull].itemType    # should be Ships or Starbases
-
+        if DEBUG: print("addDesign: techTree[%s]\n%s" % (tmpHull, techTree[tmpHull] ))
 
         if tmpType not in ('Ships', 'Starbases'):
             # raise TypeError("Attempted to add a design, but the design did not specify 'Ships' or 'Starbases'")
@@ -103,7 +105,7 @@ class PlayerDesigns(object):
             return None
 
 
-        
+
         newObject = ShipDesign(newDesign, techTree, self.techLevels, self.LRT) 
         newObject.owner = self.raceName      
         
@@ -130,9 +132,13 @@ class PlayerDesigns(object):
     #     """
     #     pass
 
+    def removeShipDesign(self, designName):
+        self.removeDesign(designName, True)        
 
+    def removeStarbase(self, designName):
+        self.removeDesign(designName, False)
 
-    def removeDesign(self, designName):
+    def removeDesign(self, designName, shipDesign = True):
         """ 
         Removing design can come in two ways.
         1) all built ships in game have been scrapped or destroyed & user deletes entry
@@ -166,13 +172,20 @@ class PlayerDesigns(object):
         Future: Possible that deleted design will end up in a 'history' dictionary
 
         """
-        if designName in self.currentShips:
-            self.currentShips.pop(designName)
-        elif designName in self.currentStarbases:
-            self.currentStarbases.pop(designName)
         
+        if shipDesign:
+
+            if designName in self.currentShips:
+                self.currentShips.pop(designName)
+                print("removeDesign: shipDesign %s removed" % designName)
+            else:
+                print("removeDesign: shipDesign not found")
         else:
-            print("Design not present")
+
+            if designName in self.currentStarbases:
+                self.currentStarbases.pop(designName)
+            else:
+                print("removeDesign: starbaseDesign not found")        
 
 
 

@@ -40,7 +40,7 @@ from ..starscoreengine.template import *
 from ..starscoreengine.player import Player
 from ..starscoreengine.player import RaceData as Race
 from ..starscoreengine.player_designs import PlayerDesigns
-from ..starscoreengine.tech import ShipDesign 
+from ..starscoreengine.ship_design import ShipDesign 
 from ..starscoreengine.productionQ import *
 from ..starscoreengine.game_xfile import processDesign, processProductionQ
 from ..starscoreengine.template_race import startingShipDesignsCount, startingDesignsCount
