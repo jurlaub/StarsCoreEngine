@@ -17,4 +17,4 @@
 
 
 """
-__all__ = ["fleets", "game", "planet", "space_objects"]
+__all__ = ["fleets", "game", "planet", "space_objects", "tech", "research", "player", "productionQ"]

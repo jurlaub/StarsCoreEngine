@@ -2,7 +2,7 @@
     This file is part of Stars Core Engine, which provides an interface and 
     processing of Game data. 
 
-    Copyright (C) 2014  <Joshua Urlaub + Contributors>
+    Copyright (C) 2017  <Joshua Urlaub + Contributors>
 
     Stars Core Engine is free software: you can redistribute it and/or modify
     it under the terms of the Lesser GNU General Public License as published by
@@ -21,6 +21,15 @@
     in the COPYING.Interpretation document.
 
 """
+
+"""
+    game_utility 
+
+    Methods to support setting up the game.
+
+
+"""
+
 
 import pickle
 import json

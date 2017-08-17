@@ -126,7 +126,10 @@ class TestGame(object):
             cwd = os.getcwd()
             tmpFileName = r"%s/%s"% (cwd, tmpFileName)
             if os.path.isfile(tmpFileName):
+                print("file exists - {}".format(tmpFileName))
                 os.remove(tmpFileName)
+            else:
+                print("file not exists - {}".format(tmpFileName))
         except IOError as e:
             print("Unable to remove file: %s" % (tmpFileName))
 
@@ -143,6 +146,7 @@ class TestGame(object):
     def test_generateUniverses_Zero(self):
 
         #--- TODO --- can it handle 0 universes?
+        # assert_true(False)
         pass
 
     def test_generateUniverses_Single(self):

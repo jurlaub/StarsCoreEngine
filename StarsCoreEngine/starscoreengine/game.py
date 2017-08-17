@@ -235,7 +235,7 @@ class Game(object):
 
 
             for each in designList:
-                print("generatePlayersStartingShips: ship%s" % each.designName)
+                print("generatePlayersStartingShips: ship %s" % each.designName)
 
                 colonyHW.productionQ.produceShip(1, each.designName)
 
@@ -257,6 +257,7 @@ class Game(object):
     def ImportTurnFiles(self):
         """ ImportTurnFiles is used to import players .x files into the Game Object.
 
+            for each player, run through the game_xfile processMethods
 
         """
 
@@ -266,6 +267,8 @@ class Game(object):
         # process new ship design
         
         # updatePlayerShipDesign()
+
+        #processProductionQ(self.test_1_item_template, self.player)
 
 
         # sort/direct orders to the approprate place in game/player object.

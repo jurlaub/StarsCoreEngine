@@ -23,17 +23,19 @@
 """
 
 """
-This file collects all the methods necessary to import a players x file. It is 
-separated from game_utility.py specifically because the x file relies on the 
-client to correctly format the data. The x file format should be clearly 
-described in this file and accurately followed by a client.
+    game_xfile.py 
+    This file collects all the methods necessary to import a players x file. 
 
-game_xfile.py methods are the x file interface. They should not depend on being 
-used by the command line. The StarsCoreEngine could be included as a part of
-another project where the game_xfile.py methods are called directly.
+    It is separated from game_utility.py specifically because the x file relies on the 
+    client to correctly format the data. The x file format should be clearly 
+    described in this file and accurately followed by a client.
 
-game_xfile.py should provide a means for validating an x file from the command 
-line.
+    game_xfile.py methods are the x file interface. They should not depend on being 
+    used by the command line. The StarsCoreEngine could be included as a part of
+    another project where the game_xfile.py methods are called directly.
+
+    game_xfile.py should provide a means for validating an x file from the command 
+    line.
 
 
 """

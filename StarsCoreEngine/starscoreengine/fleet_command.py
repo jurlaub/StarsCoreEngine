@@ -1,6 +1,6 @@
 """
     This file is part of Stars Core Engine, which provides an interface and processing of Game data.
-    Copyright (C) 2016  <Joshua Urlaub + Contributors>
+    Copyright (C) 2017  <Joshua Urlaub + Contributors>
 
     Stars Core Engine is free software: you can redistribute it and/or modify
     it under the terms of the Lesser GNU General Public License as published by
@@ -35,7 +35,7 @@ class FleetCommand(object):
     """
 
     def __init__(self, player, multiverse):
-        self.multiverse = multiverse #fleets are objects in a given universe
+        self.multiverse = multiverse # fleets are objects in a given universe
         self.player = player
         self.currentFleetID = 0    
 

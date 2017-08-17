@@ -21,8 +21,9 @@
     in the COPYING.Interpretation document.
 
 """
-from .planet import *
+from .planet import Planet, Colony
 from .player import Player
+from .productionQ import ProductionQ
 
 
 def OrderOfEvents(game):
@@ -49,7 +50,7 @@ def OrderOfEvents(game):
     fleet_controller.py - contains class FleetController()
         The idea is that it would handle things like: 
             > a fleet splitting into multiple fleets
-            > fleet mergine
+            > fleet merging
             > travel between universes
         I am thinking that when the specific situations described above occur,
         then OrderOfEvents would call FleetController with the relavant objects 
@@ -87,7 +88,7 @@ def OrderOfEvents(game):
     # !    wormholesMove():                  # for each object in UniverseObject:: wormholes  (new file -> necessary to expand upon multi-universe)
     # !!   minefieldDetonate():              # for each object in UniverseObject:: space_objects.py = Minefield
     # !    mineralMining():                  # for each player.colony update planet object
-    # ^^^!  production():                     # ProductionQ
+    production(game)                     # ProductionQ
     # ^!   universeResearchCapture():        # Research
 
     population(game)
@@ -125,18 +126,18 @@ def OrderOfEvents(game):
     
 
 
-def colonyIterator(players, action):
-    ''' iterate through all current colonies held by each player and perform one 
-    action
+# def colonyIterator(players, action):
+#     ''' iterate through all current colonies held by each player and perform one 
+#     action
 
-    input: a game's players and one action (action must be a method)
-    '''
+#     input: a game's players and one action (action must be a method)
+#     '''
 
-    pass
+#     pass
 
 
-def fleetIterator():
-    pass
+# def fleetIterator():
+#     pass
 
 
 
@@ -197,7 +198,7 @@ def mineralMining():
     # Including AR waypoint 1 remote mining of colonized worlds.
     pass
 
-def production():
+def production(game):
     # (incl. research, packet launch, fleet/starbase construction)
     """
     iterate through all the player objects.
@@ -229,7 +230,16 @@ def production():
     # iterate through (productionQ or colonies.productionQ)
     # call productionController( player.research.techLevels) # note: techLevels is for miniaturization
 
-    pass
+    for player in game.players:
+        playerObject = game.players[player]
+        colonies = playerObject.colonies
+
+        for each, colony in colonies.items():
+            #update colony value
+            colony.processProductionQ()
+
+
+
 
 def universeResearchCapture():
     # SS Spy bonus obtained

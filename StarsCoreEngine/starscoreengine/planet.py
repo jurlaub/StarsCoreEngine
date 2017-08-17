@@ -341,5 +341,6 @@ class Colony(object):
             
             return lowValue
 
-
+    def processProductionQ(self):
+        self.productionQ.productionController()
 
