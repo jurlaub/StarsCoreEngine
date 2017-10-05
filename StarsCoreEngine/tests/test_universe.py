@@ -251,7 +251,7 @@ class TestUniverse(object):
 
 
         # self.player1.fleetCommand.fleets = {}
-        # self.player1.fleetCommand.currentFleetID = 0
+        # self.player1.fleetCommand.nextFleetID = 0
         # self.universe.fleetObjects = {} 
         # self.universe.objectsAtXY[self.p1_colonyHW_obj.planet.xy] = []    # target_colony_obj exists here
 
@@ -261,7 +261,7 @@ class TestUniverse(object):
 
 
         self.baseFleets = self.player1.fleetCommand.fleets #= {}
-        self.baseFleetID = self.player1.fleetCommand.currentFleetID # = 0
+        self.baseFleetID = self.player1.fleetCommand.nextFleetID # = 0
         self.baseFleetObjects = self.universe.fleetObjects # = {} 
         self.baseObjectsAtXY = self.universe.objectsAtXY #[self.target_colony_obj.planet.xy] = []    # target_colony_obj exists here
 
@@ -271,14 +271,14 @@ class TestUniverse(object):
     def teardown(self):
         print("TestShipDesign: Teardown")
 
-        if False: print("p1_fleets:%s\np1_currentFleetID:%s \nuniverseFleets:%s \nobjectsAtXY:%s" %(self.player1.fleetCommand.fleets, self.player1.fleetCommand.currentFleetID, self.universe.fleetObjects, self.universe.objectsAtXY))
+        if False: print("p1_fleets:%s\np1_nextFleetID:%s \nuniverseFleets:%s \nobjectsAtXY:%s" %(self.player1.fleetCommand.fleets, self.player1.fleetCommand.nextFleetID, self.universe.fleetObjects, self.universe.objectsAtXY))
 
         self.player1.fleetCommand.fleets = self.baseFleets
-        self.player1.fleetCommand.currentFleetID = self.baseFleetID
+        self.player1.fleetCommand.nextFleetID = self.baseFleetID
         self.universe.fleetObjects = self.baseFleetObjects
         self.universe.objectsAtXY = self.baseObjectsAtXY
 
-        if False: print("p1_fleets:%s \np1_currentFleetID:%s \nuniverseFleets:%s \nobjectsAtXY:%s" %(self.player1.fleetCommand.fleets, self.player1.fleetCommand.currentFleetID, self.universe.fleetObjects, self.universe.objectsAtXY))
+        if False: print("p1_fleets:%s \np1_nextFleetID:%s \nuniverseFleets:%s \nobjectsAtXY:%s" %(self.player1.fleetCommand.fleets, self.player1.fleetCommand.nextFleetID, self.universe.fleetObjects, self.universe.objectsAtXY))
 
 
     @staticmethod

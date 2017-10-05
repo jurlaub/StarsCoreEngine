@@ -1492,8 +1492,8 @@ class ProductionQ(object):
 
         #add orders reference
         newFleetOrders = FleetOrders(newFleet)
-        self.player.fleetCommand.addFleetOrders(newFleetID, newFleetOrders)
-        #self.player.fleetCommand.fleets[spaceObjectID] = newFleet
+        #self.player.fleetCommand.addFleetOrders(newFleetID, newFleetOrders)
+        self.player.fleetCommand.addFleet(newFleetID, newFleet)
 
         #create new fleet object in universe
         self.colony.planet.universe.addPlayerFleets(spaceObjectID, newFleet)

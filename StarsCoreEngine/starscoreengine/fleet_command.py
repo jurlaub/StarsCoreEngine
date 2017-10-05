@@ -24,7 +24,7 @@ from .fleets import FleetObject
 from .fleet_orders import FleetOrders
 
 
-DEBUG = False
+DEBUG = True
 DEBUG2 = False
 
 
@@ -37,7 +37,7 @@ class FleetCommand(object):
     def __init__(self, player, multiverse):
         self.multiverse = multiverse # fleets are objects in a given universe
         self.player = player
-        self.currentFleetID = 0    
+        self.nextFleetID = 0    
 
         self.fleets = {}  # ? fleetID : fleetObj
 
@@ -47,39 +47,51 @@ class FleetCommand(object):
 
     def generateFleetID(self):
         """
-        precondition:   fleetIDs do not have a universe ID prefixed to currentFleetID -which should be unique across all universes
+        precondition:   fleetIDs do not have a universe ID prefixed to nextFleetID -which should be unique across all universes
 
         postcondition:  fleetID should not exceed fleet number ceiling
                         fleetID should not have a duplicate
-                        self.currentFleetID should provide the next open fleetID
+                        self.nextFleetID should provide the next open fleetID
 
         Note: 20161228 ju - do not like this way of generating ID's
 
 
         """
 
-        fleetID = self.currentFleetID
+        #fleetID = self.nextFleetID
         
-        #test that fleetID is not in self.fleets 
-        if self.currentFleetID in self.fleets:
-            fleetID = self._nextFleetID()
+        # if nextFleetID has been used, then advance to the next open fleet id
+        # if self.nextFleetID in self.fleets:
+            
+        #     # fleetID = self._nextFleetID()
+            
+        #     self.nextFleetID = self._nextFleetID()
 
-            if DEBUG: print("generateFleetID - %s in self.fleets  nextFleetID: %s" % (self.currentFleetID, fleetID))
-            #--TODO-- test that fleetID does not exceed fleet cap
-
-
-        # find next open FleetID in sequence, starting from currentFleetID
-        else:
-            # fleetID uses current fleetID
-
-            #find the next fleetID
-            self.currentFleetID = self._nextFleetID(self.currentFleetID)
-            if DEBUG: print("generateFleetID - %s " % self.currentFleetID)
+        #     # if DEBUG: print("generateFleetID - %s in self.fleets  nextFleetID: %s" % (self.nextFleetID, fleetID))
+        #     if DEBUG: print("generateFleetID - %s in self.fleets  nextFleetID: %s" % (self.nextFleetID, self._nextFleetID()))
+        #     #--TODO-- test that fleetID does not exceed fleet cap
+        #     # return fleetID
 
 
-        # fleetID = str(self.player.playerNumber) + "_" + self.currentFleetID
+
+
+        # # find next open FleetID in sequence, starting from nextFleetID
+        # else:
+        #     # fleetID uses current fleetID
+
+        #     #find the next fleetID
+        #     #self.nextFleetID = self._nextFleetID(self.nextFleetID)
+        #     self.nextFleetID = self._nextFleetID()
+            
+        #     if DEBUG: print("generateFleetID - %s " % self.nextFleetID)
+
+        #     return self.nextFleetID
+
+        # fleetID = str(self.player.playerNumber) + "_" + self.nextFleetID
         
-        return fleetID
+        #return fleetID
+        # return self.nextFleetID
+        return self._nextFleetID()
 
     def _nextFleetID(self, startingID = 0):
         """
@@ -94,18 +106,18 @@ class FleetCommand(object):
         valueInRange = True
 
         for i in range(startingID, len(self.fleets)):
-            #print("_nextFleetID: %s  fleet len(%s)" % (i, len(self.fleets)))
+            print("_nextFleetID: %s  fleet len(%s)" % (i, len(self.fleets)))
             
 
             if i not in self.fleets:
-                #print("_nextFleetID: False %s is not in self.fleets" % i)
+                print("_nextFleetID: False %s is not in self.fleets" % i)
                 fleetKeys = i
                 valueInRange = False
                 break
 
         if valueInRange:
             fleetKeys = len(self.fleets)
-            #print("_nextFleetID: valueInRange is True %s is not in self.fleets" % (fleetKeys))
+            print("_nextFleetID: valueInRange is True %s is not in self.fleets" % (fleetKeys))
 
         if DEBUG: print("[p%s]_nextFleetID: fleetKeys:%s" % (self.player.playerNumber, fleetKeys) ) 
         return fleetKeys
@@ -123,8 +135,8 @@ class FleetCommand(object):
         if fleetID in self.fleets:
             
             #
-            if fleetID < self.currentFleetID and fleetID > -1:
-                self.currentFleetID = fleetID
+            if fleetID < self.nextFleetID and fleetID > -1:
+                self.nextFleetID = fleetID
 
             del self.fleets[fleetID]
 
@@ -138,6 +150,14 @@ class FleetCommand(object):
 
 
 
-    def createFleet(self):
-        pass
+    def addFleet(self, newFleetID, newFleet):
+
+        if newFleetID not in self.fleets:
+            self.fleets[newFleetID] = newFleet
+            self.nextFleetID = self._nextFleetID()
+        
+        else:
+            print("error - duplicate fleet ID: new fleet not added")
+
+        
         

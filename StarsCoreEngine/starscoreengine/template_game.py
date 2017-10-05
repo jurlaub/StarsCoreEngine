@@ -1,5 +1,7 @@
 """
-    This file is part of Stars Core Engine, which provides an interface and processing of Game data.
+    This file is part of Stars Core Engine, which provides an interface and 
+    processing of Game data. 
+
     Copyright (C) 2017  <Joshua Urlaub + Contributors>
 
     Stars Core Engine is free software: you can redistribute it and/or modify
@@ -15,18 +17,7 @@
     You should have received a copy of the Lesser GNU General Public License
     along with Stars Core Engine.  If not, see <http://www.gnu.org/licenses/>.
 
-    Contributors to this project agree to abide by the interpretation expressed in the 
-    COPYING.Interpretation document.
+    Contributors to this project agree to abide by the interpretation expressed 
+    in the COPYING.Interpretation document.
 
 """
-
-class FleetOrders(object):
-
-    def __init__(self, fleet):
-        self.fleet = fleet
-        self.fleetOrder = None
-        self.orders = {}
-
-
-
-        

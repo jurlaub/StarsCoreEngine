@@ -17,16 +17,39 @@
 
     Contributors to this project agree to abide by the interpretation expressed in the 
     COPYING.Interpretation document.
-
+    
 """
 
-class FleetOrders(object):
-
-    def __init__(self, fleet):
-        self.fleet = fleet
-        self.fleetOrder = None
-        self.orders = {}
 
 
+def findPlayerHW(colonies):
+    """
+    brief   : helper function to find player HW
 
-        
+    input   : individual player's dictionary of colonies
+
+    output  : tuple (HW_key : HW_object) of first HW found in players dictionary of colonys
+
+        NOTE: more then 1 HW in player colonies will not be found
+    
+    """
+    hw_name = None
+    hw_obj = None
+
+    for kee, each in colonies.items():
+        if each.planet.HW:
+            hw_name = kee
+            hw_obj = each
+            break
+
+    return (hw_name, hw_obj)
+
+
+class PlayerTestObject(object):
+    """
+    Player test object
+
+    """
+
+    def __init__(self):
+        self.playerNumber = None
