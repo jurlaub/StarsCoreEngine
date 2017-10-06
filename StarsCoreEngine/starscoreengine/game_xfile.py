@@ -120,6 +120,43 @@ def xfile_TEMPLATE():
                         "productionItems" : { }
                     }
 
+            },
+
+        "FleetCommands" : 
+            {
+                "fleetID1" : 
+                    { 
+                        "orders" : [ 
+                            {
+                                "coordinates" : ("x", "y", "z"),    # or at currentLocation
+                                "velocity_command" : "speed_levels_from_list",
+                                "waypoint_action" : "action_from_list" 
+
+                            }, 
+                            {
+                                "coordinates" : ("x", "y", "z"),     # or at currentLocation  
+                                "velocity_command" : "speed_levels_from_list",
+                                "waypoint_action" : "action_from_list"
+
+                            } ] 
+                    },
+                "fleetID2" : 
+                    { 
+                        "orders" : [ 
+                            {
+                                "coordinates" : ("x", "y", "z"),    # or at currentLocation
+                                "velocity_command" : "speed_levels_from_list",
+                                "waypoint_action" : "action_from_list" 
+
+                            }, 
+                            {
+                                "coordinates" : ("x", "y", "z"),     # or at currentLocation  
+                                "velocity_command" : "speed_levels_from_list",
+                                "waypoint_action" : "action_from_list"
+
+                            } ] 
+                    }
+
             }
 
 

@@ -21,7 +21,7 @@
 """
 
 from .fleets import FleetObject
-from .fleet_orders import FleetOrders
+#from .fleet_orders import FleetOrders
 
 
 DEBUG = True
@@ -143,11 +143,19 @@ class FleetCommand(object):
 
     def addFleetOrders(self, newFleetID, newFleetOrders):
         """
+        orders for fleets are replaced
+
+        input:  fleetID 
+                list of dictionarys capturing orders
+
+        output: for the provided fleet, the orders are replaced
 
         """
+        if newFleetID in self.fleets:
+            self.fleets[newFleetID].fleetOrders = newFleetOrders   
 
-        self.fleets[newFleetID] = newFleetOrders   
-
+        else:
+            print("error - fleet id doesn't exist")
 
 
     def addFleet(self, newFleetID, newFleet):

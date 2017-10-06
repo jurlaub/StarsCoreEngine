@@ -86,7 +86,8 @@ class FleetObject(SpaceObjects): #  additionally subclass Component?
         self.currentUniverseID = universeID   # current universe,  obtained from ProductionQ location
         # self.objectID = spaceObjectID  #this is "playernumber_" + currentFleetID (i.e. FleetKey for player ) !! must change if FleetKey changes
 
-        self.fleetOrderNumber = None
+        self.fleetID = None
+        self.fleetOrders = []
 
         #self.tokens = {}
         self.fuel_capacity = 0
