@@ -141,7 +141,8 @@ class FleetCommand(object):
             del self.fleets[fleetID]
 
 
-    def addFleetOrders(self, newFleetID, newFleetOrders):
+
+    def _addFleetOrders(self, newFleetID, newFleetOrders):
         """
         orders for fleets are replaced
 
@@ -155,7 +156,22 @@ class FleetCommand(object):
             self.fleets[newFleetID].fleetOrders = newFleetOrders   
 
         else:
+            # TODO - log error
             print("error - fleet id doesn't exist")
+
+
+    def addOrdersToFleetsForTurn(self, turnFleetOrders ):
+        """
+
+        """
+        for each, obj in turnFleetOrders.items():
+            if each in self.fleets:
+                self.fleets[each].fleetOrders = obj["orders"]
+            else:
+                # TODO - log error
+                print("error - orders for fleet that doesn't exist")
+
+        
 
 
     def addFleet(self, newFleetID, newFleet):
@@ -165,6 +181,7 @@ class FleetCommand(object):
             self.nextFleetID = self._nextFleetID()
         
         else:
+            # TODO - log error
             print("error - duplicate fleet ID: new fleet not added")
 
         

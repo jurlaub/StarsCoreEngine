@@ -38,7 +38,7 @@ from ..starscoreengine.fleets import FleetObject, Token
 from ..starscoreengine.fleet_command import FleetCommand
 
 from ..starscoreengine.universe import UniverseObject
-from ..starscoreengine.template_race import startingDesigns, startingShipDesignsCount, startingDesignsCount #colonyShip, scoutShip, destroyerShip, smallFrieghterShip
+from ..starscoreengine.template_race import startingDesigns, startingShipDesignsCount, startingDesignsCount, startingDesignsNames #colonyShip, scoutShip, destroyerShip, smallFrieghterShip
 
 
 from .helper import findPlayerHW, PlayerTestObject
@@ -184,6 +184,12 @@ class TestFleets(object):
         for colony in player.colonies.values():
             if colony.planet.HW:
                 return colony.planet.xy
+
+    @staticmethod
+    def _update_xy_orders(currentXY, offsetXY):
+
+        return (currentXY[0] + offsetXY[0], currentXY[1] + offsetXY[1])
+
 
 
 
@@ -343,6 +349,102 @@ class TestFleets(object):
 
         assert_equal(testCommand.fleets[0], testFleet)
 
+
+    def test_xFileStartingDesigns(self):
+
+        designNames = startingDesignsNames()
+
+        assert_equal(len(designNames), startingDesignsCount())
+
+        designList = startingDesigns()
+
+        for each in designList["NewDesign"].keys():
+            assert_true(each in designNames)
+
+
+
+    def test_addOrdersToFleetsForTurn(self):
+
+        NORTH_OFFSET = (0, 50, 0)
+        EAST_OFFSET = (50, 0, 0)
+        SOUTH_OFFSET = (0, -50, 0)
+        WEST_OFFSET = (-50, 0, 0)
+        #OFFSET_LIST = [NORTH_OFFSET, EAST_OFFSET, SOUTH_OFFSET, WEST_OFFSET ]
+
+        fc_0 = self.player0.fleetCommand
+        hw_0_xy = self.p0_colonyHW_obj.planet.xy
+
+        # ---------- setup and test -----------
+
+
+        startingShipCount = startingShipDesignsCount()
+        assert_equal(len(fc_0.fleets), startingShipCount)
+
+        for key, obj in fc_0.fleets.items():
+            assert_true( isinstance(obj.fleetOrders, list)) # fleet has list of orders
+            assert_equal(len(obj.fleetOrders), 0)           # fleet orders is empty
+            assert_equal(obj.xy, hw_0_xy)                   # fleet is at HW (x,y)
+
+        # ----------- give orders and test -------
+
+        print("hw_0_xy: %s; n_order: %s; e_order:%s" % (hw_0_xy, TestFleets._update_xy_orders(hw_0_xy, NORTH_OFFSET), TestFleets._update_xy_orders(hw_0_xy, EAST_OFFSET)))
+
+        #assert_false(True)
+
+
+        testCommands =      {
+                0 : { "orders" : [ 
+                            {
+                                "coordinates" : TestFleets._update_xy_orders(hw_0_xy, NORTH_OFFSET),    # or at currentLocation
+                                "velocity_command" : "speed_levels_from_list",
+                                "waypoint_action" : "action_from_list" 
+
+                            } ]
+                    },
+                1 : { "orders" : [
+                            {
+                                "coordinates" : TestFleets._update_xy_orders(hw_0_xy, EAST_OFFSET),     # or at currentLocation  
+                                "velocity_command" : "speed_levels_from_list",
+                                "waypoint_action" : "action_from_list"
+
+                            } ] 
+                    },
+                2 : { "orders" : [ 
+                            {
+                                "coordinates" : TestFleets._update_xy_orders(hw_0_xy, SOUTH_OFFSET),    # or at currentLocation
+                                "velocity_command" : "speed_levels_from_list",
+                                "waypoint_action" : "action_from_list" 
+
+                            }]
+                    },
+                3 : { "orders" : [
+                            {
+                                "coordinates" : TestFleets._update_xy_orders(hw_0_xy, WEST_OFFSET),     # or at currentLocation  
+                                "velocity_command" : "speed_levels_from_list",
+                                "waypoint_action" : "action_from_list"
+                            } ] 
+                    }
+
+            }
+
+
+        # send orders to fleet
+        fc_0.addOrdersToFleetsForTurn(testCommands)
+
+
+
+        for key, obj in fc_0.fleets.items():
+            assert_true( isinstance(obj.fleetOrders, list)) # fleet has list of orders
+            assert_equal(len(obj.fleetOrders), 1)           # fleet orders is empty
+
+
+
+
+
+
+
+
+        
 
 
 

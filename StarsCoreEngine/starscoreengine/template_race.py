@@ -144,6 +144,30 @@ def smallFrieghterShip():
     return shipName, shipDesign
 
 
+def startingDesignsNames():
+    colonyName, colonyDesign = colonyShip()
+    scoutName, scoutDesign = scoutShip()
+    destroyerName, destroyerDesign = destroyerShip()
+    frieghtName, frieghtDesign = smallFrieghterShip()
+    starbaseName, starbaseDesign = startingStarbase()
+
+    return (colonyName, scoutName, destroyerName, frieghtName, starbaseName)
+
+def startingDesignNamesWithHullType():
+    """
+    output: tuple of (name, hullType) tuples
+
+    """
+
+    colonyName, colonyDesign = colonyShip()
+    scoutName, scoutDesign = scoutShip()
+    destroyerName, destroyerDesign = destroyerShip()
+    frieghtName, frieghtDesign = smallFrieghterShip()
+    starbaseName, starbaseDesign = startingStarbase()
+
+    return ((colonyName, colonyDesign['hullID']), (scoutName, scoutDesign['hullID'] ), (destroyerName, destroyerDesign['hullID']), (frieghtName, frieghtDesign['hullID']), (starbaseName, starbaseDesign['hullID']))
+
+
 def startingDesigns():
     colonyName, colonyDesign = colonyShip()
     scoutName, scoutDesign = scoutShip()

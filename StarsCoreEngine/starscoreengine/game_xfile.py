@@ -196,7 +196,7 @@ def xFileController(game):
                 """process the x file by updating the player object.
                 """
 
-                processFleets(xfile, player)
+                processFleets(xfile, player)        
                 processMinefields(xfile, player)
                 processDesign(xfile, player, game.technology)
                 processProductionQ(xfile, player)
@@ -231,6 +231,25 @@ def obtainXFile(fileName):
 
 
 def processFleets(xfile, playerObj):
+    """
+
+    TODO
+
+    x file utility - 
+        validates x file fleet data (include protect against injection attack)
+
+        assembles list of orders 
+        hands list of orders over to order_of_events
+
+    order_of_events -
+        sends orders to FleetCommands
+
+    FleetCommands
+        updates fleet orders
+
+
+
+    """
 
     print("processing fleets for #%d: %s" % (playerObj.playerNumber, playerObj.raceName))
 
