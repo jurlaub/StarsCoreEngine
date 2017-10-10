@@ -99,6 +99,7 @@ class TestFleets(object):
 
 
 
+
     def teardown_class():
         self = TestFleets
         
@@ -190,6 +191,33 @@ class TestFleets(object):
 
         return (currentXY[0] + offsetXY[0], currentXY[1] + offsetXY[1])
 
+
+    @staticmethod
+    def _obtain_fleet_orders_from_offset(currentLocation, offset ):
+
+        temp = { "orders" : [ 
+                {
+                "coordinates" : TestFleets._update_xy_orders(currentLocation, offset),    # or at currentLocation
+                "velocity_command" : "speed_levels_from_list",
+                "waypoint_action" : "action_from_list" 
+                } ]
+            }
+        return temp
+
+
+
+    @staticmethod
+    def _standard_offset():
+        NORTH_OFFSET = (0, 50, 0)
+        EAST_OFFSET = (50, 0, 0)
+        SOUTH_OFFSET = (0, -50, 0)
+        WEST_OFFSET = (-50, 0, 0)
+        OFFSET_LIST = [NORTH_OFFSET, EAST_OFFSET, SOUTH_OFFSET, WEST_OFFSET ]
+
+        return OFFSET_LIST
+
+
+        
 
 
 
@@ -440,6 +468,45 @@ class TestFleets(object):
 
 
 
+    def test_fleetsFollowOrdersAndMove(self):
+
+
+        fc_0 = self.player0.fleetCommand
+        hw_0_xy = self.p0_colonyHW_obj.planet.xy
+        offset_locations = TestFleets._standard_offset()
+
+
+        testCommands = {}
+        for x in range(0, startingShipDesignsCount()):
+            testCommands[x] = TestFleets._obtain_fleet_orders_from_offset(hw_0_xy, offset_locations[0] )
+
+        assert_equal(len(testCommands), 4)
+
+        fc_0.addOrdersToFleetsForTurn(testCommands)
+
+
+        # move action
+
+        # test for ship at new location
+        for key, obj in testCommands.items():
+            print("test object %s" % obj["orders"][0])
+
+            tmp_coord = tuple(obj["orders"][0]["coordinates"])
+
+            assert_true(isinstance(tmp_coord, tuple))
+
+            print("temp coord %s %s" % tmp_coord)
+
+            if tmp_coord in self.universe.objectsAtXY:
+                test_items = self.universe.objectsAtXY[tmp_coord]
+                print(test_items)
+                assert_in('0_'+key, test_items)
+            
+            else: 
+                assert_in(tmp_coord, self.universe.objectsAtXY)
+            
+
+        
 
 
 
