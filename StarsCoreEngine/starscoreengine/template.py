@@ -82,7 +82,7 @@ class StandardGameTemplate(object):
 
         # ---- HARDCODED =>> requires updating custom setup
         # -- TODO --- Template grabs data from r1 files
-        self.players_data = self.getPlayerRaceFile(playerFileList)    # list of player race file names 
+        self.players_data = self.getPlayerSpeciesFile(playerFileList)    # list of player species file names 
         self.player_by_universe = None  # --TODO-- method to sort players into respective universes
 
 
@@ -146,19 +146,19 @@ class StandardGameTemplate(object):
     
 
 
-    def getPlayerRaceFile(self, fileList):
-        # 'race name'.r1
+    def getPlayerSpeciesFile(self, fileList):
+        # 'species name'.r1
         # look for all r1 files in folder
         # should match number of players
-        raceObjects = []
+        speciesObjects = []
 
         for each in fileList:
 
-            #--- TODO  change from grabbing a dev race to grabbing a .r1 file
+            #--- TODO  change from grabbing a dev species to grabbing a .r1 file
             # and turning it into a SpeciesData() object
-            raceObjects.append(self.getDevRaceFile(each))
+            speciesObjects.append(self.getDevRaceFile(each))
 
-        return raceObjects
+        return speciesObjects
 
     def getDevRaceFile(self, speciesName):
         # returns a development file that will substitute as a player race file

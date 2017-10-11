@@ -111,12 +111,12 @@ class Research(object):
     
     # this collects all races research for the year. Its to calculate the SS spy bonus
     # must be zeroed out each year.
-    yearsResearch = {"energy" : {"racesResearchingField" : 0, "resourcesSpent" : 0}, 
-              "weapons" : {"racesResearchingField" : 0, "resourcesSpent" : 0},
-              "propulsion" : {"racesResearchingField" : 0, "resourcesSpent" : 0},
-              "construction" : {"racesResearchingField" : 0, "resourcesSpent" : 0},
-              "electronics" : {"racesResearchingField" : 0, "resourcesSpent" : 0},
-              "biotechnology" : {"racesResearchingField" : 0, "resourcesSpent" : 0}
+    yearsResearch = {"energy" : {"speciesResearchingField" : 0, "resourcesSpent" : 0}, 
+              "weapons" : {"speciesResearchingField" : 0, "resourcesSpent" : 0},
+              "propulsion" : {"speciesResearchingField" : 0, "resourcesSpent" : 0},
+              "construction" : {"speciesResearchingField" : 0, "resourcesSpent" : 0},
+              "electronics" : {"speciesResearchingField" : 0, "resourcesSpent" : 0},
+              "biotechnology" : {"speciesResearchingField" : 0, "resourcesSpent" : 0}
           }
     
     # class variable used for tech research reference
@@ -290,7 +290,7 @@ class Research(object):
 
 
 
-def race_editor_tech_costs(numExpensive, numCheap, boxTicked):
+def species_editor_tech_costs(numExpensive, numCheap, boxTicked):
     """Returns the cost in points from the number of expensive and cheap fields chosen,
     and whether the 'start expensive fields at level 3/4' box is ticked.
     """ 

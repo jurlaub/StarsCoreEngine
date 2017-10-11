@@ -127,23 +127,23 @@ class TestStartTech(object):
 
 
 
-class TestRaceTechFieldsCost(object):
-    def test_race_editor_costs1(self):
+class TestSpeciesTechFieldsCost(object):
+    def test_species_editor_costs1(self):
         #all normal, box not ticked
-        assert_equal(0, race_editor_tech_costs(0, 0, False))
+        assert_equal(0, species_editor_tech_costs(0, 0, False))
 
-    def test_race_editor_costs2(self):
+    def test_species_editor_costs2(self):
         #all normal, box ticked
-        assert_equal(-60, race_editor_tech_costs(0, 0, True))
+        assert_equal(-60, species_editor_tech_costs(0, 0, True))
 
-    def test_race_editor_costs3(self):
+    def test_species_editor_costs3(self):
         #3 exp, 3 cheap,  box ticked
-        assert_equal(-60, race_editor_tech_costs(3, 3, True))
+        assert_equal(-60, species_editor_tech_costs(3, 3, True))
 
-    def test_race_editor_costs4(self):
+    def test_species_editor_costs4(self):
         #1 exp, box ticked
-        assert_equal(-60 + -49, race_editor_tech_costs(1, 0, True))
+        assert_equal(-60 + -49, species_editor_tech_costs(1, 0, True))
 
-    def test_race_editor_costs5(self):
+    def test_species_editor_costs5(self):
         #1 cheap, box ticked
-        assert_equal(-60 + 43, race_editor_tech_costs(0, 1, True))
+        assert_equal(-60 + 43, species_editor_tech_costs(0, 1, True))

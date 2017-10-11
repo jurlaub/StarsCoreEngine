@@ -26,7 +26,7 @@ class SpeciesTraits(object):
     '''  SpeciesTraits are the values derived from PRT & LRT's. 
 
         Custom Race Wizard uses these values in conjunction with a PRT & LRT 
-        'Template'. When a racefile is generated there are values that are a 
+        'Template'. When a speciesfile is generated there are values that are a 
         consquence of having a particular PRT & LRT. 
     '''
 

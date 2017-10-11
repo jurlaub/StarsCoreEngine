@@ -52,12 +52,12 @@ class TestColonyPlanets(object):
         self.universe = self.game.game_universe[0]
 
 
-        self.RaceData = self.player.speciesData
+        self.SpeciesData = self.player.speciesData
 
         
-        self.playerCenterHab = (self.RaceData.habGravityCenter, 
-                                self.RaceData.habTempCenter, 
-                                self.RaceData.habRadCenter)
+        self.playerCenterHab = (self.SpeciesData.habGravityCenter, 
+                                self.SpeciesData.habTempCenter, 
+                                self.SpeciesData.habRadCenter)
 
 
         self.population = 25000

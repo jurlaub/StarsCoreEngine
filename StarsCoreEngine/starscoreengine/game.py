@@ -356,8 +356,8 @@ def cmdLineParseArgs():
         ''')
 
 
-    parser.add_argument('-r', action='store', default=None, dest='newRace', \
-        help='''Enter race name. Name must be unique within the same 
+    parser.add_argument('-r', action='store', default=None, dest='newSpecies', \
+        help='''Enter species name. Name must be unique within the same 
         folder. 
         ''')
 
@@ -429,8 +429,8 @@ def CustomTechTreeFile(fileName):
     saveFileToJSON(techTree, treeFileName)
 
 
-def CustomRaceFile():
-    print("Custom RaceFile still under development")
+def CustomSpeciesFile():
+    print("Custom SpeciesFile still under development")
 
 def GenerateMFiles(game):
     '''
@@ -574,11 +574,11 @@ def main():
 
  
     #*****************************
-    #   Create a custom race file
+    #   Create a custom species file
     #***************************** 
-    elif results.newRace:
+    elif results.newSpecies:
 
-        CustomRaceFile()
+        CustomSpeciesFile()
         sys.exit()
 
 

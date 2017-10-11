@@ -894,7 +894,7 @@ class ProductionQ(object):
             return itemValue
 
 
-    # uses Tech Tree values without race specific items.
+    # uses Tech Tree values without species specific items.
     def itemCostsDefenses(self):
         return self.speciesData.defensesCosts
 

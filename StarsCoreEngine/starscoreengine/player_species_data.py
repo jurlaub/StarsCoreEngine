@@ -33,7 +33,7 @@ class SpeciesData(SpeciesTraits):
     def __init__(self, speciesName):
         self.speciesName = speciesName            # used by universe when generating HW
         self.speciesNamePlural = speciesName
-        self.raceIcon = None
+        self.speciesIcon = None
         self.LeftOverRWPoints = None
 
         self.PRT = 'SS'
