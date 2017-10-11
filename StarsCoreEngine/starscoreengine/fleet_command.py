@@ -152,24 +152,35 @@ class FleetCommand(object):
         output: for the provided fleet, the orders are replaced
 
         """
-        if newFleetID in self.fleets:
-            self.fleets[newFleetID].fleetOrders = newFleetOrders   
+        try: 
 
-        else:
+            if newFleetID in self.fleets:
+                print("in fleet add test")
+                self.fleets[newFleetID].fleetOrders = newFleetOrders  
+
+                print(newFleetOrders)
+
+                self.fleets[newFleetID].updateOrders(newFleetOrders)   
+
+
+        except ValueError as e:
             # TODO - log error
-            print("error - fleet id doesn't exist")
+            #print("error - fleet id doesn't exist %s" % newFleetID)
+            print("Value Error - %s" % e)
 
 
     def addOrdersToFleetsForTurn(self, turnFleetOrders ):
         """
 
         """
-        for each, obj in turnFleetOrders.items():
-            if each in self.fleets:
-                self.fleets[each].fleetOrders = obj["orders"]
-            else:
-                # TODO - log error
-                print("error - orders for fleet that doesn't exist")
+        for key, obj in turnFleetOrders.items():
+            print("fleetID:%s" % key)
+            self._addFleetOrders(key, obj)
+            # if each in self.fleets:
+            #     self.fleets[each].fleetOrders = obj["orders"]
+            # else:
+            #     # TODO - log error
+            #     print("error - orders for fleet that doesn't exist")
 
         
 
@@ -184,5 +195,28 @@ class FleetCommand(object):
             # TODO - log error
             print("error - duplicate fleet ID: new fleet not added")
 
-        
+    def fleetsMove(self):
+        """
+        actual (x,y) adjustment occurs in SpaceObject.
+        Fleets have extra tasks associated with moving (e.g. as compared with MT or Packets )
+        F: Fleets must modify fuel
+        U: Fleets may hit minefields
+        F: Have Waypoint tasks
+
+
+        for every fleet in fleets:
+            # ---- this might need to be updated when orders are added
+            is action move or is destination != currentXY
+                then update destinationXY; speed
+            # -----
+            fleet calculates fuel usage & distance
+                does it have enough fuel for the distance traveled this year?
+                or What distance can it travel this year?
+                if true - move Space Object & update universes
+
+            Universe object checks if fleet moved through a minefields
+
+        """
+
+        pass
         

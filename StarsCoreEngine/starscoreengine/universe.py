@@ -136,6 +136,8 @@ class UniverseObject(object):
                             objectID must be unique to .objectsAtXY
                             objectID removed from oldXY list
 
+
+
         """
         #location = newXY
         if oldXY:

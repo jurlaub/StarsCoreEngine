@@ -97,6 +97,12 @@ class FleetObject(SpaceObjects): #  additionally subclass Component?
         self.cloaking = 0
         self.raceFuelEfficiency = self.player.raceData.fuelEfficiency
 
+    def updateOrders(self, orders):
+        if orders != []:
+            self.fleetOrders = orders["orders"]
+            self.destinationXY = orders["orders"][0]["coordinates"]
+
+
     def setCapacities(self):
         self.fuel_capacity = 0
         self.cargo_capacity = 0
