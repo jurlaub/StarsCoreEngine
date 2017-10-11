@@ -22,7 +22,7 @@
 
 """
 import random
-from .player import RaceData
+from .player_species_data import SpeciesData
 from .template_tech import standard_tech_tree
 from .tech import Component, Hull
 from .game_utility import saveFileToJSON
@@ -155,15 +155,15 @@ class StandardGameTemplate(object):
         for each in fileList:
 
             #--- TODO  change from grabbing a dev race to grabbing a .r1 file
-            # and turning it into a RaceData() object
+            # and turning it into a SpeciesData() object
             raceObjects.append(self.getDevRaceFile(each))
 
         return raceObjects
 
-    def getDevRaceFile(self, raceName):
+    def getDevRaceFile(self, speciesName):
         # returns a development file that will substitute as a player race file
 
-        return RaceData(raceName)
+        return SpeciesData(speciesName)
 
     
 

@@ -33,13 +33,14 @@ import argparse
 
 from .space_objects import SpaceObjects
 from .universe import UniverseObject
-from .planet import Colony
+from .colony import Colony
 from .productionQ import ProductionQ
 from . import fleets
 from .custom_setup import customSetupDialog
 from .custom_setup import customSetupController
 from .custom_setup import customTechDialog
-from .player import RaceData, Player
+from .player import Player
+from .player_species_data import SpeciesData
 from .template import planetNameTemplate
 from .template import StandardGameTemplate
 from .game_utility import printGameValues
@@ -142,7 +143,7 @@ class Game(object):
 
     def generatePlayers(self, template):
         '''
-        input: list of raceData objects 
+        input: list of speciesData objects 
                 (StandardGameTemplate grabs from .r1 
                 files or development standard object)
 
@@ -200,7 +201,7 @@ class Game(object):
 
                     #bonusMinerals = (0,0,0)  # per template? or RW setup
 
-                    planetHW = universe.createHomeworldPlanet(player.raceData)
+                    planetHW = universe.createHomeworldPlanet(player.speciesData)
 
                     # Need to add the HW colony manually. Cannot use 
                     # colonizePlanet as it does not have the flexibility 

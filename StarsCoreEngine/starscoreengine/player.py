@@ -1,6 +1,6 @@
 """
     This file is part of Stars Core Engine, which provides an interface and processing of Game data.
-    Copyright (C) 2014  <Joshua Urlaub + Contributors>
+    Copyright (C) 2017  <Joshua Urlaub + Contributors>
 
     Stars Core Engine is free software: you can redistribute it and/or modify
     it under the terms of the Lesser GNU General Public License as published by
@@ -22,7 +22,8 @@
 
 from math import sqrt
 
-from .planet import Colony, Planet
+from .planet import Planet
+from .colony import Colony
 from .research import Research
 from .player_designs import PlayerDesigns
 from .productionQ import ProductionQ
@@ -89,18 +90,18 @@ class Player(object):
 
     """
 
-    def __init__(self, raceData, playerNumber, multiverse, techTree = {}):
+    def __init__(self, speciesData, playerNumber, multiverse, techTree = {}):
         self.multiverse = multiverse
-        self.raceName = raceData.raceName
-        self.raceNamePlural = raceData.raceName
+        self.speciesName = speciesData.speciesName
+        self.speciesNamePlural = speciesData.speciesName
         self.playerNumber = playerNumber     # for accessing and saving x file
         self.xfilestatus = []     # list of 'error' strings
 
-        self.PRT = raceData.PRT     # apply PRT values after player variables set,
-        self.LRT = raceData.LRT   # apply LRT values after player is updated with PRT variables
+        self.PRT = speciesData.PRT     # apply PRT values after player variables set,
+        self.LRT = speciesData.LRT   # apply LRT values after player is updated with PRT variables
         
 
-        self.raceData = raceData    
+        self.speciesData = speciesData    
 
 
    
@@ -109,7 +110,7 @@ class Player(object):
         # --TODO--- add technology 'research' costs (cheap, normal, expensive) to Research
         self.research = Research(self.PRT, self.LRT)  # tech object
         self.techTree = techTree
-        self.designs = PlayerDesigns(self.raceName, self.research.techLevels, self.LRT) # ship design objects
+        self.designs = PlayerDesigns(self.speciesName, self.research.techLevels, self.LRT) # ship design objects
         self.historicalShipDesign = {}  #? 
         
         self.fleetCommand = FleetCommand(self, self.multiverse)
@@ -118,7 +119,7 @@ class Player(object):
         self.buildListObject = PlayerBuildList(self)
 
         # self.playerSpecificBuildCosts = {}  # include: terriforming, factory, defenses etc
-        # self.raceData.
+        # self.speciesData.
 
         """ turnOrders:
         when created    - should be sequentially numbered
@@ -183,9 +184,9 @@ class Player(object):
         planet.addSurfaceMinerals(fleetMinerals)
 
         newColony.planetValue = self.planetValue(planet)
-        #newColony.growthRate = self.raceData.growthRate
+        #newColony.growthRate = self.speciesData.growthRate
 
-        planet.owner = self.raceName
+        planet.owner = self.speciesName
 
         # productionQ = ProductionQ(newColony, self)
         # newColony.productionQ = productionQ
@@ -299,7 +300,7 @@ class Player(object):
         
         return planetValuePoints;		//Thanks ConstB for starting this
         '''
-        rdat = self.raceData
+        rdat = self.speciesData
 
         # NOTE: May need to adjust to be Upper and Lower bounds because of 'odd' 
         # low gravity click spaces 
@@ -388,128 +389,5 @@ class Player(object):
 
     #     return {sName :{"itemType": s, "targetItemsCost":sCosts }, \
     #             dName : {"itemType": d, "targetItemsCost":dCosts }}
-
-
-
-
-class RaceTraits(object):
-    '''  RaceTraits are the values derived from PRT & LRT's. 
-
-        Custom Race Wizard uses these values in conjunction with a PRT & LRT 
-        'Template'. When a racefile is generated there are values that are a 
-        consquence of having a particular PRT & LRT. 
-    '''
-
-    def __init__(self):
-        #self.planetMaxPopulation = 1000000  
-        pass
-
-
-class RaceData(RaceTraits):
-    """
-    
-    habitat: 
-    > if radius is -1 this means immune. 
-
-    
-    """
-    def __init__(self, raceName):
-        self.raceName = raceName            # used by universe when generating HW
-        self.raceNamePlural = raceName
-        self.raceIcon = None
-        self.LeftOverRWPoints = None
-
-        self.PRT = 'SS'
-        self.LRT = []
-
-        self.growthRate = .14
-        self.popEfficiency = 1000  # 1 resource per 1000 colonists
-        
-        '''
-        #Environment
-        >> Consists of centerpoint & range
-
-        |------<==========x==========>----------------------|
-
-        >> the range value captures only the positive side of the total 
-        habitat values 
-
-        immune habitate = -1 radius
-
-
-        NOTE: May need to adjust to be Upper and Lower bounds because of 'odd' 
-        low gravity click spaces 
-
-        '''
-        self.habGravityCenter = 1.0  # 1 (centerpoint) total range = .85 to 1.15
-        self.habGravRadius = -1         # change to upper/lower bounds   # 15.0 pos range from Center. Total range doubled  
-        
-        self.habTempCenter = 70 
-        self.habTempRadius = -1         # change to upper/lower bounds
-
-        self.habRadCenter = 50
-        self.habRadRadius = 13.0        # change to upper/lower bounds
-
-        self.terraformCosts = [0, 0, 0, 100]    # --TODO-- change to dynamic
-
-        self.factoryProduce = 10    # 10 factories produce n resources a year
-        self.factoryCost = 10       # a factory cost n resources to build
-        self.factoryOperate = 10    # 10,000 colonist operate n factories       
-        self.factoryGermCost = False # True = cost 1kt less of Germanium to build
-
-        self.mineProduce = 10       # 10 mines produce n kt of each mineral a year
-        self.mineCost = 10         # a mine costs n resources to build
-        self.mineOperate = 10       #  10,000 colonist operate n mines
-        
-        self.defensesCosts = [5, 5, 5, 15]  # --TODO-- change to dynamic
-        self.scannerCosts = [10, 10, 70, 100] # --TODO-- change to dynamic
-        self.mineralCosts = [0, 0, 0, 100] # --TODO-- change to dynamic
-
-
-        # Research costs = (75% extra, standard amount, 50% less)
-        self.techCostEner = 1 
-        self.techCostWeap = 1 
-        self.techCostProp = 1 
-        self.techCostCon = 1 
-        self.techCostElec = 1 
-        self.techCostBio = 1 
-        
-        self.techJumpStart = False # True = All 'Costs 75% extra' fields start at Tech 4
-
-
-        self.fuelEfficiency = 1  # --TODO-- review
-    
-    # def setPlayerCosts(self, techTree):
-    #     """
-    #         Setting the player costs in RaceData class after player has been created.
-    #     """
-    #     pass
-
-
-
-
-
-    # def buildCosts_MineFactory(self):
-    #     m = "Mines"
-    #     f = "Factories"
-
-        
-    #     mCosts = [0, 0, 0, self.mineCost]
-
-
-    #     fGerm = 4
-    #     if self.factoryGermCosts: 
-    #         fGerm = 3
-        
-    #     fCosts = [0, 0, fGerm, self.factoryCost]
-
-
-
-
-
-    #     return { m:{"itemType": m, "targetItemsCost": mCosts}, \
-    #             f: {"itemType": f, "targetItemsCost": fCosts} }
-
-
 
 

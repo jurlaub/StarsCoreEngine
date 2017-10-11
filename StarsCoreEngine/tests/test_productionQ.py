@@ -1109,7 +1109,7 @@ class TestProductionQ(object):
 
                 }
             }
-        targetItemCosts = [0, 0, 0, int(self.player.raceData.mineCost)]
+        targetItemCosts = [0, 0, 0, int(self.player.speciesData.mineCost)]
 
         colonyHW = self.target_colony_obj.productionQ
 
@@ -1156,7 +1156,7 @@ class TestProductionQ(object):
             }
 
 
-        mineResourceCost = int(self.player.raceData.mineCost)
+        mineResourceCost = int(self.player.speciesData.mineCost)
         targetItemCosts = [0, 0, 0, mineResourceCost]
 
         colonyHW = self.target_colony_obj.productionQ
@@ -1212,8 +1212,8 @@ class TestProductionQ(object):
                 }
             }
 
-        itemResourceCosts = int(self.player.raceData.factoryCost)
-        germCosts = 4 if not self.player.raceData.factoryGermCost else 3 
+        itemResourceCosts = int(self.player.speciesData.factoryCost)
+        germCosts = 4 if not self.player.speciesData.factoryGermCost else 3 
         targetItemCosts = [0, 0, germCosts, itemResourceCosts]
 
         colonyHW = self.target_colony_obj.productionQ
@@ -1262,7 +1262,7 @@ class TestProductionQ(object):
             }
 
 
-        mineResourceCost = int(self.player.raceData.mineCost)
+        mineResourceCost = int(self.player.speciesData.mineCost)
         targetItemCosts = [0, 0, 0, mineResourceCost]
 
         colonyHW = self.target_colony_obj.productionQ
@@ -1322,8 +1322,8 @@ class TestProductionQ(object):
             }
 
 
-        itemResourceCosts = int(self.player.raceData.factoryCost)
-        germCosts = 4 if not self.player.raceData.factoryGermCost else 3 
+        itemResourceCosts = int(self.player.speciesData.factoryCost)
+        germCosts = 4 if not self.player.speciesData.factoryGermCost else 3 
         targetItemCosts = [0, 0, germCosts, itemResourceCosts]
 
         colonyHW = self.target_colony_obj.productionQ
@@ -1376,8 +1376,8 @@ class TestProductionQ(object):
             }
 
 
-        itemResourceCosts = int(self.player.raceData.factoryCost)
-        germCosts = 4 if not self.player.raceData.factoryGermCost else 3 
+        itemResourceCosts = int(self.player.speciesData.factoryCost)
+        germCosts = 4 if not self.player.speciesData.factoryGermCost else 3 
         targetItemCosts = [0, 0, germCosts, itemResourceCosts]
 
         colonyHW = self.target_colony_obj.productionQ
@@ -1437,8 +1437,8 @@ class TestProductionQ(object):
             }
 
 
-        itemResourceCosts = int(self.player.raceData.factoryCost)
-        germCosts = 4 if not self.player.raceData.factoryGermCost else 3 
+        itemResourceCosts = int(self.player.speciesData.factoryCost)
+        germCosts = 4 if not self.player.speciesData.factoryGermCost else 3 
         targetItemCosts = [0, 0, germCosts, itemResourceCosts]
 
         colonyHW = self.target_colony_obj.productionQ
@@ -1515,7 +1515,7 @@ class TestProductionQ(object):
         player0 = TestProductionQ.player
         targetItem = self.target_colony_obj.productionQ.targetItemCosts(TestProductionQ.productionID_Mines)
         
-        expectedItemCosts = [0, 0, 0, player0.raceData.mineCost]
+        expectedItemCosts = [0, 0, 0, player0.speciesData.mineCost]
         assert_equal(targetItem, expectedItemCosts)
 
 
@@ -1524,8 +1524,8 @@ class TestProductionQ(object):
         player0 = TestProductionQ.player
         targetItem = self.target_colony_obj.productionQ.targetItemCosts(TestProductionQ.productionID_Factories)
         
-        germCost = 4 if not player0.raceData.factoryGermCost else 3  # germ cost for building a factory
-        expectedItemCosts = [0, 0, germCost, player0.raceData.factoryCost] # total cost for a factory
+        germCost = 4 if not player0.speciesData.factoryGermCost else 3  # germ cost for building a factory
+        expectedItemCosts = [0, 0, germCost, player0.speciesData.factoryCost] # total cost for a factory
 
         assert_equal(targetItem, expectedItemCosts)
 
@@ -1581,9 +1581,9 @@ class TestProductionQ(object):
 
     def test_itemCosts_Mines(self):
         player0 = TestProductionQ.player
-        expectedMineCosts = [0, 0, 0, player0.raceData.mineCost] # total cost for a mine
+        expectedMineCosts = [0, 0, 0, player0.speciesData.mineCost] # total cost for a mine
 
-        # assert_equal(player0.raceData.mineCost, 10)
+        # assert_equal(player0.speciesData.mineCost, 10)
 
         # function in productionQ.py that calculates mine costs
         mineCosts = self.target_colony_obj.productionQ.itemCostsMines()
@@ -1594,8 +1594,8 @@ class TestProductionQ(object):
         player0 = TestProductionQ.player
 
         
-        germCost = 4 if not player0.raceData.factoryGermCost else 3  # germ cost for building a factory
-        expectedFactoryCosts = [0, 0, germCost, player0.raceData.factoryCost] # total cost for a factory
+        germCost = 4 if not player0.speciesData.factoryGermCost else 3  # germ cost for building a factory
+        expectedFactoryCosts = [0, 0, germCost, player0.speciesData.factoryCost] # total cost for a factory
 
         #fuction in productionQ.py that calculates factory costs
         factoryCosts = self.target_colony_obj.productionQ.itemCostsFactories()
@@ -1644,7 +1644,7 @@ class TestProductionQ(object):
 
 
 
-    def test_raceData_MaxMines_100GreenWorld(self):
+    def test_speciesData_MaxMines_100GreenWorld(self):
         # Mine cap on a planet is a ratio of mines per 10,000 pop 
         expectedColonyValue = 100
         colonyValue = self.target_colony_obj.planetValue
@@ -1654,8 +1654,8 @@ class TestProductionQ(object):
         maxMines = self.target_colony_obj.maxMinesOnColony()
         #colonyPopulation = self.target_colony_obj.population
         maxPopulation = 1000000
-        print("test_raceData_MaxMines_100GreenWorld: HARDCODED maxPopulation: %d" % maxPopulation)
-        minesOperatePer10000 = TestProductionQ.player.raceData.mineOperate
+        print("test_speciesData_MaxMines_100GreenWorld: HARDCODED maxPopulation: %d" % maxPopulation)
+        minesOperatePer10000 = TestProductionQ.player.speciesData.mineOperate
         
         calculatedMines = int((maxPopulation/10000) * minesOperatePer10000)
         assert_equal(maxMines, calculatedMines)

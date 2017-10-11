@@ -20,13 +20,14 @@
 
 """
 
-# class FleetOrders(object):
-
-#     def __init__(self, fleet):
-#         self.fleet = fleet
-#         self.fleetOrder = None
-#         self.orders = {}
-
-
+class UniverseEvents(object):
+    """
+        this class describes universe events that could happen every game turn. 
+        on game creation the host can set each universe's settings including frequency of events.
+        events could be new minerals, wormhole appearance, or negative.
+        like a astroid impacting a planet. (severe negative impacts should not occur until later in the game)
 
         
+
+    """
+    pass

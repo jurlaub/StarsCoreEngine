@@ -38,13 +38,12 @@ from nose.tools import with_setup, assert_equal, assert_not_equal, \
 from ..starscoreengine.game import Game
 from ..starscoreengine.template import *
 from ..starscoreengine.player import Player
-from ..starscoreengine.player import RaceData as Race
 from ..starscoreengine.player_designs import PlayerDesigns
 from ..starscoreengine.tech import Hull
 from ..starscoreengine.ship_design import ShipDesign 
 from ..starscoreengine.template_race import startingStarbase
 from ..starscoreengine.game_xfile import processDesign
-from ..starscoreengine.fleets import Starbase
+from ..starscoreengine.starbase import Starbase
 from ..starscoreengine.productionQ import ProductionQ
 
 
@@ -274,7 +273,7 @@ class TestPlayerDesign(object):
             assert_equal(t1.hullID, tmpHull)
             assert_equal(t1.designName, self.testShip1["designName"])
 
-            assert_equal(t1.owner, player.raceName)         # different then the player key. 
+            assert_equal(t1.owner, player.speciesName)         # different then the player key. 
 
     def test_AddDesign_OverCapacity(self):
         """PlayerDesigns.AddDesign unit tests
@@ -369,9 +368,9 @@ class TestPlayerDesign(object):
 
 
 
-    def test_raceData_TerraformCosts(self):
+    def test_speciesData_TerraformCosts(self):
 
-        # player.raceData test terraformCosts
+        # player.speciesData test terraformCosts
         techItem = self.techTree["Gravity Terraform 7"]
         itemIron = 0 if techItem.iron == None else techItem.iron
         itemBor = 0 if techItem.bor == None else techItem.bor
@@ -380,12 +379,12 @@ class TestPlayerDesign(object):
 
 
 
-        assert_equal(expectedItemCosts, self.player1.raceData.terraformCosts)
+        assert_equal(expectedItemCosts, self.player1.speciesData.terraformCosts)
 
 
-    def test_raceData_DefensesCosts(self):
+    def test_speciesData_DefensesCosts(self):
 
-        # player.raceData test terraformCosts
+        # player.speciesData test terraformCosts
         techItem = self.techTree["SDI"]
         itemIron = 0 if techItem.iron == None else techItem.iron
         itemBor = 0 if techItem.bor == None else techItem.bor
@@ -394,12 +393,12 @@ class TestPlayerDesign(object):
 
 
 
-        assert_equal(expectedItemCosts, self.player1.raceData.defensesCosts)
+        assert_equal(expectedItemCosts, self.player1.speciesData.defensesCosts)
 
 
-    def test_raceData_ScannerCosts(self):
+    def test_speciesData_ScannerCosts(self):
 
-        # player.raceData test terraformCosts
+        # player.speciesData test terraformCosts
         techItem = self.techTree["Viewer 50"]
         itemIron = 0 if techItem.iron == None else techItem.iron
         itemBor = 0 if techItem.bor == None else techItem.bor
@@ -408,21 +407,21 @@ class TestPlayerDesign(object):
 
 
 
-        assert_equal(expectedItemCosts, self.player1.raceData.scannerCosts)
+        assert_equal(expectedItemCosts, self.player1.speciesData.scannerCosts)
 
-    def test_raceData_MineralCosts(self):
+    def test_speciesData_MineralCosts(self):
 
-        # player.raceData test terraformCosts
+        # player.speciesData test terraformCosts
         # techItem = self.techTree["Viewer 50"]
         # itemIron = 0 if techItem.iron == None else techItem.iron
         # itemBor = 0 if techItem.bor == None else techItem.bor
         # itemGerm = 0 if techItem.germ == None else techItem.germ
         # expectedItemCosts = [itemIron, itemBor, itemGerm, techItem.resources]
-        print("TestPlayerDesign.test_raceData_MineralCosts HARDCODED MineralCosts")
+        print("TestPlayerDesign.test_speciesData_MineralCosts HARDCODED MineralCosts")
         expectedItemCosts = [0, 0, 0, 100]
 
 
-        assert_equal(expectedItemCosts, self.player1.raceData.mineralCosts)
+        assert_equal(expectedItemCosts, self.player1.speciesData.mineralCosts)
 
 
 

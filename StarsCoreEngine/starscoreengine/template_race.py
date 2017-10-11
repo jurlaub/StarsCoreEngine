@@ -55,7 +55,7 @@ def chooseBestShipComponents(techTree, techLevels, shipHull, ShipDesign):
     """ chooseBestShipComponents assists the Game object with selecting the best
     game components when generating a ship for players when starting a new game.
 
-    input: techTree, raceData.techLevels, JSON shipHull, ShipDesign (empty).
+    input: techTree, speciesData.techLevels, JSON shipHull, ShipDesign (empty).
 
     output: ShipDesign with the highest level components for the class that are 
     possible. (or standard components - like some general slots may have options, 

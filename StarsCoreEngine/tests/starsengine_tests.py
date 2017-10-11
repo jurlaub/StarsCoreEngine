@@ -30,7 +30,7 @@ import random
 from ..starscoreengine import *
 from ..starscoreengine.universe import UniverseObject
 from ..starscoreengine.player import Player
-from ..starscoreengine.player import RaceData as Race
+
 from ..starscoreengine.game_utility import GamePickle
 from ..starscoreengine.order_of_events import *
 from ..starscoreengine.tech import Component, Hull
@@ -206,7 +206,7 @@ class TestGame(object):
             playerObject = players[val]         # use key to grab player object
 
             assert_true(isinstance(playerObject, Player))
-            assert_in(playerObject.raceName, self.playerFileList)
+            assert_in(playerObject.speciesName, self.playerFileList)
 
             #test HW
             assert_true(isinstance(playerObject.colonies, dict))
@@ -215,7 +215,7 @@ class TestGame(object):
             homeworldKey, homeworld = playerObject.colonies.popitem()
             
             assert_true(homeworld.planet.HW == True)
-            assert_true(homeworld.planet.owner == playerObject.raceName)
+            assert_true(homeworld.planet.owner == playerObject.speciesName)
             assert_true(homeworld.scanner == True)
 
     def test_Players_HW(self):
@@ -224,7 +224,7 @@ class TestGame(object):
 
     def test_universe_createHWPlanet(self):
         """
-        Using the game as the universe and raceData template, create a generator
+        Using the game as the universe and speciesData template, create a generator
         that will add N number of HW's (for the same race) and collect them in 
         a key:value dictionary. Each of the collection should have a key that 
         aligns with the value.ID & the universe key. 
@@ -240,8 +240,8 @@ class TestGame(object):
         testHW0 = {}
         player1 = self.game.players["player1"]
         player0 = self.game.players["player0"]
-        raceData1 = player1.raceData
-        raceData0 = player0.raceData
+        speciesData1 = player1.speciesData
+        speciesData0 = player0.speciesData
 
         uni = self.game.game_universe[0]
 
@@ -256,11 +256,11 @@ class TestGame(object):
 
             if i%2:
 
-                newHW = uni.createHomeworldPlanet(raceData1)
+                newHW = uni.createHomeworldPlanet(speciesData1)
                 testHW1[newHW.ID] = newHW
                 o +=1
             else:
-                newHW = uni.createHomeworldPlanet(raceData0)
+                newHW = uni.createHomeworldPlanet(speciesData0)
                 testHW0[newHW.ID] = newHW
                 e +=1
             
@@ -316,7 +316,7 @@ class TestGame(object):
     
     def test_Player_PlanetValue_Assessment(self):
         player1 = self.game.players['player1']
-        rd = player1.raceData
+        rd = player1.speciesData
 
         rd.habGravityCenter = 1.0  # 1 (centerpoint) total range = .85 to 1.15
         rd.habGravRadius = -1  # 15.0 pos range from Center. Total range doubled  
@@ -341,14 +341,14 @@ class TestGame(object):
         # for kee, p in self.game.game_universe[0].planets.items():
         #     val = player1.planetValue(p)
         #     print("%s for %s has value:%d%. (planet:%s, %s, %s)" % 
-        #         (rd.raceName, p.name, val, p.currentGrav, p.currentTemp, p.currentRad ))
+        #         (rd.speciesName, p.name, val, p.currentGrav, p.currentTemp, p.currentRad ))
 
     def test_Player_PlanetValue_AssessHW(self):
         tmpPlayers = self.game.players
 
         for kee, player1 in tmpPlayers.items():
             #player1 = self.game.players['player1']
-            rd = player1.raceData
+            rd = player1.speciesData
 
             playerHab = (rd.habGravityCenter, rd.habTempCenter, rd.habRadCenter)
 
@@ -357,7 +357,7 @@ class TestGame(object):
 
             assert_equal(testPlanetVal, 100)
             print("PlayerName:%s; planetVal: %s; planetStats: (%d,%d,%d)" % 
-                (player1.raceName, testPlanetVal, playerHab[0], 
+                (player1.speciesName, testPlanetVal, playerHab[0], 
                 playerHab[1],playerHab[2]))
         
         #assert_true(False)

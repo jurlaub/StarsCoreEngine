@@ -85,7 +85,8 @@ Multiple types of entries:
 
 """
 
-from .fleets import FleetObject, Starbase, Token
+from .fleets import FleetObject,  Token
+from .starbase import Starbase
 #from .fleet_orders import FleetOrders
 
 
@@ -112,7 +113,7 @@ class ProductionQ(object):
         #self.productionList = [] # shipDesigns + starbaseDesign + planetInstallations + autoBuild
         self.colony = colony
         self.research = player.research
-        self.raceData = player.raceData
+        self.speciesData = player.speciesData
         self.designs = player.designs # point is to gather productionQ BuildList -- handled in a different 
 
         self.player = player  # player to provide costs for a number of itemTypes
@@ -589,7 +590,7 @@ class ProductionQ(object):
 
         """
         # colony updates resource calculations
-        self.colony.calcTotalResources(self.raceData.popEfficiency)
+        self.colony.calcTotalResources(self.speciesData.popEfficiency)
         self.research.totalResources += self.colony.totalResources
 
 
@@ -895,21 +896,21 @@ class ProductionQ(object):
 
     # uses Tech Tree values without race specific items.
     def itemCostsDefenses(self):
-        return self.raceData.defensesCosts
+        return self.speciesData.defensesCosts
 
     def itemCostsTerraform(self):
-        return self.raceData.terraformCosts
+        return self.speciesData.terraformCosts
 
     def itemCostsScanner(self):
-        return self.raceData.scannerCosts
+        return self.speciesData.scannerCosts
 
     def itemCostsFactories(self):
-        germCost = 4 if not self.raceData.factoryGermCost else 3 
-        return [0, 0, germCost, self.raceData.factoryCost]
+        germCost = 4 if not self.speciesData.factoryGermCost else 3 
+        return [0, 0, germCost, self.speciesData.factoryCost]
 
 
     def itemCostsMines(self):
-        return [0, 0, 0, self.raceData.mineCost]
+        return [0, 0, 0, self.speciesData.mineCost]
 
     def itemCostsShip(self, itemID):
         print("itemCosts - item:%s" % itemID)
@@ -923,7 +924,7 @@ class ProductionQ(object):
 
 
     def itemCostsMinerals(self):
-        return self.raceData.mineralCosts
+        return self.speciesData.mineralCosts
 
     def splitEntryIntoTwo(self, entryID):
         """

@@ -1,6 +1,6 @@
 """
     This file is part of Stars Core Engine, which provides an interface and processing of Game data.
-    Copyright (C) 2014  <Joshua Urlaub + Contributors>
+    Copyright (C) 2017  <Joshua Urlaub + Contributors>
 
     Stars Core Engine is free software: you can redistribute it and/or modify
     it under the terms of the Lesser GNU General Public License as published by
@@ -21,7 +21,8 @@
 """
 import random
 from .template import getPlanetNameFromTemplate, planetNameTemplate
-from .planet import Planet, Colony
+from .planet import Planet
+from .colony import Colony
 
 
 DEBUG = False
@@ -203,7 +204,7 @@ class UniverseObject(object):
 
         return tmpVal
 
-    def createHomeworldPlanet(self, raceData):
+    def createHomeworldPlanet(self, speciesData):
         # -- TODO --- a positional location of HWs based on some number
 
         count = len(self.planets)   # 0 based count == next planet number
@@ -241,11 +242,11 @@ class UniverseObject(object):
         if DEBUG: print("createHomeworldPlanet-switchPlanet: PlanetName:%s, IdNewToPlanet:%s, OldIDreplacedByLastEntry:%s, PlanetOwner:%s, IsPlanetAHW:%s" % (switchPlanet.name, switchPlanet.ID, switchID,  switchPlanet.owner, switchPlanet.HW))
 
         name = self.getPlanetName()
-        playerHab = (raceData.habGravityCenter, raceData.habTempCenter, raceData.habRadCenter)
+        playerHab = (speciesData.habGravityCenter, speciesData.habTempCenter, speciesData.habRadCenter)
         
         homeworld = self.createPlanet(switchID, name, playerHab)   # HW takes existing planet ID
         homeworld.HW = True  
-        homeworld.owner = raceData.raceName    
+        homeworld.owner = speciesData.speciesName    
         if DEBUG: print("createHomeworldPlanet-NewHW: HWName:%s, Id:%s, PlanetOwner:%s, IsPlanetAHW:%s" % (homeworld.name, homeworld.ID,  homeworld.owner, homeworld.HW))
 
         #homeworld.
@@ -264,15 +265,4 @@ class UniverseObject(object):
 
 
 
-class UniverseEvents(object):
-    """
-        this class describes universe events that could happen every game turn. 
-        on game creation the host can set each universe's settings including frequency of events.
-        events could be new minerals, wormhole appearance, or negative.
-        like a astroid impacting a planet. (severe negative impacts should not occur until later in the game)
-
-        
-
-    """
-    pass
 

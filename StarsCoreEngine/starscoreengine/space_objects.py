@@ -1,6 +1,6 @@
 """
     This file is part of Stars Core Engine, which provides an interface and processing of Game data.
-    Copyright (C) 2014  <Joshua Urlaub + Contributors>
+    Copyright (C) 2017  <Joshua Urlaub + Contributors>
 
     Stars Core Engine is free software: you can redistribute it and/or modify
     it under the terms of the Lesser GNU General Public License as published by
@@ -96,38 +96,6 @@ class SpaceObjects(object):
 
 
 
-class Minefields(SpaceObjects):
-    """
-        Minefield information here
-    """
-    pass
 
-
-
-
-class PacketsAndSalvage(SpaceObjects):
-    """ Salvage in Standard Stars are minerals that can be retrieved by any who are co-located. Velocity is 0.
-        Packets in Standard Stars minerals combined at a base with a Mass Driver (see tech tree) with a velocity(~5-14) 
-        that typically has a planet destination. 
-    """
-    def __init__(self, arg):
-        super(PacketsAndSalvage, self).__init__()
-        self.arg = arg
-        
-
-
-class WhereAmI(SpaceObjects):
-    pass
-
-
-
-
-# class UniverseObject(object):
-
-#     def __init__(self, ID):
-#         self.ID = ID 
-#         self.planets = {}
-#         self.fleets = {}
-        
 
 

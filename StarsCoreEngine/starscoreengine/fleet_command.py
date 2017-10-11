@@ -21,7 +21,6 @@
 """
 
 from .fleets import FleetObject
-#from .fleet_orders import FleetOrders
 
 
 DEBUG = True
@@ -155,11 +154,8 @@ class FleetCommand(object):
         try: 
 
             if newFleetID in self.fleets:
-                print("in fleet add test")
+                
                 self.fleets[newFleetID].fleetOrders = newFleetOrders  
-
-                print(newFleetOrders)
-
                 self.fleets[newFleetID].updateOrders(newFleetOrders)   
 
 

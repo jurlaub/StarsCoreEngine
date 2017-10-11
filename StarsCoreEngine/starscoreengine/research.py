@@ -128,7 +128,7 @@ class Research(object):
 
 
 
-    def __init__(self, PRT, LRTs = [], raceData = [], tech4 = False):   # modify raceData to be a dictionary?
+    def __init__(self, PRT, LRTs = [], speciesData = [], tech4 = False):   # modify speciesData to be a dictionary?
         
         self.techLevels = {"energy" : 0, 
                   "weapons" : 0,
@@ -156,9 +156,9 @@ class Research(object):
         self.researchTax = .1  # a percentage of total resources
 
 
-        # technology costs from Player raceData
+        # technology costs from Player speciesData
         # use Research class variable for cost assessment
-        self.techCostEner = Research.researchCost[1]  # raceData[0] -> or something else from raceData
+        self.techCostEner = Research.researchCost[1]  # speciesData[0] -> or something else from speciesData
         self.techCostWeap = 1 
         self.techCostProp = 1 
         self.techCostCon = 1 

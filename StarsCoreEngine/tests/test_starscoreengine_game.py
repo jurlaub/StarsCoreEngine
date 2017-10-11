@@ -33,7 +33,6 @@ from nose.tools import with_setup, assert_equal, assert_not_equal, \
 from ..starscoreengine.game import Game
 from ..starscoreengine.template import *
 from ..starscoreengine.player import Player
-from ..starscoreengine.player import RaceData as Race
 from ..starscoreengine.player_designs import PlayerDesigns
 from ..starscoreengine.ship_design import ShipDesign 
 from ..starscoreengine.productionQ import *

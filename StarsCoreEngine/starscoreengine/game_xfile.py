@@ -251,7 +251,7 @@ def processFleets(xfile, playerObj):
 
     """
 
-    print("processing fleets for #%d: %s" % (playerObj.playerNumber, playerObj.raceName))
+    print("processing fleets for #%d: %s" % (playerObj.playerNumber, playerObj.speciesName))
 
 
 def processMinefields(xfile, playerObj): # ?player object or universe?
@@ -290,7 +290,7 @@ def processDesign(xfile, playerObj, techTree):
 
 
 
-    print("processing design for #%d: %s" % (playerObj.playerNumber, playerObj.raceName))
+    print("processing design for #%d: %s" % (playerObj.playerNumber, playerObj.speciesName))
 
 
 
@@ -329,7 +329,7 @@ def processProductionQ(xfile, playerObj):
         #print("%s" % obj)
 
 
-    #print("processing productionQ for #%d: %s" % (playerObj.playerNumber, playerObj.raceName))
+    #print("processing productionQ for #%d: %s" % (playerObj.playerNumber, playerObj.speciesName))
 
 
 

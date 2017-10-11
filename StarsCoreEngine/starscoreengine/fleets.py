@@ -1,6 +1,6 @@
 """
     This file is part of Stars Core Engine, which provides an interface and processing of Game data.
-    Copyright (C) 2014  <Joshua Urlaub + Contributors>
+    Copyright (C) 2017  <Joshua Urlaub + Contributors>
 
     Stars Core Engine is free software: you can redistribute it and/or modify
     it under the terms of the Lesser GNU General Public License as published by
@@ -38,28 +38,7 @@
 
 
 from .space_objects import SpaceObjects
-
-
-
-
-class Token:
-    """Ships of the same design in a fleet form a single token, contains everything needed
-    for the battles, needs to persist after battles to keep damage"""
-
-    def __init__(self, designID, numbers, damage = 0):
-        self.designID = designID 
-        self.number = numbers
-        #list of [[number, damage (%)], ..., so [100, 0.5], [100, 0] is a token of 200 ships, 100 of which have 50% damage
-        self.damage = damage  
-       
-        #used in battle
-        self.armor = None
-        self.shields = None
-        #modified every turn in battle
-        self.mass = None
-
-
-
+from .token import Token
 
 
 
@@ -95,12 +74,17 @@ class FleetObject(SpaceObjects): #  additionally subclass Component?
         self.cargo_mass = 0
         self.cargo_capacity = 0
         self.cloaking = 0
-        self.raceFuelEfficiency = self.player.raceData.fuelEfficiency
+        self.raceFuelEfficiency = self.player.speciesData.fuelEfficiency
 
     def updateOrders(self, orders):
         if orders != []:
+
             self.fleetOrders = orders["orders"]
+            
+            # ----- check for orders that modify destinationXY and speed
+
             self.destinationXY = orders["orders"][0]["coordinates"]
+            #speed goes here
 
 
     def setCapacities(self):
@@ -110,10 +94,10 @@ class FleetObject(SpaceObjects): #  additionally subclass Component?
             self.fuel_capacity += t.design.fuel_capacity * t.number
             self.cargo_capacity += t.design.cargo_capacity * t.number
         
-    def move(self):
+    def distanceInAYear(self):
         pos = self.xy
         tgtPos = self.destinationXY
-        distance = math.sqrt((tgtPos[0] - pos[0]) **2 + (tgtPos[0] - pos[0]) **2)
+        distance = math.sqrt((tgtPos[0] - pos[0]) **2 + (tgtPos[1] - pos[1]) **2)
         #can make it in one year
         if self.speed ** 2 <= math.ceil(distance):
             return distance
@@ -165,49 +149,3 @@ class FleetObject(SpaceObjects): #  additionally subclass Component?
         """
         pass
 
-
-class Starbase(FleetObject):
-    """
-    postcondition:  ID sent to space_objects super must prepend "playernumber_" to currentFleetID
-                    Starbases must register with UniverseObject.objectsAtXY
-                    Starbases must be connected to Planet (not Colony) object
-
-    """
-
-    def __init__(self, player, spaceObjectID, xy, universeID, planetID):
-        super(Starbase, self).__init__(player, spaceObjectID, xy, universeID)
-        # self.player = player  #owning player
-        # self.currentUniverseID = universeID   # current universe,  obtained from ProductionQ location
-        # self.objectID = spaceObjectID  #this is "playernumber_" + currentFleetID (i.e. FleetKey for player ) !! must change if FleetKey changes
-        
-        self.planetID = planetID
-        self.starbase = False
-        self.constructionCapacity = None # None or Mass Rating 
-    
-
-                   
-    def starbaseMassRating(self):
-        """
-        searchs through all the tokens 
-        returns maximum mass ship build rating that a starbase can build. 
-
-        """
-
-        #starbaseTokenIDs = [x for x.design in self.tokens.values()]
-        massRating = '0'
-        dockSizes = ['0', '200', 'infinite']
-
-        for each in self.tokens:
-
-            starbase = self.player.designs.currentStarbases[each]
-            
-            if starbase.spaceDockSize != None:
-                massRating = str(starbase.spaceDockSize)
-            # if starbase.spaceDockSize in dockSizes:
-                # if dockSizes.index(massRating) < dockSizes.index(starbase.spaceDockSize):
-                #     massRating = starbase.spaceDockSize
-            print("fleets.starbaseMassRating - %s: spaceDockSize:%s" % (each, starbase.spaceDockSize))
-            print("%s" % starbase)
-            
-        return massRating
-                    

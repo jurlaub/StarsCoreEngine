@@ -38,7 +38,6 @@ from nose.tools import with_setup, assert_equal, assert_not_equal, \
 from ..starscoreengine.game import Game
 from ..starscoreengine.template import *
 from ..starscoreengine.player import Player
-from ..starscoreengine.player import RaceData as Race
 from ..starscoreengine.player_designs import PlayerDesigns
 from ..starscoreengine.ship_design import ShipDesign 
 from ..starscoreengine.productionQ import *
@@ -960,7 +959,7 @@ class TestShipDesign(object):
         # self.target_colony_obj.planet.factories = 200
         #self.player.research.researchTax = .7
         self.colonyPQ.ExcludedFromResearch = True
-        colonyResources = self.target_colony_obj.calcTotalResources(self.player.raceData.popEfficiency)
+        colonyResources = self.target_colony_obj.calcTotalResources(self.player.speciesData.popEfficiency)
 
         print("setup: On HW pop:%d iron: %d bor: %d germ: %s" % (self.target_colony_obj.population, 
                                                                 self.target_colony_obj.planet.surfaceIron, 
@@ -1044,7 +1043,7 @@ class TestShipDesign(object):
         self.colonyPQ.productionOrder = existingOrder
         self.colonyPQ.productionItems = existingItems
 
-        colonyResources = self.target_colony_obj.calcTotalResources(self.player.raceData.popEfficiency)
+        colonyResources = self.target_colony_obj.calcTotalResources(self.player.speciesData.popEfficiency)
 
         print("setup: On HW pop:%d iron: %d bor: %d germ: %s" % (self.target_colony_obj.population, 
                                                                 self.target_colony_obj.planet.surfaceIron, 
@@ -1135,7 +1134,7 @@ class TestShipDesign(object):
         self.colonyPQ.productionOrder = existingOrder
         self.colonyPQ.productionItems = existingItems
 
-        colonyResources = self.target_colony_obj.calcTotalResources(self.player.raceData.popEfficiency)
+        colonyResources = self.target_colony_obj.calcTotalResources(self.player.speciesData.popEfficiency)
 
         print("setup: On HW pop:%d iron: %d bor: %d germ: %s" % (self.target_colony_obj.population, 
                                                                 self.target_colony_obj.planet.surfaceIron, 
@@ -1216,7 +1215,7 @@ class TestShipDesign(object):
         self.colonyPQ.productionOrder = existingOrder
         self.colonyPQ.productionItems = existingItems
 
-        colonyResources = self.target_colony_obj.calcTotalResources(self.player.raceData.popEfficiency)
+        colonyResources = self.target_colony_obj.calcTotalResources(self.player.speciesData.popEfficiency)
 
         print("setup: On HW pop:%d iron: %d bor: %d germ: %s" % (self.target_colony_obj.population, 
                                                                 self.target_colony_obj.planet.surfaceIron, 

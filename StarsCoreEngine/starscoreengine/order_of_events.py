@@ -21,7 +21,8 @@
     in the COPYING.Interpretation document.
 
 """
-from .planet import Planet, Colony
+from .planet import Planet
+from .colony import Colony
 from .player import Player
 from .productionQ import ProductionQ
 

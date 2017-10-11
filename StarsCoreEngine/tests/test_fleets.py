@@ -33,8 +33,9 @@ from ..starscoreengine.player import Player
 # from ..starscoreengine.ship_design import ShipDesign 
 from ..starscoreengine.productionQ import *
 from ..starscoreengine.game_xfile import processDesign, processProductionQ
-from ..starscoreengine.planet import Colony, Planet
-from ..starscoreengine.fleets import FleetObject, Token
+from ..starscoreengine.planet import Planet
+from ..starscoreengine.colony import Colony
+from ..starscoreengine.fleets import FleetObject
 from ..starscoreengine.fleet_command import FleetCommand
 
 from ..starscoreengine.universe import UniverseObject

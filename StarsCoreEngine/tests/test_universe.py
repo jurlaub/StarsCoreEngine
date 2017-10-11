@@ -33,8 +33,9 @@ from ..starscoreengine.player_designs import PlayerDesigns
 from ..starscoreengine.ship_design import ShipDesign 
 from ..starscoreengine.productionQ import *
 from ..starscoreengine.game_xfile import processDesign, processProductionQ
-from ..starscoreengine.planet import Colony, Planet
-from ..starscoreengine.fleets import FleetObject, Token
+from ..starscoreengine.planet import Planet
+from ..starscoreengine.colony import Colony
+from ..starscoreengine.fleets import FleetObject
 from ..starscoreengine.universe import UniverseObject
 from ..starscoreengine.template_race import startingDesigns, startingShipDesignsCount, startingDesignsCount #colonyShip, scoutShip, destroyerShip, smallFrieghterShip
 

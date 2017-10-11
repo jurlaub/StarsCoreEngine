@@ -92,7 +92,7 @@ class TestXFileController(object):
 
 
         # for kee, player in self.game.players.items():
-        #     print("kee:%s :: player:%s:" % (kee, player.raceName))
+        #     print("kee:%s :: player:%s:" % (kee, player.speciesName))
 
         #     for name, colony in player.colonies.items():
         #         print("PlanetKee:%s & PlanetID:%s & PlanetName:%s" % (name, colony.planet.ID, colony.planet.name))
@@ -102,7 +102,7 @@ class TestXFileController(object):
 
 
 
-        # print("player colonies:\n%s:%s\n%s:%s"%(self.game.players["player0"].raceName, str(self.game.players["player0"].colonies.keys()), self.game.players["player1"].raceName, str(self.game.players["player1"].colonies.keys())))
+        # print("player colonies:\n%s:%s\n%s:%s"%(self.game.players["player0"].speciesName, str(self.game.players["player0"].colonies.keys()), self.game.players["player1"].speciesName, str(self.game.players["player1"].colonies.keys())))
 
         # --------- productionQ grab planets --------
         self.target_colony = None       # HW
@@ -179,7 +179,7 @@ class TestXFileController(object):
 
 
         # values prior to xFileController being called  = Baseline
-        assert_true(p0.raceName, self.playerFileList[0])
+        assert_true(p0.speciesName, self.playerFileList[0])
         #print("count designs:%s" % len(p0.designs.currentShips))
         beginningDesignsCount_withStarbases = startingDesignsCount()
         beginningDesignsCount = startingShipDesignsCount()

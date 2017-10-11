@@ -28,7 +28,8 @@ from nose.tools import with_setup, assert_equal, assert_not_equal, \
 
 
 
-from ..starscoreengine.planet import *
+from ..starscoreengine.planet import Planet
+from ..starscoreengine.colony import Colony
 from ..starscoreengine.game import Game
 from ..starscoreengine.template import *
 
@@ -51,7 +52,7 @@ class TestColonyPlanets(object):
         self.universe = self.game.game_universe[0]
 
 
-        self.RaceData = self.player.raceData
+        self.RaceData = self.player.speciesData
 
         
         self.playerCenterHab = (self.RaceData.habGravityCenter, 
@@ -100,8 +101,8 @@ class TestColonyPlanets(object):
     def test_Colony_Planet(self):
         assert_in(self.SO_ID, self.player.colonies)
         colony = self.player.colonies[self.SO_ID]
-        assert_true(colony.planet.owner == self.player.raceName)
-        assert_true(colony.growthRate == self.player.raceData.growthRate)
+        assert_true(colony.planet.owner == self.player.speciesName)
+        assert_true(colony.growthRate == self.player.speciesData.growthRate)
 
     def test_ColonyHW_Growth_Low(self):
         """ _Low tests growth for a planet with pop below the 25'%' point

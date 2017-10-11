@@ -43,13 +43,13 @@ class PlayerBuildList(object):
 
 
     source for data
-    > raceData - player.method that produces this
+    > speciesData - player.method that produces this
     > techTree - player.method gen the most recent one planetaryInstallations 
     > playerDesigns Ships
     > playerDesigns Starbases
 
     List updated every Turn:
-    > minus raceData
+    > minus speciesData
     > refresh planetaryInstallations
     > refresh pD
 
@@ -70,7 +70,7 @@ class PlayerBuildList(object):
 
     def __init__(self, playerN):
         # define where to obtain the information
-        #self.raceData = playerN.raceData
+        #self.speciesData = playerN.speciesData
         self.playerN = playerN
 
         self.buildList = {} #{"Mines" : { "itemType": "Mines", "targetItemsCost": [0,0,0,4]}}
@@ -104,23 +104,23 @@ class PlayerBuildList(object):
         pass
 
     def buildCosts_Mine(self, playerN):
-        raceData = playerN.raceData
+        speciesData = playerN.speciesData
 
         m = "Mines"
-        mCosts = [0, 0, 0, raceData.mineCost]
+        mCosts = [0, 0, 0, speciesData.mineCost]
 
         return { m: {"itemType": m, "targetItemsCost": mCosts} }
 
     def buildCosts_Factory(self, playerN):
-        raceData = playerN.raceData
+        speciesData = playerN.speciesData
 
         f = "Factories"
 
         fGerm = 4
-        if raceData.factoryGermCost: 
+        if speciesData.factoryGermCost: 
             fGerm = 3
         
-        fCosts = [0, 0, fGerm, raceData.factoryCost]
+        fCosts = [0, 0, fGerm, speciesData.factoryCost]
 
 
         return { f: {"itemType": f, "targetItemsCost": fCosts} }
@@ -142,7 +142,7 @@ class PlayerBuildList(object):
 
 
         -- TODO --
-        Check raceData for tech exclusions (like the LRT:No Advanced Scanners or
+        Check speciesData for tech exclusions (like the LRT:No Advanced Scanners or
             other rules)
 
 

@@ -202,9 +202,9 @@ def printPlayerValues(game):
     
     for player in iter(game.players):
         playerObject = game.players[player]
-        print("%s" % ( playerObject.raceName ))
-        print("Population growth rate: %s" % str(playerObject.raceData.growthRate))
-        print("%s has %d planets" % (playerObject.raceName, len(playerObject.colonies)))
+        print("%s" % ( playerObject.speciesName ))
+        print("Population growth rate: %s" % str(playerObject.speciesData.growthRate))
+        print("%s has %d planets" % (playerObject.speciesName, len(playerObject.colonies)))
 
         for each in playerObject.colonies:
             colony = playerObject.colonies[each]
