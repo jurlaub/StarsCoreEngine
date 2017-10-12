@@ -161,10 +161,10 @@ class TestFleets(object):
 
 
 
-        self.baseFleets = self.player1.fleetCommand.fleets #= {}
-        self.baseFleetID = self.player1.fleetCommand.nextFleetID # = 0
-        self.baseFleetObjects = self.universe.fleetObjects # = {} 
-        self.baseObjectsAtXY = self.universe.objectsAtXY #[self.target_colony_obj.planet.xy] = []    # target_colony_obj exists here
+        # self.baseFleets = self.player1.fleetCommand.fleets #= {}
+        # self.baseFleetID = self.player1.fleetCommand.nextFleetID # = 0
+        # self.baseFleetObjects = self.universe.fleetObjects # = {} 
+        # self.baseObjectsAtXY = self.universe.objectsAtXY #[self.target_colony_obj.planet.xy] = []    # target_colony_obj exists here
 
 
 
@@ -172,18 +172,37 @@ class TestFleets(object):
     def teardown(self):
         print("TestFleets: Teardown")
 
-        if False: print("p1_fleets:%s\np1_nextFleetID:%s \nuniverseFleets:%s \nobjectsAtXY:%s" %(self.player1.fleetCommand.fleets, self.player1.fleetCommand.nextFleetID, self.universe.fleetObjects, self.universe.objectsAtXY))
+        # if False: print("p1_fleets:%s\np1_nextFleetID:%s \nuniverseFleets:%s \nobjectsAtXY:%s" %(self.player1.fleetCommand.fleets, self.player1.fleetCommand.nextFleetID, self.universe.fleetObjects, self.universe.objectsAtXY))
 
-        # self.player0.fleetCommand.fleets = self.baseFleets_0 #= {}
-        # self.player0.fleetCommand.nextFleetID = self.baseFleetID_0 # = 0
+        # # self.player0.fleetCommand.fleets = self.baseFleets_0 #= {}
+        # # self.player0.fleetCommand.nextFleetID = self.baseFleetID_0 # = 0
 
 
-        self.player1.fleetCommand.fleets = self.baseFleets
-        self.player1.fleetCommand.nextFleetID = self.baseFleetID
-        self.universe.fleetObjects = self.baseFleetObjects
-        self.universe.objectsAtXY = self.baseObjectsAtXY
+        # self.player1.fleetCommand.fleets = self.baseFleets
+        # self.player1.fleetCommand.nextFleetID = self.baseFleetID
+        # self.universe.fleetObjects = self.baseFleetObjects
+        # self.universe.objectsAtXY = self.baseObjectsAtXY
 
-        if True: print("p1_fleets:%s \np1_nextFleetID:%s \nuniverseFleets:%s \nobjectsAtXY:%s" %(self.player1.fleetCommand.fleets, self.player1.fleetCommand.nextFleetID, self.universe.fleetObjects, self.universe.objectsAtXY))
+        # if True: print("p1_fleets:%s \np1_nextFleetID:%s \nuniverseFleets:%s \nobjectsAtXY:%s" %(self.player1.fleetCommand.fleets, self.player1.fleetCommand.nextFleetID, self.universe.fleetObjects, self.universe.objectsAtXY))
+
+
+        # ---- cleanup -----
+
+        for each in self.player0.fleetCommand.fleets.values():
+
+            hwxy = self.p0_colonyHW_obj.planet.xy
+
+            # if each.xy != hwxy:
+
+            self.universe._updateObjectsAtXY(each.ID, self.p0_colonyHW_obj.planet.xy, each.xy )
+            each.xy = self.p0_colonyHW_obj.planet.xy
+            each.destinationXY = each.xy
+            each.fleetOrders = []
+            each.speed = 0
+            each.newSpeed = each.speed
+            
+        for each, obj in self.universe.objectsAtXY.items():
+            print("{} {}".format(each, obj))
 
 
 
@@ -400,6 +419,88 @@ class TestFleets(object):
 
 
 
+    def test_fleetsUpdateDestinationXY(self):
+
+
+        fc_0 = self.player0.fleetCommand
+        hw_0_xy = self.p0_colonyHW_obj.planet.xy
+        print(hw_0_xy)
+        assert_true(isinstance(hw_0_xy,  tuple))
+        offset_locations = TestFleets._standard_offset()
+
+
+        testCommands = {}
+        for x in range(0, startingShipDesignsCount()):
+            testCommands[x] = TestFleets._obtain_fleet_orders_from_offset(hw_0_xy, offset_locations[0] )
+
+        assert_equal(len(testCommands), 4)
+
+        
+        # ----- test the coord values before orders ------
+        for fleetObj in fc_0.fleets.values():
+            assert_true(isinstance(fleetObj.xy,  tuple))
+            assert_true(isinstance(fleetObj.destinationXY,  tuple))
+            assert_equal(hw_0_xy, fleetObj.xy)
+            assert_equal(fleetObj.destinationXY, hw_0_xy)
+            
+
+
+        # move action
+        fc_0.addOrdersToFleetsForTurn(testCommands)
+
+        print(testCommands)
+        for key, commands in testCommands.items():
+            assert_equal(fc_0.fleets[key].destinationXY, commands["orders"][0]["coordinates"])
+            
+
+
+
+
+
+    def test_fleetObjectAtCorrectUniverseLocationAfterMove(self):
+
+        fc_0 = self.player0.fleetCommand
+        hw_0_xy = self.p0_colonyHW_obj.planet.xy
+        offset_locations = TestFleets._standard_offset()
+
+
+        testCommands = {}
+        for x in range(0, startingShipDesignsCount()):
+            testCommands[x] = TestFleets._obtain_fleet_orders_from_offset(hw_0_xy, offset_locations[0] )
+
+        assert_equal(len(testCommands), 4)
+
+
+
+        fc_0.addOrdersToFleetsForTurn(testCommands)
+        fc_0.fleetsMove()
+
+        # test for ship at new location
+        for key, obj in testCommands.items():
+            print("test object %s" % obj["orders"][0])
+
+            tmp_coord = tuple(obj["orders"][0]["coordinates"])
+
+            assert_true(isinstance(tmp_coord, tuple))
+
+            print("temp coord %s %s" % tmp_coord)
+
+            if tmp_coord in self.universe.objectsAtXY:
+                test_items = self.universe.objectsAtXY[tmp_coord]
+                print(test_items)
+                assert_in('0_'+ str(key), test_items)
+
+            
+            else: 
+                assert_in(tmp_coord, self.universe.objectsAtXY)
+        
+        print("HW : (%s, %s)" % hw_0_xy)
+        for each, every in self.universe.objectsAtXY.items():
+            print("{} : {} ".format(each, every))
+
+        # assert_false(True)
+
+
     def test_addOrdersToFleetsForTurn(self):
 
         NORTH_OFFSET = (0, 50, 0)
@@ -474,99 +575,6 @@ class TestFleets(object):
             assert_true( isinstance(obj.fleetOrders, list)) # fleet has list of orders
             assert_equal(len(obj.fleetOrders), 1)           # fleet orders is empty
 
-
-        # ---- cleanup -----
-
-        for each in fc_0.fleets.values():
-            each.destinationXY = each.xy
-            each.fleetOrders = []
-            each.speed = 0
-            each.newSpeed = each.speed
-
-
-
-
-
-    def test_fleetsUpdateDestinationXY(self):
-
-
-        fc_0 = self.player0.fleetCommand
-        hw_0_xy = self.p0_colonyHW_obj.planet.xy
-        print(hw_0_xy)
-        assert_true(isinstance(hw_0_xy,  tuple))
-        offset_locations = TestFleets._standard_offset()
-
-
-        testCommands = {}
-        for x in range(0, startingShipDesignsCount()):
-            testCommands[x] = TestFleets._obtain_fleet_orders_from_offset(hw_0_xy, offset_locations[0] )
-
-        assert_equal(len(testCommands), 4)
-
-        
-        # ----- test the coord values before orders ------
-        for fleetObj in fc_0.fleets.values():
-            assert_true(isinstance(fleetObj.xy,  tuple))
-            assert_true(isinstance(fleetObj.destinationXY,  tuple))
-            assert_equal(hw_0_xy, fleetObj.xy)
-            assert_equal(fleetObj.destinationXY, hw_0_xy)
-            
-
-
-        # move action
-        fc_0.addOrdersToFleetsForTurn(testCommands)
-
-        print(testCommands)
-        for key, commands in testCommands.items():
-            assert_equal(fc_0.fleets[key].destinationXY, commands["orders"][0]["coordinates"])
-            
-
-
-        # ---- cleanup -----
-
-        for each in fc_0.fleets.values():
-            each.destinationXY = each.xy
-            each.fleetOrders = []
-            each.speed = 0
-            each.newSpeed = each.speed
-
-
-
-    #def test_fleetObjectAtCorrectUniverseLocationAfterMove(self):
-
-        # fc_0 = self.player0.fleetCommand
-        # hw_0_xy = self.p0_colonyHW_obj.planet.xy
-        # offset_locations = TestFleets._standard_offset()
-
-
-        # testCommands = {}
-        # for x in range(0, startingShipDesignsCount()):
-        #     testCommands[x] = TestFleets._obtain_fleet_orders_from_offset(hw_0_xy, offset_locations[0] )
-
-        # assert_equal(len(testCommands), 4)
-
-        # fc_0.addOrdersToFleetsForTurn(testCommands)
-
-        # # test for ship at new location
-        # for key, obj in testCommands.items():
-        #     print("test object %s" % obj["orders"][0])
-
-        #     tmp_coord = tuple(obj["orders"][0]["coordinates"])
-
-        #     assert_true(isinstance(tmp_coord, tuple))
-
-        #     print("temp coord %s %s" % tmp_coord)
-
-        #     if tmp_coord in self.universe.objectsAtXY:
-        #         test_items = self.universe.objectsAtXY[tmp_coord]
-        #         print(test_items)
-        #         assert_in('0_'+key, test_items)
-            
-        #     else: 
-        #         assert_in(tmp_coord, self.universe.objectsAtXY)
-            
-
-        
 
 
 

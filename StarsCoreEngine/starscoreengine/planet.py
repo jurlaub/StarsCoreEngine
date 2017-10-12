@@ -117,3 +117,8 @@ class Planet(SpaceObjects):
     def getSurfaceMinerals(self):      
         return [self.surfaceIron, self.surfaceBor, self.surfaceGerm]
 
+    def getPrefex(self):
+
+        return int(self.ID[0])
+
+

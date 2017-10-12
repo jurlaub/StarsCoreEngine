@@ -140,18 +140,29 @@ class UniverseObject(object):
 
 
         """
-        #location = newXY
-        if oldXY:
-            # oldLocation = self.objectsAtXY.get(oldXY)
-            #remove ObjectID
-            self.objectsAtXY.get(oldXY).remove(fleetID)
+        try: 
+
+            print("objectID:{}; newXY:{}; oldXY:{}".format(objectID, newXY, oldXY))
 
 
-        newLocation = self.objectsAtXY.setdefault(newXY, [])
-        if objectID not in newLocation:
-            newLocation.append(objectID)  
+            #location = newXY
+            if oldXY and objectID in self.objectsAtXY.get(oldXY):
+                # oldLocation = self.objectsAtXY.get(oldXY)
+                #remove ObjectID
+                print("oldXY: {}".format(oldXY))
+                self.objectsAtXY.get(oldXY).remove(objectID)
 
 
+            newLocation = self.objectsAtXY.setdefault(newXY, [])
+            if objectID not in newLocation:
+                newLocation.append(objectID)  
+        
+        except ValueError as e:
+            print("ValueError in _updateObjectsAtXY :%s" % e)
+        
+        # finally:
+        #     print("oldXY({}) values {}".format(oldXY, self.objectsAtXY.get(oldXY)))
+        #     print("newXY({}) values {}".format(newXY, self.objectsAtXY.get(newXY)))
 
     def createPlanetObjects(self):
         """
@@ -260,8 +271,11 @@ class UniverseObject(object):
     def _interceptSpaceObject(self):
         pass
 
-    def moveSpaceObject(self):
-        pass
+    def moveSpaceObject(self, objectID, newXY, oldXY ):
+
+        self._updateObjectsAtXY(objectID, newXY, oldXY)
+        
+
 
 
 

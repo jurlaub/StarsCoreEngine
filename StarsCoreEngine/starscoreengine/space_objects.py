@@ -74,7 +74,19 @@ class SpaceObjects(object):
 
 
 
+    def distanceInAYear(self):
+        pos = self.xy
+        tgtPos = self.destinationXY
+        distance = math.sqrt((tgtPos[0] - pos[0]) **2 + (tgtPos[1] - pos[1]) **2)
+        #can make it in one year
+        if self.speed ** 2 <= math.ceil(distance):
+            return distance
+        else:
+            return self.speed ** 2
 
+    def newLocation(self):
+        
+        return self.destinationXY
 
 
     def printCurrentCoord(self):

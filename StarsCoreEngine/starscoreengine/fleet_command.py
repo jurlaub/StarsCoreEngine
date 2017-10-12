@@ -191,9 +191,17 @@ class FleetCommand(object):
             # TODO - log error
             print("error - duplicate fleet ID: new fleet not added")
 
+
+    def isFleetTravelingDangerously(self):
+        pass
+
+
+
+
     def fleetsMove(self):
         """
         actual (x,y) adjustment occurs in SpaceObject.
+        Universe also requires updating 
         Fleets have extra tasks associated with moving (e.g. as compared with MT or Packets )
         F: Fleets must modify fuel
         U: Fleets may hit minefields
@@ -214,5 +222,22 @@ class FleetCommand(object):
 
         """
 
-        pass
+        # prep for all fleets to move - does fleet have move order?
+        #if fleet.shouldFleetMove():    # has orders to move (include warp speed)
+        #   is 
+        # check distance
+        # check fuel for distance
+        # check for danger
+        # universe check for hitting minefield
+        # adjust space object and universe values
+
+        for fleet_key, fleet_obj in self.fleets.items():
+
+            if fleet_obj.shouldFleetMove():
+                
+                new_location = fleet_obj.newLocation()
+                self.multiverse[fleet_obj.currentUniverseID].moveSpaceObject(fleet_obj.ID, new_location, fleet_obj.xy)
+
+
+        
         

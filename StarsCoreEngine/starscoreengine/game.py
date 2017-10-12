@@ -85,6 +85,7 @@ class Game(object):
 
         # -- A dictionary of Universe Objects
         self.game_universe = self.generateUniverses(template)
+        
 
         # -- a dictionary of Player Objects
         self.players = self.generatePlayers(template)  #--TODO-- resolve name conflict with UniverseObject.Players

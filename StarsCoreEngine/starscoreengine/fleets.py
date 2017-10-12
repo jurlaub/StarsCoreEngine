@@ -81,11 +81,25 @@ class FleetObject(SpaceObjects): #  additionally subclass Component?
 
             self.fleetOrders = orders["orders"]
             
-            # ----- check for orders that modify destinationXY and speed
+            # ----- check for orders that modify destinationXY and speed ----
 
             self.destinationXY = orders["orders"][0]["coordinates"]
             #speed goes here
 
+    def shouldFleetMove(self):
+
+        return True
+
+    def fleetHasGateTravelOrders(self):
+
+        return False
+
+    def fleetDistanceToTravelWithAvailableFuel(self):
+        """
+        fuel calculations go here
+
+        """
+        return self.distanceInAYear()
 
     def setCapacities(self):
         self.fuel_capacity = 0
@@ -94,15 +108,7 @@ class FleetObject(SpaceObjects): #  additionally subclass Component?
             self.fuel_capacity += t.design.fuel_capacity * t.number
             self.cargo_capacity += t.design.cargo_capacity * t.number
         
-    def distanceInAYear(self):
-        pos = self.xy
-        tgtPos = self.destinationXY
-        distance = math.sqrt((tgtPos[0] - pos[0]) **2 + (tgtPos[1] - pos[1]) **2)
-        #can make it in one year
-        if self.speed ** 2 <= math.ceil(distance):
-            return distance
-        else:
-            return self.speed ** 2
+
 
     def calculateFuelUsePerLY(self):
         fuelUsed = 0
