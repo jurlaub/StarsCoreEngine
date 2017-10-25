@@ -79,7 +79,8 @@ def OrderOfEvents(game):
     # !    MTMoves()
     # !    inSpacePackets()                  # for each object in UniverseObjects.mineralObjects. 
     
-    # !!!  fleetsMove():                     # UniverseObject moves according to waypoint, Wormhole updates a 
+    order_of_events_fleets_move(game)  # UniverseObject moves according to waypoint, Wormhole updates a 
+    
     ######   Universe Class dictionary with fleet object and destination. At the
     ######   end of movement (may move between universes); Fuel usage, minefield
     ######   impacts, Fuel gathering
@@ -89,10 +90,10 @@ def OrderOfEvents(game):
     # !    wormholesMove():                  # for each object in UniverseObject:: wormholes  (new file -> necessary to expand upon multi-universe)
     # !!   minefieldDetonate():              # for each object in UniverseObject:: space_objects.py = Minefield
     # !    mineralMining():                  # for each player.colony update planet object
-    production(game)                     # ProductionQ
+    order_of_events_production(game)                     # ProductionQ
     # ^!   universeResearchCapture():        # Research
 
-    population(game)
+    order_of_events_population(game)
 
     # !    newPacketCollisions():            # UniverseObject:: space_objects (new File? packets_minerals? )
     # !    fleetsRefuel():                   # for each playerfleet, FleetController?  :: colony.starbase & universe.objectsAtXY
@@ -173,11 +174,26 @@ def inSpacePackets():
     pass
 
 
-def fleetsMove():
+def order_of_events_fleets_move(game):
     # (run out of fuel, 
     #hit minefields (fields reduce as they are hit, lowest # fleets hits mines first), 
     # stargate & wormhole travel)
-    pass
+    
+    for player in game.players:
+        playerObject = game.players[player]
+
+        print(playerObject.fleetCommand.fleets)
+
+        for each in playerObject.fleetCommand.fleets.values():
+
+            print("Before {}  :{} :: {}".format(player, each.xy, each.fleetOrders))
+
+        playerObject.fleetCommand.fleetsMove()
+        for each in playerObject.fleetCommand.fleets.values():
+
+            print("After {} : {} : {}".format(player,each.xy,  each.fleetOrders))
+
+    
 
 def ISFleetgrowth():
     #Inner Strength colonists grow in fleets. Overflows to player owned planets.
@@ -199,7 +215,7 @@ def mineralMining():
     # Including AR waypoint 1 remote mining of colonized worlds.
     pass
 
-def production(game):
+def order_of_events_production(game):
     # (incl. research, packet launch, fleet/starbase construction)
     """
     iterate through all the player objects.
@@ -248,7 +264,7 @@ def universeResearchCapture():
     # could the SS races have their own version of Walter (see Fringe :) )
     pass
 
-def population(game):
+def order_of_events_population(game):
     # all colony populations grows/dies
 
     for player in game.players:

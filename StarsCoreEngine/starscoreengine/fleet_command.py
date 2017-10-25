@@ -23,7 +23,7 @@
 from .fleets import FleetObject
 
 
-DEBUG = True
+DEBUG = False
 DEBUG2 = False
 
 
@@ -90,6 +90,8 @@ class FleetCommand(object):
         
         #return fleetID
         # return self.nextFleetID
+
+        
         return self._nextFleetID()
 
     def _nextFleetID(self, startingID = 0):
@@ -105,18 +107,18 @@ class FleetCommand(object):
         valueInRange = True
 
         for i in range(startingID, len(self.fleets)):
-            print("_nextFleetID: %s  fleet len(%s)" % (i, len(self.fleets)))
+            if DEBUG2: print("_nextFleetID: %s  fleet len(%s)" % (i, len(self.fleets)))
             
 
             if i not in self.fleets:
-                print("_nextFleetID: False %s is not in self.fleets" % i)
+                if DEBUG2: print("_nextFleetID: False %s is not in self.fleets" % i)
                 fleetKeys = i
                 valueInRange = False
                 break
 
         if valueInRange:
             fleetKeys = len(self.fleets)
-            print("_nextFleetID: valueInRange is True %s is not in self.fleets" % (fleetKeys))
+            # print("_nextFleetID: valueInRange is True - %s is not in self.fleets" % (fleetKeys))
 
         if DEBUG: print("[p%s]_nextFleetID: fleetKeys:%s" % (self.player.playerNumber, fleetKeys) ) 
         return fleetKeys
@@ -234,10 +236,10 @@ class FleetCommand(object):
         for fleet_key, fleet_obj in self.fleets.items():
 
             if fleet_obj.shouldFleetMove():
-                
+
                 new_location = fleet_obj.newLocation()
                 self.multiverse[fleet_obj.currentUniverseID].moveSpaceObject(fleet_obj.ID, new_location, fleet_obj.xy)
-
+                fleet_obj.updateXYtoDestinationXY()
 
         
         

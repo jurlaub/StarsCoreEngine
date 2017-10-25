@@ -45,6 +45,45 @@ def findPlayerHW(colonies):
     return (hw_name, hw_obj)
 
 
+
+def _update_xy_orders(currentXY, offsetXY):
+
+    return (currentXY[0] + offsetXY[0], currentXY[1] + offsetXY[1])
+
+
+
+def obtain_fleet_orders_from_offset(currentLocation, offset ):
+
+    temp = { "orders" : [ 
+            {
+            "coordinates" : _update_xy_orders(currentLocation, offset),    # or at currentLocation
+            "velocity_command" : "speed_levels_from_list",
+            "waypoint_action" : "action_from_list" 
+            } ]
+        }
+    return temp
+
+def _standard_offset():
+    NORTH_OFFSET = (0, 50, 0)
+    EAST_OFFSET = (50, 0, 0)
+    SOUTH_OFFSET = (0, -50, 0)
+    WEST_OFFSET = (-50, 0, 0)
+    OFFSET_LIST = [NORTH_OFFSET, EAST_OFFSET, SOUTH_OFFSET, WEST_OFFSET ]
+
+    return OFFSET_LIST
+
+def generate_fleet_orders_from_standard_offset(fleetIDs, hw_xy):
+
+    testCommands = {}
+
+    # for each in fleetIDs:
+    for x in range(0, len(fleetIDs)):
+        testCommands[fleetIDs[x]] = obtain_fleet_orders_from_offset(hw_xy, _standard_offset()[x%4])
+        #print(testCommands)
+
+    return testCommands
+
+
 class PlayerTestObject(object):
     """
     Player test object
@@ -53,3 +92,7 @@ class PlayerTestObject(object):
 
     def __init__(self):
         self.playerNumber = None
+
+
+
+

@@ -1,6 +1,6 @@
 """
     This file is part of Stars Core Engine, which provides an interface and processing of Game data.
-    Copyright (C) 2014  <Joshua Urlaub + Contributors>
+    Copyright (C) 2017  <Joshua Urlaub + Contributors>
 
     Stars Core Engine is free software: you can redistribute it and/or modify
     it under the terms of the Lesser GNU General Public License as published by
@@ -472,56 +472,4 @@ class TestGamePlanets(object):
 
     def test_Planet_Objects(self):
         pass
-
-
-
-
-class TestOrderOfEvents(object):
-
-    def setup(self):
-        print("TestOrderOfEvents: Setup")
-        self.playerFileList = ['playerTest1', 'playerTest2']
-        self.testGameName = 'EventsTest'
-
-        self.gameTemplate = game.StandardGameTemplate(self.testGameName, self.playerFileList, {"UniverseNumber0": { "Players": "2"}})
-        self.universe_data = self.gameTemplate.universe_data
-        self.game = game.Game(self.gameTemplate)
-
-
-    def teardown(self):
-        print("TestOrderOfEvents: Teardown")
-        try:
-            tmpFileName = self.testGameName + '_TechTreeDataError'
-            cwd = os.getcwd()
-            tmpFileName = r"%s/%s"% (cwd, tmpFileName)
-            if os.path.isfile(tmpFileName):
-                os.remove(tmpFileName)
-        except IOError as e:
-            print("Unable to remove file: %s" % (tmpFileName))
-
-
-
-
-    def test_Population(self):
-        
-        player1 = self.game.players['player0']
-        colonies = player1.colonies
-
-        assert_true(len(colonies) == 1)
-        key, colony = colonies.popitem()
-        tmpPop = colony.population
-        # print("%s population = %d" % (colony.planet.name, tmpPop))
-        assert_true(tmpPop > 0)
-        colonies[key] = colony
-
-        assert_true(len(colonies) == 1)
-
-        population(self.game)
-
-        colonyAfter = colonies[key] 
-        assert_true(tmpPop < colonyAfter.population)
-        assert_false(tmpPop == colonyAfter.population)
-        # print("%s population = %d" % (colonyAfter.planet.name, colonyAfter.population) )
-
-
 

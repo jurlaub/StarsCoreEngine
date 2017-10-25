@@ -88,6 +88,9 @@ class SpaceObjects(object):
         
         return self.destinationXY
 
+    def updateXYtoDestinationXY(self):
+        self.xy = self.destinationXY
+
 
     def printCurrentCoord(self):
         print ("(x = %, y = %)" % (self.xy))

@@ -142,14 +142,14 @@ class UniverseObject(object):
         """
         try: 
 
-            print("objectID:{}; newXY:{}; oldXY:{}".format(objectID, newXY, oldXY))
+            #print("objectID:{}; newXY:{}; oldXY:{}".format(objectID, newXY, oldXY))
 
 
             #location = newXY
             if oldXY and objectID in self.objectsAtXY.get(oldXY):
                 # oldLocation = self.objectsAtXY.get(oldXY)
                 #remove ObjectID
-                print("oldXY: {}".format(oldXY))
+                #print("oldXY: {}".format(oldXY))
                 self.objectsAtXY.get(oldXY).remove(objectID)
 
 
