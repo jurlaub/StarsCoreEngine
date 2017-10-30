@@ -179,6 +179,8 @@ class TestOrderOfEvents(object):
                 # assert_not_equal(fleet.xy,  hw_list[x])
                 # if fleet.ID in self.universe.objectsAtXY[hw_list[x]]:
                 assert_not_in(fleet.ID, self.universe.objectsAtXY[hw_list[x]])
+                assert_not_equal(fleet.xy, hw_list[x])
+            
 
         #assert_true(False)
 
