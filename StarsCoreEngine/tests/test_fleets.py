@@ -550,7 +550,60 @@ class TestFleets(object):
 
 
 
+    def test_multipleOrdersForFleet(self):
 
+        targetFleet = 0
+        NORTH_OFFSET = (0, 50, 0)
+        EAST_OFFSET = (50, 0, 0)
+
+        fc_0 = self.player0.fleetCommand
+        hw_0_xy = self.p0_colonyHW_obj.planet.xy
+        firstWaypoint = TestFleets._update_xy_orders(hw_0_xy, NORTH_OFFSET)
+        secondWaypoint = TestFleets._update_xy_orders(firstWaypoint, EAST_OFFSET)
+
+        testCommands =      {
+                targetFleet : { "orders" : [ 
+                            {
+                                "coordinates" : firstWaypoint,    # or at currentLocation
+                                "velocity_command" : "speed_levels_from_list",
+                                "waypoint_action" : "action_from_list" 
+
+                            },
+                            {
+                                "coordinates" : secondWaypoint,    # or at currentLocation
+                                "velocity_command" : "speed_levels_from_list",
+                                "waypoint_action" : "action_from_list" 
+
+                            } ]
+                    }}
+
+        # ---- send orders to fleet -----
+        fc_0.addOrdersToFleetsForTurn(testCommands)
+
+
+        assert_true( isinstance(fc_0.fleets[targetFleet].fleetOrders, list)) # fleet has list of orders
+        assert_equal(len(fc_0.fleets[targetFleet].fleetOrders), 2)           # fleet orders is empty
+        print("xy{} destinationxy{}".format(fc_0.fleets[targetFleet].xy, fc_0.fleets[targetFleet].fleetOrders[0]["coordinates"])) # current location and first order location
+        assert_equal(fc_0.fleets[targetFleet].xy, hw_0_xy)
+
+
+        # ---- fleets move first turn ----
+        fc_0.fleetsMove()
+
+        # ---- test first move ----
+        assert_false(fc_0.fleets[targetFleet].xy == hw_0_xy)
+        assert_equal(fc_0.fleets[targetFleet].xy, firstWaypoint)
+        assert_equal(fc_0.fleets[targetFleet].destinationXY, secondWaypoint)
+        assert_equal(len(fc_0.fleets[targetFleet].fleetOrders), 1) 
+
+        # ---- fleets move second turn ----      
+        fc_0.fleetsMove()
+
+
+        # ----- test second move -------
+        assert_false(fc_0.fleets[targetFleet].xy == firstWaypoint)
+        assert_equal(fc_0.fleets[targetFleet].xy, secondWaypoint)
+        assert_equal(len(fc_0.fleets[targetFleet].fleetOrders), 0) 
 
         
 
